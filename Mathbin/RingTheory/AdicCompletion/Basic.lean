@@ -106,10 +106,10 @@ def Hausdorffification : Type _ :=
 #align Hausdorffification Hausdorffification
 -/
 
-#print adicCompletion /-
+#print AdicCompletion /-
 /-- The completion of a module with respect to an ideal. This is not necessarily Hausdorff.
 In fact, this is only complete if the ideal is finitely generated. -/
-def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule R M))
+def AdicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule R M))
     where
   carrier :=
     {f |
@@ -119,7 +119,7 @@ def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule 
   add_mem' f g hf hg m n hmn := by
     rw [Pi.add_apply, Pi.add_apply, LinearMap.map_add, hf hmn, hg hmn]
   smul_mem' c f hf m n hmn := by rw [Pi.smul_apply, Pi.smul_apply, LinearMap.map_smul, hf hmn]
-#align adic_completion adicCompletion
+#align adic_completion AdicCompletion
 -/
 
 namespace IsHausdorff
@@ -252,81 +252,81 @@ instance (priority := 100) of_subsingleton [Subsingleton M] : IsPrecomplete I M 
 
 end IsPrecomplete
 
-namespace adicCompletion
+namespace AdicCompletion
 
-#print adicCompletion.of /-
+#print AdicCompletion.of /-
 /-- The canonical linear map to the completion. -/
-def of : M →ₗ[R] adicCompletion I M
+def of : M →ₗ[R] AdicCompletion I M
     where
   toFun x := ⟨fun n => mkQ _ x, fun m n hmn => rfl⟩
   map_add' x y := rfl
   map_smul' c x := rfl
-#align adic_completion.of adicCompletion.of
+#align adic_completion.of AdicCompletion.of
 -/
 
-#print adicCompletion.of_apply /-
+#print AdicCompletion.of_apply /-
 @[simp]
 theorem of_apply (x : M) (n : ℕ) : (of I M x).1 n = mkQ _ x :=
   rfl
-#align adic_completion.of_apply adicCompletion.of_apply
+#align adic_completion.of_apply AdicCompletion.of_apply
 -/
 
-#print adicCompletion.eval /-
+#print AdicCompletion.eval /-
 /-- Linearly evaluating a sequence in the completion at a given input. -/
-def eval (n : ℕ) : adicCompletion I M →ₗ[R] M ⧸ (I ^ n • ⊤ : Submodule R M)
+def eval (n : ℕ) : AdicCompletion I M →ₗ[R] M ⧸ (I ^ n • ⊤ : Submodule R M)
     where
   toFun f := f.1 n
   map_add' f g := rfl
   map_smul' c f := rfl
-#align adic_completion.eval adicCompletion.eval
+#align adic_completion.eval AdicCompletion.eval
 -/
 
-#print adicCompletion.coe_eval /-
+#print AdicCompletion.coe_eval /-
 @[simp]
 theorem coe_eval (n : ℕ) :
-    (eval I M n : adicCompletion I M → M ⧸ (I ^ n • ⊤ : Submodule R M)) = fun f => f.1 n :=
+    (eval I M n : AdicCompletion I M → M ⧸ (I ^ n • ⊤ : Submodule R M)) = fun f => f.1 n :=
   rfl
-#align adic_completion.coe_eval adicCompletion.coe_eval
+#align adic_completion.coe_eval AdicCompletion.coe_eval
 -/
 
-#print adicCompletion.eval_apply /-
-theorem eval_apply (n : ℕ) (f : adicCompletion I M) : eval I M n f = f.1 n :=
+#print AdicCompletion.eval_apply /-
+theorem eval_apply (n : ℕ) (f : AdicCompletion I M) : eval I M n f = f.1 n :=
   rfl
-#align adic_completion.eval_apply adicCompletion.eval_apply
+#align adic_completion.eval_apply AdicCompletion.eval_apply
 -/
 
-#print adicCompletion.eval_of /-
+#print AdicCompletion.eval_of /-
 theorem eval_of (n : ℕ) (x : M) : eval I M n (of I M x) = mkQ _ x :=
   rfl
-#align adic_completion.eval_of adicCompletion.eval_of
+#align adic_completion.eval_of AdicCompletion.eval_of
 -/
 
-#print adicCompletion.eval_comp_of /-
+#print AdicCompletion.eval_comp_of /-
 @[simp]
 theorem eval_comp_of (n : ℕ) : (eval I M n).comp (of I M) = mkQ _ :=
   rfl
-#align adic_completion.eval_comp_of adicCompletion.eval_comp_of
+#align adic_completion.eval_comp_of AdicCompletion.eval_comp_of
 -/
 
-#print adicCompletion.range_eval /-
+#print AdicCompletion.range_eval /-
 @[simp]
 theorem range_eval (n : ℕ) : (eval I M n).range = ⊤ :=
   LinearMap.range_eq_top.2 fun x => Quotient.inductionOn' x fun x => ⟨of I M x, rfl⟩
-#align adic_completion.range_eval adicCompletion.range_eval
+#align adic_completion.range_eval AdicCompletion.range_eval
 -/
 
 variable {I M}
 
-#print adicCompletion.ext /-
+#print AdicCompletion.ext /-
 @[ext]
-theorem ext {x y : adicCompletion I M} (h : ∀ n, eval I M n x = eval I M n y) : x = y :=
+theorem ext {x y : AdicCompletion I M} (h : ∀ n, eval I M n x = eval I M n y) : x = y :=
   Subtype.eq <| funext h
-#align adic_completion.ext adicCompletion.ext
+#align adic_completion.ext AdicCompletion.ext
 -/
 
 variable (I M)
 
-instance : IsHausdorff I (adicCompletion I M) :=
+instance : IsHausdorff I (AdicCompletion I M) :=
   ⟨fun x hx =>
     ext fun n =>
       smul_induction_on (SModEq.zero.1 <| hx n)
@@ -335,7 +335,7 @@ instance : IsHausdorff I (adicCompletion I M) :=
             Quotient.inductionOn' (eval I M n x) fun x => SModEq.zero.2 <| smul_mem_smul hr mem_top)
         fun _ _ ih1 ih2 => by rw [LinearMap.map_add, ih1, ih2, LinearMap.map_zero, add_zero]⟩
 
-end adicCompletion
+end AdicCompletion
 
 namespace IsAdicComplete
 

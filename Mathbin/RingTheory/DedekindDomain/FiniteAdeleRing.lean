@@ -56,7 +56,7 @@ local notation "R_hat" => FiniteIntegralAdeles
 #print DedekindDomain.ProdAdicCompletions /-
 /-- The product of all `adic_completion`, where `v` runs over the maximal ideals of `R`. -/
 def ProdAdicCompletions :=
-  ∀ v : HeightOneSpectrum R, v.adicCompletion K
+  ∀ v : HeightOneSpectrum R, v.AdicCompletion K
 deriving NonUnitalNonAssocRing, TopologicalSpace, TopologicalRing, CommRing, Inhabited
 #align dedekind_domain.prod_adic_completions DedekindDomain.ProdAdicCompletions
 -/
@@ -100,16 +100,16 @@ end FiniteIntegralAdeles
 section AlgebraInstances
 
 instance : Algebra K (K_hat R K) :=
-  (by infer_instance : Algebra K <| ∀ v : HeightOneSpectrum R, v.adicCompletion K)
+  (by infer_instance : Algebra K <| ∀ v : HeightOneSpectrum R, v.AdicCompletion K)
 
 #print DedekindDomain.ProdAdicCompletions.algebra' /-
 instance ProdAdicCompletions.algebra' : Algebra R (K_hat R K) :=
-  (by infer_instance : Algebra R <| ∀ v : HeightOneSpectrum R, v.adicCompletion K)
+  (by infer_instance : Algebra R <| ∀ v : HeightOneSpectrum R, v.AdicCompletion K)
 #align dedekind_domain.prod_adic_completions.algebra' DedekindDomain.ProdAdicCompletions.algebra'
 -/
 
 instance : IsScalarTower R K (K_hat R K) :=
-  (by infer_instance : IsScalarTower R K <| ∀ v : HeightOneSpectrum R, v.adicCompletion K)
+  (by infer_instance : IsScalarTower R K <| ∀ v : HeightOneSpectrum R, v.AdicCompletion K)
 
 instance : Algebra R (R_hat R K) :=
   (by infer_instance : Algebra R <| ∀ v : HeightOneSpectrum R, v.adicCompletionIntegers K)
@@ -124,7 +124,7 @@ instance ProdAdicCompletions.algebraCompletions : Algebra (R_hat R K) (K_hat R K
 instance ProdAdicCompletions.isScalarTower_completions : IsScalarTower R (R_hat R K) (K_hat R K) :=
   (by infer_instance :
     IsScalarTower R (∀ v : HeightOneSpectrum R, v.adicCompletionIntegers K) <|
-      ∀ v : HeightOneSpectrum R, v.adicCompletion K)
+      ∀ v : HeightOneSpectrum R, v.AdicCompletion K)
 #align dedekind_domain.prod_adic_completions.is_scalar_tower_completions DedekindDomain.ProdAdicCompletions.isScalarTower_completions
 -/
 
@@ -197,7 +197,7 @@ theorem zero : (0 : K_hat R K).IsFiniteAdele :=
   by
   rw [is_finite_adele, Filter.eventually_cofinite]
   have h_empty :
-    {v : height_one_spectrum R | ¬(0 : v.adicCompletion K) ∈ v.adicCompletionIntegers K} = ∅ :=
+    {v : height_one_spectrum R | ¬(0 : v.AdicCompletion K) ∈ v.adicCompletionIntegers K} = ∅ :=
     by
     ext v; rw [mem_empty_iff_false, iff_false_iff]; intro hv
     rw [mem_set_of_eq] at hv; apply hv; rw [mem_adic_completion_integers]
@@ -256,7 +256,7 @@ theorem one : (1 : K_hat R K).IsFiniteAdele :=
   by
   rw [is_finite_adele, Filter.eventually_cofinite]
   have h_empty :
-    {v : height_one_spectrum R | ¬(1 : v.adicCompletion K) ∈ v.adicCompletionIntegers K} = ∅ :=
+    {v : height_one_spectrum R | ¬(1 : v.AdicCompletion K) ∈ v.adicCompletionIntegers K} = ∅ :=
     by
     ext v; rw [mem_empty_iff_false, iff_false_iff]; intro hv
     rw [mem_set_of_eq] at hv; apply hv; rw [mem_adic_completion_integers]
