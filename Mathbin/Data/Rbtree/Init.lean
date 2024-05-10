@@ -9,23 +9,23 @@ Authors: Leonardo de Moura
 -- This file used to be a part of `prelude`
 universe u v
 
-#print Std.RBNode /-
-inductive Std.RBNode (α : Type u)
-  | leaf : Std.RBNode
-  | red_node (lchild : Std.RBNode) (val : α) (rchild : Std.RBNode) : Std.RBNode
-  | black_node (lchild : Std.RBNode) (val : α) (rchild : Std.RBNode) : Std.RBNode
-#align rbnode Std.RBNode
+#print Batteries.RBNode /-
+inductive Batteries.RBNode (α : Type u)
+  | leaf : Batteries.RBNode
+  | red_node (lchild : Batteries.RBNode) (val : α) (rchild : Batteries.RBNode) : Batteries.RBNode
+  | black_node (lchild : Batteries.RBNode) (val : α) (rchild : Batteries.RBNode) : Batteries.RBNode
+#align rbnode Batteries.RBNode
 -/
 
-namespace Std.RBNode
+namespace Batteries.RBNode
 
 variable {α : Type u} {β : Type v}
 
-#print Std.RBColor /-
+#print Batteries.RBColor /-
 inductive RBColor
   | red
   | black
-#align rbnode.color Std.RBColor
+#align rbnode.color Batteries.RBColor
 -/
 
 open Color Nat
@@ -33,116 +33,122 @@ open Color Nat
 instance RBColor.decidableEq : DecidableEq RBColor := fun a b =>
   RBColor.casesOn a (RBColor.casesOn b (isTrue rfl) (isFalse fun h => RBColor.noConfusion h))
     (RBColor.casesOn b (isFalse fun h => RBColor.noConfusion h) (isTrue rfl))
-#align rbnode.color.decidable_eq Std.RBColor.decidableEq
+#align rbnode.color.decidable_eq Batteries.RBColor.decidableEq
 
-#print Std.RBNode.depth /-
-def Std.RBNode.depth (f : Nat → Nat → Nat) : Std.RBNode α → Nat
+#print Batteries.RBNode.depth /-
+def Batteries.RBNode.depth (f : Nat → Nat → Nat) : Batteries.RBNode α → Nat
   | leaf => 0
   | red_node l _ r => succ (f (depth l) (depth r))
   | black_node l _ r => succ (f (depth l) (depth r))
-#align rbnode.depth Std.RBNode.depth
+#align rbnode.depth Batteries.RBNode.depth
 -/
 
-#print Std.RBNode.min /-
-protected def Std.RBNode.min : Std.RBNode α → Option α
+#print Batteries.RBNode.min /-
+protected def Batteries.RBNode.min : Batteries.RBNode α → Option α
   | leaf => none
   | red_node leaf v _ => some v
   | black_node leaf v _ => some v
   | red_node l v _ => min l
   | black_node l v _ => min l
-#align rbnode.min Std.RBNode.min
+#align rbnode.min Batteries.RBNode.min
 -/
 
-#print Std.RBNode.max /-
-protected def Std.RBNode.max : Std.RBNode α → Option α
+#print Batteries.RBNode.max /-
+protected def Batteries.RBNode.max : Batteries.RBNode α → Option α
   | leaf => none
   | red_node _ v leaf => some v
   | black_node _ v leaf => some v
   | red_node _ v r => max r
   | black_node _ v r => max r
-#align rbnode.max Std.RBNode.max
+#align rbnode.max Batteries.RBNode.max
 -/
 
-#print Std.RBNode.fold /-
-def Std.RBNode.fold (f : α → β → β) : Std.RBNode α → β → β
+#print Batteries.RBNode.fold /-
+def Batteries.RBNode.fold (f : α → β → β) : Batteries.RBNode α → β → β
   | leaf, b => b
   | red_node l v r, b => fold r (f v (fold l b))
   | black_node l v r, b => fold r (f v (fold l b))
-#align rbnode.fold Std.RBNode.fold
+#align rbnode.fold Batteries.RBNode.fold
 -/
 
-def Std.RBNode.revFold (f : α → β → β) : Std.RBNode α → β → β
+def Batteries.RBNode.revFold (f : α → β → β) : Batteries.RBNode α → β → β
   | leaf, b => b
   | red_node l v r, b => rev_fold l (f v (rev_fold r b))
   | black_node l v r, b => rev_fold l (f v (rev_fold r b))
-#align rbnode.rev_fold Std.RBNode.revFold
+#align rbnode.rev_fold Batteries.RBNode.revFold
 
-#print Std.RBNode.balance1 /-
-def Std.RBNode.balance1 : Std.RBNode α → α → Std.RBNode α → α → Std.RBNode α → Std.RBNode α
-  | red_node l x r₁, y, r₂, v, t => Std.RBNode.node (black_node l x r₁) y (black_node r₂ v t)
-  | l₁, y, red_node l₂ x r, v, t => Std.RBNode.node (black_node l₁ y l₂) x (black_node r v t)
-  | l, y, r, v, t => black_node (Std.RBNode.node l y r) v t
-#align rbnode.balance1 Std.RBNode.balance1
+#print Batteries.RBNode.balance1 /-
+def Batteries.RBNode.balance1 :
+    Batteries.RBNode α → α → Batteries.RBNode α → α → Batteries.RBNode α → Batteries.RBNode α
+  | red_node l x r₁, y, r₂, v, t => Batteries.RBNode.node (black_node l x r₁) y (black_node r₂ v t)
+  | l₁, y, red_node l₂ x r, v, t => Batteries.RBNode.node (black_node l₁ y l₂) x (black_node r v t)
+  | l, y, r, v, t => black_node (Batteries.RBNode.node l y r) v t
+#align rbnode.balance1 Batteries.RBNode.balance1
 -/
 
-def Std.RBNode.balance1Node : Std.RBNode α → α → Std.RBNode α → Std.RBNode α
-  | red_node l x r, v, t => Std.RBNode.balance1 l x r v t
-  | black_node l x r, v, t => Std.RBNode.balance1 l x r v t
+def Batteries.RBNode.balance1Node : Batteries.RBNode α → α → Batteries.RBNode α → Batteries.RBNode α
+  | red_node l x r, v, t => Batteries.RBNode.balance1 l x r v t
+  | black_node l x r, v, t => Batteries.RBNode.balance1 l x r v t
   | leaf, v, t => t
-#align rbnode.balance1_node Std.RBNode.balance1Node
+#align rbnode.balance1_node Batteries.RBNode.balance1Node
 
-#print Std.RBNode.balance2 /-
+#print Batteries.RBNode.balance2 /-
 -- dummy value
-def Std.RBNode.balance2 : Std.RBNode α → α → Std.RBNode α → α → Std.RBNode α → Std.RBNode α
-  | red_node l x₁ r₁, y, r₂, v, t => Std.RBNode.node (black_node t v l) x₁ (black_node r₁ y r₂)
-  | l₁, y, red_node l₂ x₂ r₂, v, t => Std.RBNode.node (black_node t v l₁) y (black_node l₂ x₂ r₂)
-  | l, y, r, v, t => black_node t v (Std.RBNode.node l y r)
-#align rbnode.balance2 Std.RBNode.balance2
+def Batteries.RBNode.balance2 :
+    Batteries.RBNode α → α → Batteries.RBNode α → α → Batteries.RBNode α → Batteries.RBNode α
+  | red_node l x₁ r₁, y, r₂, v, t =>
+    Batteries.RBNode.node (black_node t v l) x₁ (black_node r₁ y r₂)
+  | l₁, y, red_node l₂ x₂ r₂, v, t =>
+    Batteries.RBNode.node (black_node t v l₁) y (black_node l₂ x₂ r₂)
+  | l, y, r, v, t => black_node t v (Batteries.RBNode.node l y r)
+#align rbnode.balance2 Batteries.RBNode.balance2
 -/
 
-def Std.RBNode.balance2Node : Std.RBNode α → α → Std.RBNode α → Std.RBNode α
-  | red_node l x r, v, t => Std.RBNode.balance2 l x r v t
-  | black_node l x r, v, t => Std.RBNode.balance2 l x r v t
+def Batteries.RBNode.balance2Node : Batteries.RBNode α → α → Batteries.RBNode α → Batteries.RBNode α
+  | red_node l x r, v, t => Batteries.RBNode.balance2 l x r v t
+  | black_node l x r, v, t => Batteries.RBNode.balance2 l x r v t
   | leaf, v, t => t
-#align rbnode.balance2_node Std.RBNode.balance2Node
+#align rbnode.balance2_node Batteries.RBNode.balance2Node
 
 -- dummy
-def Std.RBNode.getColor : Std.RBNode α → RBColor
+def Batteries.RBNode.getColor : Batteries.RBNode α → RBColor
   | red_node _ _ _ => red
   | _ => black
-#align rbnode.get_color Std.RBNode.getColor
+#align rbnode.get_color Batteries.RBNode.getColor
 
 section Insert
 
 variable (lt : α → α → Prop) [DecidableRel lt]
 
-#print Std.RBNode.ins /-
-def Std.RBNode.ins : Std.RBNode α → α → Std.RBNode α
-  | leaf, x => Std.RBNode.node Std.RBNode.nil x Std.RBNode.nil
+#print Batteries.RBNode.ins /-
+def Batteries.RBNode.ins : Batteries.RBNode α → α → Batteries.RBNode α
+  | leaf, x => Batteries.RBNode.node Batteries.RBNode.nil x Batteries.RBNode.nil
   | red_node a y b, x =>
     match cmpUsing lt x y with
-    | Ordering.lt => Std.RBNode.node (ins a x) y b
-    | Ordering.eq => Std.RBNode.node a x b
-    | Ordering.gt => Std.RBNode.node a y (ins b x)
+    | Ordering.lt => Batteries.RBNode.node (ins a x) y b
+    | Ordering.eq => Batteries.RBNode.node a x b
+    | Ordering.gt => Batteries.RBNode.node a y (ins b x)
   | black_node a y b, x =>
     match cmpUsing lt x y with
     | Ordering.lt =>
-      if a.getColor = red then Std.RBNode.balance1Node (ins a x) y b else black_node (ins a x) y b
+      if a.getColor = red then Batteries.RBNode.balance1Node (ins a x) y b
+      else black_node (ins a x) y b
     | Ordering.eq => black_node a x b
     | Ordering.gt =>
-      if b.getColor = red then Std.RBNode.balance2Node (ins b x) y a else black_node a y (ins b x)
-#align rbnode.ins Std.RBNode.ins
+      if b.getColor = red then Batteries.RBNode.balance2Node (ins b x) y a
+      else black_node a y (ins b x)
+#align rbnode.ins Batteries.RBNode.ins
 -/
 
-def Std.RBNode.mkInsertResult : RBColor → Std.RBNode α → Std.RBNode α
+def Batteries.RBNode.mkInsertResult : RBColor → Batteries.RBNode α → Batteries.RBNode α
   | red, red_node l v r => black_node l v r
   | _, t => t
-#align rbnode.mk_insert_result Std.RBNode.mkInsertResult
+#align rbnode.mk_insert_result Batteries.RBNode.mkInsertResult
 
-#print Std.RBNode.insert /-
-def Std.RBNode.insert (t : Std.RBNode α) (x : α) : Std.RBNode α :=
-  Std.RBNode.mkInsertResult (Std.RBNode.getColor t) (Std.RBNode.ins lt t x)
-#align rbnode.insert Std.RBNode.insert
+#print Batteries.RBNode.insert /-
+def Batteries.RBNode.insert (t : Batteries.RBNode α) (x : α) : Batteries.RBNode α :=
+  Batteries.RBNode.mkInsertResult (Batteries.RBNode.getColor t) (Batteries.RBNode.ins lt t x)
+#align rbnode.insert Batteries.RBNode.insert
 -/
 
 end Insert
@@ -151,24 +157,24 @@ section Membership
 
 variable (lt : α → α → Prop)
 
-#print Std.RBNode.Mem /-
-def Std.RBNode.Mem : α → Std.RBNode α → Prop
+#print Batteries.RBNode.Mem /-
+def Batteries.RBNode.Mem : α → Batteries.RBNode α → Prop
   | a, leaf => False
   | a, red_node l v r => mem a l ∨ ¬lt a v ∧ ¬lt v a ∨ mem a r
   | a, black_node l v r => mem a l ∨ ¬lt a v ∧ ¬lt v a ∨ mem a r
-#align rbnode.mem Std.RBNode.Mem
+#align rbnode.mem Batteries.RBNode.Mem
 -/
 
-def Std.RBNode.MemExact : α → Std.RBNode α → Prop
+def Batteries.RBNode.MemExact : α → Batteries.RBNode α → Prop
   | a, leaf => False
   | a, red_node l v r => mem_exact a l ∨ a = v ∨ mem_exact a r
   | a, black_node l v r => mem_exact a l ∨ a = v ∨ mem_exact a r
-#align rbnode.mem_exact Std.RBNode.MemExact
+#align rbnode.mem_exact Batteries.RBNode.MemExact
 
 variable [DecidableRel lt]
 
-#print Std.RBNode.find? /-
-def Std.RBNode.find? : Std.RBNode α → α → Option α
+#print Batteries.RBNode.find? /-
+def Batteries.RBNode.find? : Batteries.RBNode α → α → Option α
   | leaf, x => none
   | red_node a y b, x =>
     match cmpUsing lt x y with
@@ -180,147 +186,147 @@ def Std.RBNode.find? : Std.RBNode α → α → Option α
     | Ordering.lt => find a x
     | Ordering.eq => some y
     | Ordering.gt => find b x
-#align rbnode.find Std.RBNode.find?
+#align rbnode.find Batteries.RBNode.find?
 -/
 
 end Membership
 
-#print Std.RBNode.WF /-
-inductive Std.RBNode.WF (lt : α → α → Prop) : Std.RBNode α → Prop
-  | leaf_wff : well_formed Std.RBNode.nil
+#print Batteries.RBNode.WF /-
+inductive Batteries.RBNode.WF (lt : α → α → Prop) : Batteries.RBNode α → Prop
+  | leaf_wff : well_formed Batteries.RBNode.nil
   |
-  insert_wff {n n' : Std.RBNode α} {x : α} [DecidableRel lt] :
-    well_formed n → n' = Std.RBNode.insert lt n x → well_formed n'
-#align rbnode.well_formed Std.RBNode.WF
+  insert_wff {n n' : Batteries.RBNode α} {x : α} [DecidableRel lt] :
+    well_formed n → n' = Batteries.RBNode.insert lt n x → well_formed n'
+#align rbnode.well_formed Batteries.RBNode.WF
 -/
 
-end Std.RBNode
+end Batteries.RBNode
 
-open Std.RBNode
+open Batteries.RBNode
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option auto_param.check_exists -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option auto_param.check_exists -/
 set_option auto_param.check_exists false
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
-#print Std.RBSet /-
-def Std.RBSet (α : Type u)
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
+#print Batteries.RBSet /-
+def Batteries.RBSet (α : Type u)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt) :
     Type u :=
-  { t : Std.RBNode α // t.WF lt }
-#align rbtree Std.RBSet
+  { t : Batteries.RBNode α // t.WF lt }
+#align rbtree Batteries.RBSet
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
-#print Std.mkRBSet /-
-def Std.mkRBSet (α : Type u)
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
+#print Batteries.mkRBSet /-
+def Batteries.mkRBSet (α : Type u)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt) :
-    Std.RBSet α lt :=
-  ⟨Std.RBNode.nil, Std.RBNode.WF.mk⟩
-#align mk_rbtree Std.mkRBSet
+    Batteries.RBSet α lt :=
+  ⟨Batteries.RBNode.nil, Batteries.RBNode.WF.mk⟩
+#align mk_rbtree Batteries.mkRBSet
 -/
 
-namespace Std.RBSet
+namespace Batteries.RBSet
 
 variable {α : Type u} {β : Type v} {lt : α → α → Prop}
 
-#print Std.RBSet.Mem /-
-protected def Std.RBSet.Mem (a : α) (t : Std.RBSet α lt) : Prop :=
-  Std.RBNode.Mem lt a t.val
-#align rbtree.mem Std.RBSet.Mem
+#print Batteries.RBSet.Mem /-
+protected def Batteries.RBSet.Mem (a : α) (t : Batteries.RBSet α lt) : Prop :=
+  Batteries.RBNode.Mem lt a t.val
+#align rbtree.mem Batteries.RBSet.Mem
 -/
 
-instance : Membership α (Std.RBSet α lt) :=
-  ⟨Std.RBSet.Mem⟩
+instance : Membership α (Batteries.RBSet α lt) :=
+  ⟨Batteries.RBSet.Mem⟩
 
-def Std.RBSet.MemExact (a : α) (t : Std.RBSet α lt) : Prop :=
-  Std.RBNode.MemExact a t.val
-#align rbtree.mem_exact Std.RBSet.MemExact
+def Batteries.RBSet.MemExact (a : α) (t : Batteries.RBSet α lt) : Prop :=
+  Batteries.RBNode.MemExact a t.val
+#align rbtree.mem_exact Batteries.RBSet.MemExact
 
-def Std.RBSet.depth (f : Nat → Nat → Nat) (t : Std.RBSet α lt) : Nat :=
+def Batteries.RBSet.depth (f : Nat → Nat → Nat) (t : Batteries.RBSet α lt) : Nat :=
   t.val.depth f
-#align rbtree.depth Std.RBSet.depth
+#align rbtree.depth Batteries.RBSet.depth
 
-#print Std.RBSet.foldl /-
-def Std.RBSet.foldl (f : α → β → β) : Std.RBSet α lt → β → β
+#print Batteries.RBSet.foldl /-
+def Batteries.RBSet.foldl (f : α → β → β) : Batteries.RBSet α lt → β → β
   | ⟨t, _⟩, b => t.fold f b
-#align rbtree.fold Std.RBSet.foldl
+#align rbtree.fold Batteries.RBSet.foldl
 -/
 
-def Std.RBSet.revFold (f : α → β → β) : Std.RBSet α lt → β → β
+def Batteries.RBSet.revFold (f : α → β → β) : Batteries.RBSet α lt → β → β
   | ⟨t, _⟩, b => t.revFold f b
-#align rbtree.rev_fold Std.RBSet.revFold
+#align rbtree.rev_fold Batteries.RBSet.revFold
 
-#print Std.RBSet.empty /-
-def Std.RBSet.empty : Std.RBSet α lt → Bool
+#print Batteries.RBSet.empty /-
+def Batteries.RBSet.empty : Batteries.RBSet α lt → Bool
   | ⟨leaf, _⟩ => true
   | _ => false
-#align rbtree.empty Std.RBSet.empty
+#align rbtree.empty Batteries.RBSet.empty
 -/
 
-#print Std.RBSet.toList /-
-def Std.RBSet.toList : Std.RBSet α lt → List α
+#print Batteries.RBSet.toList /-
+def Batteries.RBSet.toList : Batteries.RBSet α lt → List α
   | ⟨t, _⟩ => t.revFold (· :: ·) []
-#align rbtree.to_list Std.RBSet.toList
+#align rbtree.to_list Batteries.RBSet.toList
 -/
 
-#print Std.RBSet.min /-
-protected def Std.RBSet.min : Std.RBSet α lt → Option α
+#print Batteries.RBSet.min /-
+protected def Batteries.RBSet.min : Batteries.RBSet α lt → Option α
   | ⟨t, _⟩ => t.min
-#align rbtree.min Std.RBSet.min
+#align rbtree.min Batteries.RBSet.min
 -/
 
-#print Std.RBSet.max /-
-protected def Std.RBSet.max : Std.RBSet α lt → Option α
+#print Batteries.RBSet.max /-
+protected def Batteries.RBSet.max : Batteries.RBSet α lt → Option α
   | ⟨t, _⟩ => t.max
-#align rbtree.max Std.RBSet.max
+#align rbtree.max Batteries.RBSet.max
 -/
 
-instance [Repr α] : Repr (Std.RBSet α lt) :=
+instance [Repr α] : Repr (Batteries.RBSet α lt) :=
   ⟨fun t => "rbtree_of " ++ repr t.toList⟩
 
 variable [DecidableRel lt]
 
-#print Std.RBSet.insert /-
-def Std.RBSet.insert : Std.RBSet α lt → α → Std.RBSet α lt
-  | ⟨t, w⟩, x => ⟨t.insert lt x, Std.RBNode.WF.insert w rfl⟩
-#align rbtree.insert Std.RBSet.insert
+#print Batteries.RBSet.insert /-
+def Batteries.RBSet.insert : Batteries.RBSet α lt → α → Batteries.RBSet α lt
+  | ⟨t, w⟩, x => ⟨t.insert lt x, Batteries.RBNode.WF.insert w rfl⟩
+#align rbtree.insert Batteries.RBSet.insert
 -/
 
-#print Std.RBSet.find? /-
-def Std.RBSet.find? : Std.RBSet α lt → α → Option α
+#print Batteries.RBSet.find? /-
+def Batteries.RBSet.find? : Batteries.RBSet α lt → α → Option α
   | ⟨t, _⟩, x => t.find lt x
-#align rbtree.find Std.RBSet.find?
+#align rbtree.find Batteries.RBSet.find?
 -/
 
-#print Std.RBSet.contains /-
-def Std.RBSet.contains (t : Std.RBSet α lt) (a : α) : Bool :=
+#print Batteries.RBSet.contains /-
+def Batteries.RBSet.contains (t : Batteries.RBSet α lt) (a : α) : Bool :=
   (t.find a).isSome
-#align rbtree.contains Std.RBSet.contains
+#align rbtree.contains Batteries.RBSet.contains
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
-#print Std.RBSet.ofList /-
-def Std.RBSet.ofList (l : List α)
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
+#print Batteries.RBSet.ofList /-
+def Batteries.RBSet.ofList (l : List α)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt)
-    [DecidableRel lt] : Std.RBSet α lt :=
-  l.foldl Std.RBSet.insert (Std.mkRBSet α lt)
-#align rbtree.from_list Std.RBSet.ofList
+    [DecidableRel lt] : Batteries.RBSet α lt :=
+  l.foldl Batteries.RBSet.insert (Batteries.mkRBSet α lt)
+#align rbtree.from_list Batteries.RBSet.ofList
 -/
 
-end Std.RBSet
+end Batteries.RBSet
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def rbtreeOf {α : Type u} (l : List α)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt)
-    [DecidableRel lt] : Std.RBSet α lt :=
-  Std.RBSet.ofList l lt
+    [DecidableRel lt] : Batteries.RBSet α lt :=
+  Batteries.RBSet.ofList l lt
 #align rbtree_of rbtreeOf
 

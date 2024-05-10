@@ -61,7 +61,7 @@ namespace Tactic.Interactive
 
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `rename_var old new` renames all bound variables named `old` to `new` in the goal.
 `rename_var old new at h` does the same in hypothesis `h`.
 -/

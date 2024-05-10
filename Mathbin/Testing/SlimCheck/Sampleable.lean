@@ -119,7 +119,7 @@ def ShrinkFn (α : Type _) [SizeOf α] :=
   ∀ x : α, LazyList { y : α // SizeofLt y x }
 #align slim_check.shrink_fn SlimCheck.ShrinkFn
 
-/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable α` provides ways of creating examples of type `α`,
 and given such an example `x : α`, gives us a way to shrink it
 and find simpler examples.  -/
@@ -134,7 +134,7 @@ attribute [instance 100] hasWellFoundedOfHasSizeof defaultHasSizeof
 
 attribute [instance 200] sampleable.wf
 
-/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_functor F` makes it possible to create samples of and
 shrink `F α` given a sampling function and a shrinking function for
 arbitrary `α` -/
@@ -145,7 +145,7 @@ class SampleableFunctor (F : Type u → Type v) [Functor F] where
   pRepr : ∀ α, Repr α → Repr (F α)
 #align slim_check.sampleable_functor SlimCheck.SampleableFunctor
 
-/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_bifunctor F` makes it possible to create samples of
 and shrink `F α β` given a sampling function and a shrinking function
 for arbitrary `α` and `β` -/
@@ -165,8 +165,8 @@ unsafe def sampleable.mk_trivial_interp : tactic Unit :=
 #align slim_check.sampleable.mk_trivial_interp slim_check.sampleable.mk_trivial_interp
 
 #print SlimCheck.SampleableExt /-
-/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`interp] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`interp] [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_ext` generalizes the behavior of `sampleable`
 and makes it possible to express instances for types that
 do not lend themselves to introspection, such as `ℕ → ℕ`.
@@ -194,7 +194,7 @@ section Prio
 
 open SampleableExt
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
 set_option default_priority 50
 
 instance SampleableExt.ofSampleable {α} [Sampleable α] [Repr α] : SampleableExt α
@@ -218,7 +218,7 @@ instance Sampleable.bifunctor {α β} {F} [Bifunctor F] [SampleableBifunctor F] 
   shrink := SampleableBifunctor.shrink α β Sampleable.shrink Sampleable.shrink
 #align slim_check.sampleable.bifunctor SlimCheck.Sampleable.bifunctor
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
 set_option default_priority 100
 
 instance SampleableExt.functor {α} {F} [Functor F] [SampleableFunctor F] [SampleableExt α] :
@@ -244,7 +244,7 @@ instance SampleableExt.bifunctor {α β} {F} [Bifunctor F] [SampleableBifunctor 
 
 end Prio
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `nat.shrink' k n` creates a list of smaller natural numbers by
 successively dividing `n` by 2 and subtracting the difference from
 `k`. For example, `nat.shrink 100 = [50, 75, 88, 94, 97, 99]`. -/
@@ -266,8 +266,8 @@ def Nat.shrink' (k : ℕ) :
       nat.shrink' m h₀ (⟨k - m, h₁⟩::ls)
 #align slim_check.nat.shrink' SlimCheck.Nat.shrink'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SlimCheck.Nat.shrink /-
 /-- `nat.shrink n` creates a list of smaller natural numbers by
 successively dividing by 2 and subtracting the difference from
@@ -469,7 +469,7 @@ section ListShrink
 
 variable [SizeOf α] (shr : ∀ x : α, LazyList { y : α // SizeofLt y x })
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.sizeOf_drop_lt_sizeOf_of_lt_length {xs : List α} {k} (hk : 0 < k)
     (hk' : k < xs.length) : SizeOf.sizeOf (List.drop k xs) < SizeOf.sizeOf xs :=
   by
@@ -486,14 +486,14 @@ theorem List.sizeOf_drop_lt_sizeOf_of_lt_length {xs : List α} {k} (hk : 0 < k)
     · assumption
 #align slim_check.list.sizeof_drop_lt_sizeof_of_lt_length SlimCheck.List.sizeOf_drop_lt_sizeOf_of_lt_length
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.sizeOf_cons_lt_right (a b : α) {xs : List α} (h : SizeOf.sizeOf a < SizeOf.sizeOf b) :
     SizeOf.sizeOf (a::xs) < SizeOf.sizeOf (b::xs) := by unfold_wf <;> assumption
 #align slim_check.list.sizeof_cons_lt_right SlimCheck.List.sizeOf_cons_lt_right
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.sizeOf_cons_lt_left (x : α) {xs xs' : List α}
     (h : SizeOf.sizeOf xs < SizeOf.sizeOf xs') : SizeOf.sizeOf (x::xs) < SizeOf.sizeOf (x::xs') :=
   by unfold_wf <;> assumption
@@ -546,9 +546,9 @@ def List.shrinkRemoves (k : ℕ) (hk : 0 < k) :
             Subtype.map ((· ++ ·) xs₁) h₅ <$> list.shrink_removes xs₂ (n - k) h₁
 #align slim_check.list.shrink_removes SlimCheck.List.shrinkRemoves
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 /-- `list.shrink_one xs` shrinks list `xs` by shrinking only one item in
 the list.
 -/
@@ -891,7 +891,7 @@ instance Perm'.slimCheck {xs : List α} : SlimCheck.Sampleable { ys : List α //
   shrink _ := LazyList.nil
 #align slim_check.perm'.slim_check SlimCheck.Perm'.slimCheck
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
 #print SlimCheck.printSamples /-

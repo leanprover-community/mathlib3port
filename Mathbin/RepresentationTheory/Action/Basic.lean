@@ -525,8 +525,8 @@ theorem tensorUnit_rho {g : G} : (𝟙_ (Action V G)).ρ g = 𝟙 (𝟙_ V) :=
 #align Action.tensor_unit_rho Action.tensorUnit_rho
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.tensor_v /-
 @[simp]
 theorem tensor_v {X Y : Action V G} : (X ⊗ Y).V = X.V ⊗ Y.V :=
@@ -534,8 +534,8 @@ theorem tensor_v {X Y : Action V G} : (X ⊗ Y).V = X.V ⊗ Y.V :=
 #align Action.tensor_V Action.tensor_v
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.tensor_rho /-
 @[simp]
 theorem tensor_rho {X Y : Action V G} {g : G} : (X ⊗ Y).ρ g = X.ρ g ⊗ Y.ρ g :=
@@ -543,8 +543,8 @@ theorem tensor_rho {X Y : Action V G} {g : G} : (X ⊗ Y).ρ g = X.ρ g ⊗ Y.ρ
 #align Action.tensor_rho Action.tensor_rho
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.tensor_hom /-
 @[simp]
 theorem tensor_hom {W X Y Z : Action V G} (f : W ⟶ X) (g : Y ⟶ Z) : (f ⊗ g).Hom = f.Hom ⊗ g.Hom :=
@@ -689,10 +689,10 @@ instance :
     CategoryTheory.Functor.IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor := by
   change is_equivalence (Action.functorCategoryEquivalence _ _).Functor; infer_instance
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.functorCategoryMonoidalEquivalence.μ_app /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.μ_app (A B : Action V G) :
@@ -730,37 +730,33 @@ theorem functorCategoryMonoidalEquivalence.ε_app :
 #align Action.functor_category_monoidal_equivalence.ε_app Action.functorCategoryMonoidalEquivalence.ε_app
 -/
 
-#print Action.functorCategoryMonoidalEquivalence.inv_counit_app_hom /-
+#print Action.functorCategoryMonoidalAdjunction.unit_app_hom /-
 @[simp]
-theorem functorCategoryMonoidalEquivalence.inv_counit_app_hom (A : Action V G) :
+theorem functorCategoryMonoidalAdjunction.unit_app_hom (A : Action V G) :
     ((functorCategoryMonoidalEquivalence _ _).inv.Adjunction.counit.app A).Hom = 𝟙 _ :=
   rfl
-#align Action.functor_category_monoidal_equivalence.inv_counit_app_hom Action.functorCategoryMonoidalEquivalence.inv_counit_app_hom
+#align Action.functor_category_monoidal_equivalence.inv_counit_app_hom Action.functorCategoryMonoidalAdjunction.unit_app_hom
 -/
 
-#print Action.functorCategoryMonoidalEquivalence.counit_app /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.counit_app (A : SingleObj G ⥤ V) :
     ((functorCategoryMonoidalEquivalence _ _).Adjunction.counit.app A).app PUnit.unit = 𝟙 _ :=
   rfl
 #align Action.functor_category_monoidal_equivalence.counit_app Action.functorCategoryMonoidalEquivalence.counit_app
--/
 
-#print Action.functorCategoryMonoidalEquivalence.inv_unit_app_app /-
+#print Action.functorCategoryMonoidalAdjunction.counit_app_app /-
 @[simp]
-theorem functorCategoryMonoidalEquivalence.inv_unit_app_app (A : SingleObj G ⥤ V) :
+theorem functorCategoryMonoidalAdjunction.counit_app_app (A : SingleObj G ⥤ V) :
     ((functorCategoryMonoidalEquivalence _ _).inv.Adjunction.Unit.app A).app PUnit.unit = 𝟙 _ :=
   rfl
-#align Action.functor_category_monoidal_equivalence.inv_unit_app_app Action.functorCategoryMonoidalEquivalence.inv_unit_app_app
+#align Action.functor_category_monoidal_equivalence.inv_unit_app_app Action.functorCategoryMonoidalAdjunction.counit_app_app
 -/
 
-#print Action.functorCategoryMonoidalEquivalence.unit_app_hom /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.unit_app_hom (A : Action V G) :
     ((functorCategoryMonoidalEquivalence _ _).Adjunction.Unit.app A).Hom = 𝟙 _ :=
   rfl
 #align Action.functor_category_monoidal_equivalence.unit_app_hom Action.functorCategoryMonoidalEquivalence.unit_app_hom
--/
 
 #print Action.functorCategoryMonoidalEquivalence.functor_map /-
 @[simp]
@@ -803,8 +799,8 @@ instance [RigidCategory V] : RigidCategory (Action V H) :=
 
 variable {V H} (X : Action V H)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.rightDual_v /-
 @[simp]
 theorem rightDual_v [RightRigidCategory V] : Xᘁ.V = X.Vᘁ :=
@@ -812,8 +808,8 @@ theorem rightDual_v [RightRigidCategory V] : Xᘁ.V = X.Vᘁ :=
 #align Action.right_dual_V Action.rightDual_v
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.leftDual_v /-
 @[simp]
 theorem leftDual_v [LeftRigidCategory V] : (ᘁX).V = ᘁX.V :=
@@ -821,8 +817,8 @@ theorem leftDual_v [LeftRigidCategory V] : (ᘁX).V = ᘁX.V :=
 #align Action.left_dual_V Action.leftDual_v
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.rightDual_ρ /-
 @[simp]
 theorem rightDual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ : H)ᘁ := by
@@ -830,8 +826,8 @@ theorem rightDual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ :
 #align Action.right_dual_ρ Action.rightDual_ρ
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.leftDual_ρ /-
 @[simp]
 theorem leftDual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻¹ : H) := by
@@ -930,7 +926,7 @@ theorem ofMulAction_apply {G H : Type u} [Monoid G] [MulAction G H] (g : G) (x :
 #align Action.of_mul_action_apply Action.ofMulAction_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 #print Action.ofMulActionLimitCone /-
 /-- Given a family `F` of types with `G`-actions, this is the limit cone demonstrating that the
 product of `F` as types is a product in the category of `G`-sets. -/
@@ -945,7 +941,7 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
           naturality' := fun i j x => by
             ext
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
+              "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
             cases x
             congr } }
   IsLimit :=
@@ -991,8 +987,8 @@ def diagonalOneIsoLeftRegular (G : Type u) [Monoid G] : diagonal G 1 ≅ leftReg
 #align Action.diagonal_one_iso_left_regular Action.diagonalOneIsoLeftRegular
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.leftRegularTensorIso /-
 /-- Given `X : Action (Type u) (Mon.of G)` for `G` a group, then `G × X` (with `G` acting as left
 multiplication on the first factor and by `X.ρ` on the second) is isomorphic as a `G`-set to
@@ -1030,7 +1026,7 @@ def leftRegularTensorIso (G : Type u) [Group G] (X : Action (Type u) (MonCat.of 
 #align Action.left_regular_tensor_iso Action.leftRegularTensorIso
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.diagonalSucc /-
 /-- The natural isomorphism of `G`-sets `Gⁿ⁺¹ ≅ G × Gⁿ`, where `G` acts by left multiplication on
 each factor. -/

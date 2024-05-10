@@ -54,8 +54,8 @@ variable {α : Type u} {o n m : ℕ} {m' n' o' : Type _}
 
 open scoped Matrix
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 #print Matrix.toExpr /-
 /-- Matrices can be reflected whenever their entries can. We insert an `@id (matrix m' n' α)` to
 prevent immediate decay to a function. -/
@@ -64,11 +64,11 @@ unsafe instance Matrix.toExpr [Lean.ToLevel.{u}] [Lean.ToLevel.{u_1}] [Lean.ToLe
     has_reflect (Matrix m' n' α) := fun m =>
   (by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
+            "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
           reflected _ @id.{max u_1 u_2 u + 1}).subst₂
       ((by
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
+              "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
             reflected _ @Matrix.{u_1, u_2, u}).subst₃
         q(_) q(_) q(_)) <|
     by dsimp only [Matrix]; exact h m
@@ -85,7 +85,7 @@ open Interactive
 
 open Interactive.Types
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Parse the entries of a matrix -/
 unsafe def entry_parser {α : Type} (p : parser α) : parser (Σ m n, Fin m → Fin n → α) := do
   let-- a list of lists if the matrix has at least one row, or the number of columns if the matrix has

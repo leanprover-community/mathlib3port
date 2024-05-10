@@ -329,7 +329,7 @@ def List.applyId [DecidableEq α] (xs : List (α × α)) (x : α) : α :=
 #align slim_check.injective_function.list.apply_id SlimCheck.InjectiveFunction.List.applyId
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SlimCheck.InjectiveFunction.List.applyId_cons /-
 @[simp]
 theorem List.applyId_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) :
@@ -370,7 +370,7 @@ theorem List.applyId_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodu
 #align slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.applyId_zip_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:570:6: unsupported: specialize @hyp -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:570:6: unsupported: specialize @hyp -/
 #print SlimCheck.InjectiveFunction.applyId_mem_iff /-
 theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys)
     (x : α) : List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs :=

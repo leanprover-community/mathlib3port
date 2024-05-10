@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Algebra.Star.Basic
-import GroupTheory.Submonoid.Basic
+import Algebra.Group.Submonoid.Basic
 
 #align_import algebra.star.order from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

@@ -29,7 +29,7 @@ for lib in mathlib3 archive counterexamples; do
 done
 
 lake build fetchOleans
-cp build/lib/upstream-rev .
+cp .lake/build/lib/upstream-rev .
 upstream_rev=$(cat upstream-rev)
 sed -i 's|\(.* mathlib commit:\).*|\1 '"[\`$upstream_rev\`](https://github.com/leanprover-community/mathlib/commit/$upstream_rev)|" README.md
 

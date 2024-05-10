@@ -200,8 +200,8 @@ instance (G : Comonad C) : CategoryTheory.Functor.EssSurj (Comonad.comparison G.
 /-- A right adjoint functor `R : D ⥤ C` is *monadic* if the comparison functor `monad.comparison R`
 from `D` to the category of Eilenberg-Moore algebras for the adjunction is an equivalence.
 -/
-class MonadicRightAdjoint (R : D ⥤ C) extends IsRightAdjoint R where
-  eqv : CategoryTheory.Functor.IsEquivalence (Monad.comparison (Adjunction.ofRightAdjoint R))
+class MonadicRightAdjoint (R : D ⥤ C) extends CategoryTheory.Functor.IsRightAdjoint R where
+  eqv : CategoryTheory.Functor.IsEquivalence (Monad.comparison (Adjunction.ofIsRightAdjoint R))
 #align category_theory.monadic_right_adjoint CategoryTheory.MonadicRightAdjoint
 -/
 
@@ -210,22 +210,20 @@ class MonadicRightAdjoint (R : D ⥤ C) extends IsRightAdjoint R where
 A left adjoint functor `L : C ⥤ D` is *comonadic* if the comparison functor `comonad.comparison L`
 from `C` to the category of Eilenberg-Moore algebras for the adjunction is an equivalence.
 -/
-class ComonadicLeftAdjoint (L : C ⥤ D) extends IsLeftAdjoint L where
-  eqv : CategoryTheory.Functor.IsEquivalence (Comonad.comparison (Adjunction.ofLeftAdjoint L))
+class ComonadicLeftAdjoint (L : C ⥤ D) extends CategoryTheory.Functor.IsLeftAdjoint L where
+  eqv : CategoryTheory.Functor.IsEquivalence (Comonad.comparison (Adjunction.ofIsLeftAdjoint L))
 #align category_theory.comonadic_left_adjoint CategoryTheory.ComonadicLeftAdjoint
 -/
 
 noncomputable instance (T : Monad C) : MonadicRightAdjoint T.forget :=
-  ⟨(CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _ :
-      CategoryTheory.Functor.IsEquivalence (Monad.comparison T.adj))⟩
+  ⟨(Functor.asEquivalence _ : CategoryTheory.Functor.IsEquivalence (Monad.comparison T.adj))⟩
 
 noncomputable instance (G : Comonad C) : ComonadicLeftAdjoint G.forget :=
-  ⟨(CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _ :
-      CategoryTheory.Functor.IsEquivalence (Comonad.comparison G.adj))⟩
+  ⟨(Functor.asEquivalence _ : CategoryTheory.Functor.IsEquivalence (Comonad.comparison G.adj))⟩
 
 #print CategoryTheory.μ_iso_of_reflective /-
 -- TODO: This holds more generally for idempotent adjunctions, not just reflective adjunctions.
-instance μ_iso_of_reflective [Reflective R] : IsIso (Adjunction.ofRightAdjoint R).toMonad.μ := by
+instance μ_iso_of_reflective [Reflective R] : IsIso (Adjunction.ofIsRightAdjoint R).toMonad.μ := by
   dsimp; infer_instance
 #align category_theory.μ_iso_of_reflective CategoryTheory.μ_iso_of_reflective
 -/
@@ -236,8 +234,8 @@ attribute [instance] comonadic_left_adjoint.eqv
 
 namespace Reflective
 
-instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
-    IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.A) :=
+instance [Reflective R] (X : (Adjunction.ofIsRightAdjoint R).toMonad.Algebra) :
+    IsIso ((Adjunction.ofIsRightAdjoint R).Unit.app X.A) :=
   ⟨⟨X.a,
       ⟨X.Unit, by
         dsimp only [functor.id_obj]
@@ -249,7 +247,7 @@ instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
 
 #print CategoryTheory.Reflective.comparison_essSurj /-
 instance comparison_essSurj [Reflective R] :
-    CategoryTheory.Functor.EssSurj (Monad.comparison (Adjunction.ofRightAdjoint R)) :=
+    CategoryTheory.Functor.EssSurj (Monad.comparison (Adjunction.ofIsRightAdjoint R)) :=
   by
   refine' ⟨fun X => ⟨(left_adjoint R).obj X.A, ⟨_⟩⟩⟩
   symm
@@ -264,8 +262,8 @@ instance comparison_essSurj [Reflective R] :
 -/
 
 #print CategoryTheory.Reflective.comparison_full /-
-instance comparison_full [CategoryTheory.Functor.Full R] [IsRightAdjoint R] :
-    CategoryTheory.Functor.Full (Monad.comparison (Adjunction.ofRightAdjoint R))
+instance comparison_full [CategoryTheory.Functor.Full R] [CategoryTheory.Functor.IsRightAdjoint R] :
+    CategoryTheory.Functor.Full (Monad.comparison (Adjunction.ofIsRightAdjoint R))
     where preimage X Y f := R.preimage f.f
 #align category_theory.reflective.comparison_full CategoryTheory.Reflective.comparison_full
 -/
@@ -279,7 +277,7 @@ end Reflective
 /-- Any reflective inclusion has a monadic right adjoint.
     cf Prop 5.3.3 of [Riehl][riehl2017] -/
 noncomputable instance (priority := 100) monadicOfReflective [Reflective R] : MonadicRightAdjoint R
-    where eqv := CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _
+    where eqv := Functor.asEquivalence _
 #align category_theory.monadic_of_reflective CategoryTheory.monadicOfReflective
 -/
 

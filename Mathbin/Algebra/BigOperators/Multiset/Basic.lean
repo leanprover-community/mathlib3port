@@ -159,7 +159,7 @@ theorem prod_replicate (n : ℕ) (a : α) : (replicate n a).Prod = a ^ n := by
 #align multiset.sum_replicate Multiset.sum_replicate
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i' «expr ≠ » i) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i' «expr ≠ » i) -/
 #print Multiset.prod_map_eq_pow_single /-
 @[to_additive]
 theorem prod_map_eq_pow_single [DecidableEq ι] (i : ι)
@@ -171,7 +171,7 @@ theorem prod_map_eq_pow_single [DecidableEq ι] (i : ι)
 #align multiset.sum_map_eq_nsmul_single Multiset.sum_map_eq_nsmul_single
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 #print Multiset.prod_eq_pow_single /-
 @[to_additive]
 theorem prod_eq_pow_single [DecidableEq α] (a : α) (h : ∀ (a') (_ : a' ≠ a), a' ∈ s → a' = 1) :

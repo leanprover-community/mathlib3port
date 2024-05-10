@@ -613,8 +613,8 @@ def Nat.fintypeIio (n : ℕ) : Fintype (Iio n) :=
 #align set.nat.fintype_Iio Set.Nat.fintypeIio
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.fintypeProd /-
 instance fintypeProd (s : Set α) (t : Set β) [Fintype s] [Fintype t] :
     Fintype (s ×ˢ t : Set (α × β)) :=
@@ -840,16 +840,16 @@ instance finite_image (s : Set α) (f : α → β) [Finite s] : Finite (f '' s) 
 #align finite.set.finite_image Finite.Set.finite_image
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {(f x) | x : α} -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:374:4: unsupported set replacement {(f x) | x : α} -/
 #print Finite.Set.finite_replacement /-
 instance finite_replacement [Finite α] (f : α → β) :
     Finite
-      "./././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {(f x) | x : α}" :=
+      "././././Mathport/Syntax/Translate/Expr.lean:374:4: unsupported set replacement {(f x) | x : α}" :=
   Finite.Set.finite_range f
 #align finite.set.finite_replacement Finite.Set.finite_replacement
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finite.Set.finite_prod /-
 instance finite_prod (s : Set α) (t : Set β) [Finite s] [Finite t] :
     Finite (s ×ˢ t : Set (α × β)) :=
@@ -1010,7 +1010,7 @@ theorem Finite.sInter {α : Type _} {s : Set (Set α)} {t : Set α} (ht : t ∈ 
 #align set.finite.sInter Set.Finite.sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » t) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » t) -/
 #print Set.Finite.iUnion /-
 /-- If sets `s i` are finite for all `i` from a finite set `t` and are empty for `i ∉ t`, then the
 union `⋃ i, s i` is a finite set. -/
@@ -1143,42 +1143,42 @@ section Prod
 
 variable {s : Set α} {t : Set β}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Finite.prod /-
 protected theorem Finite.prod (hs : s.Finite) (ht : t.Finite) : (s ×ˢ t : Set (α × β)).Finite := by
   cases hs; cases ht; apply to_finite
 #align set.finite.prod Set.Finite.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Finite.of_prod_left /-
 theorem Finite.of_prod_left (h : (s ×ˢ t : Set (α × β)).Finite) : t.Nonempty → s.Finite :=
   fun ⟨b, hb⟩ => (h.image Prod.fst).Subset fun a ha => ⟨(a, b), ⟨ha, hb⟩, rfl⟩
 #align set.finite.of_prod_left Set.Finite.of_prod_left
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Finite.of_prod_right /-
 theorem Finite.of_prod_right (h : (s ×ˢ t : Set (α × β)).Finite) : s.Nonempty → t.Finite :=
   fun ⟨a, ha⟩ => (h.image Prod.snd).Subset fun b hb => ⟨(a, b), ⟨ha, hb⟩, rfl⟩
 #align set.finite.of_prod_right Set.Finite.of_prod_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Infinite.prod_left /-
 protected theorem Infinite.prod_left (hs : s.Infinite) (ht : t.Nonempty) : (s ×ˢ t).Infinite :=
   fun h => hs <| h.of_prod_left ht
 #align set.infinite.prod_left Set.Infinite.prod_left
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Infinite.prod_right /-
 protected theorem Infinite.prod_right (ht : t.Infinite) (hs : s.Nonempty) : (s ×ˢ t).Infinite :=
   fun h => ht <| h.of_prod_right hs
 #align set.infinite.prod_right Set.Infinite.prod_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.infinite_prod /-
 protected theorem infinite_prod :
     (s ×ˢ t).Infinite ↔ s.Infinite ∧ t.Nonempty ∨ t.Infinite ∧ s.Nonempty :=
@@ -1193,7 +1193,7 @@ protected theorem infinite_prod :
 #align set.infinite_prod Set.infinite_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.finite_prod /-
 theorem finite_prod : (s ×ˢ t).Finite ↔ (s.Finite ∨ t = ∅) ∧ (t.Finite ∨ s = ∅) := by
   simp only [← not_infinite, Set.infinite_prod, not_or, not_and_or, not_nonempty_iff_eq_empty]
@@ -1357,7 +1357,7 @@ theorem Finite.toFinset_insert' [DecidableEq α] {a : α} {s : Set α} (hs : s.F
 #align set.finite.to_finset_insert' Set.Finite.toFinset_insert'
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Finite.toFinset_prod /-
 theorem Finite.toFinset_prod {s : Set α} {t : Set β} (hs : s.Finite) (ht : t.Finite) :
     hs.toFinset ×ˢ ht.toFinset = (hs.Prod ht).toFinset :=
@@ -2133,7 +2133,7 @@ theorem Finite.of_forall_not_lt_lt (h : ∀ ⦃x y z : α⦄, x < y → y < z �
 #align finite.of_forall_not_lt_lt Finite.of_forall_not_lt_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
 #print Set.finite_of_forall_not_lt_lt /-
 /-- If a set `s` does not contain any triple of elements `x < y < z`, then `s` is finite. -/
 theorem Set.finite_of_forall_not_lt_lt {s : Set α}

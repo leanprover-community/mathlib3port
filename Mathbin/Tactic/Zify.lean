@@ -106,7 +106,7 @@ unsafe def tactic.zify_proof (extra_lems : List simp_arg_type) (h : expr) : tact
 
 section
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- The `zify` tactic is used to shift propositions from `ℕ` to `ℤ`.
 This is often useful since `ℤ` has well-behaved subtraction.
 

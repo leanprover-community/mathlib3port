@@ -97,7 +97,7 @@ theorem PairwiseDisjoint.biUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → 
 #align set.pairwise_disjoint.bUnion Set.PairwiseDisjoint.biUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.PairwiseDisjoint.prod_left /-
 /-- If the suprema of columns are pairwise disjoint and suprema of rows as well, then everything is
 pairwise disjoint. Not to be confused with `set.pairwise_disjoint.prod`. -/
@@ -124,7 +124,7 @@ section Frame
 
 variable [Frame α]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.pairwiseDisjoint_prod_left /-
 theorem pairwiseDisjoint_prod_left {s : Set ι} {t : Set ι'} {f : ι × ι' → α} :
     (s ×ˢ t : Set (ι × ι')).PairwiseDisjoint f ↔

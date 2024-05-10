@@ -53,7 +53,7 @@ sanity check, lint, cleanup, command, tactic
 
 open Tactic Expr Native
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Verbosity for the linter output.
 * `low`: only print failing checks, print nothing on success.
 * `medium`: only print failing checks, print confirmation on success.
@@ -284,7 +284,7 @@ unsafe def lint_all (slow : Bool := true) (verbose : LintVerbosity := LintVerbos
   lint_aux l (some 0) "in all imported files (including this one)" slow verbose checks
 #align lint_all lint_all
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Parses an optional `only`, followed by a sequence of zero or more identifiers.
 Prepends `linter.` to each of these identifiers. -/
 unsafe def parse_lint_additions : parser (Bool × List Name) :=

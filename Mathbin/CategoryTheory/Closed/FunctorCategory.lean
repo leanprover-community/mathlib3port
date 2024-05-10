@@ -77,7 +77,7 @@ def closedCounit (F : D ⥤ C) : closedIhom F ⋙ tensorLeft F ⟶ 𝟭 (D ⥤ C
 closed in the functor category `F : D ⥤ C` with the pointwise monoidal structure. -/
 @[simps]
 instance closed (F : D ⥤ C) : Closed F
-    where isAdj :=
+    where is_adj :=
     { right := closedIhom F
       adj :=
         Adjunction.mkOfUnitCounit

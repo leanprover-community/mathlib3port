@@ -546,25 +546,21 @@ variable (X Y : C) (f : X ⟶ Y)
 
 /-- Shifting by `i` is an equivalence. -/
 instance (i : A) : CategoryTheory.Functor.IsEquivalence (shiftFunctor C i) :=
-  CategoryTheory.Functor.IsEquivalence.ofEquivalence (shiftEquiv C i)
+  Equivalence.isEquivalence_functor (shiftEquiv C i)
 
-#print CategoryTheory.shiftFunctor_inv /-
 @[simp]
 theorem shiftFunctor_inv (i : A) : (shiftFunctor C i).inv = shiftFunctor C (-i) :=
   rfl
 #align category_theory.shift_functor_inv CategoryTheory.shiftFunctor_inv
--/
 
 section
 
 variable (C)
 
-#print CategoryTheory.shiftFunctor_essSurj /-
 /-- Shifting by `n` is an essentially surjective functor. -/
 instance shiftFunctor_essSurj (i : A) : CategoryTheory.Functor.EssSurj (shiftFunctor C i) :=
   Equivalence.essSurj_of_equivalence _
 #align category_theory.shift_functor_ess_surj CategoryTheory.shiftFunctor_essSurj
--/
 
 end
 

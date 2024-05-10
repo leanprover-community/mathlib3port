@@ -92,6 +92,6 @@ def adj : free ⊣ forget MonCat.{u} :=
 #align adj adj
 -/
 
-instance : IsRightAdjoint (forget MonCat.{u}) :=
+instance : CategoryTheory.Functor.IsRightAdjoint (forget MonCat.{u}) :=
   ⟨_, adj⟩
 

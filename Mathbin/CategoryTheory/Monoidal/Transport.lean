@@ -38,12 +38,12 @@ variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C]
 
 variable {D : Type u₂} [Category.{v₂} D]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.Monoidal.transport /-
 -- We just want these simp lemmas locally
 /-- Transport a monoidal structure along an equivalence of (plain) categories.
@@ -184,7 +184,7 @@ section
 attribute [local simp] transport_tensor_hom transport_associator transport_left_unitor
   transport_right_unitor
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /--
 We can upgrade `e.functor` to a lax monoidal functor from `C` to `D` with the transported structure.
 -/
@@ -271,7 +271,7 @@ def fromTransported (e : C ≌ D) : MonoidalFunctor (Transported e) C :=
 #align category_theory.monoidal.from_transported CategoryTheory.Monoidal.fromTransported
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.Monoidal.transportedMonoidalUnitIso /-
 /-- The unit isomorphism upgrades to a monoidal isomorphism. -/
 @[simps]
@@ -281,7 +281,7 @@ def transportedMonoidalUnitIso (e : C ≌ D) :
 #align category_theory.monoidal.transported_monoidal_unit_iso CategoryTheory.Monoidal.transportedMonoidalUnitIso
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.Monoidal.transportedMonoidalCounitIso /-
 /-- The counit isomorphism upgrades to a monoidal isomorphism. -/
 @[simps]

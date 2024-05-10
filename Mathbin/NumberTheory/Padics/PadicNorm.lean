@@ -161,7 +161,7 @@ variable [hp : Fact p.Prime]
 protected theorem nonzero {q : ℚ} (hq : q ≠ 0) : padicNorm p q ≠ 0 :=
   by
   rw [padicNorm.eq_zpow_of_nonzero hq]
-  apply zpow_ne_zero_of_ne_zero
+  apply zpow_ne_zero
   exact_mod_cast ne_of_gt hp.1.Pos
 #align padic_norm.nonzero padicNorm.nonzero
 -/
@@ -173,7 +173,7 @@ theorem zero_of_padicNorm_eq_zero {q : ℚ} (h : padicNorm p q = 0) : q = 0 :=
   apply by_contradiction; intro hq
   unfold padicNorm at h; rw [if_neg hq] at h
   apply absurd h
-  apply zpow_ne_zero_of_ne_zero
+  apply zpow_ne_zero
   exact_mod_cast hp.1.NeZero
 #align padic_norm.zero_of_padic_norm_eq_zero padicNorm.zero_of_padicNorm_eq_zero
 -/

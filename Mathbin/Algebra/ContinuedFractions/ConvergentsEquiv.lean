@@ -73,7 +73,7 @@ variable {K : Type _} {n : ℕ}
 
 namespace GeneralizedContinuedFraction
 
-/- ./././Mathport/Syntax/Translate/Command.lean:230:11: unsupported: unusual advanced open style -/
+/- ././././Mathport/Syntax/Translate/Command.lean:230:11: unsupported: unusual advanced open style -/
 variable {g : GeneralizedContinuedFraction K} {s : Seq <| Pair K}
 
 section Squash

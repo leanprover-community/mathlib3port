@@ -151,7 +151,7 @@ theorem KaehlerDifferential.span_range_eq_ideal :
 #align kaehler_differential.span_range_eq_ideal KaehlerDifferential.span_range_eq_ideal
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] tensor_product(S, R, S) -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] tensor_product(S, R, S) -/
 #print KaehlerDifferential /-
 /-- The module of Kähler differentials (Kahler differentials, Kaehler differentials).
 This is implemented as `I / I ^ 2` with `I` the kernel of the multiplication map `S ⊗[R] S →ₐ[R] S`.
@@ -164,7 +164,7 @@ Note that the slash is `\textfractionsolidus`.
 def KaehlerDifferential : Type _ :=
   (KaehlerDifferential.ideal R S).Cotangent
 deriving AddCommGroup,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] tensor_product(S, R, S)»
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] tensor_product(S, R, S)»
 #align kaehler_differential KaehlerDifferential
 -/
 

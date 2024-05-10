@@ -5,7 +5,7 @@ Authors: Chris Birkbeck
 -/
 import Data.ZMod.Basic
 import GroupTheory.GroupAction.ConjAct
-import GroupTheory.Subgroup.Pointwise
+import Algebra.Group.Subgroup.Pointwise
 import LinearAlgebra.Matrix.SpecialLinearGroup
 
 #align_import number_theory.modular_forms.congruence_subgroups from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"

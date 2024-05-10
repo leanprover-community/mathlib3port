@@ -9,7 +9,7 @@ import Mathbin.Tactic.Monotonicity.Default
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -130,7 +130,7 @@ namespace Tactic
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Apply a function to an equality or inequality in either a local hypothesis or the goal.
 
 * If we have `h : a = b`, then `apply_fun f at h` will replace this with `h : f a = f b`.

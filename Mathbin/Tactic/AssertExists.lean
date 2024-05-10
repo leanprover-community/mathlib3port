@@ -28,7 +28,7 @@ The `_` in the `_checked` prefix should hide them from doc-gen.
 
 section
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
 /-- `assert_exists n` is a user command that asserts that a declaration named `n` exists

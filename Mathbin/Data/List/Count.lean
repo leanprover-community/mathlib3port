@@ -437,7 +437,7 @@ theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.e
 #align list.count_erase_of_ne List.count_erase_of_ne
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 #print List.prod_map_eq_pow_single /-
 @[to_additive]
 theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β)
@@ -454,7 +454,7 @@ theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β
 #align list.sum_map_eq_nsmul_single List.sum_map_eq_nsmul_single
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 #print List.prod_eq_pow_single /-
 @[to_additive]
 theorem prod_eq_pow_single [Monoid α] {l : List α} (a : α)

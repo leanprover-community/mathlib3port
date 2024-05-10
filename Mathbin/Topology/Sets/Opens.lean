@@ -346,7 +346,7 @@ theorem isBasis_iff_nbhd {B : Set (Opens α)} :
 #align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.isBasis_iff_nbhd
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
 #print TopologicalSpace.Opens.isBasis_iff_cover /-
 theorem isBasis_iff_cover {B : Set (Opens α)} :
     IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _) (_ : Us ⊆ B), U = sSup Us :=

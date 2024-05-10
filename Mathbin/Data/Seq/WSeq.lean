@@ -185,7 +185,7 @@ def get? (s : WSeq α) (n : ℕ) : Computation (Option α) :=
 #align stream.wseq.nth Stream'.WSeq.get?
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.toList /-
 /-- Convert `s` to a list (if it is finite and completes in finite time). -/
 def toList (s : WSeq α) : Computation (List α) :=
@@ -414,7 +414,7 @@ def take (s : WSeq α) (n : ℕ) : WSeq α :=
 #align stream.wseq.take Stream'.WSeq.take
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.splitAt /-
 /-- Split the sequence at position `n` into a finite initial segment
   and the weak sequence tail -/
@@ -478,7 +478,7 @@ def scanl (f : α → β → α) (a : α) (s : WSeq β) : WSeq α :=
 /-- Get the weak sequence of initial segments of the input sequence -/
 def inits (s : WSeq α) : WSeq (List α) :=
   cons [] <|
-    @Seq.corec (Option (List α)) (Std.DList α × WSeq α)
+    @Seq.corec (Option (List α)) (Batteries.DList α × WSeq α)
       (fun ⟨l, s⟩ =>
         match Seq.destruct s with
         | none => none
@@ -486,7 +486,7 @@ def inits (s : WSeq α) : WSeq (List α) :=
         | some (some a, s') =>
           let l' := l.push a
           some (some l'.toList, l', s'))
-      (Std.DList.empty, s)
+      (Batteries.DList.empty, s)
 #align stream.wseq.inits Stream'.WSeq.inits
 -/
 
@@ -623,8 +623,8 @@ theorem liftRel_destruct_iff {R : α → β → Prop} {s : WSeq α} {t : WSeq β
 
 infixl:50 " ~ " => Equiv
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.destruct_congr /-
 theorem destruct_congr {s t : WSeq α} :
     s ~ t → Computation.LiftRel (BisimO (· ~ ·)) (destruct s) (destruct t) :=
@@ -632,8 +632,8 @@ theorem destruct_congr {s t : WSeq α} :
 #align stream.wseq.destruct_congr Stream'.WSeq.destruct_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.destruct_congr_iff /-
 theorem destruct_congr_iff {s t : WSeq α} :
     s ~ t ↔ Computation.LiftRel (BisimO (· ~ ·)) (destruct s) (destruct t) :=
@@ -713,7 +713,7 @@ theorem LiftRel.equiv (R : α → α → Prop) : Equivalence R → Equivalence (
 #align stream.wseq.lift_rel.equiv Stream'.WSeq.LiftRel.equiv
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.Equiv.refl /-
 @[refl]
 theorem Equiv.refl : ∀ s : WSeq α, s ~ s :=
@@ -721,8 +721,8 @@ theorem Equiv.refl : ∀ s : WSeq α, s ~ s :=
 #align stream.wseq.equiv.refl Stream'.WSeq.Equiv.refl
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.Equiv.symm /-
 @[symm]
 theorem Equiv.symm : ∀ {s t : WSeq α}, s ~ t → t ~ s :=
@@ -730,9 +730,9 @@ theorem Equiv.symm : ∀ {s t : WSeq α}, s ~ t → t ~ s :=
 #align stream.wseq.equiv.symm Stream'.WSeq.Equiv.symm
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.Equiv.trans /-
 @[trans]
 theorem Equiv.trans : ∀ {s t u : WSeq α}, s ~ t → t ~ u → s ~ u :=
@@ -1122,7 +1122,7 @@ theorem mem_rec_on {C : WSeq α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s', a 
 #align stream.wseq.mem_rec_on Stream'.WSeq.mem_rec_on
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.mem_think /-
 @[simp]
 theorem mem_think (s : WSeq α) (a) : a ∈ think s ↔ a ∈ s :=
@@ -1326,31 +1326,31 @@ theorem liftRel_think_right (R : α → β → Prop) (s t) : LiftRel R s (think 
 #align stream.wseq.lift_rel_think_right Stream'.WSeq.liftRel_think_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.cons_congr /-
 theorem cons_congr {s t : WSeq α} (a : α) (h : s ~ t) : cons a s ~ cons a t := by
   unfold Equiv <;> simp <;> exact h
 #align stream.wseq.cons_congr Stream'.WSeq.cons_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.think_equiv /-
 theorem think_equiv (s : WSeq α) : think s ~ s := by unfold Equiv <;> simp <;> apply Equiv.refl
 #align stream.wseq.think_equiv Stream'.WSeq.think_equiv
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.think_congr /-
 theorem think_congr {s t : WSeq α} (h : s ~ t) : think s ~ think t := by
   unfold Equiv <;> simp <;> exact h
 #align stream.wseq.think_congr Stream'.WSeq.think_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.head_congr /-
 theorem head_congr : ∀ {s t : WSeq α}, s ~ t → head s ~ head t :=
   by
@@ -1370,7 +1370,7 @@ theorem head_congr : ∀ {s t : WSeq α}, s ~ t → head s ~ head t :=
 #align stream.wseq.head_congr Stream'.WSeq.head_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.flatten_equiv /-
 theorem flatten_equiv {c : Computation (WSeq α)} {s} (h : s ∈ c) : flatten c ~ s :=
   by
@@ -1393,7 +1393,7 @@ theorem liftRel_flatten {R : α → β → Prop} {c1 : Computation (WSeq α)} {c
 #align stream.wseq.lift_rel_flatten Stream'.WSeq.liftRel_flatten
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.flatten_congr /-
 theorem flatten_congr {c1 c2 : Computation (WSeq α)} :
     Computation.LiftRel Equiv c1 c2 → flatten c1 ~ flatten c2 :=
@@ -1401,8 +1401,8 @@ theorem flatten_congr {c1 c2 : Computation (WSeq α)} :
 #align stream.wseq.flatten_congr Stream'.WSeq.flatten_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.tail_congr /-
 theorem tail_congr {s t : WSeq α} (h : s ~ t) : tail s ~ tail t :=
   by
@@ -1418,24 +1418,24 @@ theorem tail_congr {s t : WSeq α} (h : s ~ t) : tail s ~ tail t :=
 #align stream.wseq.tail_congr Stream'.WSeq.tail_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.dropn_congr /-
 theorem dropn_congr {s t : WSeq α} (h : s ~ t) (n) : drop s n ~ drop t n := by
   induction n <;> simp [*, tail_congr]
 #align stream.wseq.dropn_congr Stream'.WSeq.dropn_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.get?_congr /-
 theorem get?_congr {s t : WSeq α} (h : s ~ t) (n) : get? s n ~ get? t n :=
   head_congr (dropn_congr h _)
 #align stream.wseq.nth_congr Stream'.WSeq.get?_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.mem_congr /-
 theorem mem_congr {s t : WSeq α} (h : s ~ t) (a) : a ∈ s ↔ a ∈ t :=
   suffices ∀ {s t : WSeq α}, s ~ t → a ∈ s → a ∈ t from ⟨this h, this h.symm⟩
@@ -1445,17 +1445,17 @@ theorem mem_congr {s t : WSeq α} (h : s ~ t) (a) : a ∈ s ↔ a ∈ t :=
 #align stream.wseq.mem_congr Stream'.WSeq.mem_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.productive_congr /-
 theorem productive_congr {s t : WSeq α} (h : s ~ t) : Productive s ↔ Productive t := by
   simp only [productive_iff] <;> exact forall_congr' fun n => terminates_congr <| nth_congr h _
 #align stream.wseq.productive_congr Stream'.WSeq.productive_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.Equiv.ext /-
 theorem Equiv.ext {s t : WSeq α} (h : ∀ n, get? s n ~ get? t n) : s ~ t :=
   ⟨fun s t => ∀ n, get? s n ~ get? t n, h, fun s t h =>
@@ -1480,7 +1480,7 @@ theorem Equiv.ext {s t : WSeq α} (h : ∀ n, get? s n ~ get? t n) : s ~ t :=
 #align stream.wseq.equiv.ext Stream'.WSeq.Equiv.ext
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.length_eq_map /-
 theorem length_eq_map (s : WSeq α) : length s = Computation.map List.length (toList s) :=
   by
@@ -1505,8 +1505,8 @@ theorem ofList_nil : ofList [] = (nil : WSeq α) :=
 #align stream.wseq.of_list_nil Stream'.WSeq.ofList_nil
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.ofList_cons /-
 @[simp]
 theorem ofList_cons (a : α) (l) : ofList (a::l) = cons a (ofList l) :=
@@ -1521,7 +1521,7 @@ theorem toList'_nil (l : List α) : Computation.corec toList._match2 (l, nil) = 
 #align stream.wseq.to_list'_nil Stream'.WSeq.toList'_nil
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.toList'_cons /-
 @[simp]
 theorem toList'_cons (l : List α) (s : WSeq α) (a : α) :
@@ -1540,7 +1540,7 @@ theorem toList'_think (l : List α) (s : WSeq α) :
 #align stream.wseq.to_list'_think Stream'.WSeq.toList'_think
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.toList'_map /-
 theorem toList'_map (l : List α) (s : WSeq α) :
     Computation.corec toList._match2 (l, s) = (· ++ ·) l.reverse <$> toList s :=
@@ -1774,8 +1774,8 @@ theorem liftRel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 :
 #align stream.wseq.lift_rel_map Stream'.WSeq.liftRel_map
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.map_congr /-
 theorem map_congr (f : α → β) {s t : WSeq α} (h : s ~ t) : map f s ~ map f t :=
   liftRel_map _ _ h fun _ _ => congr_arg _
@@ -1939,7 +1939,7 @@ theorem liftRel_join (R : α → β → Prop) {S : WSeq (WSeq α)} {T : WSeq (WS
 #align stream.wseq.lift_rel_join Stream'.WSeq.liftRel_join
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.join_congr /-
 theorem join_congr {S T : WSeq (WSeq α)} (h : LiftRel Equiv S T) : join S ~ join T :=
   liftRel_join _ h
@@ -1954,9 +1954,9 @@ theorem liftRel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 
 #align stream.wseq.lift_rel_bind Stream'.WSeq.liftRel_bind
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.bind_congr /-
 theorem bind_congr {s1 s2 : WSeq α} {f1 f2 : α → WSeq β} (h1 : s1 ~ s2) (h2 : ∀ a, f1 a ~ f2 a) :
     bind s1 f1 ~ bind s2 f2 :=
@@ -1964,14 +1964,14 @@ theorem bind_congr {s1 s2 : WSeq α} {f1 f2 : α → WSeq β} (h1 : s1 ~ s2) (h2
 #align stream.wseq.bind_congr Stream'.WSeq.bind_congr
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.join_ret /-
 @[simp]
 theorem join_ret (s : WSeq α) : join (ret s) ~ s := by simp [ret] <;> apply think_equiv
 #align stream.wseq.join_ret Stream'.WSeq.join_ret
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.join_map_ret /-
 @[simp]
 theorem join_map_ret (s : WSeq α) : join (map ret s) ~ s :=
@@ -1994,7 +1994,7 @@ theorem join_map_ret (s : WSeq α) : join (map ret s) ~ s :=
 #align stream.wseq.join_map_ret Stream'.WSeq.join_map_ret
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.join_append /-
 @[simp]
 theorem join_append (S T : WSeq (WSeq α)) : join (append S T) ~ append (join S) (join T) :=
@@ -2030,7 +2030,7 @@ theorem join_append (S T : WSeq (WSeq α)) : join (append S T) ~ append (join S)
 #align stream.wseq.join_append Stream'.WSeq.join_append
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.bind_ret /-
 @[simp]
 theorem bind_ret (f : α → β) (s) : bind s (ret ∘ f) ~ map f s :=
@@ -2040,7 +2040,7 @@ theorem bind_ret (f : α → β) (s) : bind s (ret ∘ f) ~ map f s :=
 #align stream.wseq.bind_ret Stream'.WSeq.bind_ret
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.ret_bind /-
 @[simp]
 theorem ret_bind (a : α) (f : α → WSeq β) : bind (ret a) f ~ f a := by simp [bind]
@@ -2069,7 +2069,7 @@ theorem map_join (f : α → β) (S) : map f (join S) = join (map (map f) S) :=
 #align stream.wseq.map_join Stream'.WSeq.map_join
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.join_join /-
 @[simp]
 theorem join_join (SS : WSeq (WSeq (WSeq α))) : join (join SS) ~ join (map join SS) :=
@@ -2107,7 +2107,7 @@ theorem join_join (SS : WSeq (WSeq (WSeq α))) : join (join SS) ~ join (map join
 #align stream.wseq.join_join Stream'.WSeq.join_join
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.WSeq.bind_assoc /-
 @[simp]
 theorem bind_assoc (s : WSeq α) (f : α → WSeq β) (g : β → WSeq γ) :

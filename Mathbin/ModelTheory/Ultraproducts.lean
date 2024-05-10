@@ -166,8 +166,8 @@ theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a
 #align first_order.language.ultraproduct.realize_formula_cast FirstOrder.Language.Ultraproduct.realize_formula_cast
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Ultraproduct.sentence_realize /-
 /-- Łoś's Theorem : A sentence is true in an ultraproduct if and only if the set of structures it is
   true in is in the ultrafilter. -/
@@ -180,7 +180,7 @@ theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ �
 
 instance : Nonempty ((u : Filter α).product M) :=
   letI : ∀ a, Inhabited (M a) := fun _ => Classical.inhabited_of_nonempty'
-  instNonempty
+  instNonemptyOfInhabited
 
 end Ultraproduct
 

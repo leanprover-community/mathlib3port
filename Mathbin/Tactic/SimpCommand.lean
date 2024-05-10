@@ -49,7 +49,7 @@ unsafe def simp_arg_type.replace_subexprs : simp_arg_type → List (expr × expr
   | sat, rules => sat
 #align tactic.simp_arg_type.replace_subexprs tactic.simp_arg_type.replace_subexprs
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 -- Turn off the messages if the result is exactly `true` with this option.
 initialize
   registerTraceClass.1 `silence_simp_if_true

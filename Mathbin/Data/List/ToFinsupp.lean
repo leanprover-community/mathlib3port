@@ -106,8 +106,8 @@ theorem toFinsupp_singleton (x : M) [DecidablePred fun i => getD [x] i 0 ≠ 0] 
 #align list.to_finsupp_singleton List.toFinsupp_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print List.toFinsupp_cons_apply_zero /-
 @[simp]
 theorem toFinsupp_cons_apply_zero (x : M) (xs : List M)
@@ -116,8 +116,8 @@ theorem toFinsupp_cons_apply_zero (x : M) (xs : List M)
 #align list.to_finsupp_cons_apply_zero List.toFinsupp_cons_apply_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print List.toFinsupp_cons_apply_succ /-
 @[simp]
 theorem toFinsupp_cons_apply_succ (x : M) (xs : List M) (n : ℕ)
@@ -127,8 +127,8 @@ theorem toFinsupp_cons_apply_succ (x : M) (xs : List M) (n : ℕ)
 #align list.to_finsupp_cons_apply_succ List.toFinsupp_cons_apply_succ
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print List.toFinsupp_cons_eq_single_add_embDomain /-
 theorem toFinsupp_cons_eq_single_add_embDomain {R : Type _} [AddZeroClass R] (x : R) (xs : List R)
     [DecidablePred fun i => getD (x::xs) i 0 ≠ 0] [DecidablePred fun i => getD xs i 0 ≠ 0] :

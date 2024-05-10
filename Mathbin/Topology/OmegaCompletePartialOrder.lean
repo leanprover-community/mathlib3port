@@ -144,7 +144,7 @@ theorem isωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωS
 #align is_ωSup_ωSup isωSup_ωSup
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:571:11: unsupported: specialize non-hyp -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:571:11: unsupported: specialize non-hyp -/
 #print scottContinuous_of_continuous /-
 theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β) (hf : Continuous f) :
@@ -159,7 +159,7 @@ theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
   exists h; intro c
   apply eq_of_forall_ge_iff; intro z
   specialize
-    «./././Mathport/Syntax/Translate/Tactic/Lean3.lean:571:11: unsupported: specialize non-hyp»
+    «././././Mathport/Syntax/Translate/Tactic/Lean3.lean:571:11: unsupported: specialize non-hyp»
   cases hf; specialize hf_h c
   simp only [notBelow, OrderHom.coe_mk, eq_iff_iff, mem_set_of_eq] at hf_h
   rw [← not_iff_not]

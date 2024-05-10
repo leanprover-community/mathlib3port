@@ -50,10 +50,10 @@ def adj₂ : forget TopCat.{u} ⊣ trivial :=
 #align Top.adj₂ TopCat.adj₂
 -/
 
-instance : IsRightAdjoint (forget TopCat.{u}) :=
+instance : CategoryTheory.Functor.IsRightAdjoint (forget TopCat.{u}) :=
   ⟨_, adj₁⟩
 
-instance : IsLeftAdjoint (forget TopCat.{u}) :=
+instance : CategoryTheory.Functor.IsLeftAdjoint (forget TopCat.{u}) :=
   ⟨_, adj₂⟩
 
 end TopCat

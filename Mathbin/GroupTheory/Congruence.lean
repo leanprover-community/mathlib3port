@@ -6,7 +6,7 @@ Authors: Amelia Livingston
 import Algebra.Group.Prod
 import Algebra.Group.Equiv.Basic
 import Data.Setoid.Basic
-import GroupTheory.Submonoid.Operations
+import Algebra.Group.Submonoid.Operations
 
 #align_import group_theory.congruence from "leanprover-community/mathlib"@"cc70d9141824ea8982d1562ce009952f2c3ece30"
 

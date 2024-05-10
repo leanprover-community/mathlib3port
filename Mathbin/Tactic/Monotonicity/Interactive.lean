@@ -30,7 +30,7 @@ unsafe inductive mono_function (elab : Bool := true)
   | assoc_comm : expr elab → expr elab → mono_function
 #align tactic.interactive.mono_function tactic.interactive.mono_function
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
 unsafe instance : DecidableEq mono_function := by
   run_tac
     mk_dec_eq_instance
@@ -98,7 +98,7 @@ unsafe def as_goal (e : expr) (tac : tactic Unit) : tactic Unit := do
 
 open List hiding map
 
-open Functor Std.DList
+open Functor Batteries.DList
 
 section Config
 
@@ -132,7 +132,8 @@ unsafe def pi_head : expr → tactic expr
 
 unsafe def delete_expr (e : expr) : List expr → tactic (Option (List expr))
   | [] => return none
-  | x :: xs => compare opt e x >> return (some xs) <|> map (Std.DList.cons x) <$> delete_expr xs
+  | x :: xs =>
+    compare opt e x >> return (some xs) <|> map (Batteries.DList.cons x) <$> delete_expr xs
 #align tactic.interactive.delete_expr tactic.interactive.delete_expr
 
 unsafe def match_ac' : List expr → List expr → tactic (List expr × List expr × List expr)
@@ -199,17 +200,17 @@ unsafe def check_ac : expr → tactic (Bool × Bool × Option (expr × expr × e
   | _ => return (false, false, none, expr.var 1)
 #align tactic.interactive.check_ac tactic.interactive.check_ac
 
-unsafe def parse_assoc_chain' (f : expr) : expr → tactic (Std.DList expr)
+unsafe def parse_assoc_chain' (f : expr) : expr → tactic (Batteries.DList expr)
   | e =>
     (do
         let expr.app (expr.app f' x) y ← return e
         is_def_eq f f'
         (· ++ ·) <$> parse_assoc_chain' x <*> parse_assoc_chain' y) <|>
-      return (Std.DList.singleton e)
+      return (Batteries.DList.singleton e)
 #align tactic.interactive.parse_assoc_chain' tactic.interactive.parse_assoc_chain'
 
 unsafe def parse_assoc_chain (f : expr) : expr → tactic (List expr) :=
-  map Std.DList.toList ∘ parse_assoc_chain' f
+  map Batteries.DList.toList ∘ parse_assoc_chain' f
 #align tactic.interactive.parse_assoc_chain tactic.interactive.parse_assoc_chain
 
 unsafe def fold_assoc (op : expr) :
@@ -386,7 +387,7 @@ unsafe def mk_rel (ctx : ac_mono_ctx_ne) (f : expr → expr) : expr :=
   ctx.to_rel (f ctx.left) (f ctx.right)
 #align tactic.interactive.mk_rel tactic.interactive.mk_rel
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `xs₁ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `xs₁ -/
 unsafe def mk_congr_args (fn : expr) (xs₀ xs₁ : List expr) (l r : expr) : tactic expr := do
   let p ← mk_app `eq [fn.mk_app <| xs₀ ++ l :: xs₁, fn.mk_app <| xs₀ ++ r :: xs₁]
   Prod.snd <$>
@@ -650,10 +651,10 @@ add_tactic_doc
     declNames := [`tactic.interactive.mono]
     tags := ["monotonicity"] }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `g -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `g -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 

@@ -39,8 +39,8 @@ variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C] {D : Ty
   [MonoidalCategory.{v₂} D]
 
 #print CategoryTheory.MonoidalNatTrans /-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A monoidal natural transformation is a natural transformation between (lax) monoidal functors
 additionally satisfying:
 `F.μ X Y ≫ app (X ⊗ Y) = (app X ⊗ app Y) ≫ G.μ X Y`
@@ -114,8 +114,8 @@ theorem comp_toNatTrans {F G H : MonoidalFunctor C D} {α : F ⟶ G} {β : G ⟶
 
 variable {E : Type u₃} [Category.{v₃} E] [MonoidalCategory.{v₃} E]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalNatTrans.hcomp /-
 /-- Horizontal composition of monoidal natural transformations.
 -/
@@ -155,8 +155,8 @@ namespace MonoidalNatIso
 
 variable {F G : LaxMonoidalFunctor C D}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalNatIso.ofComponents /-
 /-- Construct a monoidal natural isomorphism from object level isomorphisms,
 and the monoidal naturality in the forward direction.
@@ -207,7 +207,7 @@ end MonoidalNatIso
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.monoidalUnit /-
 /-- The unit of a monoidal equivalence can be upgraded to a monoidal natural transformation. -/
 @[simps]
@@ -224,7 +224,7 @@ def monoidalUnit (F : MonoidalFunctor C D) [CategoryTheory.Functor.IsEquivalence
       simp only [← functor.map_comp]
       erw [e.counit_app_functor, e.counit_app_functor, F.to_lax_monoidal_functor.μ_natural,
         is_iso.inv_hom_id_assoc]
-      simp only [CategoryTheory.Functor.IsEquivalence.inv_fun_map]
+      simp only [CategoryTheory.Functor.inv_fun_map]
       slice_rhs 2 3 => erw [iso.hom_inv_id_app]
       dsimp
       simp only [CategoryTheory.Category.id_comp]
@@ -241,7 +241,7 @@ instance (F : MonoidalFunctor C D) [CategoryTheory.Functor.IsEquivalence F.toFun
   haveI : ∀ X : C, is_iso ((monoidal_unit F).toNatTrans.app X) := by intros; dsimp; infer_instance
   monoidal_nat_iso.is_iso_of_is_iso_app _
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.monoidalCounit /-
 /-- The counit of a monoidal equivalence can be upgraded to a monoidal natural transformation. -/
 @[simps]

@@ -9,16 +9,16 @@ import Data.Rbtree.Basic
 
 universe u
 
-namespace Std.RBNode
+namespace Batteries.RBNode
 
 variable {α : Type u}
 
 @[elab_without_expected_type]
-theorem Std.RBNode.find?.induction {p : Std.RBNode α → Prop} (lt) [DecidableRel lt] (t x)
-    (h₁ : p Std.RBNode.nil)
-    (h₂ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.lt) (ih : p l), p (Std.RBNode.node l y r))
-    (h₃ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.eq), p (Std.RBNode.node l y r))
-    (h₄ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.gt) (ih : p r), p (Std.RBNode.node l y r))
+theorem Batteries.RBNode.find?.induction {p : Batteries.RBNode α → Prop} (lt) [DecidableRel lt]
+    (t x) (h₁ : p Batteries.RBNode.nil)
+    (h₂ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.lt) (ih : p l), p (Batteries.RBNode.node l y r))
+    (h₃ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.eq), p (Batteries.RBNode.node l y r))
+    (h₄ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.gt) (ih : p r), p (Batteries.RBNode.node l y r))
     (h₅ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.lt) (ih : p l), p (black_node l y r))
     (h₆ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.eq), p (black_node l y r))
     (h₇ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.gt) (ih : p r), p (black_node l y r)) : p t :=
@@ -35,12 +35,12 @@ theorem Std.RBNode.find?.induction {p : Std.RBNode α → Prop} (lt) [DecidableR
     case lt => apply h₅; assumption; assumption
     case eq => apply h₆; assumption
     case gt => apply h₇; assumption; assumption
-#align rbnode.find.induction Std.RBNode.find?.induction
+#align rbnode.find.induction Batteries.RBNode.find?.induction
 
-theorem Std.RBNode.find?_correct {t : Std.RBNode α} {lt x} [DecidableRel lt]
+theorem Batteries.RBNode.find?_correct {t : Batteries.RBNode α} {lt x} [DecidableRel lt]
     [IsStrictWeakOrder α lt] :
-    ∀ {lo hi} (hs : Std.RBNode.IsSearchable lt t lo hi),
-      Std.RBNode.Mem lt x t ↔ ∃ y, Std.RBNode.find? lt t x = some y ∧ x ≈[lt]y :=
+    ∀ {lo hi} (hs : Batteries.RBNode.IsSearchable lt t lo hi),
+      Batteries.RBNode.Mem lt x t ↔ ∃ y, Batteries.RBNode.find? lt t x = some y ∧ x ≈[lt]y :=
   by
   apply find.induction lt t x <;> intros <;> simp only [mem, find, *]
   · simp
@@ -68,21 +68,21 @@ theorem Std.RBNode.find?_correct {t : Std.RBNode α} {lt x} [DecidableRel lt]
         · simp at h; cases hm; contradiction
         · exact Iff.mp (ih hs_hs₂) hm
       · intro hc; right; right; exact Iff.mpr (ih hs_hs₂) hc
-#align rbnode.find_correct Std.RBNode.find?_correct
+#align rbnode.find_correct Batteries.RBNode.find?_correct
 
-theorem Std.RBNode.mem_of_memExact {lt} [IsIrrefl α lt] {x t} :
-    Std.RBNode.MemExact x t → Std.RBNode.Mem lt x t :=
+theorem Batteries.RBNode.mem_of_memExact {lt} [IsIrrefl α lt] {x t} :
+    Batteries.RBNode.MemExact x t → Batteries.RBNode.Mem lt x t :=
   by
   induction t <;> simp [mem_exact, mem, false_imp_iff] <;> intro h
   all_goals
     cases_type* or.1; simp [t_ih_lchild h]; simp [h, irrefl_of lt t_val]
     simp [t_ih_rchild h]
-#align rbnode.mem_of_mem_exact Std.RBNode.mem_of_memExact
+#align rbnode.mem_of_mem_exact Batteries.RBNode.mem_of_memExact
 
-theorem Std.RBNode.find?_correct_exact {t : Std.RBNode α} {lt x} [DecidableRel lt]
+theorem Batteries.RBNode.find?_correct_exact {t : Batteries.RBNode α} {lt x} [DecidableRel lt]
     [IsStrictWeakOrder α lt] :
-    ∀ {lo hi} (hs : Std.RBNode.IsSearchable lt t lo hi),
-      Std.RBNode.MemExact x t ↔ Std.RBNode.find? lt t x = some x :=
+    ∀ {lo hi} (hs : Batteries.RBNode.IsSearchable lt t lo hi),
+      Batteries.RBNode.MemExact x t ↔ Batteries.RBNode.find? lt t x = some x :=
   by
   apply find.induction lt t x <;> intros <;> simp only [mem_exact, find, *]
   iterate 2
@@ -119,23 +119,23 @@ theorem Std.RBNode.find?_correct_exact {t : Std.RBNode α} {lt x} [DecidableRel 
         · simp at h; subst x; exact absurd h (irrefl y)
         · exact Iff.mp (ih hs_hs₂) hm
       · intro hc; right; right; exact Iff.mpr (ih hs_hs₂) hc
-#align rbnode.find_correct_exact Std.RBNode.find?_correct_exact
+#align rbnode.find_correct_exact Batteries.RBNode.find?_correct_exact
 
-theorem Std.RBNode.eqv_of_find?_some {t : Std.RBNode α} {lt x y} [DecidableRel lt] :
-    ∀ {lo hi} (hs : Std.RBNode.IsSearchable lt t lo hi) (he : Std.RBNode.find? lt t x = some y),
-      x ≈[lt]y :=
+theorem Batteries.RBNode.eqv_of_find?_some {t : Batteries.RBNode α} {lt x y} [DecidableRel lt] :
+    ∀ {lo hi} (hs : Batteries.RBNode.IsSearchable lt t lo hi)
+      (he : Batteries.RBNode.find? lt t x = some y), x ≈[lt]y :=
   by
   apply find.induction lt t x <;> intros <;> simp_all only [mem, find]
   iterate 2 
     · cases hs; exact ih hs_hs₁ rfl
     · subst y; simp at h; exact h
     · cases hs; exact ih hs_hs₂ rfl
-#align rbnode.eqv_of_find_some Std.RBNode.eqv_of_find?_some
+#align rbnode.eqv_of_find_some Batteries.RBNode.eqv_of_find?_some
 
-theorem Std.RBNode.find?_eq_find?_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt]
-    {t : Std.RBNode α} :
-    ∀ {lo hi} (hs : Std.RBNode.IsSearchable lt t lo hi) (heqv : a ≈[lt]b),
-      Std.RBNode.find? lt t a = Std.RBNode.find? lt t b :=
+theorem Batteries.RBNode.find?_eq_find?_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt]
+    {t : Batteries.RBNode α} :
+    ∀ {lo hi} (hs : Batteries.RBNode.IsSearchable lt t lo hi) (heqv : a ≈[lt]b),
+      Batteries.RBNode.find? lt t a = Batteries.RBNode.find? lt t b :=
   by
   apply find.induction lt t a <;> intros <;>
     simp_all [mem, find, StrictWeakOrder.Equiv, true_imp_iff]
@@ -147,7 +147,7 @@ theorem Std.RBNode.find?_eq_find?_of_eqv {lt a b} [DecidableRel lt] [IsStrictWea
     · have := lt_of_lt_of_incomp h heqv
       have := not_lt_of_lt this
       simp [cmpUsing, find, *]; cases hs; apply ih hs_hs₂
-#align rbnode.find_eq_find_of_eqv Std.RBNode.find?_eq_find?_of_eqv
+#align rbnode.find_eq_find_of_eqv Batteries.RBNode.find?_eq_find?_of_eqv
 
-end Std.RBNode
+end Batteries.RBNode
 

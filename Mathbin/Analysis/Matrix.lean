@@ -357,7 +357,7 @@ section NonUnitalSeminormedRing
 
 variable [NonUnitalSeminormedRing α]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k j) -/
 #print Matrix.linfty_opNNNorm_mul /-
 theorem linfty_opNNNorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖₊ ≤ ‖A‖₊ * ‖B‖₊ :=
   by
@@ -511,7 +511,7 @@ section SeminormedAddCommGroup
 
 variable [SeminormedAddCommGroup α] [SeminormedAddCommGroup β]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Matrix.frobenius_nnnorm_def /-
 theorem frobenius_nnnorm_def (A : Matrix m n α) :
     ‖A‖₊ = (∑ (i) (j), ‖A i j‖₊ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) := by
@@ -519,7 +519,7 @@ theorem frobenius_nnnorm_def (A : Matrix m n α) :
 #align matrix.frobenius_nnnorm_def Matrix.frobenius_nnnorm_def
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Matrix.frobenius_norm_def /-
 theorem frobenius_norm_def (A : Matrix m n α) :
     ‖A‖ = (∑ (i) (j), ‖A i j‖ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) :=

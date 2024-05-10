@@ -105,7 +105,7 @@ unsafe def reassoc_axiom (n : Name) (n' : Name := n.appendSuffix "_assoc") : tac
   copy_attribute `simp n n'
 #align tactic.reassoc_axiom tactic.reassoc_axiom
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- The `reassoc` attribute can be applied to a lemma
 
 ```lean

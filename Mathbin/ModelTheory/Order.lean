@@ -213,7 +213,7 @@ instance orderedStructure_LE [LE M] : OrderedStructure Language.order M :=
 #align first_order.language.ordered_structure_has_le FirstOrder.Language.orderedStructure_LE
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.model_preorder /-
 instance model_preorder [Preorder M] : M ⊨ Language.order.preorderTheory :=
   by
@@ -224,7 +224,7 @@ instance model_preorder [Preorder M] : M ⊨ Language.order.preorderTheory :=
 #align first_order.language.model_preorder FirstOrder.Language.model_preorder
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.model_partialOrder /-
 instance model_partialOrder [PartialOrder M] : M ⊨ Language.order.partialOrderTheory :=
   by
@@ -235,7 +235,7 @@ instance model_partialOrder [PartialOrder M] : M ⊨ Language.order.partialOrder
 #align first_order.language.model_partial_order FirstOrder.Language.model_partialOrder
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.model_linearOrder /-
 instance model_linearOrder [LinearOrder M] : M ⊨ Language.order.linearOrderTheory :=
   by
@@ -284,7 +284,7 @@ section LE
 
 variable [LE M]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.realize_noTopOrder_iff /-
 theorem realize_noTopOrder_iff : M ⊨ Language.order.noTopOrderSentence ↔ NoTopOrder M :=
   by
@@ -296,7 +296,7 @@ theorem realize_noTopOrder_iff : M ⊨ Language.order.noTopOrderSentence ↔ NoT
 #align first_order.language.realize_no_top_order_iff FirstOrder.Language.realize_noTopOrder_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.realize_noTopOrder /-
 @[simp]
 theorem realize_noTopOrder [h : NoTopOrder M] : M ⊨ Language.order.noTopOrderSentence :=
@@ -304,7 +304,7 @@ theorem realize_noTopOrder [h : NoTopOrder M] : M ⊨ Language.order.noTopOrderS
 #align first_order.language.realize_no_top_order FirstOrder.Language.realize_noTopOrder
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.realize_noBotOrder_iff /-
 theorem realize_noBotOrder_iff : M ⊨ Language.order.noBotOrderSentence ↔ NoBotOrder M :=
   by
@@ -316,7 +316,7 @@ theorem realize_noBotOrder_iff : M ⊨ Language.order.noBotOrderSentence ↔ NoB
 #align first_order.language.realize_no_bot_order_iff FirstOrder.Language.realize_noBotOrder_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.realize_noBotOrder /-
 @[simp]
 theorem realize_noBotOrder [h : NoBotOrder M] : M ⊨ Language.order.noBotOrderSentence :=
@@ -326,7 +326,7 @@ theorem realize_noBotOrder [h : NoBotOrder M] : M ⊨ Language.order.noBotOrderS
 
 end LE
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.realize_denselyOrdered_iff /-
 theorem realize_denselyOrdered_iff [Preorder M] :
     M ⊨ Language.order.denselyOrderedSentence ↔ DenselyOrdered M :=
@@ -340,7 +340,7 @@ theorem realize_denselyOrdered_iff [Preorder M] :
 #align first_order.language.realize_densely_ordered_iff FirstOrder.Language.realize_denselyOrdered_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.realize_denselyOrdered /-
 @[simp]
 theorem realize_denselyOrdered [Preorder M] [h : DenselyOrdered M] :
@@ -349,7 +349,7 @@ theorem realize_denselyOrdered [Preorder M] [h : DenselyOrdered M] :
 #align first_order.language.realize_densely_ordered FirstOrder.Language.realize_denselyOrdered
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.model_dlo /-
 instance model_dlo [LinearOrder M] [DenselyOrdered M] [NoTopOrder M] [NoBotOrder M] :
     M ⊨ Language.order.dlo :=

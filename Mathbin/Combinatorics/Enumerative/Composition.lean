@@ -762,8 +762,8 @@ namespace List
 
 variable {α : Type _}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print List.splitWrtCompositionAux /-
 /-- Auxiliary for `list.split_wrt_composition`. -/
 def splitWrtCompositionAux : List α → List ℕ → List (List α)
@@ -785,8 +785,8 @@ def splitWrtComposition (l : List α) (c : Composition n) : List (List α) :=
 
 attribute [local simp] split_wrt_composition_aux.equations._eqn_1
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print List.splitWrtCompositionAux_cons /-
 @[local simp]
 theorem splitWrtCompositionAux_cons (l : List α) (n ns) :

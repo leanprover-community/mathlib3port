@@ -208,7 +208,7 @@ def ltTopHomeomorphNNReal : {a | a < ∞} ≃ₜ ℝ≥0 := by
 #align ennreal.lt_top_homeomorph_nnreal ENNReal.ltTopHomeomorphNNReal
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 #print ENNReal.nhds_top /-
 theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (Ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
@@ -273,7 +273,7 @@ theorem tendsto_ofReal_atTop : Tendsto ENNReal.ofReal atTop (𝓝 ∞) :=
 #align ennreal.tendsto_of_real_at_top ENNReal.tendsto_ofReal_atTop
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 #print ENNReal.nhds_zero /-
 theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot, Iio]
@@ -963,7 +963,7 @@ end TopologicalSpace
 
 section Liminf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 #print ENNReal.exists_frequently_lt_of_liminf_ne_top /-
 theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x : ι → ℝ}
     (hx : liminf (fun n => ((x n).nnabs : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, x n < R :=
@@ -983,7 +983,7 @@ theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x :
 #align ennreal.exists_frequently_lt_of_liminf_ne_top ENNReal.exists_frequently_lt_of_liminf_ne_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 #print ENNReal.exists_frequently_lt_of_liminf_ne_top' /-
 theorem exists_frequently_lt_of_liminf_ne_top' {ι : Type _} {l : Filter ι} {x : ι → ℝ}
     (hx : liminf (fun n => ((x n).nnabs : ℝ≥0∞)) l ≠ ∞) : ∃ R, ∃ᶠ n in l, R < x n :=
@@ -1104,7 +1104,7 @@ protected theorem tsum_eq_iSup_sum' {ι : Type _} (s : ι → Finset α) (hs : �
 #align ennreal.tsum_eq_supr_sum' ENNReal.tsum_eq_iSup_sum'
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print ENNReal.tsum_sigma /-
 protected theorem tsum_sigma {β : α → Type _} (f : ∀ a, β a → ℝ≥0∞) :
     ∑' p : Σ a, β a, f p.1 p.2 = ∑' (a) (b), f a b :=
@@ -1112,7 +1112,7 @@ protected theorem tsum_sigma {β : α → Type _} (f : ∀ a, β a → ℝ≥0�
 #align ennreal.tsum_sigma ENNReal.tsum_sigma
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print ENNReal.tsum_sigma' /-
 protected theorem tsum_sigma' {β : α → Type _} (f : (Σ a, β a) → ℝ≥0∞) :
     ∑' p : Σ a, β a, f p = ∑' (a) (b), f ⟨a, b⟩ :=
@@ -1120,14 +1120,14 @@ protected theorem tsum_sigma' {β : α → Type _} (f : (Σ a, β a) → ℝ≥0
 #align ennreal.tsum_sigma' ENNReal.tsum_sigma'
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print ENNReal.tsum_prod /-
 protected theorem tsum_prod {f : α → β → ℝ≥0∞} : ∑' p : α × β, f p.1 p.2 = ∑' (a) (b), f a b :=
   tsum_prod' ENNReal.summable fun _ => ENNReal.summable
 #align ennreal.tsum_prod ENNReal.tsum_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print ENNReal.tsum_prod' /-
 protected theorem tsum_prod' {f : α × β → ℝ≥0∞} : ∑' p : α × β, f p = ∑' (a) (b), f (a, b) :=
   tsum_prod' ENNReal.summable fun _ => ENNReal.summable

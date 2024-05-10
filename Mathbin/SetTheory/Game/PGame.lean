@@ -365,7 +365,7 @@ theorem SetTheory.PGame.Subsequent.mk_right {xl xr} (xL : xl → SetTheory.PGame
 #align pgame.subsequent.mk_right SetTheory.PGame.Subsequent.mk_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
 unsafe def pgame_wf_tac :=
   sorry

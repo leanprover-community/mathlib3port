@@ -139,7 +139,8 @@ def pullbackComp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : pullback (f ≫ g) �
 -/
 
 #print CategoryTheory.Over.pullbackIsRightAdjoint /-
-instance pullbackIsRightAdjoint {A B : C} (f : A ⟶ B) : IsRightAdjoint (pullback f) :=
+instance pullbackIsRightAdjoint {A B : C} (f : A ⟶ B) :
+    CategoryTheory.Functor.IsRightAdjoint (pullback f) :=
   ⟨_, mapPullbackAdj f⟩
 #align category_theory.over.pullback_is_right_adjoint CategoryTheory.Over.pullbackIsRightAdjoint
 -/

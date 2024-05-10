@@ -747,7 +747,7 @@ variable {R M ι : Type _}
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M] [DecidableEq ι]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 -- TODO: In Lean 4 we can remove this and use `by { intros; exact Set.toFinite _ }` as a default
 -- argument.
 /-- Try using `set.to_finite` to dispatch a `set.finite` goal. -/
@@ -756,7 +756,7 @@ unsafe def use_finite_instance : tactic Unit :=
 #align use_finite_instance use_finite_instance
 
 #print Module.DualBases /-
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic use_finite_instance -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic use_finite_instance -/
 /-- `e` and `ε` have characteristic properties of a basis and its dual -/
 @[nolint has_nonempty_instance]
 structure Module.DualBases (e : ι → M) (ε : ι → Dual R M) : Prop where
@@ -1810,7 +1810,7 @@ variable [CommRing R] [AddCommGroup M] [AddCommGroup N]
 
 variable [Module R M] [Module R N]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print TensorProduct.dualDistribInvOfBasis /-
 /-- An inverse to `dual_tensor_dual_map` given bases.
 -/
@@ -1822,7 +1822,7 @@ noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
 #align tensor_product.dual_distrib_inv_of_basis TensorProduct.dualDistribInvOfBasis
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print TensorProduct.dualDistribInvOfBasis_apply /-
 @[simp]
 theorem dualDistribInvOfBasis_apply (b : Basis ι R M) (c : Basis κ R N) (f : Dual R (M ⊗[R] N)) :

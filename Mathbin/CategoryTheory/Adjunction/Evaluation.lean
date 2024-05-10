@@ -81,7 +81,8 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
 -/
 
 #print CategoryTheory.evaluationIsRightAdjoint /-
-instance evaluationIsRightAdjoint (c : C) : IsRightAdjoint ((evaluation _ D).obj c) :=
+instance evaluationIsRightAdjoint (c : C) :
+    CategoryTheory.Functor.IsRightAdjoint ((evaluation _ D).obj c) :=
   ⟨_, evaluationAdjunctionRight _ _⟩
 #align category_theory.evaluation_is_right_adjoint CategoryTheory.evaluationIsRightAdjoint
 -/
@@ -152,7 +153,8 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
 -/
 
 #print CategoryTheory.evaluationIsLeftAdjoint /-
-instance evaluationIsLeftAdjoint (c : C) : IsLeftAdjoint ((evaluation _ D).obj c) :=
+instance evaluationIsLeftAdjoint (c : C) :
+    CategoryTheory.Functor.IsLeftAdjoint ((evaluation _ D).obj c) :=
   ⟨_, evaluationAdjunctionLeft _ _⟩
 #align category_theory.evaluation_is_left_adjoint CategoryTheory.evaluationIsLeftAdjoint
 -/

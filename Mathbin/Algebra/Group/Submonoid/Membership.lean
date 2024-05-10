@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov
 -/
-import GroupTheory.Submonoid.Operations
+import Algebra.Group.Submonoid.Operations
 import Algebra.BigOperators.Basic
 import Algebra.FreeMonoid.Basic
 import Data.Finset.NoncommProd
@@ -614,7 +614,7 @@ theorem map_powers {N : Type _} {F : Type _} [Monoid N] [MonoidHomClass F M N] (
 #align submonoid.map_powers Submonoid.map_powers
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print Submonoid.closureCommMonoidOfComm /-
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/
 @[to_additive

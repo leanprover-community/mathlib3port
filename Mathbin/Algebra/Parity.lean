@@ -593,12 +593,10 @@ theorem Even.pow_abs {p : ℕ} (hp : Even p) (a : R) : |a| ^ p = a ^ p :=
 #align even.pow_abs Even.pow_abs
 -/
 
-#print pow_bit0_abs /-
 @[simp]
 theorem pow_bit0_abs (a : R) (p : ℕ) : |a| ^ bit0 p = a ^ bit0 p :=
   (even_bit0 _).pow_abs _
 #align pow_bit0_abs pow_bit0_abs
--/
 
 #print Odd.strictMono_pow /-
 theorem Odd.strictMono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by

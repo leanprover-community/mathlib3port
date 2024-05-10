@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jordan Brown, Thomas Browning, Patrick Lutz
 -/
 import Data.Bracket
-import GroupTheory.Subgroup.Finite
+import Algebra.Group.Subgroup.Finite
 import Tactic.Group
 
 #align_import group_theory.commutator from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"

@@ -202,7 +202,7 @@ end Primrec
 end Nat
 
 #print Primcodable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`prim] [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`prim] [] -/
 /-- A `primcodable` type is an `encodable` type for which
   the encode/decode functions are primitive recursive. -/
 class Primcodable (α : Type _) extends Encodable α where
@@ -1032,7 +1032,7 @@ theorem dom_fintype [Fintype α] (f : α → σ) : Primrec f :=
   option_some_iff.1 <| by
     haveI := decidable_eq_of_encodable α
     refine' ((list_nth₁ (l.map f)).comp (list_index_of₁ l)).of_eq fun a => _
-    rw [List.get?_map, List.nthLe_get? (List.indexOf_lt_length.2 (m _)), List.indexOf_nthLe] <;> rfl
+    rw [List.get?_map, List.nthLe_get? (List.indexOf_lt_length.2 (m _)), List.indexOf_get] <;> rfl
 #align primrec.dom_fintype Primrec.dom_fintype
 -/
 
@@ -1761,7 +1761,7 @@ open Nat (Primrec')
 
 open Nat.Primrec'
 
-/- ./././Mathport/Syntax/Translate/Command.lean:705:6: unsupported: hide command -/
+/- ././././Mathport/Syntax/Translate/Command.lean:705:6: unsupported: hide command -/
 #print Nat.Primrec'.to_prim /-
 theorem to_prim {n f} (pf : @Primrec' n f) : Primrec f :=
   by

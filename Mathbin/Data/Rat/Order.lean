@@ -102,10 +102,10 @@ protected theorem nonneg_total : Rat.Nonneg a ∨ Rat.Nonneg (-a) := by
 #align rat.nonneg_total Rat.nonneg_total
 -/
 
-#print Rat.instDecidableLeRatInstLERat /-
-instance instDecidableLeRatInstLERat : Decidable (Rat.Nonneg a) := by
+#print Rat.instDecidableLe /-
+instance instDecidableLe : Decidable (Rat.Nonneg a) := by
   cases a <;> unfold Rat.Nonneg <;> infer_instance
-#align rat.decidable_nonneg Rat.instDecidableLeRatInstLERat
+#align rat.decidable_nonneg Rat.instDecidableLe
 -/
 
 /-- Relation `a ≤ b` on `ℚ` defined as `a ≤ b ↔ rat.nonneg (b - a)`. Use `a ≤ b` instead of
@@ -171,7 +171,7 @@ instance : LinearOrder ℚ where
   le_antisymm := @le_antisymm
   le_total := Rat.le_total
   DecidableEq := by infer_instance
-  decidableLe a b := Rat.instDecidableLeRatInstLERat (b - a)
+  decidableLe a b := Rat.instDecidableLe (b - a)
 
 -- Extra instances to short-circuit type class resolution
 instance : LT ℚ := by infer_instance

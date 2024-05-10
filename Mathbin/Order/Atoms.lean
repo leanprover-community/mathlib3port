@@ -82,7 +82,7 @@ theorem IsAtom.of_isAtom_coe_Iic {a : Set.Iic x} (ha : IsAtom a) : IsAtom (a : �
 #align is_atom.of_is_atom_coe_Iic IsAtom.of_isAtom_coe_Iic
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
 #print isAtom_iff_le_of_ge /-
 theorem isAtom_iff_le_of_ge {a : α} : IsAtom a ↔ a ≠ ⊥ ∧ ∀ (b) (_ : b ≠ ⊥), b ≤ a → a ≤ b :=
   and_congr Iff.rfl <|
@@ -172,7 +172,7 @@ theorem IsCoatom.of_isCoatom_coe_Ici {a : Set.Ici x} (ha : IsCoatom a) : IsCoato
 #align is_coatom.of_is_coatom_coe_Ici IsCoatom.of_isCoatom_coe_Ici
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
 #print isCoatom_iff_ge_of_le /-
 theorem isCoatom_iff_ge_of_le {a : α} : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ (b) (_ : b ≠ ⊤), a ≤ b → b ≤ a :=
   @isAtom_iff_le_of_ge αᵒᵈ _ _ _
@@ -776,7 +776,7 @@ namespace IsSimpleOrder
 
 variable [CompleteLattice α] [IsSimpleOrder α]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
 set_option default_priority 100
 
 instance : IsAtomistic α :=

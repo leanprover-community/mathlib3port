@@ -221,7 +221,7 @@ theorem coe_equiv_apply_eq_preimage (f : α ≃ₜ β) (K : Compacts α) :
 #align topological_space.compacts.coe_equiv_apply_eq_preimage TopologicalSpace.Compacts.coe_equiv_apply_eq_preimage
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print TopologicalSpace.Compacts.prod /-
 /-- The product of two `compacts`, as a `compacts` in the product space. -/
 protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β)
@@ -231,7 +231,7 @@ protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β)
 #align topological_space.compacts.prod TopologicalSpace.Compacts.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print TopologicalSpace.Compacts.coe_prod /-
 @[simp]
 theorem coe_prod (K : Compacts α) (L : Compacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
@@ -350,7 +350,7 @@ protected def prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) : Nonempt
 #align topological_space.nonempty_compacts.prod TopologicalSpace.NonemptyCompacts.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print TopologicalSpace.NonemptyCompacts.coe_prod /-
 @[simp]
 theorem coe_prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) :
@@ -516,7 +516,7 @@ protected def prod (K : PositiveCompacts α) (L : PositiveCompacts β) : Positiv
 #align topological_space.positive_compacts.prod TopologicalSpace.PositiveCompacts.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print TopologicalSpace.PositiveCompacts.coe_prod /-
 @[simp]
 theorem coe_prod (K : PositiveCompacts α) (L : PositiveCompacts β) :
@@ -711,7 +711,7 @@ protected def prod (K : CompactOpens α) (L : CompactOpens β) : CompactOpens (�
 #align topological_space.compact_opens.prod TopologicalSpace.CompactOpens.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print TopologicalSpace.CompactOpens.coe_prod /-
 @[simp]
 theorem coe_prod (K : CompactOpens α) (L : CompactOpens β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=

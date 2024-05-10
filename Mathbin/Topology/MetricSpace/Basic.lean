@@ -128,7 +128,7 @@ private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → 
       _ ≥ 0 := by rw [← dist_self x] <;> apply dist_triangle
   nonneg_of_mul_nonneg_right this zero_lt_two
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic is used to populate `pseudo_metric_space.edist_dist` when the default `edist` is
 used. -/
 protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
@@ -136,7 +136,7 @@ protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
 #align pseudo_metric_space.edist_dist_tac pseudo_metric_space.edist_dist_tac
 
 #print PseudoMetricSpace /-
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic pseudo_metric_space.edist_dist_tac -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic pseudo_metric_space.edist_dist_tac -/
 /-- Pseudo metric and Metric spaces
 
 A pseudo metric space is endowed with a distance for which the requirement `d(x,y)=0 → x = y` might
@@ -1125,7 +1125,7 @@ theorem uniformContinuous_iff [PseudoMetricSpace β] {f : α → β} :
 #align metric.uniform_continuous_iff Metric.uniformContinuous_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Metric.uniformContinuousOn_iff /-
 theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1134,7 +1134,7 @@ theorem uniformContinuousOn_iff [PseudoMetricSpace β] {f : α → β} {s : Set 
 #align metric.uniform_continuous_on_iff Metric.uniformContinuousOn_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Metric.uniformContinuousOn_iff_le /-
 theorem uniformContinuousOn_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
@@ -1201,7 +1201,7 @@ theorem totallyBounded_of_finite_discretization {s : Set α}
 #align metric.totally_bounded_of_finite_discretization Metric.totallyBounded_of_finite_discretization
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Metric.finite_approx_of_totallyBounded /-
 theorem finite_approx_of_totallyBounded {s : Set α} (hs : TotallyBounded s) :
     ∀ ε > 0, ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
@@ -1270,7 +1270,7 @@ theorem tendstoUniformly_iff {ι : Type _} {F : ι → β → α} {f : β → α
 #align metric.tendsto_uniformly_iff Metric.tendstoUniformly_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print Metric.cauchy_iff /-
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ ε > 0, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), dist x y < ε :=
@@ -2002,7 +2002,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 #print Metric.cauchySeq_iff /-
 -- see Note [nolint_ge]
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
@@ -2356,14 +2356,14 @@ theorem dist_prod_same_right {x₁ x₂ : α} {y : β} : dist (x₁, y) (x₂, y
 #align dist_prod_same_right dist_prod_same_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ball_prod_same /-
 theorem ball_prod_same (x : α) (y : β) (r : ℝ) : ball x r ×ˢ ball y r = ball (x, y) r :=
   ext fun z => by simp [Prod.dist_eq]
 #align ball_prod_same ball_prod_same
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print closedBall_prod_same /-
 theorem closedBall_prod_same (x : α) (y : β) (r : ℝ) :
     closedBall x r ×ˢ closedBall y r = closedBall (x, y) r :=
@@ -2371,8 +2371,8 @@ theorem closedBall_prod_same (x : α) (y : β) (r : ℝ) :
 #align closed_ball_prod_same closedBall_prod_same
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print sphere_prod /-
 theorem sphere_prod (x : α × β) (r : ℝ) :
     sphere x r = sphere x.1 r ×ˢ closedBall x.2 r ∪ closedBall x.1 r ×ˢ sphere x.2 r :=
@@ -2917,7 +2917,7 @@ end Pi
 
 section Compact
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print finite_cover_balls_of_compact /-
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
@@ -3029,7 +3029,7 @@ instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyC
 #align locally_compact_of_proper locally_compact_of_proper
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 #print complete_of_proper /-
 -- see Note [lower instance priority]
 /-- A proper space is complete -/
@@ -3161,7 +3161,7 @@ namespace Metric
 
 /- warning: metric.bounded clashes with bornology.is_bounded -> Bornology.IsBounded
 Case conversion may be inaccurate. Consider using '#align metric.bounded Bornology.IsBoundedₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Bornology.IsBounded /-
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
@@ -3327,8 +3327,8 @@ theorem isBounded_biUnion {I : Set β} {s : β → Set α} (H : I.Finite) :
 
 /- warning: metric.bounded.prod clashes with bornology.is_bounded.prod -> Bornology.IsBounded.prod
 Case conversion may be inaccurate. Consider using '#align metric.bounded.prod Bornology.IsBounded.prodₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Bornology.IsBounded.prod /-
 protected theorem IsBounded.prod [PseudoMetricSpace β] {s : Set α} {t : Set β} (hs : IsBounded s)
     (ht : IsBounded t) : IsBounded (s ×ˢ t) :=

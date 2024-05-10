@@ -194,7 +194,7 @@ theorem bdd_below_bdd_above_iff_subset_uIcc (s : Set α) :
 
 section Prod
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.uIcc_prod_uIcc /-
 @[simp]
 theorem uIcc_prod_uIcc (a₁ a₂ : α) (b₁ b₂ : β) : [a₁, a₂] ×ˢ [b₁, b₂] = [(a₁, b₁), (a₂, b₂)] :=
@@ -202,7 +202,7 @@ theorem uIcc_prod_uIcc (a₁ a₂ : α) (b₁ b₂ : β) : [a₁, a₂] ×ˢ [b�
 #align set.uIcc_prod_uIcc Set.uIcc_prod_uIcc
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.uIcc_prod_eq /-
 theorem uIcc_prod_eq (a b : α × β) : [a, b] = [a.1, b.1] ×ˢ [a.2, b.2] := by simp
 #align set.uIcc_prod_eq Set.uIcc_prod_eq
@@ -355,7 +355,7 @@ theorem monotone_or_antitone_iff_uIcc :
 #align set.monotone_or_antitone_iff_uIcc Set.monotone_or_antitone_iff_uIcc
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
 #print Set.monotoneOn_or_antitoneOn_iff_uIcc /-
 theorem monotoneOn_or_antitoneOn_iff_uIcc :
     MonotoneOn f s ∨ AntitoneOn f s ↔

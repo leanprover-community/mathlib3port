@@ -141,7 +141,7 @@ end HasLimits
 
 open HasLimits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:335:38: unsupported irreducible non-definition -/
+/- ././././Mathport/Syntax/Translate/Command.lean:335:38: unsupported irreducible non-definition -/
 #print ModuleCat.hasLimitsOfSize /-
 /-- The category of R-modules has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R) :=

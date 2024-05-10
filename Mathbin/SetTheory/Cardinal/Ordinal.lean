@@ -620,7 +620,7 @@ theorem beth_normal : IsNormal.{u} fun o => (beth o).ord :=
 /-! ### Properties of `mul` -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Cardinal.mul_eq_self /-
 /-- If `α` is an infinite type, then `α × α` and `α` have the same cardinality. -/
 theorem mul_eq_self {c : Cardinal} (h : ℵ₀ ≤ c) : c * c = c :=

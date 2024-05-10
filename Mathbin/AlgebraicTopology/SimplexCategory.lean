@@ -40,7 +40,7 @@ universe v
 
 open CategoryTheory CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:336:31: unsupported: @[derive, irreducible] def -/
+/- ././././Mathport/Syntax/Translate/Command.lean:336:31: unsupported: @[derive, irreducible] def -/
 #print SimplexCategory /-
 /-- The simplex category:
 * objects are natural numbers `n : ℕ`
@@ -557,7 +557,7 @@ instance : CategoryTheory.Functor.EssSurj skeletalFunctor.{v}
 
 #print SimplexCategory.SkeletalFunctor.isEquivalence /-
 noncomputable instance isEquivalence : CategoryTheory.Functor.IsEquivalence skeletalFunctor.{v} :=
-  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj skeletalFunctor
+  Functor.asEquivalence skeletalFunctor
 #align simplex_category.skeletal_functor.is_equivalence SimplexCategory.SkeletalFunctor.isEquivalence
 -/
 

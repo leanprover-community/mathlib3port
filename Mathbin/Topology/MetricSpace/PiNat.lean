@@ -246,7 +246,7 @@ variable {α : Type _}
 
 open List
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print PiNat.res /-
 /-- In the case where `E` has constant value `α`,
 the cylinder `cylinder x n` can be identified with the element of `list α`
@@ -265,7 +265,7 @@ theorem res_zero (x : ℕ → α) : res x 0 = @nil α :=
 #align pi_nat.res_zero PiNat.res_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print PiNat.res_succ /-
 @[simp]
 theorem res_succ (x : ℕ → α) (n : ℕ) : res x n.succ = x n::res x n :=

@@ -6,8 +6,8 @@ Amelia Livingston, Yury Kudryashov
 -/
 import Algebra.Order.Monoid.Cancel.Basic
 import GroupTheory.GroupAction.Defs
-import GroupTheory.Submonoid.Basic
-import GroupTheory.Subsemigroup.Operations
+import Algebra.Group.Submonoid.Basic
+import Algebra.Group.Subsemigroup.Operations
 
 #align_import group_theory.submonoid.operations from "leanprover-community/mathlib"@"cf8e77c636317b059a8ce20807a29cf3772a0640"
 
@@ -1021,7 +1021,7 @@ theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s →
 #align add_submonoid.closure_closure_coe_preimage AddSubmonoid.closure_closure_coe_preimage
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Submonoid.prod /-
 /-- Given `submonoid`s `s`, `t` of monoids `M`, `N` respectively, `s × t` as a submonoid
 of `M × N`. -/
@@ -1036,7 +1036,7 @@ def prod (s : Submonoid M) (t : Submonoid N) : Submonoid (M × N)
 #align add_submonoid.prod AddSubmonoid.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Submonoid.coe_prod /-
 @[to_additive coe_prod]
 theorem coe_prod (s : Submonoid M) (t : Submonoid N) : (s.Prod t : Set (M × N)) = s ×ˢ t :=

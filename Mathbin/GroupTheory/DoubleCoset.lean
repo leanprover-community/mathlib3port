@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
 import Data.Setoid.Basic
-import GroupTheory.Subgroup.Basic
+import Algebra.Group.Subgroup.Basic
 import GroupTheory.Coset
-import GroupTheory.Subgroup.Pointwise
+import Algebra.Group.Subgroup.Pointwise
 import Data.Set.Basic
 import Tactic.Group
 

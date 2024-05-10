@@ -429,15 +429,16 @@ def uniqueExtensionAlongYoneda (L : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ) (hL : yoned
 #align category_theory.unique_extension_along_yoneda CategoryTheory.uniqueExtensionAlongYoneda
 -/
 
-#print CategoryTheory.isLeftAdjointOfPreservesColimitsAux /-
+#print CategoryTheory.adjunctionOfPreservesColimitsAux /-
 /-- If `L` preserves colimits and `ℰ` has them, then it is a left adjoint. This is a special case of
 `is_left_adjoint_of_preserves_colimits` used to prove that.
 -/
-def isLeftAdjointOfPreservesColimitsAux (L : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ) [PreservesColimits L] :
-    IsLeftAdjoint L where
+def adjunctionOfPreservesColimitsAux (L : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ) [PreservesColimits L] :
+    CategoryTheory.Functor.IsLeftAdjoint L
+    where
   right := restrictedYoneda (yoneda ⋙ L)
   adj := (yonedaAdjunction _).ofNatIsoLeft (uniqueExtensionAlongYoneda _ L (Iso.refl _)).symm
-#align category_theory.is_left_adjoint_of_preserves_colimits_aux CategoryTheory.isLeftAdjointOfPreservesColimitsAux
+#align category_theory.is_left_adjoint_of_preserves_colimits_aux CategoryTheory.adjunctionOfPreservesColimitsAux
 -/
 
 #print CategoryTheory.isLeftAdjointOfPreservesColimits /-
@@ -445,9 +446,9 @@ def isLeftAdjointOfPreservesColimitsAux (L : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ) [P
 converse to `left_adjoint_preserves_colimits`.
 -/
 def isLeftAdjointOfPreservesColimits (L : (C ⥤ Type u₁) ⥤ ℰ) [PreservesColimits L] :
-    IsLeftAdjoint L :=
+    CategoryTheory.Functor.IsLeftAdjoint L :=
   let e : _ ⥤ Type u₁ ≌ _ ⥤ Type u₁ := (opOpEquivalence C).congr_left
-  let t := isLeftAdjointOfPreservesColimitsAux (e.Functor ⋙ L : _)
+  let t := adjunctionOfPreservesColimitsAux (e.Functor ⋙ L : _)
   adjunction.left_adjoint_of_nat_iso (e.inv_fun_id_assoc _)
 #align category_theory.is_left_adjoint_of_preserves_colimits CategoryTheory.isLeftAdjointOfPreservesColimits
 -/

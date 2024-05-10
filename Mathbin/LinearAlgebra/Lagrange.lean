@@ -606,7 +606,7 @@ theorem nodal_empty : nodal ∅ v = 1 :=
 
 #print Lagrange.degree_nodal /-
 theorem degree_nodal : (nodal s v).degree = s.card := by
-  simp_rw [nodal, degree_prod, degree_X_sub_C, sum_const, Nat.smul_one_eq_coe]
+  simp_rw [nodal, degree_prod, degree_X_sub_C, sum_const, Nat.smul_one_eq_cast]
 #align lagrange.degree_nodal Lagrange.degree_nodal
 -/
 

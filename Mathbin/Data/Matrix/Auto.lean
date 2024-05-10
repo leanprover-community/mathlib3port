@@ -43,7 +43,7 @@ namespace Matrix
 
 section FinEta
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -105,7 +105,7 @@ section FinEta
           tactic.exact ( pr α A' )
 #align matrix.fin_eta.derive matrix.fin_eta.derive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic matrix.fin_eta.derive -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic matrix.fin_eta.derive -/
 /-- This lemma expands `A` into `!![A 0 0, ...]`. -/
 theorem fin_eta {α} {m n : ℕ} (A : Matrix (Fin m) (Fin n) α)
     {«!![A 0 0, ...]» : Matrix (Fin m) (Fin n) α}
@@ -234,7 +234,7 @@ unsafe def of_mul_of_fin.derive : tactic Unit := do
   tactic.done
 #align matrix.of_mul_of_fin.derive matrix.of_mul_of_fin.derive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic of_mul_of_fin.derive -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic of_mul_of_fin.derive -/
 -- TODO: should we be extracting the coefficients manually so we can do a full invocation as
 -- something like:
 --   tactic.unify target (t.instantiate_pis [α, A']),

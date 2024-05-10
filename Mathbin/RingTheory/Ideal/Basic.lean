@@ -351,8 +351,8 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
 #align ideal.is_prime.mem_of_pow_mem Ideal.IsPrime.mem_of_pow_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y «expr ∉ » I) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y «expr ∉ » I) -/
 #print Ideal.not_isPrime_iff /-
 theorem not_isPrime_iff {I : Ideal α} :
     ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _) (_ : x ∉ I) (y : _) (_ : y ∉ I), x * y ∈ I :=
@@ -945,7 +945,7 @@ namespace Ring
 
 variable {R : Type _} [CommSemiring R]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
 #print Ring.exists_not_isUnit_of_not_isField /-
 theorem exists_not_isUnit_of_not_isField [Nontrivial R] (hf : ¬IsField R) :
     ∃ (x : _) (_ : x ≠ (0 : R)), ¬IsUnit x :=

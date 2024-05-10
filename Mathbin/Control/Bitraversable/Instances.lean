@@ -100,7 +100,7 @@ instance Bitraversable.flip : Bitraversable (flip t) where bitraverse := @flip.b
 
 open LawfulBitraversable
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.apply_assumption -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.apply_assumption -/
 #print LawfulBitraversable.flip /-
 instance LawfulBitraversable.flip [LawfulBitraversable t] : LawfulBitraversable (flip t) := by
   constructor <;> intros <;> casesm LawfulBitraversable t <;>

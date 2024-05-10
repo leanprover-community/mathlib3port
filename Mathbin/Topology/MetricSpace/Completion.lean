@@ -102,7 +102,7 @@ protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y 
 #align uniform_space.completion.dist_triangle UniformSpace.Completion.dist_triangle
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print UniformSpace.Completion.mem_uniformity_dist /-
 /-- Elements of the uniformity (defined generally for completions) can be characterized in terms
 of the distance. -/

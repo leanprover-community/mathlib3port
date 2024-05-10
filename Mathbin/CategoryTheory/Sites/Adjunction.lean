@@ -106,8 +106,9 @@ def adjunction (adj : G ⊣ F) : composeAndSheafify J G ⊣ sheafCompose J F :=
 #align category_theory.Sheaf.adjunction CategoryTheory.Sheaf.adjunction
 -/
 
-instance [IsRightAdjoint F] : IsRightAdjoint (sheafCompose J F) :=
-  ⟨_, adjunction J (Adjunction.ofRightAdjoint F)⟩
+instance [CategoryTheory.Functor.IsRightAdjoint F] :
+    CategoryTheory.Functor.IsRightAdjoint (sheafCompose J F) :=
+  ⟨_, adjunction J (Adjunction.ofIsRightAdjoint F)⟩
 
 section ForgetToType
 
@@ -158,8 +159,9 @@ theorem adjunctionToTypes_counit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ f
 #align category_theory.Sheaf.adjunction_to_types_counit_app_val CategoryTheory.Sheaf.adjunctionToTypes_counit_app_val
 -/
 
-instance [IsRightAdjoint (forget D)] : IsRightAdjoint (sheafForget J) :=
-  ⟨_, adjunctionToTypes J (Adjunction.ofRightAdjoint (forget D))⟩
+instance [CategoryTheory.Functor.IsRightAdjoint (forget D)] :
+    CategoryTheory.Functor.IsRightAdjoint (sheafForget J) :=
+  ⟨_, adjunctionToTypes J (Adjunction.ofIsRightAdjoint (forget D))⟩
 
 end ForgetToType
 

@@ -164,7 +164,7 @@ theorem finprod_false (f : False → M) : ∏ᶠ i, f i = 1 :=
 #align finsum_false finsum_false
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print finprod_eq_single /-
 @[to_additive]
 theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f x = 1) : ∏ᶠ x, f x = f a :=
@@ -463,7 +463,7 @@ theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : F
 #align finsum_cond_eq_sum_of_cond_iff finsum_cond_eq_sum_of_cond_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ≠ » a) -/
 #print finprod_cond_ne /-
 @[to_additive]
 theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : (mulSupport f).Finite) :
@@ -893,7 +893,7 @@ theorem finprod_mem_singleton : ∏ᶠ i ∈ ({a} : Set α), f i = f a := by
 #align finsum_mem_singleton finsum_mem_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr = » a) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr = » a) -/
 #print finprod_cond_eq_left /-
 @[simp, to_additive]
 theorem finprod_cond_eq_left : ∏ᶠ (i) (_ : i = a), f i = f a :=
@@ -1197,7 +1197,7 @@ theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀
 #align finsum_mem_sUnion finsum_mem_sUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ≠ » a) -/
 #print mul_finprod_cond_ne /-
 @[to_additive]
 theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) :
@@ -1338,7 +1338,7 @@ theorem Finset.mulSupport_of_fiberwise_prod_subset_image [DecidableEq β] (s : F
 #align finset.support_of_fiberwise_sum_subset_image Finset.support_of_fiberwise_sum_subset_image
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print finprod_mem_finset_product' /-
 /-- Note that `b ∈ (s.filter (λ ab, prod.fst ab = a)).image prod.snd` iff `(a, b) ∈ s` so we can
 simplify the right hand side of this lemma. However the form stated here is more useful for
@@ -1372,7 +1372,7 @@ theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finse
 #align finsum_mem_finset_product' finsum_mem_finset_product'
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print finprod_mem_finset_product /-
 /-- See also `finprod_mem_finset_product'`. -/
 @[to_additive "See also `finsum_mem_finset_product'`."]
@@ -1385,7 +1385,7 @@ theorem finprod_mem_finset_product (s : Finset (α × β)) (f : α × β → M) 
 #align finsum_mem_finset_product finsum_mem_finset_product
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
 #print finprod_mem_finset_product₃ /-
 @[to_additive]
 theorem finprod_mem_finset_product₃ {γ : Type _} (s : Finset (α × β × γ)) (f : α × β × γ → M) :
@@ -1398,7 +1398,7 @@ theorem finprod_mem_finset_product₃ {γ : Type _} (s : Finset (α × β × γ)
 #align finsum_mem_finset_product₃ finsum_mem_finset_product₃
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print finprod_curry /-
 @[to_additive]
 theorem finprod_curry (f : α × β → M) (hf : (mulSupport f).Finite) :
@@ -1411,7 +1411,7 @@ theorem finprod_curry (f : α × β → M) (hf : (mulSupport f).Finite) :
 #align finsum_curry finsum_curry
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
 #print finprod_curry₃ /-
 @[to_additive]
 theorem finprod_curry₃ {γ : Type _} (f : α × β × γ → M) (h : (mulSupport f).Finite) :

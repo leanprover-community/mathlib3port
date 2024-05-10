@@ -69,7 +69,7 @@ def adj : free ⊣ forget CommRingCat.{u} :=
 #align CommRing.adj CommRingCat.adj
 -/
 
-instance : IsRightAdjoint (forget CommRingCat.{u}) :=
+instance : CategoryTheory.Functor.IsRightAdjoint (forget CommRingCat.{u}) :=
   ⟨_, adj⟩
 
 end CommRingCat

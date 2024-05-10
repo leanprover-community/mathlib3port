@@ -492,28 +492,28 @@ instance Spec.preservesLimits : Limits.preservesLimits Scheme.Spec :=
 
 /-- Spec is a full functor. -/
 instance : CategoryTheory.Functor.Full Spec.toLocallyRingedSpace :=
-  R_full_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
+  CategoryTheory.Adjunction.R_full_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
 
 #print AlgebraicGeometry.Spec.full /-
 instance Spec.full : CategoryTheory.Functor.Full Scheme.Spec :=
-  R_full_of_counit_isIso ΓSpec.adjunction
+  CategoryTheory.Adjunction.R_full_of_counit_isIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.full AlgebraicGeometry.Spec.full
 -/
 
 /-- Spec is a faithful functor. -/
 instance : CategoryTheory.Functor.Faithful Spec.toLocallyRingedSpace :=
-  R_faithful_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
+  CategoryTheory.Adjunction.R_faithful_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
 
 #print AlgebraicGeometry.Spec.faithful /-
 instance Spec.faithful : CategoryTheory.Functor.Faithful Scheme.Spec :=
-  R_faithful_of_counit_isIso ΓSpec.adjunction
+  CategoryTheory.Adjunction.R_faithful_of_counit_isIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.faithful AlgebraicGeometry.Spec.faithful
 -/
 
-instance : IsRightAdjoint Spec.toLocallyRingedSpace :=
+instance : CategoryTheory.Functor.IsRightAdjoint Spec.toLocallyRingedSpace :=
   ⟨_, ΓSpec.locallyRingedSpaceAdjunction⟩
 
-instance : IsRightAdjoint Scheme.Spec :=
+instance : CategoryTheory.Functor.IsRightAdjoint Scheme.Spec :=
   ⟨_, ΓSpec.adjunction⟩
 
 instance : Reflective Spec.toLocallyRingedSpace :=

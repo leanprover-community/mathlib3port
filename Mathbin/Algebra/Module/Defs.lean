@@ -886,18 +886,18 @@ instance (priority := 100) RatModule.noZeroSMulDivisors [AddCommGroup M] [Module
 
 end NoZeroSMulDivisors
 
-#print Nat.smul_one_eq_coe /-
+#print Nat.smul_one_eq_cast /-
 @[simp]
-theorem Nat.smul_one_eq_coe {R : Type _} [Semiring R] (m : ℕ) : m • (1 : R) = ↑m := by
+theorem Nat.smul_one_eq_cast {R : Type _} [Semiring R] (m : ℕ) : m • (1 : R) = ↑m := by
   rw [nsmul_eq_mul, mul_one]
-#align nat.smul_one_eq_coe Nat.smul_one_eq_coe
+#align nat.smul_one_eq_coe Nat.smul_one_eq_cast
 -/
 
-#print Int.smul_one_eq_coe /-
+#print Int.smul_one_eq_cast /-
 @[simp]
-theorem Int.smul_one_eq_coe {R : Type _} [Ring R] (m : ℤ) : m • (1 : R) = ↑m := by
+theorem Int.smul_one_eq_cast {R : Type _} [Ring R] (m : ℤ) : m • (1 : R) = ↑m := by
   rw [zsmul_eq_mul, mul_one]
-#align int.smul_one_eq_coe Int.smul_one_eq_coe
+#align int.smul_one_eq_coe Int.smul_one_eq_cast
 -/
 
 assert_not_exists Multiset

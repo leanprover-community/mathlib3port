@@ -11,7 +11,7 @@ import Algebra.Ring.Aut
 import Algebra.Ring.ULift
 import Algebra.CharZero.Lemmas
 import Algebra.Module.Submodule.Ker
-import RingTheory.Subring.Basic
+import Algebra.Ring.Subring.Basic
 import Tactic.Abel
 
 #align_import algebra.algebra.basic from "leanprover-community/mathlib"@"36b8aa61ea7c05727161f96a0532897bd72aedab"
@@ -105,7 +105,7 @@ open scoped BigOperators
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option extends_priority -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option extends_priority -/
 -- We set this priority to 0 later in this file
 set_option extends_priority 200
 

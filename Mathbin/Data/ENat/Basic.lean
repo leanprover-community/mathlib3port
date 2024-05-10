@@ -21,7 +21,7 @@ about this type.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ() -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ() -/
 #print ENat /-
 /-- Extended natural numbers `ℕ∞ = with_top ℕ`. -/
 def ENat : Type :=
@@ -29,7 +29,7 @@ def ENat : Type :=
 deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial, LinearOrder,
   OrderBot, OrderTop, Bot, Top, CanonicallyLinearOrderedAddCommMonoid, Sub, OrderedSub,
   LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLT, WellFoundedRelation, CharZero,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ()»
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ()»
 #align enat ENat
 -/
 

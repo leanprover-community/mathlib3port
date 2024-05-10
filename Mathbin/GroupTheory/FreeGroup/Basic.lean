@@ -5,7 +5,7 @@ Authors: Kenny Lau
 -/
 import Data.Fintype.Basic
 import Data.List.Sublists
-import GroupTheory.Subgroup.Basic
+import Algebra.Group.Subgroup.Basic
 
 #align_import group_theory.free_group from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 

@@ -379,7 +379,7 @@ protected theorem mul_end {f g : Function.End α} {Kf Kg} (hf : LipschitzWith Kf
 #align lipschitz_with.mul LipschitzWith.mul_end
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print LipschitzWith.list_prod /-
 /-- The product of a list of Lipschitz continuous endomorphisms is a Lipschitz continuous
 endomorphism. -/
@@ -634,7 +634,7 @@ variable [PseudoMetricSpace α] [PseudoMetricSpace β] {s : Set α} {t : Set β}
 
 /- warning: metric.bounded.left_of_prod clashes with bornology.is_bounded.fst_of_prod -> Bornology.IsBounded.fst_of_prod
 Case conversion may be inaccurate. Consider using '#align metric.bounded.left_of_prod Bornology.IsBounded.fst_of_prodₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Bornology.IsBounded.fst_of_prod /-
 theorem IsBounded.fst_of_prod (h : IsBounded (s ×ˢ t)) (ht : t.Nonempty) : IsBounded s := by
   simpa only [fst_image_prod s ht] using (@LipschitzWith.prod_fst α β _ _).isBounded_image h
@@ -643,7 +643,7 @@ theorem IsBounded.fst_of_prod (h : IsBounded (s ×ˢ t)) (ht : t.Nonempty) : IsB
 
 /- warning: metric.bounded.right_of_prod clashes with bornology.is_bounded.snd_of_prod -> Bornology.IsBounded.snd_of_prod
 Case conversion may be inaccurate. Consider using '#align metric.bounded.right_of_prod Bornology.IsBounded.snd_of_prodₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Bornology.IsBounded.snd_of_prod /-
 theorem IsBounded.snd_of_prod (h : IsBounded (s ×ˢ t)) (hs : s.Nonempty) : IsBounded t := by
   simpa only [snd_image_prod hs t] using (@LipschitzWith.prod_snd α β _ _).isBounded_image h
@@ -652,7 +652,7 @@ theorem IsBounded.snd_of_prod (h : IsBounded (s ×ˢ t)) (hs : s.Nonempty) : IsB
 
 /- warning: metric.bounded_prod_of_nonempty clashes with bornology.is_bounded_prod_of_nonempty -> Bornology.isBounded_prod_of_nonempty
 Case conversion may be inaccurate. Consider using '#align metric.bounded_prod_of_nonempty Bornology.isBounded_prod_of_nonemptyₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Bornology.isBounded_prod_of_nonempty /-
 theorem isBounded_prod_of_nonempty (hs : s.Nonempty) (ht : t.Nonempty) :
     IsBounded (s ×ˢ t) ↔ IsBounded s ∧ IsBounded t :=
@@ -662,7 +662,7 @@ theorem isBounded_prod_of_nonempty (hs : s.Nonempty) (ht : t.Nonempty) :
 
 /- warning: metric.bounded_prod clashes with bornology.is_bounded_prod -> Bornology.isBounded_prod
 Case conversion may be inaccurate. Consider using '#align metric.bounded_prod Bornology.isBounded_prodₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Bornology.isBounded_prod /-
 theorem isBounded_prod : IsBounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ IsBounded s ∧ IsBounded t :=
   by
@@ -808,7 +808,7 @@ end Metric
 
 end LipschitzOnWith
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print continuousOn_prod_of_continuousOn_lipschitzOnWith /-
 /-- Consider a function `f : α × β → γ`. Suppose that it is continuous on each “vertical fiber”
 `{a} × t`, `a ∈ s`, and is Lipschitz continuous on each “horizontal fiber” `s × {b}`, `b ∈ t`

@@ -89,16 +89,16 @@ def functorialityCounit :
 #align category_theory.adjunction.functoriality_counit CategoryTheory.Adjunction.functorialityCounit
 -/
 
-#print CategoryTheory.Adjunction.functorialityIsLeftAdjoint /-
+#print CategoryTheory.Adjunction.functorialityAdjunction /-
 /-- The functor `cocones.functoriality K F : cocone K ⥤ cocone (K ⋙ F)` is a left adjoint. -/
-def functorialityIsLeftAdjoint : IsLeftAdjoint (Cocones.functoriality K F)
+def functorialityAdjunction : CategoryTheory.Functor.IsLeftAdjoint (Cocones.functoriality K F)
     where
   right := functorialityRightAdjoint adj K
   adj :=
     mkOfUnitCounit
       { Unit := functorialityUnit adj K
         counit := functorialityCounit adj K }
-#align category_theory.adjunction.functoriality_is_left_adjoint CategoryTheory.Adjunction.functorialityIsLeftAdjoint
+#align category_theory.adjunction.functoriality_is_left_adjoint CategoryTheory.Adjunction.functorialityAdjunction
 -/
 
 #print CategoryTheory.Adjunction.leftAdjointPreservesColimits /-
@@ -237,16 +237,16 @@ def functorialityCounit' : Cones.functoriality _ G ⋙ functorialityLeftAdjoint 
 #align category_theory.adjunction.functoriality_counit' CategoryTheory.Adjunction.functorialityCounit'
 -/
 
-#print CategoryTheory.Adjunction.functorialityIsRightAdjoint /-
+#print CategoryTheory.Adjunction.functorialityAdjunction' /-
 /-- The functor `cones.functoriality K G : cone K ⥤ cone (K ⋙ G)` is a right adjoint. -/
-def functorialityIsRightAdjoint : IsRightAdjoint (Cones.functoriality K G)
+def functorialityAdjunction' : CategoryTheory.Functor.IsRightAdjoint (Cones.functoriality K G)
     where
   left := functorialityLeftAdjoint adj K
   adj :=
     mkOfUnitCounit
       { Unit := functorialityUnit' adj K
         counit := functorialityCounit' adj K }
-#align category_theory.adjunction.functoriality_is_right_adjoint CategoryTheory.Adjunction.functorialityIsRightAdjoint
+#align category_theory.adjunction.functoriality_is_right_adjoint CategoryTheory.Adjunction.functorialityAdjunction'
 -/
 
 #print CategoryTheory.Adjunction.rightAdjointPreservesLimits /-

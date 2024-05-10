@@ -6,7 +6,7 @@ Authors: Scott Morrison
 import Algebra.Category.MonCat.Limits
 import Algebra.Category.GroupCat.Preadditive
 import CategoryTheory.Comma.Over
-import GroupTheory.Subgroup.Basic
+import Algebra.Group.Subgroup.Basic
 import CategoryTheory.ConcreteCategory.Elementwise
 
 #align_import algebra.category.Group.limits from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"

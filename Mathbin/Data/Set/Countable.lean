@@ -351,7 +351,7 @@ theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (h
 #align set.countable_pi Set.countable_pi
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Countable.prod /-
 protected theorem Countable.prod {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) :
     Set.Countable (s ×ˢ t) := by

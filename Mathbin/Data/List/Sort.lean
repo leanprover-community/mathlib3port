@@ -390,7 +390,7 @@ def merge : List α → List α → List α
 #align list.merge List.merge
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print List.mergeSort /-
 /-- Implementation of a merge sort algorithm to sort a list. -/
 def mergeSort : List α → List α
@@ -433,7 +433,7 @@ theorem perm_merge : ∀ l l' : List α, merge r l l' ~ l ++ l'
 #align list.perm_merge List.perm_merge
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print List.perm_mergeSort /-
 theorem perm_mergeSort : ∀ l : List α, mergeSort r l ~ l
   | [] => by simp [merge_sort]
@@ -489,7 +489,7 @@ theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sort
 
 variable (r)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print List.sorted_mergeSort /-
 theorem sorted_mergeSort : ∀ l : List α, Sorted r (mergeSort r l)
   | [] => by simp [merge_sort]

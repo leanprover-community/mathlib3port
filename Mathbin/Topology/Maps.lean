@@ -162,14 +162,14 @@ protected theorem Inducing.continuous {f : α → β} (hf : Inducing f) : Contin
 #align inducing.continuous Inducing.continuous
 -/
 
-#print Inducing.inducing_iff /-
-protected theorem Inducing.inducing_iff {f : α → β} {g : β → γ} (hg : Inducing g) :
+#print Inducing.of_comp_iff /-
+protected theorem Inducing.of_comp_iff {f : α → β} {g : β → γ} (hg : Inducing g) :
     Inducing f ↔ Inducing (g ∘ f) :=
   by
   refine' ⟨fun h => hg.comp h, fun hgf => inducing_of_inducing_compose _ hg.continuous hgf⟩
   rw [hg.continuous_iff]
   exact hgf.continuous
-#align inducing.inducing_iff Inducing.inducing_iff
+#align inducing.inducing_iff Inducing.of_comp_iff
 -/
 
 #print Inducing.closure_eq_preimage_closure_image /-

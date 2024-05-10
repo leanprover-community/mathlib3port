@@ -302,7 +302,7 @@ section Inf
 
 variable [DecidableEq α] {a b c : α}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance : Inf (Finpartition a) :=
   ⟨fun P Q =>
     ofErase ((P.parts ×ˢ Q.parts).image fun bc => bc.1 ⊓ bc.2)
@@ -323,7 +323,7 @@ instance : Inf (Finpartition a) :=
           rfl
         · rw [P.sup_parts, Q.sup_parts, inf_idem])⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finpartition.parts_inf /-
 @[simp]
 theorem parts_inf (P Q : Finpartition a) :
@@ -618,7 +618,7 @@ def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
 
 variable {F : Finset (Finset α)}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (Q «expr ⊆ » F) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (Q «expr ⊆ » F) -/
 #print Finpartition.mem_atomise /-
 theorem mem_atomise :
     t ∈ (atomise s F).parts ↔

@@ -243,7 +243,7 @@ def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
 #align open_add_subgroup.sum OpenAddSubgroup.sum
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print OpenSubgroup.coe_prod /-
 @[simp, norm_cast, to_additive]
 theorem coe_prod (U : OpenSubgroup G) (V : OpenSubgroup H) : (U.Prod V : Set (G × H)) = U ×ˢ V :=

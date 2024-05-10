@@ -133,7 +133,7 @@ theorem continuous_comp_left : Continuous (fun g => g.comp f : C(β, γ) → C(�
 #align continuous_map.continuous_comp_left ContinuousMap.continuous_comp_left
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ContinuousMap.continuous_comp' /-
 /-- Composition is a continuous map from `C(α, β) × C(β, γ)` to `C(α, γ)`, provided that `β` is
   locally compact. This is Prop. 9 of Chap. X, §3, №. 4 of Bourbaki's *Topologie Générale*. -/
@@ -173,7 +173,7 @@ section Ev
 
 variable {α β}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ContinuousMap.continuous_eval /-
 /-- The evaluation map `C(α, β) × α → β` is continuous if `α` is locally compact.
 
@@ -357,7 +357,7 @@ def coev (b : β) : C(α, β × α) :=
 
 variable {α β}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ContinuousMap.image_coev /-
 theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×ˢ s := by tidy
 #align continuous_map.image_coev ContinuousMap.image_coev

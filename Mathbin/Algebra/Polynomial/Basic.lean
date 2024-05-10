@@ -1475,7 +1475,7 @@ variable [DivisionRing R]
 
 #print Polynomial.qsmul_eq_C_mul /-
 theorem qsmul_eq_C_mul (a : ℚ) (f : R[X]) : a • f = Polynomial.C ↑a * f := by
-  rw [← Rat.smul_one_eq_coe, ← Polynomial.smul_C, C_1, smul_one_mul]
+  rw [← Rat.smul_one_eq_cast, ← Polynomial.smul_C, C_1, smul_one_mul]
 #align polynomial.rat_smul_eq_C_mul Polynomial.qsmul_eq_C_mul
 -/
 

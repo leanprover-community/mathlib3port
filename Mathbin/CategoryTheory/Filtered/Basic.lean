@@ -344,8 +344,8 @@ theorem of_right_adjoint {L : D ⥤ C} {R : C ⥤ D} (h : L ⊣ R) : IsFiltered 
 
 #print CategoryTheory.IsFiltered.of_isRightAdjoint /-
 /-- If `C` is filtered, and we have a right adjoint functor `R : C ⥤ D`, then `D` is filtered. -/
-theorem of_isRightAdjoint (R : C ⥤ D) [IsRightAdjoint R] : IsFiltered D :=
-  of_right_adjoint (Adjunction.ofRightAdjoint R)
+theorem of_isRightAdjoint (R : C ⥤ D) [CategoryTheory.Functor.IsRightAdjoint R] : IsFiltered D :=
+  of_right_adjoint (Adjunction.ofIsRightAdjoint R)
 #align category_theory.is_filtered.of_is_right_adjoint CategoryTheory.IsFiltered.of_isRightAdjoint
 -/
 
@@ -819,8 +819,8 @@ theorem of_left_adjoint {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R) : IsCofiltered
 
 #print CategoryTheory.IsCofiltered.of_isLeftAdjoint /-
 /-- If `C` is cofiltered, and we have a left adjoint functor `L : C ⥤ D`, then `D` is cofiltered. -/
-theorem of_isLeftAdjoint (L : C ⥤ D) [IsLeftAdjoint L] : IsCofiltered D :=
-  of_left_adjoint (Adjunction.ofLeftAdjoint L)
+theorem of_isLeftAdjoint (L : C ⥤ D) [CategoryTheory.Functor.IsLeftAdjoint L] : IsCofiltered D :=
+  of_left_adjoint (Adjunction.ofIsLeftAdjoint L)
 #align category_theory.is_cofiltered.of_is_left_adjoint CategoryTheory.IsCofiltered.of_isLeftAdjoint
 -/
 

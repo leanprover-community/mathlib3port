@@ -296,15 +296,15 @@ def SelfLERadical.cast (hJK : J.radical = K.radical) : SelfLERadical J ⥤ SelfL
 #align local_cohomology.self_le_radical.cast localCohomology.SelfLERadical.cast
 -/
 
-#print localCohomology.SelfLERadical.castIsEquivalence /-
+#print localCohomology.SelfLERadical.cast_isEquivalence /-
 -- TODO generalize this to the equivalence of full categories for any `iff`.
-instance SelfLERadical.castIsEquivalence (hJK : J.radical = K.radical) :
+instance SelfLERadical.cast_isEquivalence (hJK : J.radical = K.radical) :
     CategoryTheory.Functor.IsEquivalence (SelfLERadical.cast hJK)
     where
   inverse := SelfLERadical.cast hJK.symm
   unitIso := by tidy
   counitIso := by tidy
-#align local_cohomology.self_le_radical.cast_is_equivalence localCohomology.SelfLERadical.castIsEquivalence
+#align local_cohomology.self_le_radical.cast_is_equivalence localCohomology.SelfLERadical.cast_isEquivalence
 -/
 
 #print localCohomology.SelfLERadical.isoOfSameRadical /-

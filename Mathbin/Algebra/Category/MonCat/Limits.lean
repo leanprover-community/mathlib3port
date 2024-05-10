@@ -7,7 +7,7 @@ import Algebra.Category.MonCat.Basic
 import Algebra.Group.Pi.Lemmas
 import CategoryTheory.Limits.Creates
 import CategoryTheory.Limits.Types
-import GroupTheory.Submonoid.Operations
+import Algebra.Group.Submonoid.Operations
 
 #align_import algebra.category.Mon.limits from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

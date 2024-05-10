@@ -44,7 +44,7 @@ We use notation `𝕎 R`, entered `\bbW`, for the Witt vectors over `R`.
 noncomputable section
 
 #print WittVector /-
-/- ./././Mathport/Syntax/Translate/Command.lean:436:34: infer kinds are unsupported in Lean 4: mk [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:436:34: infer kinds are unsupported in Lean 4: mk [] -/
 /-- `witt_vector p R` is the ring of `p`-typical Witt vectors over the commutative ring `R`,
 where `p` is a prime number.
 
@@ -492,35 +492,35 @@ theorem mul_coeff_zero (x y : 𝕎 R) : (x * y).coeff 0 = x.coeff 0 * y.coeff 0 
 
 end Coeff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.wittAdd_vars /-
 theorem wittAdd_vars (n : ℕ) : (wittAdd p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   wittStructureInt_vars _ _ _
 #align witt_vector.witt_add_vars WittVector.wittAdd_vars
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.wittSub_vars /-
 theorem wittSub_vars (n : ℕ) : (wittSub p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   wittStructureInt_vars _ _ _
 #align witt_vector.witt_sub_vars WittVector.wittSub_vars
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.wittMul_vars /-
 theorem wittMul_vars (n : ℕ) : (wittMul p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   wittStructureInt_vars _ _ _
 #align witt_vector.witt_mul_vars WittVector.wittMul_vars
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.wittNeg_vars /-
 theorem wittNeg_vars (n : ℕ) : (wittNeg p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   wittStructureInt_vars _ _ _
 #align witt_vector.witt_neg_vars WittVector.wittNeg_vars
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.wittNSMul_vars /-
 theorem wittNSMul_vars (m : ℕ) (n : ℕ) :
     (wittNSMul p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
@@ -528,7 +528,7 @@ theorem wittNSMul_vars (m : ℕ) (n : ℕ) :
 #align witt_vector.witt_nsmul_vars WittVector.wittNSMul_vars
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.wittZSMul_vars /-
 theorem wittZSMul_vars (m : ℤ) (n : ℕ) :
     (wittZSMul p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
@@ -536,7 +536,7 @@ theorem wittZSMul_vars (m : ℤ) (n : ℕ) :
 #align witt_vector.witt_zsmul_vars WittVector.wittZSMul_vars
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.wittPow_vars /-
 theorem wittPow_vars (m : ℕ) (n : ℕ) : (wittPow p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   wittStructureInt_vars _ _ _

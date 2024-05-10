@@ -329,14 +329,14 @@ theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r : ℝ
 #align ennreal.forall_ennreal ENNReal.forall_ennreal
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 #print ENNReal.forall_ne_top /-
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ (a) (_ : a ≠ ∞), p a) ↔ ∀ r : ℝ≥0, p r :=
   Option.ball_ne_none
 #align ennreal.forall_ne_top ENNReal.forall_ne_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 #print ENNReal.exists_ne_top' /-
 theorem exists_ne_top' {p : ℝ≥0∞ → Prop} : (∃ (a : _) (_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0, p r :=
   Option.bex_ne_none
@@ -655,7 +655,7 @@ theorem cinfi_ne_top [InfSet α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠
 #align ennreal.cinfi_ne_top ENNReal.cinfi_ne_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 #print ENNReal.iInf_ne_top /-
 theorem iInf_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0, f x := by rw [iInf_subtype', cinfi_ne_top]
@@ -668,7 +668,7 @@ theorem csupr_ne_top [SupSet α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠
 #align ennreal.csupr_ne_top ENNReal.csupr_ne_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 #print ENNReal.iSup_ne_top /-
 theorem iSup_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0, f x :=
@@ -3479,7 +3479,7 @@ theorem add_iInf {a : ℝ≥0∞} : a + iInf f = ⨅ b, a + f b := by
 #align ennreal.add_infi ENNReal.add_iInf
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a a') -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a a') -/
 #print ENNReal.iInf_add_iInf /-
 theorem iInf_add_iInf (h : ∀ i j, ∃ k, f k + g k ≤ f i + g j) : iInf f + iInf g = ⨅ a, f a + g a :=
   suffices (⨅ a, f a + g a) ≤ iInf f + iInf g from

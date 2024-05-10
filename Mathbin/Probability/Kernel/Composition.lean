@@ -166,7 +166,7 @@ theorem compProdFun_tsum_left (κ : kernel α β) (η : kernel (α × β) γ) [I
 #align probability_theory.kernel.comp_prod_fun_tsum_left ProbabilityTheory.kernel.compProdFun_tsum_left
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n m) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n m) -/
 #print ProbabilityTheory.kernel.compProdFun_eq_tsum /-
 theorem compProdFun_eq_tsum (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
     [IsSFiniteKernel η] (a : α) (hs : MeasurableSet s) :
@@ -484,7 +484,7 @@ theorem lintegral_compProd₀ (κ : kernel α β) [IsSFiniteKernel κ] (η : ker
 #align probability_theory.kernel.lintegral_comp_prod₀ ProbabilityTheory.kernel.lintegral_compProd₀
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ProbabilityTheory.kernel.set_lintegral_compProd /-
 theorem set_lintegral_compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
     [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f) {s : Set β} {t : Set γ}
@@ -495,7 +495,7 @@ theorem set_lintegral_compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : ke
 #align probability_theory.kernel.set_lintegral_comp_prod ProbabilityTheory.kernel.set_lintegral_compProd
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ProbabilityTheory.kernel.set_lintegral_compProd_univ_right /-
 theorem set_lintegral_compProd_univ_right (κ : kernel α β) [IsSFiniteKernel κ]
     (η : kernel (α × β) γ) [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f)
@@ -505,7 +505,7 @@ theorem set_lintegral_compProd_univ_right (κ : kernel α β) [IsSFiniteKernel �
 #align probability_theory.kernel.set_lintegral_comp_prod_univ_right ProbabilityTheory.kernel.set_lintegral_compProd_univ_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ProbabilityTheory.kernel.set_lintegral_compProd_univ_left /-
 theorem set_lintegral_compProd_univ_left (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
     [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f) {t : Set γ}
@@ -517,7 +517,7 @@ theorem set_lintegral_compProd_univ_left (κ : kernel α β) [IsSFiniteKernel κ
 
 end Lintegral
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n m) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n m) -/
 #print ProbabilityTheory.kernel.compProd_eq_tsum_compProd /-
 theorem compProd_eq_tsum_compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
     [IsSFiniteKernel η] (a : α) (hs : MeasurableSet s) :

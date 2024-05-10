@@ -380,10 +380,10 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
 #align solvable_by_rad.induction3 solvableByRad.induction3
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print solvableByRad.induction2 /-
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction2 {α β γ : solvableByRad F E} (hγ : γ ∈ F⟮⟯) (hα : P α) (hβ : P β) : P γ :=
@@ -419,7 +419,7 @@ theorem induction2 {α β γ : solvableByRad F E} (hγ : γ ∈ F⟮⟯) (hα : 
 #align solvable_by_rad.induction2 solvableByRad.induction2
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print solvableByRad.induction1 /-
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction1 {α β : solvableByRad F E} (hβ : β ∈ F⟮⟯) (hα : P α) : P β :=

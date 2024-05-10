@@ -174,7 +174,7 @@ theorem card_le_two_pow {x k : ℕ} : card ({e ∈ m x k | Squarefree (e + 1)}) 
     _ = 2 ^ k := by rw [card_range k]
 #align theorems_100.card_le_two_pow Theorems100.card_le_two_pow
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /--
 The number of `e < x` for which `e + 1` is a product of powers of primes smaller than or equal to
 `k` is bounded by `2 ^ k * nat.sqrt x`.

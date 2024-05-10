@@ -173,7 +173,7 @@ instance : HasLimits AffineScheme.{u} :=
 
 noncomputable instance : PreservesLimits Γ.{u}.rightOp :=
   @Adjunction.isEquivalencePreservesLimits _ _ Γ.rightOp
-    (CategoryTheory.Functor.IsEquivalence.ofEquivalence equivCommRingCat)
+    (Equivalence.isEquivalence_functor equivCommRingCat)
 
 noncomputable instance : PreservesLimits forgetToScheme :=
   by

@@ -180,12 +180,12 @@ theorem not_nodup_of_get_eq_of_ne (xs : List α) (n m : ℕ) (hn : n < xs.length
 #align list.nth_le_eq_of_ne_imp_not_nodup List.not_nodup_of_get_eq_of_ne
 -/
 
-#print List.nthLe_index_of /-
+#print List.get_indexOf /-
 @[simp]
-theorem nthLe_index_of [DecidableEq α] {l : List α} (H : Nodup l) (n h) :
+theorem get_indexOf [DecidableEq α] {l : List α} (H : Nodup l) (n h) :
     indexOf (nthLe l n h) l = n :=
-  nodup_iff_nthLe_inj.1 H _ _ _ h <| indexOf_nthLe <| indexOf_lt_length.2 <| nthLe_mem _ _ _
-#align list.nth_le_index_of List.nthLe_index_of
+  nodup_iff_nthLe_inj.1 H _ _ _ h <| indexOf_get <| indexOf_lt_length.2 <| nthLe_mem _ _ _
+#align list.nth_le_index_of List.get_indexOf
 -/
 
 #print List.nodup_iff_count_le_one /-

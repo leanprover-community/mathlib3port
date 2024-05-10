@@ -285,7 +285,7 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
         run_linarith_on_pfs cfg hyps pref_type
 #align tactic.linarith tactic.linarith
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Tries to prove a goal of `false` by linear arithmetic on hypotheses.
 If the goal is a linear (in)equality, tries to prove it by contradiction.
 If the goal is not `false` or an inequality, applies `exfalso` and tries linarith on the

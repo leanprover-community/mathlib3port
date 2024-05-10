@@ -602,7 +602,7 @@ instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l
 #align list.decidable_infix List.decidableInfix
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:570:6: unsupported: specialize @hyp -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:570:6: unsupported: specialize @hyp -/
 #print List.prefix_take_le_iff /-
 theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) :
     L.take m <+: L.take n ↔ m ≤ n :=

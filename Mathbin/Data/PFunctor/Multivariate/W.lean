@@ -301,7 +301,7 @@ theorem w_map_wMk {α β : TypeVec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B a
 #align mvpfunctor.W_map_W_mk MvPFunctor.w_map_wMk
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MvPFunctor.objAppend1 /-
 -- TODO: this technical theorem is used in one place in constructing the initial algebra.
 -- Can it be avoided?
@@ -330,7 +330,7 @@ the qpf axioms are expressed in terms of `map` on `P`.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MvPFunctor.wMk' /-
 /-- Constructor for the W-type of `P` -/
 def wMk' {α : TypeVec n} : P.Obj (α ::: P.W α) → P.W α

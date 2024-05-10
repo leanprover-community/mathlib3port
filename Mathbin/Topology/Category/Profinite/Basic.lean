@@ -278,7 +278,7 @@ def toProfiniteAdjToCompHaus : CompHaus.toProfinite ⊣ profiniteToCompHaus :=
 #print Profinite.toCompHaus.reflective /-
 /-- The category of profinite sets is reflective in the category of compact hausdroff spaces -/
 instance toCompHaus.reflective : Reflective profiniteToCompHaus
-    where toIsRightAdjoint := ⟨CompHaus.toProfinite, Profinite.toProfiniteAdjToCompHaus⟩
+    where to_isRightAdjoint := ⟨CompHaus.toProfinite, Profinite.toProfiniteAdjToCompHaus⟩
 #align Profinite.to_CompHaus.reflective Profinite.toCompHaus.reflective
 -/
 

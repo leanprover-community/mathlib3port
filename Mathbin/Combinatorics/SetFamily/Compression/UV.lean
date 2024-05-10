@@ -373,7 +373,7 @@ private theorem aux (huv : ∀ x ∈ u, ∃ y ∈ v, IsCompressed (u.eraseₓ x)
     v = ∅ → u = ∅ := by rintro rfl; refine' eq_empty_of_forall_not_mem fun a ha => _;
   obtain ⟨_, ⟨⟩, -⟩ := huv a ha
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y «expr ∉ » s) -/
 #print UV.shadow_compression_subset_compression_shadow /-
 /-- UV-compression reduces the size of the shadow of `𝒜` if, for all `x ∈ u` there is `y ∈ v` such
 that `𝒜` is `(u.erase x, v.erase y)`-compressed. This is the key fact about compression for

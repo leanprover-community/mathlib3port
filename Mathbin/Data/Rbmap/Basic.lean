@@ -13,25 +13,25 @@ def RbmapLt {α : Type u} {β : Type v} (lt : α → α → Prop) (a b : α × �
   lt a.1 b.1
 #align rbmap_lt RbmapLt
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option auto_param.check_exists -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option auto_param.check_exists -/
 set_option auto_param.check_exists false
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def Rbmap (α : Type u) (β : Type v)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt) :
     Type max u v :=
-  Std.RBSet (α × β) (RbmapLt lt)
+  Batteries.RBSet (α × β) (RbmapLt lt)
 #align rbmap Rbmap
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def mkRbmap (α : Type u) (β : Type v)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt) :
     Rbmap α β lt :=
-  Std.mkRBSet (α × β) (RbmapLt lt)
+  Batteries.mkRBSet (α × β) (RbmapLt lt)
 #align mk_rbmap mkRbmap
 
 namespace Rbmap
@@ -70,9 +70,9 @@ definition: (k, default) ∈ m
 -/
 protected def Mem (k : α) (m : Rbmap α β lt) : Prop :=
   match m.val with
-  | Std.RBNode.nil => False
-  | Std.RBNode.node _ e _ => Std.RBSet.Mem (k, e.2) m
-  | rbnode.black_node _ e _ => Std.RBSet.Mem (k, e.2) m
+  | Batteries.RBNode.nil => False
+  | Batteries.RBNode.node _ e _ => Batteries.RBSet.Mem (k, e.2) m
+  | rbnode.black_node _ e _ => Batteries.RBSet.Mem (k, e.2) m
 #align rbmap.mem Rbmap.Mem
 
 instance : Membership α (Rbmap α β lt) :=
@@ -87,14 +87,14 @@ def rbmapLtDec [h : DecidableRel lt] : DecidableRel (@RbmapLt α β lt) := fun a
 variable [DecidableRel lt]
 
 def insert (m : Rbmap α β lt) (k : α) (v : β) : Rbmap α β lt :=
-  @Std.RBSet.insert _ _ rbmapLtDec m (k, v)
+  @Batteries.RBSet.insert _ _ rbmapLtDec m (k, v)
 #align rbmap.insert Rbmap.insert
 
 def findEntry (m : Rbmap α β lt) (k : α) : Option (α × β) :=
   match m.val with
-  | Std.RBNode.nil => none
-  | Std.RBNode.node _ e _ => @Std.RBSet.find? _ _ rbmapLtDec m (k, e.2)
-  | rbnode.black_node _ e _ => @Std.RBSet.find? _ _ rbmapLtDec m (k, e.2)
+  | Batteries.RBNode.nil => none
+  | Batteries.RBNode.node _ e _ => @Batteries.RBSet.find? _ _ rbmapLtDec m (k, e.2)
+  | rbnode.black_node _ e _ => @Batteries.RBSet.find? _ _ rbmapLtDec m (k, e.2)
 #align rbmap.find_entry Rbmap.findEntry
 
 def toValue : Option (α × β) → Option β
@@ -110,7 +110,7 @@ def contains (m : Rbmap α β lt) (k : α) : Bool :=
   (findEntry m k).isSome
 #align rbmap.contains Rbmap.contains
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def fromList (l : List (α × β))
     (lt : α → α → Prop := by
       run_tac
@@ -121,7 +121,7 @@ def fromList (l : List (α × β))
 
 end Rbmap
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def rbmapOf {α : Type u} {β : Type v} (l : List (α × β))
     (lt : α → α → Prop := by
       run_tac

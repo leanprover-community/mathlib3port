@@ -133,7 +133,7 @@ unsafe def tactic.qify_proof (extra_lems : List simp_arg_type) (h : expr) : tact
 
 section
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- The `qify` tactic is used to shift propositions from `ℕ` or `ℤ` to `ℚ`.
 This is often useful since `ℚ` has well-behaved division and subtraction.
 

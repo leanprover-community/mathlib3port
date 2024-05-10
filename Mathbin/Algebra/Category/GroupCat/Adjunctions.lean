@@ -84,7 +84,7 @@ def adj : free ⊣ forget AddCommGroupCat.{u} :=
 #align AddCommGroup.adj AddCommGroupCat.adj
 -/
 
-instance : IsRightAdjoint (forget AddCommGroupCat.{u}) :=
+instance : CategoryTheory.Functor.IsRightAdjoint (forget AddCommGroupCat.{u}) :=
   ⟨_, adj⟩
 
 /-- As an example, we now give a high-powered proof that
@@ -120,7 +120,7 @@ def adj : free ⊣ forget GroupCat.{u} :=
 #align Group.adj GroupCat.adj
 -/
 
-instance : IsRightAdjoint (forget GroupCat.{u}) :=
+instance : CategoryTheory.Functor.IsRightAdjoint (forget GroupCat.{u}) :=
   ⟨_, adj⟩
 
 end GroupCat
@@ -188,7 +188,7 @@ def GroupCat.forget₂MonAdj : forget₂ GroupCat MonCat ⊣ MonCat.units.{u}
 #align Group.forget₂_Mon_adj GroupCat.forget₂MonAdj
 -/
 
-instance : IsRightAdjoint MonCat.units.{u} :=
+instance : CategoryTheory.Functor.IsRightAdjoint MonCat.units.{u} :=
   ⟨_, GroupCat.forget₂MonAdj⟩
 
 #print CommMonCat.units /-
@@ -223,6 +223,6 @@ def CommGroupCat.forget₂CommMonAdj : forget₂ CommGroupCat CommMonCat ⊣ Com
 #align CommGroup.forget₂_CommMon_adj CommGroupCat.forget₂CommMonAdj
 -/
 
-instance : IsRightAdjoint CommMonCat.units.{u} :=
+instance : CategoryTheory.Functor.IsRightAdjoint CommMonCat.units.{u} :=
   ⟨_, CommGroupCat.forget₂CommMonAdj⟩
 

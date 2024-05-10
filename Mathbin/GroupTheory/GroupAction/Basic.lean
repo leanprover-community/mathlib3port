@@ -8,7 +8,7 @@ import GroupTheory.GroupAction.Defs
 import GroupTheory.GroupAction.Group
 import Data.Setoid.Basic
 import Data.Set.Pointwise.SMul
-import GroupTheory.Subgroup.Basic
+import Algebra.Group.Subgroup.Basic
 
 #align_import group_theory.group_action.basic from "leanprover-community/mathlib"@"d30d31261cdb4d2f5e612eabc3c4bf45556350d5"
 

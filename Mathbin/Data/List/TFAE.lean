@@ -66,7 +66,7 @@ theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀ a ∈ l, a ↔ b) : T
 #align list.tfae_of_forall List.tfae_of_forall
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->» -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->» -/
 #print List.tfae_of_cycle /-
 theorem tfae_of_cycle {a b} {l : List Prop} :
     List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → TFAE (a :: b :: l) :=

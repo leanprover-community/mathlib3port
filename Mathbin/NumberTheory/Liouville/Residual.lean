@@ -24,7 +24,7 @@ open scoped Filter
 
 open Filter Set Metric
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print setOf_liouville_eq_iInter_iUnion /-
 theorem setOf_liouville_eq_iInter_iUnion :
     {x | Liouville x} =
@@ -46,7 +46,7 @@ theorem IsGδ.setOf_liouville : IsGδ {x | Liouville x} :=
 #align is_Gδ_set_of_liouville IsGδ.setOf_liouville
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print setOf_liouville_eq_irrational_inter_iInter_iUnion /-
 theorem setOf_liouville_eq_irrational_inter_iInter_iUnion :
     {x | Liouville x} =

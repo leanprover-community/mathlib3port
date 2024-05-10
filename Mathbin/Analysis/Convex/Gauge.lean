@@ -70,14 +70,14 @@ theorem gauge_def : gauge s x = sInf ({r ∈ Set.Ioi 0 | x ∈ r • s}) :=
 #align gauge_def gauge_def
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]] -/
 #print gauge_def' /-
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
 theorem gauge_def' : gauge s x = sInf ({r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s}) :=
   by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
+    "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
   exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
 #align gauge_def' gauge_def'
 -/

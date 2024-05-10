@@ -284,7 +284,7 @@ end ExplodeWidget
 
 open ExplodeWidget
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- User command of the explode widget.
 -/
 @[user_command]

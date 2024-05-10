@@ -187,7 +187,7 @@ variable (f : Type → Prop)
 
 namespace SlimCheck
 
-/- ./././Mathport/Syntax/Translate/Command.lean:377:30: infer kinds are unsupported in Lean 4: gave_up {} -/
+/- ././././Mathport/Syntax/Translate/Command.lean:377:30: infer kinds are unsupported in Lean 4: gave_up {} -/
 #print SlimCheck.TestResult /-
 /-- Result of trying to disprove `p`
 
@@ -267,7 +267,7 @@ instance (priority := 100) defaultPrintableProp {p} : PrintableProp p :=
 #align slim_check.default_printable_prop SlimCheck.defaultPrintableProp
 
 #print SlimCheck.Testable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
 /-- `testable p` uses random examples to try to disprove `p`. -/
 class Testable (p : Prop) where
   run (cfg : SlimCheckCfg) (minimize : Bool) : Gen (TestResult p)
@@ -319,7 +319,7 @@ def convertCounterExample' {p q : Prop} (h : p ↔ q) (r : TestResult p) : TestR
   convertCounterExample h.2 r (PSum.inr h.1)
 #align slim_check.convert_counter_example' SlimCheck.convertCounterExample'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- When we assign a value to a universally quantified variable,
 we record that value using this function so that our counter-examples
 can be informative. -/
@@ -439,7 +439,7 @@ def traceIfGiveup {p α β} [Repr α] (tracing_enabled : Bool) (var : String) (v
   | _ => (· <| ())
 #align slim_check.trace_if_giveup SlimCheck.traceIfGiveup
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- testable instance for a property iterating over the element of a list -/
 instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] :
     ∀ xs : List α, Testable (NamedBinder var <| ∀ x, NamedBinder var' <| x ∈ xs → β x)
@@ -855,7 +855,7 @@ unsafe def mk_decorations : tactic Unit := do
 
 end Tactic
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.mk_decorations -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.mk_decorations -/
 #print SlimCheck.Testable.check /-
 /-- Run a test suite for `p` and return true or false: should we believe that `p` holds? -/
 def Testable.check (p : Prop) (cfg : SlimCheckCfg := { })

@@ -48,13 +48,13 @@ local notation:1024 "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 
 local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler λ α,
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler λ α,
 has_coe[has_coe] α exprℂ() -/
 #print UpperHalfPlane /-
 /-- The open upper half plane -/
 def UpperHalfPlane :=
   { point : ℂ // 0 < point.im }
-deriving «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler λ α,
+deriving «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler λ α,
   has_coe[has_coe] α exprℂ()»
 #align upper_half_plane UpperHalfPlane
 -/

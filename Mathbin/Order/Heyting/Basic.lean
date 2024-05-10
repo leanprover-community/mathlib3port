@@ -1541,7 +1541,7 @@ theorem compl_le_hnot : aᶜ ≤ ￢a :=
 
 end BiheytingAlgebra
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->» -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->» -/
 #print Prop.instHeytingAlgebra /-
 /-- Propositions form a Heyting algebra with implication as Heyting implication and negation as
 complement. -/

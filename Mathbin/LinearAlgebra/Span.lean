@@ -300,8 +300,8 @@ theorem span_iUnion {ι} (s : ι → Set M) : span R (⋃ i, s i) = ⨆ i, span 
 #align submodule.span_Union Submodule.span_iUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Submodule.span_iUnion₂ /-
 theorem span_iUnion₂ {ι} {κ : ι → Sort _} (s : ∀ i, κ i → Set M) :
     span R (⋃ (i) (j), s i j) = ⨆ (i) (j), span R (s i j) :=
@@ -932,7 +932,7 @@ end
 
 variable {M' : Type _} [AddCommMonoid M'] [Module R M'] (q₁ q₁' : Submodule R M')
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Submodule.prod /-
 /-- The product of two submodules is a submodule. -/
 def prod : Submodule R (M × M') :=
@@ -943,7 +943,7 @@ def prod : Submodule R (M × M') :=
 #align submodule.prod Submodule.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Submodule.prod_coe /-
 @[simp]
 theorem prod_coe : (prod p q₁ : Set (M × M')) = p ×ˢ q₁ :=
@@ -959,7 +959,7 @@ theorem mem_prod {p : Submodule R M} {q : Submodule R M'} {x : M × M'} :
 #align submodule.mem_prod Submodule.mem_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Submodule.span_prod_le /-
 theorem span_prod_le (s : Set M) (t : Set M') : span R (s ×ˢ t) ≤ prod (span R s) (span R t) :=
   span_le.2 <| Set.prod_mono subset_span subset_span

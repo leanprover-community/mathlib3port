@@ -112,13 +112,13 @@ def MiuAtom.repr : MiuAtom → String
 instance : Repr MiuAtom :=
   ⟨fun u => u.repr⟩
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_mem[has_mem] miu_atom[miu.miu_atom] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_mem[has_mem] miu_atom[miu.miu_atom] -/
 /-- For simplicity, an `miustr` is just a list of elements of type `miu_atom`.
 -/
 def Miustr :=
   List MiuAtom
 deriving Append,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_mem[has_mem] miu_atom[miu.miu_atom]»
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_mem[has_mem] miu_atom[miu.miu_atom]»
 #align miu.miustr Miu.Miustr
 
 /-- For display purposes, an `miustr` can be represented as a `string`.

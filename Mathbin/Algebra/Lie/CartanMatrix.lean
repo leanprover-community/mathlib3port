@@ -201,7 +201,7 @@ end Relations
 
 end CartanMatrix
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler lie_algebra[lie_algebra] R -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler lie_algebra[lie_algebra] R -/
 #print Matrix.ToLieAlgebra /-
 /-- The Lie algebra corresponding to a Cartan matrix.
 
@@ -210,7 +210,7 @@ regarded as junk. -/
 def Matrix.ToLieAlgebra :=
   FreeLieAlgebra R _ ⧸ CartanMatrix.Relations.toIdeal R A
 deriving Inhabited, LieRing,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler lie_algebra[lie_algebra] R»
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler lie_algebra[lie_algebra] R»
 #align matrix.to_lie_algebra Matrix.ToLieAlgebra
 -/
 

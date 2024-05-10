@@ -126,7 +126,7 @@ variable [CommSemiring R] [Semiring S] [AddCommMonoid A]
 
 variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print linearIndependent_smul /-
 theorem linearIndependent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁} {c : ι' → A}
     (hb : LinearIndependent R b) (hc : LinearIndependent S c) :

@@ -64,7 +64,7 @@ def adj : free R ⊣ forget (ModuleCat.{u} R) :=
 #align Module.adj ModuleCat.adj
 -/
 
-instance : IsRightAdjoint (forget (ModuleCat.{u} R)) :=
+instance : CategoryTheory.Functor.IsRightAdjoint (forget (ModuleCat.{u} R)) :=
   ⟨_, adj R⟩
 
 end
@@ -89,8 +89,8 @@ theorem ε_apply (r : R) : ε R r = Finsupp.single PUnit.unit r :=
 #align Module.free.ε_apply ModuleCat.Free.ε_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.Free.μ /-
 /-- (Implementation detail) The tensorator for `free R`. -/
 def μ (α β : Type u) : (free R).obj α ⊗ (free R).obj β ≅ (free R).obj (α ⊗ β) :=
@@ -98,8 +98,8 @@ def μ (α β : Type u) : (free R).obj α ⊗ (free R).obj β ≅ (free R).obj (
 #align Module.free.μ ModuleCat.Free.μ
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.Free.μ_natural /-
 theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
     ((free R).map f ⊗ (free R).map g) ≫ (μ R Y Y').Hom = (μ R X X').Hom ≫ (free R).map (f ⊗ g) :=
@@ -112,7 +112,7 @@ theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
 #align Module.free.μ_natural ModuleCat.Free.μ_natural
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.Free.left_unitality /-
 theorem left_unitality (X : Type u) :
     (λ_ ((free R).obj X)).Hom =
@@ -127,7 +127,7 @@ theorem left_unitality (X : Type u) :
 #align Module.free.left_unitality ModuleCat.Free.left_unitality
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.Free.right_unitality /-
 theorem right_unitality (X : Type u) :
     (ρ_ ((free R).obj X)).Hom =
@@ -142,10 +142,10 @@ theorem right_unitality (X : Type u) :
 #align Module.free.right_unitality ModuleCat.Free.right_unitality
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.Free.associativity /-
 theorem associativity (X Y Z : Type u) :
     ((μ R X Y).Hom ⊗ 𝟙 ((free R).obj Z)) ≫ (μ R (X ⊗ Y) Z).Hom ≫ map (free R).obj (α_ X Y Z).Hom =
@@ -192,7 +192,7 @@ def monoidalFree : MonoidalFunctor (Type u) (ModuleCat.{u} R) :=
 #align Module.monoidal_free ModuleCat.monoidalFree
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 example (X Y : Type u) : (free R).obj (X × Y) ≅ (free R).obj X ⊗ (free R).obj Y :=
   ((monoidalFree R).μIso X Y).symm
 

@@ -73,8 +73,8 @@ theorem boxProd_adj_right : (G □ H).Adj (a, b₁) (a, b₂) ↔ H.Adj b₁ b�
 #align simple_graph.box_prod_adj_right SimpleGraph.boxProd_adj_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.boxProd_neighborSet /-
 theorem boxProd_neighborSet (x : α × β) :
     (G □ H).neighborSet x = G.neighborSet x.1 ×ˢ {x.2} ∪ {x.1} ×ˢ H.neighborSet x.2 :=
@@ -260,8 +260,8 @@ theorem boxProd_connected : (G □ H).Connected ↔ G.Connected ∧ H.Connected 
 #align simple_graph.box_prod_connected SimpleGraph.boxProd_connected
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.boxProdFintypeNeighborSet /-
 instance boxProdFintypeNeighborSet (x : α × β) [Fintype (G.neighborSet x.1)]
     [Fintype (H.neighborSet x.2)] : Fintype ((G □ H).neighborSet x) :=
@@ -276,8 +276,8 @@ instance boxProdFintypeNeighborSet (x : α × β) [Fintype (G.neighborSet x.1)]
 #align simple_graph.box_prod_fintype_neighbor_set SimpleGraph.boxProdFintypeNeighborSet
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.boxProd_neighborFinset /-
 theorem boxProd_neighborFinset (x : α × β) [Fintype (G.neighborSet x.1)]
     [Fintype (H.neighborSet x.2)] [Fintype ((G □ H).neighborSet x)] :

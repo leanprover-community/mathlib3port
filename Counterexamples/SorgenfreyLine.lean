@@ -127,7 +127,7 @@ theorem isOpen_iff {s : Set ℝₗ} : IsOpen s ↔ ∀ x ∈ s, ∃ y > x, Ico x
   isOpen_iff_mem_nhds.trans <| forall₂_congr fun x hx => (nhds_basis_Ico x).mem_iff
 #align counterexample.sorgenfrey_line.is_open_iff Counterexample.SorgenfreyLine.isOpen_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem isClosed_iff {s : Set ℝₗ} : IsClosed s ↔ ∀ (x) (_ : x ∉ s), ∃ y > x, Disjoint (Ico x y) s :=
   by simp only [← isOpen_compl_iff, is_open_iff, mem_compl_iff, subset_compl_iff_disjoint_right]
 #align counterexample.sorgenfrey_line.is_closed_iff Counterexample.SorgenfreyLine.isClosed_iff
@@ -257,7 +257,7 @@ theorem isClosed_of_subset_antidiagonal {s : Set (ℝₗ × ℝₗ)} {c : ℝₗ
     rwa [← add_le_add_iff_left, hs _ H, add_le_add_iff_right]
 #align counterexample.sorgenfrey_line.is_closed_of_subset_antidiagonal Counterexample.SorgenfreyLine.isClosed_of_subset_antidiagonal
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem nhds_prod_antitone_basis_inv_pNat (x y : ℝₗ) :
     (𝓝 (x, y)).HasAntitoneBasis fun n : ℕ+ => Ico x (x + n⁻¹) ×ˢ Ico y (y + n⁻¹) :=
   by
@@ -265,8 +265,8 @@ theorem nhds_prod_antitone_basis_inv_pNat (x y : ℝₗ) :
   exact (nhds_antitone_basis_Ico_inv_pnat x).Prod (nhds_antitone_basis_Ico_inv_pnat y)
 #align counterexample.sorgenfrey_line.nhds_prod_antitone_basis_inv_pnat Counterexample.SorgenfreyLine.nhds_prod_antitone_basis_inv_pNat
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of the Sorgenfrey line and itself is not a normal topological space. -/
 theorem not_normalSpace_prod : ¬NormalSpace (ℝₗ × ℝₗ) :=
   by

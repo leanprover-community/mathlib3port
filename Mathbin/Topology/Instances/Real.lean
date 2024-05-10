@@ -9,7 +9,7 @@ import Topology.Algebra.UniformMulAction
 import Topology.Algebra.Ring.Basic
 import Topology.Algebra.Star
 import Topology.Algebra.Order.Field
-import RingTheory.Subring.Basic
+import Algebra.Ring.Subring.Basic
 import GroupTheory.Archimedean
 import Algebra.Order.Group.Bounds
 import Algebra.Periodic
@@ -70,7 +70,7 @@ instance : ProperSpace ℝ
 instance : SecondCountableTopology ℝ :=
   secondCountable_of_proper
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print Real.isTopologicalBasis_Ioo_rat /-
 theorem Real.isTopologicalBasis_Ioo_rat :
     @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
@@ -162,7 +162,7 @@ theorem Real.uniformContinuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
 #align real.uniform_continuous_mul Real.uniformContinuous_mul
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Real.continuous_mul /-
 protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
   continuous_iff_continuousAt.2 fun ⟨a₁, a₂⟩ =>

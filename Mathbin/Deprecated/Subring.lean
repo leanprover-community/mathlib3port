@@ -5,7 +5,7 @@ Authors: Johan Commelin
 -/
 import Deprecated.Subgroup
 import Deprecated.Group
-import RingTheory.Subring.Basic
+import Algebra.Ring.Subring.Basic
 
 #align_import deprecated.subring from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 
@@ -153,8 +153,8 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
 #align ring.exists_list_of_mem_closure Ring.exists_list_of_mem_closure
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Ring.InClosure.recOn /-
 @[elab_as_elim]
 protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1)

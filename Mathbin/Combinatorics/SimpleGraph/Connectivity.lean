@@ -634,7 +634,7 @@ theorem concat_inj {u v v' w : V} {p : G.Walk u v} {h : G.Adj v w} {p' : G.Walk 
 #align simple_graph.walk.concat_inj SimpleGraph.Walk.concat_inj
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.Walk.support /-
 /-- The `support` of a walk is the list of vertices it visits in order. -/
 def support : ∀ {u v : V}, G.Walk u v → List V
@@ -643,7 +643,7 @@ def support : ∀ {u v : V}, G.Walk u v → List V
 #align simple_graph.walk.support SimpleGraph.Walk.support
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.Walk.darts /-
 /-- The `darts` of a walk is the list of darts it visits in order. -/
 def darts : ∀ {u v : V}, G.Walk u v → List G.Dart
@@ -667,7 +667,7 @@ theorem support_nil {u : V} : (nil : G.Walk u u).support = [u] :=
 #align simple_graph.walk.support_nil SimpleGraph.Walk.support_nil
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.Walk.support_cons /-
 @[simp]
 theorem support_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
@@ -715,7 +715,7 @@ theorem tail_support_append {u v w : V} (p : G.Walk u v) (p' : G.Walk v w) :
 #align simple_graph.walk.tail_support_append SimpleGraph.Walk.tail_support_append
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.Walk.support_eq_cons /-
 theorem support_eq_cons {u v : V} (p : G.Walk u v) : p.support = u::p.support.tail := by
   cases p <;> simp
@@ -869,7 +869,7 @@ theorem darts_nil {u : V} : (nil : G.Walk u u).darts = [] :=
 #align simple_graph.walk.darts_nil SimpleGraph.Walk.darts_nil
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.Walk.darts_cons /-
 @[simp]
 theorem darts_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
@@ -912,7 +912,7 @@ theorem mem_darts_reverse {u v : V} {d : G.Dart} {p : G.Walk u v} :
 #align simple_graph.walk.mem_darts_reverse SimpleGraph.Walk.mem_darts_reverse
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.Walk.cons_map_snd_darts /-
 theorem cons_map_snd_darts {u v : V} (p : G.Walk u v) : (u::p.darts.map Dart.snd) = p.support := by
   induction p <;> simp! [*]
@@ -944,7 +944,7 @@ theorem edges_nil {u : V} : (nil : G.Walk u u).edges = [] :=
 #align simple_graph.walk.edges_nil SimpleGraph.Walk.edges_nil
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.Walk.edges_cons /-
 @[simp]
 theorem edges_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
@@ -1068,32 +1068,32 @@ structure IsTrail {u v : V} (p : G.Walk u v) : Prop where
 -/
 
 #print SimpleGraph.Walk.IsPath /-
-/- ./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure -/
+/- ././././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure -/
 /-- A *path* is a walk with no repeating vertices.
 Use `simple_graph.walk.is_path.mk'` for a simpler constructor. -/
 structure IsPath {u v : V} (p : G.Walk u v) extends
-    "./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure" :
+    "././././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure" :
     Prop where
   support_nodup : p.support.Nodup
 #align simple_graph.walk.is_path SimpleGraph.Walk.IsPath
 -/
 
 #print SimpleGraph.Walk.IsCircuit /-
-/- ./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure -/
+/- ././././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure -/
 /-- A *circuit* at `u : V` is a nonempty trail beginning and ending at `u`. -/
 structure IsCircuit {u : V} (p : G.Walk u u) extends
-    "./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure" :
+    "././././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure" :
     Prop where
   ne_nil : p ≠ nil
 #align simple_graph.walk.is_circuit SimpleGraph.Walk.IsCircuit
 -/
 
 #print SimpleGraph.Walk.IsCycle /-
-/- ./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure -/
+/- ././././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure -/
 /-- A *cycle* at `u : V` is a circuit at `u` whose only repeating vertex
 is `u` (which appears exactly twice). -/
 structure IsCycle {u : V} (p : G.Walk u u) extends
-    "./././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure" :
+    "././././Mathport/Syntax/Translate/Command.lean:429:11: unsupported: advanced extends in structure" :
     Prop where
   support_nodup : p.support.tail.Nodup
 #align simple_graph.walk.is_cycle SimpleGraph.Walk.IsCycle

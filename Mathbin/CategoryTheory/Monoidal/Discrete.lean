@@ -65,7 +65,7 @@ def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Disc
 
 variable {K : Type u} [Monoid K]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.Discrete.monoidalFunctorComp /-
 /-- The monoidal natural isomorphism corresponding to composing two multiplicative morphisms.
 -/

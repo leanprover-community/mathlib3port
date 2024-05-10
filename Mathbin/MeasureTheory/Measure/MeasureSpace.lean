@@ -597,7 +597,7 @@ theorem measure_biUnion_eq_iSup {s : ι → Set α} {t : Set ι} (ht : t.Countab
 #align measure_theory.measure_bUnion_eq_supr MeasureTheory.measure_biUnion_eq_iSup
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s k) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s k) -/
 #print MeasureTheory.measure_iInter_eq_iInf /-
 /-- Continuity from above: the measure of the intersection of a decreasing sequence of measurable
 sets is the infimum of the measures. -/
@@ -724,8 +724,8 @@ theorem measure_limsup_eq_zero {s : ℕ → Set α} (hs : ∑' i, μ (s i) ≠ �
 #align measure_theory.measure_limsup_eq_zero MeasureTheory.measure_limsup_eq_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 #print MeasureTheory.measure_liminf_eq_zero /-
 theorem measure_liminf_eq_zero {s : ℕ → Set α} (h : ∑' i, μ (s i) ≠ ⊤) : μ (liminf s atTop) = 0 :=
   by
@@ -2165,7 +2165,7 @@ theorem restrict_eq_self_of_ae_mem {m0 : MeasurableSpace α} ⦃s : Set α⦄ �
 #align measure_theory.measure.restrict_eq_self_of_ae_mem MeasureTheory.Measure.restrict_eq_self_of_ae_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print MeasureTheory.Measure.restrict_congr_meas /-
 theorem restrict_congr_meas (hs : MeasurableSet s) :
     μ.restrict s = ν.restrict s ↔ ∀ (t) (_ : t ⊆ s), MeasurableSet t → μ t = ν t :=
@@ -3179,7 +3179,7 @@ section Pointwise
 
 open scoped Pointwise
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
 #print MeasureTheory.Measure.pairwise_aedisjoint_of_aedisjoint_forall_ne_one /-
 @[to_additive]
 theorem pairwise_aedisjoint_of_aedisjoint_forall_ne_one {G α : Type _} [Group G] [MulAction G α]
@@ -4532,7 +4532,7 @@ theorem countable_meas_level_set_pos {α β : Type _} [MeasurableSpace α] {μ :
 #align measure_theory.measure.countable_meas_level_set_pos MeasureTheory.Measure.countable_meas_level_set_pos
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t' «expr ⊇ » t) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t' «expr ⊇ » t) -/
 #print MeasureTheory.Measure.measure_toMeasurable_inter_of_cover /-
 /-- If a set `t` is covered by a countable family of finite measure sets, then its measurable
 superset `to_measurable μ t` (which has the same measure as `t`) satisfies,
@@ -5560,7 +5560,7 @@ namespace IsCompact
 
 variable [TopologicalSpace α] [MeasurableSpace α] {μ : Measure α} {s : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (U «expr ⊇ » s) -/
 #print IsCompact.exists_open_superset_measure_lt_top' /-
 /-- If `s` is a compact set and `μ` is finite at `𝓝 x` for every `x ∈ s`, then `s` admits an open
 superset of finite measure. -/
@@ -5580,7 +5580,7 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s)
 #align is_compact.exists_open_superset_measure_lt_top' IsCompact.exists_open_superset_measure_lt_top'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (U «expr ⊇ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (U «expr ⊇ » s) -/
 #print IsCompact.exists_open_superset_measure_lt_top /-
 /-- If `s` is a compact set and `μ` is a locally finite measure, then `s` admits an open superset of
 finite measure. -/

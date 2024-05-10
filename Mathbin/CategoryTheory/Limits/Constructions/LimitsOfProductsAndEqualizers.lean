@@ -73,7 +73,7 @@ def buildLimit : Cone F where
 
 variable {i}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 #print CategoryTheory.Limits.HasLimitOfHasProductsOfHasEqualizers.buildIsLimit /-
 /--
 (Implementation) Show the cone constructed in `build_limit` is limiting, provided the cones used in
@@ -89,7 +89,7 @@ def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) :
     · apply t₂.hom_ext
       intro j;
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
+        "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
       simp [hs, ht]
   uniq q m w := hi.hom_ext (i.equalizer_ext (t₁.hom_ext fun j => by cases j; simpa using w j))
 #align category_theory.limits.has_limit_of_has_products_of_has_equalizers.build_is_limit CategoryTheory.Limits.HasLimitOfHasProductsOfHasEqualizers.buildIsLimit
@@ -294,7 +294,7 @@ def buildColimit : Cocone F where
 
 variable {i}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 #print CategoryTheory.Limits.HasColimitOfHasCoproductsOfHasCoequalizers.buildIsColimit /-
 /-- (Implementation) Show the cocone constructed in `build_colimit` is colimiting,
 provided the cocones used in its construction are.
@@ -309,7 +309,7 @@ def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColim
     · apply t₁.hom_ext
       intro j;
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
+        "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
       simp [reassoc_of hs, reassoc_of ht]
   uniq q m w := hi.hom_ext (i.coequalizer_ext (t₂.hom_ext fun j => by cases j; simpa using w j))
 #align category_theory.limits.has_colimit_of_has_coproducts_of_has_coequalizers.build_is_colimit CategoryTheory.Limits.HasColimitOfHasCoproductsOfHasCoequalizers.buildIsColimit

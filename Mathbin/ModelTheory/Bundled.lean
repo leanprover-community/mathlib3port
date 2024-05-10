@@ -103,7 +103,7 @@ theorem carrier_eq_coe (M : T.ModelType) : M.carrier = M :=
   rfl
 #align first_order.language.Theory.Model.carrier_eq_coe FirstOrder.Language.Theory.ModelType.carrier_eq_coe
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.ModelType.of /-
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
 typeclasses. -/
@@ -112,7 +112,7 @@ def of (M : Type w) [L.Structure M] [M ⊨ T] [Nonempty M] : T.ModelType :=
 #align first_order.language.Theory.Model.of FirstOrder.Language.Theory.ModelType.of
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.ModelType.coe_of /-
 @[simp]
 theorem coe_of (M : Type w) [L.Structure M] [M ⊨ T] [Nonempty M] : (of T M : Type w) = M :=
@@ -145,7 +145,7 @@ def equivInduced {M : ModelType.{u, v, w} T} {N : Type w'} (e : M ≃ N) : Model
 #align first_order.language.Theory.Model.equiv_induced FirstOrder.Language.Theory.ModelType.equivInduced
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.ModelType.of_small /-
 instance of_small (M : Type w) [Nonempty M] [L.Structure M] [M ⊨ T] [h : Small.{w'} M] :
     Small.{w'} (ModelType.of T M) :=
@@ -220,7 +220,7 @@ def subtheoryModel (M : T.ModelType) {T' : L.Theory} (h : T' ⊆ T) : T'.ModelTy
 #align first_order.language.Theory.Model.subtheory_Model FirstOrder.Language.Theory.ModelType.subtheoryModel
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.ModelType.subtheoryModel_models /-
 instance subtheoryModel_models (M : T.ModelType) {T' : L.Theory} (h : T' ⊆ T) :
     M.subtheoryModel h ⊨ T :=
@@ -232,7 +232,7 @@ end Model
 
 variable {T}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.Model.bundled /-
 /-- Bundles `M ⊨ T` as a `T.Model`. -/
 def Model.bundled {M : Type w} [LM : L.Structure M] [ne : Nonempty M] (h : M ⊨ T) : T.ModelType :=
@@ -240,7 +240,7 @@ def Model.bundled {M : Type w} [LM : L.Structure M] [ne : Nonempty M] (h : M ⊨
 #align first_order.language.Theory.model.bundled FirstOrder.Language.Theory.Model.bundled
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.coe_of /-
 @[simp]
 theorem coe_of {M : Type w} [L.Structure M] [Nonempty M] (h : M ⊨ T) : (h.Bundled : Type w) = M :=

@@ -266,12 +266,12 @@ instance [IsIdempotentComplete C] : CategoryTheory.Functor.EssSurj (toKaroubi C)
         { Hom := ⟨i, by erw [id_comp, ← h₂, ← assoc, h₁, id_comp]⟩
           inv := ⟨e, by erw [comp_id, ← h₂, assoc, h₁, comp_id]⟩ }⟩
 
-#print CategoryTheory.Idempotents.toKaroubiIsEquivalence /-
+#print CategoryTheory.Idempotents.toKaroubi_isEquivalence /-
 /-- If `C` is idempotent complete, the functor `to_karoubi : C ⥤ karoubi C` is an equivalence. -/
-def toKaroubiIsEquivalence [IsIdempotentComplete C] :
+def toKaroubi_isEquivalence [IsIdempotentComplete C] :
     CategoryTheory.Functor.IsEquivalence (toKaroubi C) :=
-  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj (toKaroubi C)
-#align category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubiIsEquivalence
+  Functor.asEquivalence (toKaroubi C)
+#align category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubi_isEquivalence
 -/
 
 #print CategoryTheory.Idempotents.toKaroubiEquivalence /-

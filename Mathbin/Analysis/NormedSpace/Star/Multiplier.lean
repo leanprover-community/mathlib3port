@@ -190,13 +190,13 @@ instance : NatCast 𝓜(𝕜, A)
     where natCast n :=
     ⟨n, fun x y => by
       rw [Prod.snd_natCast, Prod.fst_natCast]
-      simp only [← Nat.smul_one_eq_coe, smul_apply, one_apply, mul_smul_comm, smul_mul_assoc]⟩
+      simp only [← Nat.smul_one_eq_cast, smul_apply, one_apply, mul_smul_comm, smul_mul_assoc]⟩
 
 instance : IntCast 𝓜(𝕜, A)
     where intCast n :=
     ⟨n, fun x y => by
       rw [Prod.snd_intCast, Prod.fst_intCast]
-      simp only [← Int.smul_one_eq_coe, smul_apply, one_apply, mul_smul_comm, smul_mul_assoc]⟩
+      simp only [← Int.smul_one_eq_cast, smul_apply, one_apply, mul_smul_comm, smul_mul_assoc]⟩
 
 instance : Pow 𝓜(𝕜, A) ℕ
     where pow a n :=

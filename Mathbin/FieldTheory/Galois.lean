@@ -106,13 +106,13 @@ instance of_fixed_field (G : Type _) [Group G] [Finite G] [MulSemiringAction G E
 #align is_galois.of_fixed_field IsGalois.of_fixed_field
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print IsGalois.IntermediateField.AdjoinSimple.card_aut_eq_finrank /-
 theorem IntermediateField.AdjoinSimple.card_aut_eq_finrank [FiniteDimensional F E] {α : E}
     (hα : IsIntegral F α) (h_sep : (minpoly F α).Separable)
@@ -126,9 +126,9 @@ theorem IntermediateField.AdjoinSimple.card_aut_eq_finrank [FiniteDimensional F 
 #align is_galois.intermediate_field.adjoin_simple.card_aut_eq_finrank IsGalois.IntermediateField.AdjoinSimple.card_aut_eq_finrank
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print IsGalois.card_aut_eq_finrank /-
 theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
     Fintype.card (E ≃ₐ[F] E) = finrank F E :=
@@ -452,13 +452,13 @@ theorem of_card_aut_eq_finrank [FiniteDimensional F E]
 
 variable {F} {E} {p : F[X]}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print IsGalois.of_separable_splitting_field_aux /-
 theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.IsSplittingField F E]
     (hp : p.Separable) (K : Type _) [Field K] [Algebra F K] [Algebra K E] [IsScalarTower F K E]

@@ -175,7 +175,7 @@ def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
 #align Algebra.adj AlgebraCat.adj
 -/
 
-instance : IsRightAdjoint (forget (AlgebraCat.{u} R)) :=
+instance : CategoryTheory.Functor.IsRightAdjoint (forget (AlgebraCat.{u} R)) :=
   ⟨_, adj R⟩
 
 end AlgebraCat

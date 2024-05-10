@@ -279,7 +279,7 @@ unsafe def borelize (α : expr) : tactic Unit := do
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- The behaviour of `borelize α` depends on the existing assumptions on `α`.
 
 - if `α` is a topological space with instances `[measurable_space α] [borel_space α]`, then
@@ -2103,7 +2103,7 @@ namespace Real
 
 open MeasurableSpace MeasureTheory
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print Real.borel_eq_generateFrom_Ioo_rat /-
 theorem borel_eq_generateFrom_Ioo_rat :
     borel ℝ = generateFrom (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
@@ -2111,7 +2111,7 @@ theorem borel_eq_generateFrom_Ioo_rat :
 #align real.borel_eq_generate_from_Ioo_rat Real.borel_eq_generateFrom_Ioo_rat
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print Real.isPiSystem_Ioo_rat /-
 theorem isPiSystem_Ioo_rat : @IsPiSystem ℝ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   by
@@ -2121,7 +2121,7 @@ theorem isPiSystem_Ioo_rat : @IsPiSystem ℝ (⋃ (a : ℚ) (b : ℚ) (h : a < b
 #align real.is_pi_system_Ioo_rat Real.isPiSystem_Ioo_rat
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print Real.finiteSpanningSetsInIooRat /-
 /-- The intervals `(-(n + 1), (n + 1))` form a finite spanning sets in the set of open intervals
 with rational endpoints for a locally finite measure `μ` on `ℝ`. -/

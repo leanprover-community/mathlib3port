@@ -124,7 +124,7 @@ protected theorem continuousOn (hf : IsCoveringMapOn f s) : ContinuousOn f (f �
 #align is_covering_map_on.continuous_on IsCoveringMapOn.continuousOn
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print IsCoveringMapOn.isLocalHomeomorphOn /-
 protected theorem isLocalHomeomorphOn (hf : IsCoveringMapOn f s) :
     IsLocalHomeomorphOn f (f ⁻¹' s) :=

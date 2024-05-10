@@ -82,7 +82,7 @@ For the example of `f = at_top`, we can take `p = bdd_above` and `ns : ι → se
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 #print ProbabilityTheory.indep_biSup_limsup /-
 theorem indep_biSup_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) (hf : ∀ t, p t → tᶜ ∈ f)
     {t : Set ι} (ht : p t) : Indep (⨆ n ∈ t, s n) (limsup s f) μ :=

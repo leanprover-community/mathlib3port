@@ -284,7 +284,7 @@ def last : PFunctor where
 #align mvpfunctor.last MvPFunctor.last
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MvPFunctor.appendContents /-
 /-- append arrows of a polynomial functor application -/
 @[reducible]

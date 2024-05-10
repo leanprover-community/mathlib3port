@@ -266,7 +266,8 @@ noncomputable def adj : completionFunctor ⊣ forget₂ CpltSepUniformSpace Unif
 #align UniformSpace.adj UniformSpaceCat.adj
 -/
 
-noncomputable instance : IsRightAdjoint (forget₂ CpltSepUniformSpace UniformSpaceCat) :=
+noncomputable instance :
+    CategoryTheory.Functor.IsRightAdjoint (forget₂ CpltSepUniformSpace UniformSpaceCat) :=
   ⟨completionFunctor, adj⟩
 
 noncomputable instance : Reflective (forget₂ CpltSepUniformSpace UniformSpaceCat) where

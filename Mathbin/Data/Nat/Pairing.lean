@@ -225,7 +225,7 @@ open Nat
 
 section CompleteLattice
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print iSup_unpair /-
 theorem iSup_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨆ n : ℕ, f n.unpair.1 n.unpair.2) = ⨆ (i : ℕ) (j : ℕ), f i j := by
@@ -233,7 +233,7 @@ theorem iSup_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
 #align supr_unpair iSup_unpair
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print iInf_unpair /-
 theorem iInf_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨅ n : ℕ, f n.unpair.1 n.unpair.2) = ⨅ (i : ℕ) (j : ℕ), f i j :=
@@ -245,8 +245,8 @@ end CompleteLattice
 
 namespace Set
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.iUnion_unpair_prod /-
 theorem iUnion_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
     (⋃ n : ℕ, s n.unpair.fst ×ˢ t n.unpair.snd) = (⋃ n, s n) ×ˢ ⋃ n, t n := by rw [← Union_prod];
@@ -254,7 +254,7 @@ theorem iUnion_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
 #align set.Union_unpair_prod Set.iUnion_unpair_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.iUnion_unpair /-
 theorem iUnion_unpair {α} (f : ℕ → ℕ → Set α) :
     (⋃ n : ℕ, f n.unpair.1 n.unpair.2) = ⋃ (i : ℕ) (j : ℕ), f i j :=
@@ -262,7 +262,7 @@ theorem iUnion_unpair {α} (f : ℕ → ℕ → Set α) :
 #align set.Union_unpair Set.iUnion_unpair
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.iInter_unpair /-
 theorem iInter_unpair {α} (f : ℕ → ℕ → Set α) :
     (⋂ n : ℕ, f n.unpair.1 n.unpair.2) = ⋂ (i : ℕ) (j : ℕ), f i j :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Frédéric Dupuis
 -/
 import Algebra.Star.Basic
-import GroupTheory.Submonoid.Operations
+import Algebra.Group.Submonoid.Operations
 
 #align_import algebra.star.unitary from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

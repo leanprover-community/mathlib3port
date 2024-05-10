@@ -371,7 +371,7 @@ structure ContDiffBump (c : E) where
 -/
 
 #print ContDiffBumpBase /-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The base function from which one will construct a family of bump functions. One could
 add more properties if they are useful and satisfied in the examples of inner product spaces
 and finite dimensional vector spaces, notably derivative norm control in terms of `R - 1`. -/
@@ -598,8 +598,8 @@ theorem eventuallyEq_one : f =ᶠ[𝓝 c] 1 :=
 #align cont_diff_bump.eventually_eq_one ContDiffBump.eventuallyEq_one
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ContDiffAt.contDiffBump /-
 /-- `cont_diff_bump` is `𝒞ⁿ` in all its arguments. -/
 protected theorem ContDiffAt.contDiffBump {c g : X → E} {f : ∀ x, ContDiffBump (c x)} {x : X}

@@ -125,10 +125,10 @@ attribute [mfld_simps] id.def Function.id_comp Set.mem_setOf_eq and_true_iff tru
   Function.comp_apply and_self_iff eq_self_iff_true Function.comp_id not_false_iff true_or_iff
   or_true_iff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'Lean.Meta.Simp._root_.Lean.Parser.Command.registerSimpAttr'
-/-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
+/-- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
   register_simp_attr
   monad_norm
 

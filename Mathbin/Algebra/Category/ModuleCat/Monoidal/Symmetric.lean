@@ -24,8 +24,8 @@ namespace ModuleCat
 
 variable {R : Type u} [CommRing R]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.braiding /-
 /-- (implementation) the braiding for R-modules -/
 def braiding (M N : ModuleCat.{u} R) : M ⊗ N ≅ N ⊗ M :=
@@ -35,8 +35,8 @@ def braiding (M N : ModuleCat.{u} R) : M ⊗ N ≅ N ⊗ M :=
 
 namespace MonoidalCategory
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.braiding_naturality /-
 @[simp]
 theorem braiding_naturality {X₁ X₂ Y₁ Y₂ : ModuleCat.{u} R} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) :
@@ -48,8 +48,8 @@ theorem braiding_naturality {X₁ X₂ Y₁ Y₂ : ModuleCat.{u} R} (f : X₁ �
 #align Module.monoidal_category.braiding_naturality ModuleCat.MonoidalCategory.braiding_naturality
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.hexagon_forward /-
 @[simp]
 theorem hexagon_forward (X Y Z : ModuleCat.{u} R) :
@@ -62,8 +62,8 @@ theorem hexagon_forward (X Y Z : ModuleCat.{u} R) :
 #align Module.monoidal_category.hexagon_forward ModuleCat.MonoidalCategory.hexagon_forward
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.hexagon_reverse /-
 @[simp]
 theorem hexagon_reverse (X Y Z : ModuleCat.{u} R) :
@@ -90,8 +90,8 @@ instance symmetricCategory : SymmetricCategory (ModuleCat.{u} R)
 #align Module.monoidal_category.symmetric_category ModuleCat.MonoidalCategory.symmetricCategory
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.braiding_hom_apply /-
 @[simp]
 theorem braiding_hom_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :
@@ -100,8 +100,8 @@ theorem braiding_hom_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :
 #align Module.monoidal_category.braiding_hom_apply ModuleCat.MonoidalCategory.braiding_hom_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.braiding_inv_apply /-
 @[simp]
 theorem braiding_inv_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :

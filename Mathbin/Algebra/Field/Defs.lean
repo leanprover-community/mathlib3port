@@ -178,11 +178,11 @@ theorem smul_def (a : ℚ) (x : K) : a • x = ↑a * x :=
 #align rat.smul_def Rat.smul_def
 -/
 
-#print Rat.smul_one_eq_coe /-
+#print Rat.smul_one_eq_cast /-
 @[simp]
-theorem smul_one_eq_coe (A : Type _) [DivisionRing A] (m : ℚ) : m • (1 : A) = ↑m := by
+theorem smul_one_eq_cast (A : Type _) [DivisionRing A] (m : ℚ) : m • (1 : A) = ↑m := by
   rw [Rat.smul_def, mul_one]
-#align rat.smul_one_eq_coe Rat.smul_one_eq_coe
+#align rat.smul_one_eq_coe Rat.smul_one_eq_cast
 -/
 
 end Rat

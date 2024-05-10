@@ -162,7 +162,7 @@ theorem tendsto_real_toNNReal_atTop : Tendsto Real.toNNReal atTop atTop :=
 #align tendsto_real_to_nnreal_at_top tendsto_real_toNNReal_atTop
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 #print NNReal.nhds_zero /-
 theorem nhds_zero : 𝓝 (0 : ℝ≥0) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]

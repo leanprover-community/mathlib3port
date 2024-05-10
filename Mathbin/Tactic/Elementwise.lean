@@ -195,7 +195,7 @@ add_tactic_doc
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `elementwise h`, for assumption `w : ∀ ..., f ≫ g = h`, creates a new assumption
 `w : ∀ ... (x : X), g (f x) = h x`.
 

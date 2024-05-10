@@ -870,7 +870,7 @@ theorem dist_eq_iff_eq_smul_rotation_pi_div_two_vadd_midpoint {p₁ p₂ p : P} 
 
 open AffineSubspace
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Collinear.oangle_sign_of_sameRay_vsub /-
 /-- Given two pairs of distinct points on the same line, such that the vectors between those
 pairs of points are on the same ray (oriented in the same direction on that line), and a fifth

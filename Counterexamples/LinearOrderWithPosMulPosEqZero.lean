@@ -55,13 +55,13 @@ def aux1 : Foo → ℕ
   | 1 => 2
 #align counterexample.foo.aux1 Counterexample.Foo.aux1
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic to prove facts by cases. -/
 unsafe def boom : tactic Unit :=
   sorry
 #align counterexample.foo.boom counterexample.foo.boom
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
 theorem aux1_inj : Function.Injective aux1 := by
   run_tac
     boom
@@ -77,10 +77,10 @@ def mul : Foo → Foo → Foo
   | _, _ => 0
 #align counterexample.foo.mul Counterexample.Foo.mul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
 instance : CommMonoid Foo where
   mul := mul
   one := 1
@@ -97,8 +97,8 @@ instance : CommMonoid Foo where
     run_tac
       boom
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
 instance : LinearOrderedCommMonoidWithZero Foo :=
   { Foo.linearOrder, Foo.commMonoid with
     zero := 0
@@ -111,9 +111,9 @@ instance : LinearOrderedCommMonoidWithZero Foo :=
     mul_le_mul_left := by rintro ⟨⟩ ⟨⟩ h ⟨⟩ <;> revert h <;> decide
     zero_le_one := by decide }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
 theorem not_hMul_pos :
     ¬∀ {M : Type} [LinearOrderedCommMonoidWithZero M],
         ∀ (a b : M) (ha : 0 < a) (hb : 0 < b), 0 < a * b :=
@@ -135,7 +135,7 @@ theorem not_hMul_pos :
               boom))).elim
 #align counterexample.foo.not_mul_pos Counterexample.Foo.not_hMul_pos
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.foo.boom -/
 example : 0 < ε ∧ ε * ε = 0 := by
   run_tac
     boom

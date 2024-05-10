@@ -277,7 +277,7 @@ extension of `ℚ`. -/
 noncomputable def subOneIntegralPowerBasis [IsCyclotomicExtension {p ^ k} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) : PowerBasis ℤ (𝓞 K) :=
   PowerBasis.ofGenMemAdjoin' hζ.integralPowerBasis
-    (isIntegral_of_mem_ringOfIntegers <|
+    (NumberField.RingOfIntegers.isIntegral <|
       Subalgebra.sub_mem _ (hζ.IsIntegral (p ^ k).Pos) (Subalgebra.one_mem _))
     (by
       simp only [integral_power_basis_gen]

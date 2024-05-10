@@ -124,7 +124,7 @@ theorem squarefree_and_prime_pow_iff_prime {n : ℕ} : Squarefree n ∧ IsPrimeP
 #align nat.squarefree_and_prime_pow_iff_prime Nat.squarefree_and_prime_pow_iff_prime
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print Nat.minSqFacAux /-
 /-- Assuming that `n` has no factors less than `k`, returns the smallest prime `p` such that
   `p^2 ∣ n`. -/
@@ -184,7 +184,7 @@ theorem minSqFacProp_div (n) {k} (pk : Prime k) (dk : k ∣ n) (dkk : ¬k * k �
 #align nat.min_sq_fac_prop_div Nat.minSqFacProp_div
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print Nat.minSqFacAux_has_prop /-
 theorem minSqFacAux_has_prop :
     ∀ {n : ℕ} (k),

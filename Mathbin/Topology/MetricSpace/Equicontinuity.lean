@@ -62,7 +62,7 @@ theorem equicontinuousAt_iff {ι : Type _} [PseudoMetricSpace β] {F : ι → β
 #align metric.equicontinuous_at_iff Metric.equicontinuousAt_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
 #print Metric.equicontinuousAt_iff_pair /-
 /-- Reformulation of `equicontinuous_at_iff_pair` for families of functions taking values in a
 (pseudo) metric space. -/

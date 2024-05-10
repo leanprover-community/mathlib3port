@@ -62,7 +62,7 @@ scoped notation3"["(l ", "* => foldr (h t => Vector3.cons h t) Vector3.nil)"]" =
 
 notation a "::" b => cons a b
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.cons_fz /-
 @[simp]
 theorem cons_fz (a : α) (v : Vector3 α n) : (a::v) fz = a :=
@@ -70,7 +70,7 @@ theorem cons_fz (a : α) (v : Vector3 α n) : (a::v) fz = a :=
 #align vector3.cons_fz Vector3.cons_fz
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.cons_fs /-
 @[simp]
 theorem cons_fs (a : α) (v : Vector3 α n) (i) : (a::v) (fs i) = v i :=
@@ -113,7 +113,7 @@ theorem eq_nil (v : Vector3 α 0) : v = [] :=
 #align vector3.eq_nil Vector3.eq_nil
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.cons_head_tail /-
 theorem cons_head_tail (v : Vector3 α (succ n)) : (head v::tail v) = v :=
   funext fun i => Fin2.cases' rfl (fun _ => rfl) i
@@ -127,7 +127,7 @@ def nilElim {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : C v :=
 #align vector3.nil_elim Vector3.nilElim
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.consElim /-
 /-- Recursion principle for a nonempty vector. -/
 def consElim {C : Vector3 α (succ n) → Sort u} (H : ∀ (a : α) (t : Vector3 α n), C (a::t))
@@ -135,7 +135,7 @@ def consElim {C : Vector3 α (succ n) → Sort u} (H : ∀ (a : α) (t : Vector3
 #align vector3.cons_elim Vector3.consElim
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.consElim_cons /-
 @[simp]
 theorem consElim_cons {C H a t} : @consElim α n C H (a::t) = H a t :=
@@ -143,7 +143,7 @@ theorem consElim_cons {C H a t} : @consElim α n C H (a::t) = H a t :=
 #align vector3.cons_elim_cons Vector3.consElim_cons
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.recOn /-
 /-- Recursion principle with the vector as first argument. -/
 @[elab_as_elim]
@@ -160,7 +160,7 @@ theorem recOn_nil {C H0 Hs} : @Vector3.recOn α (@C) 0 [] H0 @Hs = H0 :=
 #align vector3.rec_on_nil Vector3.recOn_nil
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.recOn_cons /-
 @[simp]
 theorem recOn_cons {C H0 Hs n a v} :
@@ -186,8 +186,8 @@ theorem append_nil (w : Vector3 α n) : [] +-+ w = w :=
 #align vector3.append_nil Vector3.append_nil
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.append_cons /-
 @[simp]
 theorem append_cons (a : α) (v : Vector3 α m) (w : Vector3 α n) : (a::v) +-+ w = a::v +-+ w :=
@@ -213,7 +213,7 @@ theorem append_add :
 #align vector3.append_add Vector3.append_add
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.insert /-
 /-- Insert `a` into `v` at index `i`. -/
 def insert (a : α) (v : Vector3 α n) (i : Fin2 (succ n)) : Vector3 α (succ n) := fun j =>
@@ -221,7 +221,7 @@ def insert (a : α) (v : Vector3 α n) (i : Fin2 (succ n)) : Vector3 α (succ n)
 #align vector3.insert Vector3.insert
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.insert_fz /-
 @[simp]
 theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a::v := by
@@ -229,8 +229,8 @@ theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a::v := by
 #align vector3.insert_fz Vector3.insert_fz
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.insert_fs /-
 @[simp]
 theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) :
@@ -241,8 +241,8 @@ theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) :
 #align vector3.insert_fs Vector3.insert_fs
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.append_insert /-
 theorem append_insert (a : α) (t : Vector3 α m) (v : Vector3 α n) (i : Fin2 (succ n))
     (e : succ n + m = succ (n + m)) :
@@ -269,7 +269,7 @@ open Vector3
 
 open scoped Vector3
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print VectorEx /-
 /-- "Curried" exists, i.e. `∃ x₁ ... xₙ, f [x₁, ..., xₙ]`. -/
 def VectorEx : ∀ k, (Vector3 α k → Prop) → Prop
@@ -278,7 +278,7 @@ def VectorEx : ∀ k, (Vector3 α k → Prop) → Prop
 #align vector_ex VectorEx
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print VectorAll /-
 /-- "Curried" forall, i.e. `∀ x₁ ... xₙ, f [x₁, ..., xₙ]`. -/
 def VectorAll : ∀ k, (Vector3 α k → Prop) → Prop
@@ -293,7 +293,7 @@ theorem exists_vector_zero (f : Vector3 α 0 → Prop) : Exists f ↔ f [] :=
 #align exists_vector_zero exists_vector_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print exists_vector_succ /-
 theorem exists_vector_succ (f : Vector3 α (succ n) → Prop) : Exists f ↔ ∃ x v, f (x::v) :=
   ⟨fun ⟨v, fv⟩ => ⟨_, _, by rw [cons_head_tail v] <;> exact fv⟩, fun ⟨x, v, fxv⟩ => ⟨_, fxv⟩⟩
@@ -307,8 +307,8 @@ theorem vectorEx_iff_exists : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f 
 #align vector_ex_iff_exists vectorEx_iff_exists
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print vectorAll_iff_forall /-
 theorem vectorAll_iff_forall : ∀ {n} (f : Vector3 α n → Prop), VectorAll n f ↔ ∀ v, f v
   | 0, f => ⟨fun f0 v => v.nilElim f0, fun al => al []⟩
@@ -341,7 +341,7 @@ theorem vectorAllP_singleton (p : α → Prop) (x : α) : VectorAllP p [x] = p x
 #align vector_allp_singleton vectorAllP_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print vectorAllP_cons /-
 @[simp]
 theorem vectorAllP_cons (p : α → Prop) (x : α) (v : Vector3 α n) :

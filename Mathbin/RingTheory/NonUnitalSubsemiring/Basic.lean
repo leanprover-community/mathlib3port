@@ -6,8 +6,8 @@ Authors: Jireh Loreaux
 import Algebra.Ring.Equiv
 import Algebra.Ring.Prod
 import Data.Set.Finite
-import GroupTheory.Submonoid.Membership
-import GroupTheory.Subsemigroup.Membership
+import Algebra.Group.Submonoid.Membership
+import Algebra.Group.Subsemigroup.Membership
 import Algebra.Group.Centralizer
 
 #align_import ring_theory.non_unital_subsemiring.basic from "leanprover-community/mathlib"@"b915e9392ecb2a861e1e766f0e1df6ac481188ca"
@@ -993,7 +993,7 @@ theorem comap_top (f : F) : comap f (⊤ : NonUnitalSubsemiring S) = (⊤ : NonU
 #align non_unital_subsemiring.comap_top NonUnitalSubsemiring.comap_top
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print NonUnitalSubsemiring.prod /-
 /-- Given `non_unital_subsemiring`s `s`, `t` of semirings `R`, `S` respectively, `s.prod t` is
 `s × t` as a non-unital subsemiring of `R × S`. -/
@@ -1003,7 +1003,7 @@ def prod (s : NonUnitalSubsemiring R) (t : NonUnitalSubsemiring S) : NonUnitalSu
 #align non_unital_subsemiring.prod NonUnitalSubsemiring.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print NonUnitalSubsemiring.coe_prod /-
 @[norm_cast]
 theorem coe_prod (s : NonUnitalSubsemiring R) (t : NonUnitalSubsemiring S) :

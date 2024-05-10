@@ -234,7 +234,7 @@ theorem iUnion_image_sup_right : (⋃ b ∈ t, (· ⊔ b) '' s) = s ⊻ t :=
 #align set.Union_image_sup_right Set.iUnion_image_sup_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.image_sup_prod /-
 @[simp]
 theorem image_sup_prod (s t : Set α) : (s ×ˢ t).image (uncurry (· ⊔ ·)) = s ⊻ t :=
@@ -448,7 +448,7 @@ theorem iUnion_image_inf_right : (⋃ b ∈ t, (· ⊓ b) '' s) = s ⊼ t :=
 #align set.Union_image_inf_right Set.iUnion_image_inf_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.image_inf_prod /-
 @[simp]
 theorem image_inf_prod (s t : Set α) : (s ×ˢ t).image (uncurry (· ⊓ ·)) = s ⊼ t :=

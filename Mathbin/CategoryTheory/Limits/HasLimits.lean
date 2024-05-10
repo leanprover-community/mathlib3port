@@ -725,7 +725,7 @@ def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ lim
 #align category_theory.limits.const_lim_adj CategoryTheory.Limits.constLimAdj
 -/
 
-instance : IsRightAdjoint (lim : (J ⥤ C) ⥤ C) :=
+instance : CategoryTheory.Functor.IsRightAdjoint (lim : (J ⥤ C) ⥤ C) :=
   ⟨_, constLimAdj⟩
 
 end LimFunctor
@@ -1460,7 +1460,7 @@ def colimConstAdj : (colim : (J ⥤ C) ⥤ C) ⊣ const J
 #align category_theory.limits.colim_const_adj CategoryTheory.Limits.colimConstAdj
 -/
 
-instance : IsLeftAdjoint (colim : (J ⥤ C) ⥤ C) :=
+instance : CategoryTheory.Functor.IsLeftAdjoint (colim : (J ⥤ C) ⥤ C) :=
   ⟨_, colimConstAdj⟩
 
 end ColimFunctor

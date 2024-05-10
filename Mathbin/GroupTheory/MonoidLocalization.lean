@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 -/
 import GroupTheory.Congruence
-import GroupTheory.Submonoid.Membership
+import Algebra.Group.Submonoid.Membership
 import Algebra.Group.Units
 
 #align_import group_theory.monoid_localization from "leanprover-community/mathlib"@"10ee941346c27bdb5e87bb3535100c0b1f08ac41"

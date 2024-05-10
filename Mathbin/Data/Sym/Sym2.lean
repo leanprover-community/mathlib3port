@@ -839,7 +839,7 @@ theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) 
 #align sym2.other_invol Sym2.other_invol
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Sym2.filter_image_mk_isDiag /-
 theorem filter_image_mk_isDiag [DecidableEq α] (s : Finset α) :
     ((s ×ˢ s).image Quotient.mk').filterₓ IsDiag = s.diag.image Quotient.mk' :=
@@ -858,7 +858,7 @@ theorem filter_image_mk_isDiag [DecidableEq α] (s : Finset α) :
 #align sym2.filter_image_quotient_mk_is_diag Sym2.filter_image_mk_isDiag
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Sym2.filter_image_mk_not_isDiag /-
 theorem filter_image_mk_not_isDiag [DecidableEq α] (s : Finset α) :
     (((s ×ˢ s).image Quotient.mk').filterₓ fun a : Sym2 α => ¬a.IsDiag) =

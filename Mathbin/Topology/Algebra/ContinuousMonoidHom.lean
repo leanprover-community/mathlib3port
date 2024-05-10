@@ -332,8 +332,8 @@ theorem embedding_toContinuousMap :
 #align continuous_add_monoid_hom.embedding_to_continuous_map ContinuousAddMonoidHom.embedding_toContinuousMap
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (U V W) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (U V W) -/
 #print ContinuousMonoidHom.closedEmbedding_toContinuousMap /-
 @[to_additive]
 theorem closedEmbedding_toContinuousMap [ContinuousMul B] [T2Space B] :

@@ -990,14 +990,14 @@ theorem cast_val_eq_self {n : ℕ} [NeZero n] (a : Fin n) : ((a : ℕ) : Fin n) 
 #align fin.coe_coe_eq_self Fin.cast_val_eq_self
 -/
 
-#print Fin.cast_nat_eq_last /-
-theorem cast_nat_eq_last (n) : (n : Fin (n + 1)) = Fin.last n := by
+#print Fin.natCast_eq_last /-
+theorem natCast_eq_last (n) : (n : Fin (n + 1)) = Fin.last n := by
   rw [← Fin.ofNat''_eq_cast, Fin.ofNat, Fin.last]; simp only [Nat.mod_eq_of_lt n.lt_succ_self]
-#align fin.coe_nat_eq_last Fin.cast_nat_eq_last
+#align fin.coe_nat_eq_last Fin.natCast_eq_last
 -/
 
 #print Fin.le_val_last /-
-theorem le_val_last (i : Fin (n + 1)) : i ≤ n := by rw [Fin.cast_nat_eq_last]; exact Fin.le_last i
+theorem le_val_last (i : Fin (n + 1)) : i ≤ n := by rw [Fin.natCast_eq_last]; exact Fin.le_last i
 #align fin.le_coe_last Fin.le_val_last
 -/
 
@@ -2165,7 +2165,7 @@ theorem fin_two_eq_of_eq_zero_iff {a b : Fin 2} (h : a = 0 ↔ b = 0) : a = b :=
 #align fin.fin_two_eq_of_eq_zero_iff Fin.fin_two_eq_of_eq_zero_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print Fin.reverseInduction /-
 /--
 Define `C i` by reverse induction on `i : fin (n + 1)` via induction on the underlying `nat` value.

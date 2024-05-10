@@ -230,7 +230,7 @@ theorem trivializationAt_source (x : M) :
 #align tangent_bundle.trivialization_at_source TangentBundle.trivializationAt_source
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print TangentBundle.trivializationAt_target /-
 @[simp, mfld_simps]
 theorem trivializationAt_target (x : M) :

@@ -191,11 +191,11 @@ theorem zpow_bit1₀ (a : G₀) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a :=
 #align zpow_bit1₀ zpow_bit1₀
 -/
 
-#print zpow_ne_zero_of_ne_zero /-
-theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z ≠ 0
+#print zpow_ne_zero /-
+theorem zpow_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z ≠ 0
   | (n : ℕ) => by rw [zpow_natCast]; exact pow_ne_zero _ ha
   | -[n+1] => by rw [zpow_negSucc]; exact inv_ne_zero (pow_ne_zero _ ha)
-#align zpow_ne_zero_of_ne_zero zpow_ne_zero_of_ne_zero
+#align zpow_ne_zero_of_ne_zero zpow_ne_zero
 -/
 
 #print zpow_sub₀ /-
@@ -210,21 +210,23 @@ theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by
 #align zpow_bit1' zpow_bit1'
 -/
 
-#print zpow_eq_zero /-
-theorem zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=
-  by_contradiction fun hx => zpow_ne_zero_of_ne_zero hx n h
-#align zpow_eq_zero zpow_eq_zero
+#print eq_zero_of_zpow_eq_zero /-
+theorem eq_zero_of_zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=
+  by_contradiction fun hx => zpow_ne_zero hx n h
+#align zpow_eq_zero eq_zero_of_zpow_eq_zero
 -/
 
 #print zpow_eq_zero_iff /-
 theorem zpow_eq_zero_iff {a : G₀} {n : ℤ} (hn : n ≠ 0) : a ^ n = 0 ↔ a = 0 :=
-  ⟨zpow_eq_zero, fun ha => ha.symm ▸ zero_zpow _ hn⟩
+  ⟨eq_zero_of_zpow_eq_zero, fun ha => ha.symm ▸ zero_zpow _ hn⟩
 #align zpow_eq_zero_iff zpow_eq_zero_iff
 -/
 
+/- warning: zpow_ne_zero clashes with zpow_ne_zero_of_ne_zero -> zpow_ne_zero
+Case conversion may be inaccurate. Consider using '#align zpow_ne_zero zpow_ne_zeroₓ'. -/
 #print zpow_ne_zero /-
 theorem zpow_ne_zero {x : G₀} (n : ℤ) : x ≠ 0 → x ^ n ≠ 0 :=
-  mt zpow_eq_zero
+  mt eq_zero_of_zpow_eq_zero
 #align zpow_ne_zero zpow_ne_zero
 -/
 

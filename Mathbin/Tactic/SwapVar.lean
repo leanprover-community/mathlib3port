@@ -36,7 +36,7 @@ end
 
 namespace Tactic.Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def swap_arg_parser : lean.parser (Name × Name) :=
   Prod.mk <$> ident <*> (optional (tk "<->" <|> tk "↔") *> ident)
 

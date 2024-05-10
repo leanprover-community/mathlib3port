@@ -177,7 +177,7 @@ section
 
 open scoped Classical
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print EuclideanDomain.GCD.induction /-
 @[elab_as_elim]
 theorem GCD.induction {P : R → R → Prop} :
@@ -197,7 +197,7 @@ section Gcd
 
 variable [DecidableEq R]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print EuclideanDomain.gcd /-
 /-- `gcd a b` is a (non-unique) element such that `gcd a b ∣ a` `gcd a b ∣ b`, and for
   any element `c` such that `c ∣ a` and `c ∣ b`, then `c ∣ gcd a b` -/
@@ -217,7 +217,7 @@ theorem gcd_zero_left (a : R) : gcd 0 a = a := by rw [gcd]; exact if_pos rfl
 #align euclidean_domain.gcd_zero_left EuclideanDomain.gcd_zero_left
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print EuclideanDomain.xgcdAux /-
 /-- An implementation of the extended GCD algorithm.
 At each step we are computing a triple `(r, s, t)`, where `r` is the next value of the GCD

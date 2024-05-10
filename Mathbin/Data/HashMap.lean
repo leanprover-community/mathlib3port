@@ -68,9 +68,9 @@ def BucketArray (α : Type u) (β : α → Type v) (n : ℕ+) :=
 #align bucket_array BucketArray
 
 /-- Make a hash_map index from a `nat` hash value and a (positive) buffer size -/
-def Std.HashMap.mkIdx (n : ℕ+) (i : Nat) : Fin n :=
+def Batteries.HashMap.mkIdx (n : ℕ+) (i : Nat) : Fin n :=
   ⟨i % n, Nat.mod_lt _ n.2⟩
-#align hash_map.mk_idx Std.HashMapₓ.mkIdx
+#align hash_map.mk_idx Batteries.HashMapₓ.mkIdx
 
 namespace BucketArray
 
@@ -85,19 +85,19 @@ instance : Inhabited (BucketArray α β n) :=
 
 /-- Read the bucket corresponding to an element -/
 def read (a : α) : List (Σ a, β a) :=
-  let bidx := Std.HashMap.mkIdx n (hash_fn a)
+  let bidx := Batteries.HashMap.mkIdx n (hash_fn a)
   data.read bidx
 #align bucket_array.read BucketArray.read
 
 /-- Write the bucket corresponding to an element -/
 def write (a : α) (l : List (Σ a, β a)) : BucketArray α β n :=
-  let bidx := Std.HashMap.mkIdx n (hash_fn a)
+  let bidx := Batteries.HashMap.mkIdx n (hash_fn a)
   data.write bidx l
 #align bucket_array.write BucketArray.write
 
 /-- Modify (read, apply `f`, and write) the bucket corresponding to an element -/
 def modify (a : α) (f : List (Σ a, β a) → List (Σ a, β a)) : BucketArray α β n :=
-  let bidx := Std.HashMap.mkIdx n (hash_fn a)
+  let bidx := Batteries.HashMap.mkIdx n (hash_fn a)
   Array'.write data bidx (f (Array'.read data bidx))
 #align bucket_array.modify BucketArray.modify
 
@@ -129,7 +129,7 @@ end
 
 end BucketArray
 
-namespace Std.HashMap
+namespace Batteries.HashMap
 
 section
 
@@ -137,26 +137,27 @@ parameter {α : Type u} {β : α → Type v} (hash_fn : α → Nat)
 
 /-- Insert the pair `⟨a, b⟩` into the correct location in the bucket array
   (without checking for duplication) -/
-def Std.HashMap.reinsertAux {n} (data : BucketArray α β n) (a : α) (b : β a) : BucketArray α β n :=
+def Batteries.HashMap.reinsertAux {n} (data : BucketArray α β n) (a : α) (b : β a) :
+    BucketArray α β n :=
   data.modify hash_fn a fun l => ⟨a, b⟩ :: l
-#align hash_map.reinsert_aux Std.HashMapₓ.reinsertAux
+#align hash_map.reinsert_aux Batteries.HashMapₓ.reinsertAux
 
-theorem Std.HashMap.mk_asList (n : ℕ+) :
+theorem Batteries.HashMap.mk_asList (n : ℕ+) :
     BucketArray.asList (mkArray' n [] : BucketArray α β n) = [] :=
   List.eq_nil_iff_forall_not_mem.mpr fun x m =>
     let ⟨i, h⟩ := (BucketArray.mem_asList _).1 m
     h
-#align hash_map.mk_as_list Std.HashMapₓ.mk_asList
+#align hash_map.mk_as_list Batteries.HashMapₓ.mk_asList
 
 parameter [DecidableEq α]
 
 /-- Search a bucket for a key `a` and return the value -/
-def Std.HashMap.findAux (a : α) : List (Σ a, β a) → Option (β a)
+def Batteries.HashMap.findAux (a : α) : List (Σ a, β a) → Option (β a)
   | [] => none
   | ⟨a', b⟩ :: t => if h : a' = a then some (Eq.recOn h b) else find_aux t
-#align hash_map.find_aux Std.HashMapₓ.findAux
+#align hash_map.find_aux Batteries.HashMapₓ.findAux
 
-theorem Std.HashMap.findAux_iff {a : α} {b : β a} :
+theorem Batteries.HashMap.findAux_iff {a : α} {b : β a} :
     ∀ {l : List (Σ a, β a)}, (l.map Sigma.fst).Nodup → (find_aux a l = some b ↔ Sigma.mk a b ∈ l)
   | [], nd => ⟨fun n => by injection n, False.elim⟩
   | ⟨a', b'⟩ :: t, nd => by
@@ -168,15 +169,15 @@ theorem Std.HashMap.findAux_iff {a : α} {b : β a} :
       exact this.elim (List.mem_map_of_mem Sigma.fst m)
     · have : Sigma.mk a b ≠ ⟨a', b'⟩ := by intro e; injection e with e; exact h e.symm
       simp at nd; simp [find_aux, h, Ne.symm h, find_aux_iff, nd]
-#align hash_map.find_aux_iff Std.HashMapₓ.findAux_iff
+#align hash_map.find_aux_iff Batteries.HashMapₓ.findAux_iff
 
 /-- Returns `tt` if the bucket `l` contains the key `a` -/
-def Std.HashMap.containsAux (a : α) (l : List (Σ a, β a)) : Bool :=
+def Batteries.HashMap.containsAux (a : α) (l : List (Σ a, β a)) : Bool :=
   (find_aux a l).isSome
-#align hash_map.contains_aux Std.HashMapₓ.containsAux
+#align hash_map.contains_aux Batteries.HashMapₓ.containsAux
 
-theorem Std.HashMap.containsAux_iff {a : α} {l : List (Σ a, β a)} (nd : (l.map Sigma.fst).Nodup) :
-    contains_aux a l ↔ a ∈ l.map Sigma.fst :=
+theorem Batteries.HashMap.containsAux_iff {a : α} {l : List (Σ a, β a)}
+    (nd : (l.map Sigma.fst).Nodup) : contains_aux a l ↔ a ∈ l.map Sigma.fst :=
   by
   unfold contains_aux
   cases' h : find_aux a l with b <;> simp
@@ -185,46 +186,46 @@ theorem Std.HashMap.containsAux_iff {a : α} {l : List (Σ a, β a)} (nd : (l.ma
     contradiction
   · show ∃ b : β a, Sigma.mk a b ∈ l
     exact ⟨_, (find_aux_iff nd).1 h⟩
-#align hash_map.contains_aux_iff Std.HashMapₓ.containsAux_iff
+#align hash_map.contains_aux_iff Batteries.HashMapₓ.containsAux_iff
 
 /-- Modify a bucket to replace a value in the list. Leaves the list
  unchanged if the key is not found. -/
-def Std.HashMap.replaceAux (a : α) (b : β a) : List (Σ a, β a) → List (Σ a, β a)
+def Batteries.HashMap.replaceAux (a : α) (b : β a) : List (Σ a, β a) → List (Σ a, β a)
   | [] => []
   | ⟨a', b'⟩ :: t => if a' = a then ⟨a, b⟩ :: t else ⟨a', b'⟩ :: replace_aux t
-#align hash_map.replace_aux Std.HashMapₓ.replaceAux
+#align hash_map.replace_aux Batteries.HashMapₓ.replaceAux
 
 /-- Modify a bucket to remove a key, if it exists. -/
-def Std.HashMap.eraseAux (a : α) : List (Σ a, β a) → List (Σ a, β a)
+def Batteries.HashMap.eraseAux (a : α) : List (Σ a, β a) → List (Σ a, β a)
   | [] => []
   | ⟨a', b'⟩ :: t => if a' = a then t else ⟨a', b'⟩ :: erase_aux t
-#align hash_map.erase_aux Std.HashMapₓ.eraseAux
+#align hash_map.erase_aux Batteries.HashMapₓ.eraseAux
 
 /-- The predicate `valid bkts sz` means that `bkts` satisfies the `hash_map`
   invariants: There are exactly `sz` elements in it, every pair is in the
   bucket determined by its key and the hash function, and no key appears
   multiple times in the list. -/
-structure Std.HashMap.Valid {n} (bkts : BucketArray α β n) (sz : Nat) : Prop where
+structure Batteries.HashMap.Valid {n} (bkts : BucketArray α β n) (sz : Nat) : Prop where
   len : bkts.asList.length = sz
-  idx : ∀ {i} {a : Σ a, β a}, a ∈ Array'.read bkts i → Std.HashMap.mkIdx n (hash_fn a.1) = i
+  idx : ∀ {i} {a : Σ a, β a}, a ∈ Array'.read bkts i → Batteries.HashMap.mkIdx n (hash_fn a.1) = i
   Nodup : ∀ i, ((Array'.read bkts i).map Sigma.fst).Nodup
-#align hash_map.valid Std.HashMapₓ.Valid
+#align hash_map.valid Batteries.HashMapₓ.Valid
 
-theorem Std.HashMap.Valid.idx_enum {n} {bkts : BucketArray α β n} {sz : Nat} (v : valid bkts sz)
-    {i l} (he : (i, l) ∈ bkts.toList.enum) {a} {b : β a} (hl : Sigma.mk a b ∈ l) :
-    ∃ h, Std.HashMap.mkIdx n (hash_fn a) = ⟨i, h⟩ :=
+theorem Batteries.HashMap.Valid.idx_enum {n} {bkts : BucketArray α β n} {sz : Nat}
+    (v : valid bkts sz) {i l} (he : (i, l) ∈ bkts.toList.enum) {a} {b : β a}
+    (hl : Sigma.mk a b ∈ l) : ∃ h, Batteries.HashMap.mkIdx n (hash_fn a) = ⟨i, h⟩ :=
   (Array'.mem_toList_enum.mp he).imp fun h e => by subst e <;> exact v.idx hl
-#align hash_map.valid.idx_enum Std.HashMapₓ.Valid.idx_enum
+#align hash_map.valid.idx_enum Batteries.HashMapₓ.Valid.idx_enum
 
-theorem Std.HashMap.Valid.idx_enum_1 {n} {bkts : BucketArray α β n} {sz : Nat} (v : valid bkts sz)
-    {i l} (he : (i, l) ∈ bkts.toList.enum) {a} {b : β a} (hl : Sigma.mk a b ∈ l) :
-    (Std.HashMap.mkIdx n (hash_fn a)).1 = i :=
+theorem Batteries.HashMap.Valid.idx_enum_1 {n} {bkts : BucketArray α β n} {sz : Nat}
+    (v : valid bkts sz) {i l} (he : (i, l) ∈ bkts.toList.enum) {a} {b : β a}
+    (hl : Sigma.mk a b ∈ l) : (Batteries.HashMap.mkIdx n (hash_fn a)).1 = i :=
   by
   let ⟨h, e⟩ := v.idx_enum _ he hl
   rw [e] <;> rfl
-#align hash_map.valid.idx_enum_1 Std.HashMapₓ.Valid.idx_enum_1
+#align hash_map.valid.idx_enum_1 Batteries.HashMapₓ.Valid.idx_enum_1
 
-theorem Std.HashMap.Valid.asList_nodup {n} {bkts : BucketArray α β n} {sz : Nat}
+theorem Batteries.HashMap.Valid.asList_nodup {n} {bkts : BucketArray α β n} {sz : Nat}
     (v : valid bkts sz) : (bkts.asList.map Sigma.fst).Nodup :=
   by
   suffices (bkts.to_list.map (List.map Sigma.fst)).Pairwise List.Disjoint
@@ -240,23 +241,24 @@ theorem Std.HashMap.Valid.asList_nodup {n} {bkts : BucketArray α β n} {sz : Na
   rw [Prod.forall]; intro j l₂ me₁ me₂ ij
   simp [List.Disjoint]; intro a b ml₁ b' ml₂
   apply ij; rwa [← v.idx_enum_1 _ me₁ ml₁, ← v.idx_enum_1 _ me₂ ml₂]
-#align hash_map.valid.as_list_nodup Std.HashMapₓ.Valid.asList_nodup
+#align hash_map.valid.as_list_nodup Batteries.HashMapₓ.Valid.asList_nodup
 
-theorem Std.HashMap.mk_valid (n : ℕ+) : @valid n (mkArray' n []) 0 :=
+theorem Batteries.HashMap.mk_valid (n : ℕ+) : @valid n (mkArray' n []) 0 :=
   ⟨by simp [mk_as_list], fun i a h => by cases h, fun i => List.nodup_nil⟩
-#align hash_map.mk_valid Std.HashMapₓ.mk_valid
+#align hash_map.mk_valid Batteries.HashMapₓ.mk_valid
 
-theorem Std.HashMap.Valid.findAux_iff {n} {bkts : BucketArray α β n} {sz : Nat} (v : valid bkts sz)
-    {a : α} {b : β a} : find_aux a (bkts.read hash_fn a) = some b ↔ Sigma.mk a b ∈ bkts.asList :=
+theorem Batteries.HashMap.Valid.findAux_iff {n} {bkts : BucketArray α β n} {sz : Nat}
+    (v : valid bkts sz) {a : α} {b : β a} :
+    find_aux a (bkts.read hash_fn a) = some b ↔ Sigma.mk a b ∈ bkts.asList :=
   (find_aux_iff (v.Nodup _)).trans <| by
     rw [bkts.mem_as_list] <;> exact ⟨fun h => ⟨_, h⟩, fun ⟨i, h⟩ => (v.idx h).symm ▸ h⟩
-#align hash_map.valid.find_aux_iff Std.HashMapₓ.Valid.findAux_iff
+#align hash_map.valid.find_aux_iff Batteries.HashMapₓ.Valid.findAux_iff
 
-theorem Std.HashMap.Valid.containsAux_iff {n} {bkts : BucketArray α β n} {sz : Nat}
+theorem Batteries.HashMap.Valid.containsAux_iff {n} {bkts : BucketArray α β n} {sz : Nat}
     (v : valid bkts sz) (a : α) :
     contains_aux a (bkts.read hash_fn a) ↔ a ∈ bkts.asList.map Sigma.fst := by
   simp [contains_aux, Option.isSome_iff_exists, v.find_aux_iff hash_fn]
-#align hash_map.valid.contains_aux_iff Std.HashMapₓ.Valid.containsAux_iff
+#align hash_map.valid.contains_aux_iff Batteries.HashMapₓ.Valid.containsAux_iff
 
 section
 
@@ -270,7 +272,7 @@ private def bkts' : BucketArray α β n :=
 
 variable (hl : L = u ++ v1 ++ w) (hfl : f L = u ++ v2 ++ w)
 
-theorem Std.HashMap.append_of_modify :
+theorem Batteries.HashMap.append_of_modify :
     ∃ u' w', bkts.asList = u' ++ v1 ++ w' ∧ bkts'.asList = u' ++ v2 ++ w' :=
   by
   unfold BucketArray.asList
@@ -286,14 +288,14 @@ theorem Std.HashMap.append_of_modify :
       rw [bkts', Array'.write_toList, List.set_eq_take_cons_drop _ h]
       simp [hfl]
     simp
-#align hash_map.append_of_modify Std.HashMapₓ.append_of_modify
+#align hash_map.append_of_modify Batteries.HashMapₓ.append_of_modify
 
 variable (hvnd : (v2.map Sigma.fst).Nodup)
-  (hal : ∀ a : Σ a, β a, a ∈ v2 → Std.HashMap.mkIdx n (hash_fn a.1) = bidx)
+  (hal : ∀ a : Σ a, β a, a ∈ v2 → Batteries.HashMap.mkIdx n (hash_fn a.1) = bidx)
   (djuv : (u.map Sigma.fst).Disjoint (v2.map Sigma.fst))
   (djwv : (w.map Sigma.fst).Disjoint (v2.map Sigma.fst))
 
-theorem Std.HashMap.Valid.modify {sz : ℕ} (v : valid bkts sz) :
+theorem Batteries.HashMap.Valid.modify {sz : ℕ} (v : valid bkts sz) :
     v1.length ≤ sz + v2.length ∧ valid bkts' (sz + v2.length - v1.length) :=
   by
   rcases append_of_modify u v1 v2 w hl hfl with ⟨u', w', e₁, e₂⟩
@@ -313,11 +315,11 @@ theorem Std.HashMap.Valid.modify {sz : ℕ} (v : valid bkts sz) :
       simp [hl, List.nodup_append] at this
       simp [List.nodup_append, this, hvnd, djuv, djwv.symm]
     · rw [bkts', Array'.read_write_of_ne _ _ h]; apply v.nodup
-#align hash_map.valid.modify Std.HashMapₓ.Valid.modify
+#align hash_map.valid.modify Batteries.HashMapₓ.Valid.modify
 
 end
 
-theorem Std.HashMap.Valid.replaceAux (a : α) (b : β a) :
+theorem Batteries.HashMap.Valid.replaceAux (a : α) (b : β a) :
     ∀ l : List (Σ a, β a),
       a ∈ l.map Sigma.fst →
         ∃ (u w : List (Σ a, β a)) (b' : _),
@@ -345,14 +347,14 @@ theorem Std.HashMap.Valid.replaceAux (a : α) (b : β a) :
         by simpa using valid.replace_aux t
       rcases IH x m with ⟨u, w, b'', hl, hfl⟩
       exact ⟨⟨a', b'⟩ :: u, w, b'', by simp [hl, hfl.symm, Ne.symm e]⟩
-#align hash_map.valid.replace_aux Std.HashMapₓ.Valid.replaceAux
+#align hash_map.valid.replace_aux Batteries.HashMapₓ.Valid.replaceAux
 
-theorem Std.HashMap.Valid.replace {n : ℕ+} {bkts : BucketArray α β n} {sz : ℕ} (a : α) (b : β a)
-    (Hc : contains_aux a (bkts.read hash_fn a)) (v : valid bkts sz) :
+theorem Batteries.HashMap.Valid.replace {n : ℕ+} {bkts : BucketArray α β n} {sz : ℕ} (a : α)
+    (b : β a) (Hc : contains_aux a (bkts.read hash_fn a)) (v : valid bkts sz) :
     valid (bkts.modify hash_fn a (replace_aux a b)) sz :=
   by
   have nd := v.nodup (mk_idx n (hash_fn a))
-  rcases Std.HashMap.Valid.replaceAux a b (Array'.read bkts (mk_idx n (hash_fn a)))
+  rcases Batteries.HashMap.Valid.replaceAux a b (Array'.read bkts (mk_idx n (hash_fn a)))
       ((contains_aux_iff nd).1 Hc) with
     ⟨u, w, b', hl, hfl⟩
   simp [hl, List.nodup_append] at nd
@@ -360,10 +362,10 @@ theorem Std.HashMap.Valid.replace {n : ℕ+} {bkts : BucketArray α β n} {sz : 
       (v.modify hash_fn u [⟨a, b'⟩] [⟨a, b⟩] w hl hfl (List.nodup_singleton _)
           (fun a' e => by simp at e <;> rw [e]) (fun a' e1 e2 => _) fun a' e1 e2 => _).2 <;>
     · revert e1; simp [-Sigma.exists] at e2; subst a'; simp [nd]
-#align hash_map.valid.replace Std.HashMapₓ.Valid.replace
+#align hash_map.valid.replace Batteries.HashMapₓ.Valid.replace
 
-theorem Std.HashMap.Valid.insert {n : ℕ+} {bkts : BucketArray α β n} {sz : ℕ} (a : α) (b : β a)
-    (Hnc : ¬contains_aux a (bkts.read hash_fn a)) (v : valid bkts sz) :
+theorem Batteries.HashMap.Valid.insert {n : ℕ+} {bkts : BucketArray α β n} {sz : ℕ} (a : α)
+    (b : β a) (Hnc : ¬contains_aux a (bkts.read hash_fn a)) (v : valid bkts sz) :
     valid (reinsert_aux bkts a b) (sz + 1) :=
   by
   have nd := v.nodup (mk_idx n (hash_fn a))
@@ -372,9 +374,9 @@ theorem Std.HashMap.Valid.insert {n : ℕ+} {bkts : BucketArray α β n} {sz : �
         (fun a' e => by simp at e <;> rw [e]) (fun a' => False.elim) fun a' e1 e2 => _).2
   simp [-Sigma.exists] at e2; subst a'
   exact Hnc ((contains_aux_iff nd).2 e1)
-#align hash_map.valid.insert Std.HashMapₓ.Valid.insert
+#align hash_map.valid.insert Batteries.HashMapₓ.Valid.insert
 
-theorem Std.HashMap.Valid.eraseAux (a : α) :
+theorem Batteries.HashMap.Valid.eraseAux (a : α) :
     ∀ l : List (Σ a, β a),
       a ∈ l.map Sigma.fst →
         ∃ (u w : List (Σ a, β a)) (b : _), l = u ++ [⟨a, b⟩] ++ w ∧ erase_aux a l = u ++ [] ++ w
@@ -398,110 +400,113 @@ theorem Std.HashMap.Valid.eraseAux (a : α) :
         by simpa using valid.erase_aux t
       rcases IH b m with ⟨u, w, b'', hl, hfl⟩
       exact ⟨⟨a', b'⟩ :: u, w, b'', by simp [hl, hfl.symm]⟩
-#align hash_map.valid.erase_aux Std.HashMapₓ.Valid.eraseAux
+#align hash_map.valid.erase_aux Batteries.HashMapₓ.Valid.eraseAux
 
-theorem Std.HashMap.Valid.erase {n} {bkts : BucketArray α β n} {sz} (a : α)
+theorem Batteries.HashMap.Valid.erase {n} {bkts : BucketArray α β n} {sz} (a : α)
     (Hc : contains_aux a (bkts.read hash_fn a)) (v : valid bkts sz) :
     valid (bkts.modify hash_fn a (erase_aux a)) (sz - 1) :=
   by
   have nd := v.nodup (mk_idx n (hash_fn a))
-  rcases Std.HashMap.Valid.eraseAux a (Array'.read bkts (mk_idx n (hash_fn a)))
+  rcases Batteries.HashMap.Valid.eraseAux a (Array'.read bkts (mk_idx n (hash_fn a)))
       ((contains_aux_iff nd).1 Hc) with
     ⟨u, w, b, hl, hfl⟩
   refine' (v.modify hash_fn u [⟨a, b⟩] [] w hl hfl List.nodup_nil _ _ _).2 <;> simp
-#align hash_map.valid.erase Std.HashMapₓ.Valid.erase
+#align hash_map.valid.erase Batteries.HashMapₓ.Valid.erase
 
 end
 
-end Std.HashMap
+end Batteries.HashMap
 
 /-- A hash map data structure, representing a finite key-value map
   with key type `α` and value type `β` (which may depend on `α`). -/
-structure Std.HashMap (α : Type u) [DecidableEq α] (β : α → Type v) where
+structure Batteries.HashMap (α : Type u) [DecidableEq α] (β : α → Type v) where
   hashFn : α → Nat
   size : ℕ
   nbuckets : ℕ+
   buckets : BucketArray α β nbuckets
-  is_valid : Std.HashMap.Valid hash_fn buckets size
-#align hash_map Std.HashMapₓ
+  is_valid : Batteries.HashMap.Valid hash_fn buckets size
+#align hash_map Batteries.HashMapₓ
 
 /-- Construct an empty hash map with buffer size `nbuckets` (default 8). -/
 def mkHashMap {α : Type u} [DecidableEq α] {β : α → Type v} (hash_fn : α → Nat) (nbuckets := 8) :
-    Std.HashMap α β :=
+    Batteries.HashMap α β :=
   let n := if nbuckets = 0 then 8 else nbuckets
   let nz : n > 0 := by abstract cases nbuckets <;> simp [if_pos, Nat.succ_ne_zero]
   { hashFn
     size := 0
     nbuckets := ⟨n, nz⟩
     buckets := mkArray' n []
-    is_valid := Std.HashMap.mk_valid _ _ }
+    is_valid := Batteries.HashMap.mk_valid _ _ }
 #align mk_hash_map mkHashMap
 
-namespace Std.HashMap
+namespace Batteries.HashMap
 
 variable {α : Type u} {β : α → Type v} [DecidableEq α]
 
 /-- Return the value corresponding to a key, or `none` if not found -/
-def Std.HashMap.find (m : Std.HashMap α β) (a : α) : Option (β a) :=
-  Std.HashMap.findAux a (m.buckets.read m.hashFn a)
-#align hash_map.find Std.HashMapₓ.find
+def Batteries.HashMap.find (m : Batteries.HashMap α β) (a : α) : Option (β a) :=
+  Batteries.HashMap.findAux a (m.buckets.read m.hashFn a)
+#align hash_map.find Batteries.HashMapₓ.find
 
 /-- Return `tt` if the key exists in the map -/
-def Std.HashMap.contains (m : Std.HashMap α β) (a : α) : Bool :=
+def Batteries.HashMap.contains (m : Batteries.HashMap α β) (a : α) : Bool :=
   (m.find a).isSome
-#align hash_map.contains Std.HashMapₓ.contains
+#align hash_map.contains Batteries.HashMapₓ.contains
 
-instance : Membership α (Std.HashMap α β) :=
+instance : Membership α (Batteries.HashMap α β) :=
   ⟨fun a m => m.contains a⟩
 
 /-- Fold a function over the key-value pairs in the map -/
-def Std.HashMap.fold {δ : Type w} (m : Std.HashMap α β) (d : δ) (f : δ → ∀ a, β a → δ) : δ :=
+def Batteries.HashMap.fold {δ : Type w} (m : Batteries.HashMap α β) (d : δ) (f : δ → ∀ a, β a → δ) :
+    δ :=
   m.buckets.foldl d f
-#align hash_map.fold Std.HashMapₓ.fold
+#align hash_map.fold Batteries.HashMapₓ.fold
 
 /-- The list of key-value pairs in the map -/
-def Std.HashMap.entries (m : Std.HashMap α β) : List (Σ a, β a) :=
+def Batteries.HashMap.entries (m : Batteries.HashMap α β) : List (Σ a, β a) :=
   m.buckets.asList
-#align hash_map.entries Std.HashMapₓ.entries
+#align hash_map.entries Batteries.HashMapₓ.entries
 
 /-- The list of keys in the map -/
-def Std.HashMap.keys (m : Std.HashMap α β) : List α :=
+def Batteries.HashMap.keys (m : Batteries.HashMap α β) : List α :=
   m.entries.map Sigma.fst
-#align hash_map.keys Std.HashMapₓ.keys
+#align hash_map.keys Batteries.HashMapₓ.keys
 
-theorem Std.HashMap.find_iff (m : Std.HashMap α β) (a : α) (b : β a) :
+theorem Batteries.HashMap.find_iff (m : Batteries.HashMap α β) (a : α) (b : β a) :
     m.find a = some b ↔ Sigma.mk a b ∈ m.entries :=
   m.is_valid.findAux_iff _
-#align hash_map.find_iff Std.HashMapₓ.find_iff
+#align hash_map.find_iff Batteries.HashMapₓ.find_iff
 
-theorem Std.HashMap.contains_iff (m : Std.HashMap α β) (a : α) : m.contains a ↔ a ∈ m.keys :=
+theorem Batteries.HashMap.contains_iff (m : Batteries.HashMap α β) (a : α) :
+    m.contains a ↔ a ∈ m.keys :=
   m.is_valid.containsAux_iff _ _
-#align hash_map.contains_iff Std.HashMapₓ.contains_iff
+#align hash_map.contains_iff Batteries.HashMapₓ.contains_iff
 
-theorem Std.HashMap.entries_empty (hash_fn : α → Nat) (n) :
+theorem Batteries.HashMap.entries_empty (hash_fn : α → Nat) (n) :
     (@mkHashMap α _ β hash_fn n).entries = [] :=
-  Std.HashMap.mk_asList _
-#align hash_map.entries_empty Std.HashMapₓ.entries_empty
+  Batteries.HashMap.mk_asList _
+#align hash_map.entries_empty Batteries.HashMapₓ.entries_empty
 
-theorem Std.HashMap.keys_empty (hash_fn : α → Nat) (n) : (@mkHashMap α _ β hash_fn n).keys = [] :=
-  by dsimp [keys] <;> rw [entries_empty] <;> rfl
-#align hash_map.keys_empty Std.HashMapₓ.keys_empty
+theorem Batteries.HashMap.keys_empty (hash_fn : α → Nat) (n) :
+    (@mkHashMap α _ β hash_fn n).keys = [] := by dsimp [keys] <;> rw [entries_empty] <;> rfl
+#align hash_map.keys_empty Batteries.HashMapₓ.keys_empty
 
-theorem Std.HashMap.find_empty (hash_fn : α → Nat) (n a) :
+theorem Batteries.HashMap.find_empty (hash_fn : α → Nat) (n a) :
     (@mkHashMap α _ β hash_fn n).find a = none := by
   induction' h : (@mkHashMap α _ β hash_fn n).find a with <;> [rfl;
     · have := (find_iff _ _ _).1 h; rw [entries_empty] at this; contradiction]
-#align hash_map.find_empty Std.HashMapₓ.find_empty
+#align hash_map.find_empty Batteries.HashMapₓ.find_empty
 
-theorem Std.HashMap.not_contains_empty (hash_fn : α → Nat) (n a) :
+theorem Batteries.HashMap.not_contains_empty (hash_fn : α → Nat) (n a) :
     ¬(@mkHashMap α _ β hash_fn n).contains a := by
   apply Bool.bool_iff_false.2 <;> dsimp [contains] <;> rw [find_empty] <;> rfl
-#align hash_map.not_contains_empty Std.HashMapₓ.not_contains_empty
+#align hash_map.not_contains_empty Batteries.HashMapₓ.not_contains_empty
 
-theorem Std.HashMap.insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArray α β n} {sz}
-    (v : Std.HashMap.Valid hash_fn bkts sz) :
-    Std.HashMap.Valid hash_fn
-      (bkts.foldl (mkArray' _ [] : BucketArray α β n') (Std.HashMap.reinsertAux hash_fn)) sz :=
+theorem Batteries.HashMap.insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArray α β n} {sz}
+    (v : Batteries.HashMap.Valid hash_fn bkts sz) :
+    Batteries.HashMap.Valid hash_fn
+      (bkts.foldl (mkArray' _ [] : BucketArray α β n') (Batteries.HashMap.reinsertAux hash_fn))
+      sz :=
   by
   suffices
     ∀ (l : List (Σ a, β a)) (t : BucketArray α β n') (sz),
@@ -545,17 +550,18 @@ theorem Std.HashMap.insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArr
     exact nm1.elim (@List.mem_map_of_mem _ _ Sigma.fst _ _ m1)
   · apply this
     simpa [reinsert_aux, BucketArray.modify, Array'.read_write_of_ne _ _ h] using im
-#align hash_map.insert_lemma Std.HashMapₓ.insert_lemma
+#align hash_map.insert_lemma Batteries.HashMapₓ.insert_lemma
 
 /-- Insert a key-value pair into the map. (Modifies `m` in-place when applicable) -/
-def Std.HashMap.insert : ∀ (m : Std.HashMap α β) (a : α) (b : β a), Std.HashMap α β
+def Batteries.HashMap.insert :
+    ∀ (m : Batteries.HashMap α β) (a : α) (b : β a), Batteries.HashMap α β
   | ⟨hash_fn, size, n, buckets, v⟩, a, b =>
     let bkt := buckets.read hash_fn a
-    if hc : Std.HashMap.containsAux a bkt then
+    if hc : Batteries.HashMap.containsAux a bkt then
       { hashFn
         size
         nbuckets := n
-        buckets := buckets.modify hash_fn a (Std.HashMap.replaceAux a b)
+        buckets := buckets.modify hash_fn a (Batteries.HashMap.replaceAux a b)
         is_valid := v.replace _ a b hc }
     else
       let size' := size + 1
@@ -570,16 +576,16 @@ def Std.HashMap.insert : ∀ (m : Std.HashMap α β) (a : α) (b : β a), Std.Ha
       else
         let n' : ℕ+ := ⟨n * 2, mul_pos n.2 (by decide)⟩
         let buckets'' : BucketArray α β n' :=
-          buckets'.foldl (mkArray' _ []) (Std.HashMap.reinsertAux hash_fn)
+          buckets'.foldl (mkArray' _ []) (Batteries.HashMap.reinsertAux hash_fn)
         { hashFn
           size := size'
           nbuckets := n'
           buckets := buckets''
-          is_valid := Std.HashMap.insert_lemma _ valid' }
-#align hash_map.insert Std.HashMapₓ.insert
+          is_valid := Batteries.HashMap.insert_lemma _ valid' }
+#align hash_map.insert Batteries.HashMapₓ.insert
 
-theorem Std.HashMap.mem_insert :
-    ∀ (m : Std.HashMap α β) (a b a' b'),
+theorem Batteries.HashMap.mem_insert :
+    ∀ (m : Batteries.HashMap α β) (a b a' b'),
       (Sigma.mk a' b' : Sigma β) ∈ (m.insert a b).entries ↔
         if a = a' then HEq b b' else Sigma.mk a' b' ∈ m.entries
   | ⟨hash_fn, size, n, bkts, v⟩, a, b, a', b' =>
@@ -608,7 +614,7 @@ theorem Std.HashMap.mem_insert :
       · suffices Sigma.mk a' b' ∉ v1 by simp [h, Ne.symm h, this]
         rcases veq with (⟨rfl, Hnc⟩ | ⟨b'', rfl⟩) <;> simp [Ne.symm h]
     by_cases Hc : (contains_aux a bkt : Prop)
-    · rcases Std.HashMap.Valid.replaceAux a b (Array'.read bkts (mk_idx n (hash_fn a)))
+    · rcases Batteries.HashMap.Valid.replaceAux a b (Array'.read bkts (mk_idx n (hash_fn a)))
           ((contains_aux_iff nd).1 Hc) with ⟨u', w', b'', hl', hfl'⟩
       rcases append_of_modify u' [⟨a, b''⟩] [⟨a, b⟩] w' hl' hfl' with ⟨u, w, hl, hfl⟩
       simpa [insert, @dif_pos (contains_aux a bkt) _ Hc] using
@@ -637,23 +643,23 @@ theorem Std.HashMap.mem_insert :
           rcases append_of_modify [] [] [⟨a'', b''⟩] _ rfl rfl with ⟨u, w, hl, hfl⟩
           simp [IH.symm, or_left_comm, show B.as_list = _ from hl,
             show (reinsert_aux hash_fn B a'' b'').asList = _ from hfl]
-#align hash_map.mem_insert Std.HashMapₓ.mem_insert
+#align hash_map.mem_insert Batteries.HashMapₓ.mem_insert
 
-theorem Std.HashMap.find_insert_eq (m : Std.HashMap α β) (a : α) (b : β a) :
+theorem Batteries.HashMap.find_insert_eq (m : Batteries.HashMap α β) (a : α) (b : β a) :
     (m.insert a b).find a = some b :=
-  (Std.HashMap.find_iff (m.insert a b) a b).2 <|
-    (Std.HashMap.mem_insert m a b a b).2 <| by rw [if_pos rfl]
-#align hash_map.find_insert_eq Std.HashMapₓ.find_insert_eq
+  (Batteries.HashMap.find_iff (m.insert a b) a b).2 <|
+    (Batteries.HashMap.mem_insert m a b a b).2 <| by rw [if_pos rfl]
+#align hash_map.find_insert_eq Batteries.HashMapₓ.find_insert_eq
 
-theorem Std.HashMap.find_insert_ne (m : Std.HashMap α β) (a a' : α) (b : β a) (h : a ≠ a') :
-    (m.insert a b).find a' = m.find a' :=
+theorem Batteries.HashMap.find_insert_ne (m : Batteries.HashMap α β) (a a' : α) (b : β a)
+    (h : a ≠ a') : (m.insert a b).find a' = m.find a' :=
   Option.eq_of_eq_some fun b' =>
-    let t := Std.HashMap.mem_insert m a b a' b'
-    (Std.HashMap.find_iff _ _ _).trans <|
-      Iff.trans (by rwa [if_neg h] at t) (Std.HashMap.find_iff _ _ _).symm
-#align hash_map.find_insert_ne Std.HashMapₓ.find_insert_ne
+    let t := Batteries.HashMap.mem_insert m a b a' b'
+    (Batteries.HashMap.find_iff _ _ _).trans <|
+      Iff.trans (by rwa [if_neg h] at t) (Batteries.HashMap.find_iff _ _ _).symm
+#align hash_map.find_insert_ne Batteries.HashMapₓ.find_insert_ne
 
-theorem Std.HashMap.find_insert (m : Std.HashMap α β) (a' a : α) (b : β a) :
+theorem Batteries.HashMap.find_insert (m : Batteries.HashMap α β) (a' a : α) (b : β a) :
     (m.insert a b).find a' = if h : a = a' then some (Eq.recOn h b) else m.find a' :=
   if h : a = a' then by
     rw [dif_pos h] <;>
@@ -661,33 +667,34 @@ theorem Std.HashMap.find_insert (m : Std.HashMap α β) (a' a : α) (b : β a) :
         match a', h with
         | _, rfl => find_insert_eq m a b
   else by rw [dif_neg h] <;> exact find_insert_ne m a a' b h
-#align hash_map.find_insert Std.HashMapₓ.find_insert
+#align hash_map.find_insert Batteries.HashMapₓ.find_insert
 
 /-- Insert a list of key-value pairs into the map. (Modifies `m` in-place when applicable) -/
-def Std.HashMap.insertAll (l : List (Σ a, β a)) (m : Std.HashMap α β) : Std.HashMap α β :=
-  l.foldl (fun m ⟨a, b⟩ => Std.HashMap.insert m a b) m
-#align hash_map.insert_all Std.HashMapₓ.insertAll
+def Batteries.HashMap.insertAll (l : List (Σ a, β a)) (m : Batteries.HashMap α β) :
+    Batteries.HashMap α β :=
+  l.foldl (fun m ⟨a, b⟩ => Batteries.HashMap.insert m a b) m
+#align hash_map.insert_all Batteries.HashMapₓ.insertAll
 
 /-- Construct a hash map from a list of key-value pairs. -/
-def Std.HashMap.ofList (l : List (Σ a, β a)) (hash_fn) : Std.HashMap α β :=
-  Std.HashMap.insertAll l (mkHashMap hash_fn (2 * l.length))
-#align hash_map.of_list Std.HashMapₓ.ofList
+def Batteries.HashMap.ofList (l : List (Σ a, β a)) (hash_fn) : Batteries.HashMap α β :=
+  Batteries.HashMap.insertAll l (mkHashMap hash_fn (2 * l.length))
+#align hash_map.of_list Batteries.HashMapₓ.ofList
 
 /-- Remove a key from the map. (Modifies `m` in-place when applicable) -/
-def Std.HashMap.erase (m : Std.HashMap α β) (a : α) : Std.HashMap α β :=
+def Batteries.HashMap.erase (m : Batteries.HashMap α β) (a : α) : Batteries.HashMap α β :=
   match m with
   | ⟨hash_fn, size, n, buckets, v⟩ =>
-    if hc : Std.HashMap.containsAux a (buckets.read hash_fn a) then
+    if hc : Batteries.HashMap.containsAux a (buckets.read hash_fn a) then
       { hashFn
         size := size - 1
         nbuckets := n
-        buckets := buckets.modify hash_fn a (Std.HashMap.eraseAux a)
+        buckets := buckets.modify hash_fn a (Batteries.HashMap.eraseAux a)
         is_valid := v.eraseₓ _ a hc }
     else m
-#align hash_map.erase Std.HashMapₓ.erase
+#align hash_map.erase Batteries.HashMapₓ.erase
 
-theorem Std.HashMap.mem_erase :
-    ∀ (m : Std.HashMap α β) (a a' b'),
+theorem Batteries.HashMap.mem_erase :
+    ∀ (m : Batteries.HashMap α β) (a a' b'),
       (Sigma.mk a' b' : Sigma β) ∈ (m.eraseₓ a).entries ↔ a ≠ a' ∧ Sigma.mk a' b' ∈ m.entries
   | ⟨hash_fn, size, n, bkts, v⟩, a, a', b' =>
     by
@@ -714,27 +721,28 @@ theorem Std.HashMap.mem_erase :
         simp [erase, @dif_neg (contains_aux a bkt) _ Hc, entries, and_iff_right_of_imp this]
       rintro m rfl
       exact Hc ((v.contains_aux_iff _ _).2 (List.mem_map_of_mem Sigma.fst m))
-#align hash_map.mem_erase Std.HashMapₓ.mem_erase
+#align hash_map.mem_erase Batteries.HashMapₓ.mem_erase
 
-theorem Std.HashMap.find_erase_eq (m : Std.HashMap α β) (a : α) : (m.eraseₓ a).find a = none :=
+theorem Batteries.HashMap.find_erase_eq (m : Batteries.HashMap α β) (a : α) :
+    (m.eraseₓ a).find a = none :=
   by
   cases' h : (m.erase a).find a with b; · rfl
   exact absurd rfl ((mem_erase m a a b).1 ((find_iff (m.erase a) a b).1 h)).left
-#align hash_map.find_erase_eq Std.HashMapₓ.find_erase_eq
+#align hash_map.find_erase_eq Batteries.HashMapₓ.find_erase_eq
 
-theorem Std.HashMap.find_erase_ne (m : Std.HashMap α β) (a a' : α) (h : a ≠ a') :
+theorem Batteries.HashMap.find_erase_ne (m : Batteries.HashMap α β) (a a' : α) (h : a ≠ a') :
     (m.eraseₓ a).find a' = m.find a' :=
   Option.eq_of_eq_some fun b' =>
-    (Std.HashMap.find_iff _ _ _).trans <|
-      (Std.HashMap.mem_erase m a a' b').trans <|
-        (and_iff_right h).trans (Std.HashMap.find_iff _ _ _).symm
-#align hash_map.find_erase_ne Std.HashMapₓ.find_erase_ne
+    (Batteries.HashMap.find_iff _ _ _).trans <|
+      (Batteries.HashMap.mem_erase m a a' b').trans <|
+        (and_iff_right h).trans (Batteries.HashMap.find_iff _ _ _).symm
+#align hash_map.find_erase_ne Batteries.HashMapₓ.find_erase_ne
 
-theorem Std.HashMap.find_erase (m : Std.HashMap α β) (a' a : α) :
+theorem Batteries.HashMap.find_erase (m : Batteries.HashMap α β) (a' a : α) :
     (m.eraseₓ a).find a' = if a = a' then none else m.find a' :=
   if h : a = a' then by subst a' <;> simp [find_erase_eq m a]
   else by rw [if_neg h] <;> exact find_erase_ne m a a' h
-#align hash_map.find_erase Std.HashMapₓ.find_erase
+#align hash_map.find_erase Batteries.HashMapₓ.find_erase
 
 section String
 
@@ -745,14 +753,14 @@ open Prod
 private def key_data_to_string (a : α) (b : β a) (first : Bool) : String :=
   (if first then "" else ", ") ++ s! "{a } ← {b}"
 
-private def to_string (m : Std.HashMap α β) : String :=
+private def to_string (m : Batteries.HashMap α β) : String :=
   "⟨" ++
       fst
-        (Std.HashMap.fold m ("", true) fun p a b =>
+        (Batteries.HashMap.fold m ("", true) fun p a b =>
           (fst p ++ keyDataToString a b (snd p), false)) ++
     "⟩"
 
-instance : ToString (Std.HashMap α β) :=
+instance : ToString (Batteries.HashMap α β) :=
   ⟨toString⟩
 
 end String
@@ -767,23 +775,23 @@ private unsafe def format_key_data (a : α) (b : β a) (first : Bool) : format :
   (if first then to_fmt "" else to_fmt "," ++ line) ++ to_fmt a ++ space ++ to_fmt "←" ++ space ++
     to_fmt b
 
-private unsafe def to_format (m : Std.HashMap α β) : format :=
+private unsafe def to_format (m : Batteries.HashMap α β) : format :=
   Group <|
     to_fmt "⟨" ++
         nest 1
           (fst
-            (Std.HashMap.fold m (to_fmt "", true) fun p a b =>
+            (Batteries.HashMap.fold m (to_fmt "", true) fun p a b =>
               (fst p ++ format_key_data a b (snd p), false))) ++
       to_fmt "⟩"
 
-unsafe instance : has_to_format (Std.HashMap α β) :=
+unsafe instance : has_to_format (Batteries.HashMap α β) :=
   ⟨to_format⟩
 
 end Format
 
 /-- `hash_map` with key type `nat` and value type that may vary. -/
-instance {β : ℕ → Type _} : Inhabited (Std.HashMap ℕ β) :=
+instance {β : ℕ → Type _} : Inhabited (Batteries.HashMap ℕ β) :=
   ⟨mkHashMap id⟩
 
-end Std.HashMap
+end Batteries.HashMap
 

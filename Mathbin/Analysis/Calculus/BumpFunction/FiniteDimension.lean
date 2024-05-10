@@ -31,7 +31,7 @@ noncomputable section
 open Set Metric TopologicalSpace Function Asymptotics MeasureTheory FiniteDimensional
   ContinuousLinearMap Filter MeasureTheory.Measure
 
-open scoped Pointwise Topology NNReal BigOperators convolution
+open scoped Pointwise Topology NNReal BigOperators MeasureTheory.convolution
 
 variable {E : Type _} [NormedAddCommGroup E]
 
@@ -417,7 +417,7 @@ def y (D : ℝ) : E → ℝ :=
 #print ExistsContDiffBumpBase.y_neg /-
 theorem y_neg (D : ℝ) (x : E) : y D (-x) = y D x :=
   by
-  apply convolution_neg_of_neg_eq
+  apply MeasureTheory.convolution_neg_of_neg_eq
   · apply eventually_of_forall fun x => _
     simp only [W_def, u_neg, smul_neg, Algebra.id.smul_eq_mul, mul_eq_mul_left_iff,
       eq_self_iff_true, true_or_iff]
@@ -443,7 +443,7 @@ theorem y_eq_one_of_mem_closedBall {D : ℝ} {x : E} (Dpos : 0 < D)
     linarith only [mem_ball.1 (C hy), h'y]
   have Bx : φ x = 1 := B _ (mem_ball_self Dpos)
   have B' : ∀ y, y ∈ ball x D → φ y = φ x := by rw [Bx]; exact B
-  rw [convolution_eq_right' _ (le_of_eq (W_support E Dpos)) B']
+  rw [MeasureTheory.convolution_eq_right' _ (le_of_eq (W_support E Dpos)) B']
   simp only [lsmul_apply, Algebra.id.smul_eq_mul, integral_mul_right, W_integral E Dpos, Bx,
     one_mul]
 #align exists_cont_diff_bump_base.Y_eq_one_of_mem_closed_ball ExistsContDiffBumpBase.y_eq_one_of_mem_closedBall
@@ -465,7 +465,7 @@ theorem y_eq_zero_of_not_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (hx : x ∉ b
     exact hx (C (mem_ball_comm.1 hy))
   have Bx : φ x = 0 := B _ (mem_ball_self Dpos)
   have B' : ∀ y, y ∈ ball x D → φ y = φ x := by rw [Bx]; exact B
-  rw [convolution_eq_right' _ (le_of_eq (W_support E Dpos)) B']
+  rw [MeasureTheory.convolution_eq_right' _ (le_of_eq (W_support E Dpos)) B']
   simp only [lsmul_apply, Algebra.id.smul_eq_mul, Bx, MulZeroClass.mul_zero, integral_const]
 #align exists_cont_diff_bump_base.Y_eq_zero_of_not_mem_ball ExistsContDiffBumpBase.y_eq_zero_of_not_mem_ball
 -/
@@ -482,15 +482,16 @@ theorem y_le_one {D : ℝ} (x : E) (Dpos : 0 < D) : y D x ≤ 1 :=
   have A : (W D ⋆[lsmul ℝ ℝ, μ] φ) x ≤ (W D ⋆[lsmul ℝ ℝ, μ] 1) x :=
     by
     apply
-      convolution_mono_right_of_nonneg _ (W_nonneg D) (indicator_le_self' fun x hx => zero_le_one)
-        fun x => zero_le_one
+      MeasureTheory.convolution_mono_right_of_nonneg _ (W_nonneg D)
+        (indicator_le_self' fun x hx => zero_le_one) fun x => zero_le_one
     refine'
       (HasCompactSupport.convolutionExistsLeft _ (W_compact_support E Dpos) _
           (locally_integrable_const (1 : ℝ)) x).Integrable
     exact continuous_const.mul ((u_continuous E).comp (continuous_id.const_smul _))
   have B : (W D ⋆[lsmul ℝ ℝ, μ] fun y => (1 : ℝ)) x = 1 := by
-    simp only [convolution, ContinuousLinearMap.map_smul, mul_inv_rev, coe_smul', mul_one,
-      lsmul_apply, Algebra.id.smul_eq_mul, integral_mul_left, W_integral E Dpos, Pi.smul_apply]
+    simp only [MeasureTheory.convolution, ContinuousLinearMap.map_smul, mul_inv_rev, coe_smul',
+      mul_one, lsmul_apply, Algebra.id.smul_eq_mul, integral_mul_left, W_integral E Dpos,
+      Pi.smul_apply]
   exact A.trans (le_of_eq B)
 #align exists_cont_diff_bump_base.Y_le_one ExistsContDiffBumpBase.y_le_one
 -/
@@ -547,13 +548,13 @@ theorem y_pos_of_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (D_lt_one : D < 1)
 
 variable (E)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ExistsContDiffBumpBase.y_smooth /-
 theorem y_smooth : ContDiffOn ℝ ⊤ (uncurry y) (Ioo (0 : ℝ) 1 ×ˢ (univ : Set E)) :=
   by
   have hs : IsOpen (Ioo (0 : ℝ) (1 : ℝ)) := isOpen_Ioo
   have hk : IsCompact (closed_ball (0 : E) 1) := ProperSpace.isCompact_closedBall _ _
-  refine' contDiffOn_convolution_left_with_param (lsmul ℝ ℝ) hs hk _ _ _
+  refine' MeasureTheory.contDiffOn_convolution_left_with_param (lsmul ℝ ℝ) hs hk _ _ _
   · rintro p x hp hx
     simp only [W, mul_inv_rev, Algebra.id.smul_eq_mul, mul_eq_zero, inv_eq_zero]
     right
@@ -591,7 +592,7 @@ variable {E}
 
 end HelperDefinitions
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance (priority := 100) {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] : HasContDiffBump E :=
   by

@@ -515,7 +515,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
   try triv
 #align tactic.add_coinductive_predicate tactic.add_coinductive_predicate
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 -- we setup a trivial goal for the tactic framework
 @[user_command]
 unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "coinductive") :
@@ -531,7 +531,7 @@ unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "
       add_doc_string d doc_string
 #align tactic.coinductive_predicate tactic.coinductive_predicate
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `hs -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `hs -/
 /-- Prepares coinduction proofs. This tactic constructs the coinduction invariant from
 the quantifiers in the current goal.
 

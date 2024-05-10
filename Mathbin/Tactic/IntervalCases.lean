@@ -268,7 +268,7 @@ unsafe def interval_cases_using (hl hu : expr) (n : Option Name) : tactic Unit :
     fin_cases_at none none
 #align tactic.interval_cases_using tactic.interval_cases_using
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 namespace Interactive
 
 local postfix:1024 "?" => optional

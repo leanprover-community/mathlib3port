@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
 import GroupTheory.Index
-import GroupTheory.Subgroup.Pointwise
+import Algebra.Group.Subgroup.Pointwise
 import GroupTheory.GroupAction.ConjAct
 
 #align_import group_theory.commensurable from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"

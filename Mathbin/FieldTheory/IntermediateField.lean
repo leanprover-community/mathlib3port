@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import FieldTheory.Minpoly.Field
-import FieldTheory.Subfield
+import Algebra.Field.Subfield
 import FieldTheory.Tower
 
 #align_import field_theory.intermediate_field from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"

@@ -11,43 +11,45 @@ import Tactic.Interactive
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 #align tactic.interactive.blast_disjs tactic.interactive.blast_disjs
 
-namespace Std.RBNode
+namespace Batteries.RBNode
 
 variable {α : Type u}
 
 open Color Nat
 
-inductive Std.RBNode.IsNodeOf : Std.RBNode α → Std.RBNode α → α → Std.RBNode α → Prop
-  | of_red (l v r) : is_node_of (Std.RBNode.node l v r) l v r
+inductive Batteries.RBNode.IsNodeOf :
+    Batteries.RBNode α → Batteries.RBNode α → α → Batteries.RBNode α → Prop
+  | of_red (l v r) : is_node_of (Batteries.RBNode.node l v r) l v r
   | of_black (l v r) : is_node_of (black_node l v r) l v r
-#align rbnode.is_node_of Std.RBNode.IsNodeOf
+#align rbnode.is_node_of Batteries.RBNode.IsNodeOf
 
-def Std.RBNode.Lift (lt : α → α → Prop) : Option α → Option α → Prop
+def Batteries.RBNode.Lift (lt : α → α → Prop) : Option α → Option α → Prop
   | some a, some b => lt a b
   | _, _ => True
-#align rbnode.lift Std.RBNode.Lift
+#align rbnode.lift Batteries.RBNode.Lift
 
-inductive Std.RBNode.IsSearchable (lt : α → α → Prop) : Std.RBNode α → Option α → Option α → Prop
-  | leaf_s {lo hi} (hlt : Std.RBNode.Lift lt lo hi) : is_searchable Std.RBNode.nil lo hi
+inductive Batteries.RBNode.IsSearchable (lt : α → α → Prop) :
+    Batteries.RBNode α → Option α → Option α → Prop
+  | leaf_s {lo hi} (hlt : Batteries.RBNode.Lift lt lo hi) : is_searchable Batteries.RBNode.nil lo hi
   |
   red_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
-    is_searchable (Std.RBNode.node l v r) lo hi
+    is_searchable (Batteries.RBNode.node l v r) lo hi
   |
   black_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (black_node l v r) lo hi
-#align rbnode.is_searchable Std.RBNode.IsSearchable
+#align rbnode.is_searchable Batteries.RBNode.IsSearchable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 #align rbnode.is_searchable_tactic rbnode.is_searchable_tactic
 
-open Std.RBNode (Mem)
+open Batteries.RBNode (Mem)
 
 open IsSearchable
 
@@ -55,8 +57,8 @@ section IsSearchableLemmas
 
 variable {lt : α → α → Prop}
 
-theorem Std.RBNode.lo_lt_hi {t : Std.RBNode α} {lt} [IsTrans α lt] :
-    ∀ {lo hi}, Std.RBNode.IsSearchable lt t lo hi → Std.RBNode.Lift lt lo hi :=
+theorem Batteries.RBNode.lo_lt_hi {t : Batteries.RBNode α} {lt} [IsTrans α lt] :
+    ∀ {lo hi}, Batteries.RBNode.IsSearchable lt t lo hi → Batteries.RBNode.Lift lt lo hi :=
   by
   induction t <;> intro lo hi hs
   case leaf => cases hs; assumption
@@ -66,12 +68,13 @@ theorem Std.RBNode.lo_lt_hi {t : Std.RBNode α} {lt} [IsTrans α lt] :
     have h₂ := t_ih_rchild hs_hs₂
     cases lo <;> cases hi <;> simp [lift] at *
     apply trans_of lt h₁ h₂
-#align rbnode.lo_lt_hi Std.RBNode.lo_lt_hi
+#align rbnode.lo_lt_hi Batteries.RBNode.lo_lt_hi
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-theorem Std.RBNode.isSearchableOfIsSearchableOfIncomp [IsStrictWeakOrder α lt] {t} :
-    ∀ {lo hi hi'} (hc : ¬lt hi' hi ∧ ¬lt hi hi') (hs : Std.RBNode.IsSearchable lt t lo (some hi)),
-      Std.RBNode.IsSearchable lt t lo (some hi') :=
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+theorem Batteries.RBNode.isSearchableOfIsSearchableOfIncomp [IsStrictWeakOrder α lt] {t} :
+    ∀ {lo hi hi'} (hc : ¬lt hi' hi ∧ ¬lt hi hi')
+      (hs : Batteries.RBNode.IsSearchable lt t lo (some hi)),
+      Batteries.RBNode.IsSearchable lt t lo (some hi') :=
   by
   classical
   induction t <;> intros <;>
@@ -79,12 +82,13 @@ theorem Std.RBNode.isSearchableOfIsSearchableOfIncomp [IsStrictWeakOrder α lt] 
       is_searchable_tactic
   · cases lo <;> simp_all [lift]; apply lt_of_lt_of_incomp; assumption; exact ⟨hc.2, hc.1⟩
   all_goals apply t_ih_rchild hc hs_hs₂
-#align rbnode.is_searchable_of_is_searchable_of_incomp Std.RBNode.isSearchableOfIsSearchableOfIncomp
+#align rbnode.is_searchable_of_is_searchable_of_incomp Batteries.RBNode.isSearchableOfIsSearchableOfIncomp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-theorem Std.RBNode.isSearchableOfIncompOfIsSearchable [IsStrictWeakOrder α lt] {t} :
-    ∀ {lo lo' hi} (hc : ¬lt lo' lo ∧ ¬lt lo lo') (hs : Std.RBNode.IsSearchable lt t (some lo) hi),
-      Std.RBNode.IsSearchable lt t (some lo') hi :=
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+theorem Batteries.RBNode.isSearchableOfIncompOfIsSearchable [IsStrictWeakOrder α lt] {t} :
+    ∀ {lo lo' hi} (hc : ¬lt lo' lo ∧ ¬lt lo lo')
+      (hs : Batteries.RBNode.IsSearchable lt t (some lo) hi),
+      Batteries.RBNode.IsSearchable lt t (some lo') hi :=
   by
   classical
   induction t <;> intros <;>
@@ -92,60 +96,61 @@ theorem Std.RBNode.isSearchableOfIncompOfIsSearchable [IsStrictWeakOrder α lt] 
       is_searchable_tactic
   · cases hi <;> simp_all [lift]; apply lt_of_incomp_of_lt; assumption; assumption
   all_goals apply t_ih_lchild hc hs_hs₁
-#align rbnode.is_searchable_of_incomp_of_is_searchable Std.RBNode.isSearchableOfIncompOfIsSearchable
+#align rbnode.is_searchable_of_incomp_of_is_searchable Batteries.RBNode.isSearchableOfIncompOfIsSearchable
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-theorem Std.RBNode.isSearchableSomeLowOfIsSearchableOfLt {t} [IsTrans α lt] :
-    ∀ {lo hi lo'} (hlt : lt lo' lo) (hs : Std.RBNode.IsSearchable lt t (some lo) hi),
-      Std.RBNode.IsSearchable lt t (some lo') hi :=
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+theorem Batteries.RBNode.isSearchableSomeLowOfIsSearchableOfLt {t} [IsTrans α lt] :
+    ∀ {lo hi lo'} (hlt : lt lo' lo) (hs : Batteries.RBNode.IsSearchable lt t (some lo) hi),
+      Batteries.RBNode.IsSearchable lt t (some lo') hi :=
   by
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
   · cases hi <;> simp_all [lift]; apply trans_of lt hlt; assumption
   all_goals apply t_ih_lchild hlt hs_hs₁
-#align rbnode.is_searchable_some_low_of_is_searchable_of_lt Std.RBNode.isSearchableSomeLowOfIsSearchableOfLt
+#align rbnode.is_searchable_some_low_of_is_searchable_of_lt Batteries.RBNode.isSearchableSomeLowOfIsSearchableOfLt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-theorem Std.RBNode.isSearchableNoneLowOfIsSearchableSomeLow {t} :
-    ∀ {y hi} (hlt : Std.RBNode.IsSearchable lt t (some y) hi),
-      Std.RBNode.IsSearchable lt t none hi :=
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+theorem Batteries.RBNode.isSearchableNoneLowOfIsSearchableSomeLow {t} :
+    ∀ {y hi} (hlt : Batteries.RBNode.IsSearchable lt t (some y) hi),
+      Batteries.RBNode.IsSearchable lt t none hi :=
   by
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
   · simp [lift]
   all_goals apply t_ih_lchild hlt_hs₁
-#align rbnode.is_searchable_none_low_of_is_searchable_some_low Std.RBNode.isSearchableNoneLowOfIsSearchableSomeLow
+#align rbnode.is_searchable_none_low_of_is_searchable_some_low Batteries.RBNode.isSearchableNoneLowOfIsSearchableSomeLow
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-theorem Std.RBNode.isSearchableSomeHighOfIsSearchableOfLt {t} [IsTrans α lt] :
-    ∀ {lo hi hi'} (hlt : lt hi hi') (hs : Std.RBNode.IsSearchable lt t lo (some hi)),
-      Std.RBNode.IsSearchable lt t lo (some hi') :=
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+theorem Batteries.RBNode.isSearchableSomeHighOfIsSearchableOfLt {t} [IsTrans α lt] :
+    ∀ {lo hi hi'} (hlt : lt hi hi') (hs : Batteries.RBNode.IsSearchable lt t lo (some hi)),
+      Batteries.RBNode.IsSearchable lt t lo (some hi') :=
   by
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
   · cases lo <;> simp_all [lift]; apply trans_of lt; assumption; assumption
   all_goals apply t_ih_rchild hlt hs_hs₂
-#align rbnode.is_searchable_some_high_of_is_searchable_of_lt Std.RBNode.isSearchableSomeHighOfIsSearchableOfLt
+#align rbnode.is_searchable_some_high_of_is_searchable_of_lt Batteries.RBNode.isSearchableSomeHighOfIsSearchableOfLt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
-theorem Std.RBNode.isSearchableNoneHighOfIsSearchableSomeHigh {t} :
-    ∀ {lo y} (hlt : Std.RBNode.IsSearchable lt t lo (some y)),
-      Std.RBNode.IsSearchable lt t lo none :=
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+theorem Batteries.RBNode.isSearchableNoneHighOfIsSearchableSomeHigh {t} :
+    ∀ {lo y} (hlt : Batteries.RBNode.IsSearchable lt t lo (some y)),
+      Batteries.RBNode.IsSearchable lt t lo none :=
   by
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
   · cases lo <;> simp [lift]
   all_goals apply t_ih_rchild hlt_hs₂
-#align rbnode.is_searchable_none_high_of_is_searchable_some_high Std.RBNode.isSearchableNoneHighOfIsSearchableSomeHigh
+#align rbnode.is_searchable_none_high_of_is_searchable_some_high Batteries.RBNode.isSearchableNoneHighOfIsSearchableSomeHigh
 
-theorem Std.RBNode.range [IsStrictWeakOrder α lt] {t : Std.RBNode α} {x} :
+theorem Batteries.RBNode.range [IsStrictWeakOrder α lt] {t : Batteries.RBNode α} {x} :
     ∀ {lo hi},
-      Std.RBNode.IsSearchable lt t lo hi →
-        Std.RBNode.Mem lt x t → Std.RBNode.Lift lt lo (some x) ∧ Std.RBNode.Lift lt (some x) hi :=
+      Batteries.RBNode.IsSearchable lt t lo hi →
+        Batteries.RBNode.Mem lt x t →
+          Batteries.RBNode.Lift lt lo (some x) ∧ Batteries.RBNode.Lift lt (some x) hi :=
   by
   classical
   induction t
@@ -182,55 +187,58 @@ theorem Std.RBNode.range [IsStrictWeakOrder α lt] {t : Std.RBNode α} {x} :
       constructor
       · apply trans_of lt lo_val val_x
       · assumption
-#align rbnode.range Std.RBNode.range
+#align rbnode.range Batteries.RBNode.range
 
-theorem Std.RBNode.ltOfMemLeft [IsStrictWeakOrder α lt] {y : α} {t l r : Std.RBNode α} :
+theorem Batteries.RBNode.ltOfMemLeft [IsStrictWeakOrder α lt] {y : α} {t l r : Batteries.RBNode α} :
     ∀ {lo hi},
-      Std.RBNode.IsSearchable lt t lo hi →
-        Std.RBNode.IsNodeOf t l y r → ∀ {x}, Std.RBNode.Mem lt x l → lt x y :=
+      Batteries.RBNode.IsSearchable lt t lo hi →
+        Batteries.RBNode.IsNodeOf t l y r → ∀ {x}, Batteries.RBNode.Mem lt x l → lt x y :=
   by
   intro _ _ hs hn x hm; cases hn <;> cases hs
   all_goals exact (range hs_hs₁ hm).2
-#align rbnode.lt_of_mem_left Std.RBNode.ltOfMemLeft
+#align rbnode.lt_of_mem_left Batteries.RBNode.ltOfMemLeft
 
-theorem Std.RBNode.ltOfMemRight [IsStrictWeakOrder α lt] {y : α} {t l r : Std.RBNode α} :
+theorem Batteries.RBNode.ltOfMemRight [IsStrictWeakOrder α lt] {y : α}
+    {t l r : Batteries.RBNode α} :
     ∀ {lo hi},
-      Std.RBNode.IsSearchable lt t lo hi →
-        Std.RBNode.IsNodeOf t l y r → ∀ {z}, Std.RBNode.Mem lt z r → lt y z :=
+      Batteries.RBNode.IsSearchable lt t lo hi →
+        Batteries.RBNode.IsNodeOf t l y r → ∀ {z}, Batteries.RBNode.Mem lt z r → lt y z :=
   by
   intro _ _ hs hn z hm; cases hn <;> cases hs
   all_goals exact (range hs_hs₂ hm).1
-#align rbnode.lt_of_mem_right Std.RBNode.ltOfMemRight
+#align rbnode.lt_of_mem_right Batteries.RBNode.ltOfMemRight
 
-theorem Std.RBNode.ltOfMemLeftRight [IsStrictWeakOrder α lt] {y : α} {t l r : Std.RBNode α} :
+theorem Batteries.RBNode.ltOfMemLeftRight [IsStrictWeakOrder α lt] {y : α}
+    {t l r : Batteries.RBNode α} :
     ∀ {lo hi},
-      Std.RBNode.IsSearchable lt t lo hi →
-        Std.RBNode.IsNodeOf t l y r →
-          ∀ {x z}, Std.RBNode.Mem lt x l → Std.RBNode.Mem lt z r → lt x z :=
+      Batteries.RBNode.IsSearchable lt t lo hi →
+        Batteries.RBNode.IsNodeOf t l y r →
+          ∀ {x z}, Batteries.RBNode.Mem lt x l → Batteries.RBNode.Mem lt z r → lt x z :=
   by
   intro _ _ hs hn x z hm₁ hm₂; cases hn <;> cases hs
   all_goals
     have h₁ := range hs_hs₁ hm₁
     have h₂ := range hs_hs₂ hm₂
     exact trans_of lt h₁.2 h₂.1
-#align rbnode.lt_of_mem_left_right Std.RBNode.ltOfMemLeftRight
+#align rbnode.lt_of_mem_left_right Batteries.RBNode.ltOfMemLeftRight
 
 end IsSearchableLemmas
 
-inductive Std.RBNode.IsRedBlack : Std.RBNode α → RBColor → Nat → Prop
-  | leaf_rb : is_red_black Std.RBNode.nil black 0
+inductive Batteries.RBNode.IsRedBlack : Batteries.RBNode α → RBColor → Nat → Prop
+  | leaf_rb : is_red_black Batteries.RBNode.nil black 0
   |
   red_rb {v l r n} (rb_l : is_red_black l black n) (rb_r : is_red_black r black n) :
-    is_red_black (Std.RBNode.node l v r) red n
+    is_red_black (Batteries.RBNode.node l v r) red n
   |
   black_rb {v l r n c₁ c₂} (rb_l : is_red_black l c₁ n) (rb_r : is_red_black r c₂ n) :
     is_red_black (black_node l v r) black (succ n)
-#align rbnode.is_red_black Std.RBNode.IsRedBlack
+#align rbnode.is_red_black Batteries.RBNode.IsRedBlack
 
 open IsRedBlack
 
-theorem Std.RBNode.depth_min :
-    ∀ {c n} {t : Std.RBNode α}, Std.RBNode.IsRedBlack t c n → n ≤ Std.RBNode.depth min t :=
+theorem Batteries.RBNode.depth_min :
+    ∀ {c n} {t : Batteries.RBNode α},
+      Batteries.RBNode.IsRedBlack t c n → n ≤ Batteries.RBNode.depth min t :=
   by
   intro c n' t h
   induction h
@@ -243,7 +251,7 @@ theorem Std.RBNode.depth_min :
     simp [depth]
     apply succ_le_succ
     apply le_min <;> assumption
-#align rbnode.depth_min Std.RBNode.depth_min
+#align rbnode.depth_min Batteries.RBNode.depth_min
 
 private def upper : RBColor → Nat → Nat
   | red, n => 2 * n + 1
@@ -253,8 +261,9 @@ private theorem upper_le : ∀ c n, upper c n ≤ 2 * n + 1
   | red, n => le_refl _
   | black, n => by apply le_succ
 
-theorem Std.RBNode.depth_max' :
-    ∀ {c n} {t : Std.RBNode α}, Std.RBNode.IsRedBlack t c n → Std.RBNode.depth max t ≤ upper c n :=
+theorem Batteries.RBNode.depth_max' :
+    ∀ {c n} {t : Batteries.RBNode α},
+      Batteries.RBNode.IsRedBlack t c n → Batteries.RBNode.depth max t ≤ upper c n :=
   by
   intro c n' t h
   induction h
@@ -271,20 +280,21 @@ theorem Std.RBNode.depth_max' :
     suffices new : max (depth max h_l) (depth max h_r) + 1 ≤ 2 * h_n + 2 * 1
     · simp_all [depth, upper, succ_eq_add_one, Nat.left_distrib]
     apply succ_le_succ; apply max_le <;> assumption
-#align rbnode.depth_max' Std.RBNode.depth_max'
+#align rbnode.depth_max' Batteries.RBNode.depth_max'
 
-theorem Std.RBNode.depth_max {c n} {t : Std.RBNode α} (h : Std.RBNode.IsRedBlack t c n) :
-    Std.RBNode.depth max t ≤ 2 * n + 1 :=
-  le_trans (Std.RBNode.depth_max' h) (upper_le _ _)
-#align rbnode.depth_max Std.RBNode.depth_max
+theorem Batteries.RBNode.depth_max {c n} {t : Batteries.RBNode α}
+    (h : Batteries.RBNode.IsRedBlack t c n) : Batteries.RBNode.depth max t ≤ 2 * n + 1 :=
+  le_trans (Batteries.RBNode.depth_max' h) (upper_le _ _)
+#align rbnode.depth_max Batteries.RBNode.depth_max
 
-theorem Std.RBNode.balanced {c n} {t : Std.RBNode α} (h : Std.RBNode.IsRedBlack t c n) :
-    Std.RBNode.depth max t ≤ 2 * Std.RBNode.depth min t + 1 :=
+theorem Batteries.RBNode.balanced {c n} {t : Batteries.RBNode α}
+    (h : Batteries.RBNode.IsRedBlack t c n) :
+    Batteries.RBNode.depth max t ≤ 2 * Batteries.RBNode.depth min t + 1 :=
   by
   have : 2 * depth min t + 1 ≥ 2 * n + 1 := by apply succ_le_succ; apply Nat.mul_le_mul_left;
     apply depth_min h
   apply le_trans; apply depth_max h; apply this
-#align rbnode.balanced Std.RBNode.balanced
+#align rbnode.balanced Batteries.RBNode.balanced
 
-end Std.RBNode
+end Batteries.RBNode
 

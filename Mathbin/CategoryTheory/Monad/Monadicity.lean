@@ -63,13 +63,13 @@ parameter {C : Type u₁} {D : Type u₂}
 
 parameter [Category.{v₁} C] [Category.{v₁} D]
 
-parameter {G : D ⥤ C} [IsRightAdjoint G]
+parameter {G : D ⥤ C} [CategoryTheory.Functor.IsRightAdjoint G]
 
 -- An unfortunate consequence of the local notation is that it is only recognised if there is an
 -- extra space after the reference.
-local notation "F" => leftAdjoint G
+local notation "F" => CategoryTheory.Functor.leftAdjoint G
 
-local notation "adj" => Adjunction.ofRightAdjoint G
+local notation "adj" => Adjunction.ofIsRightAdjoint G
 
 #print CategoryTheory.Monad.MonadicityInternal.main_pair_reflexive /-
 /-- The "main pair" for an algebra `(A, α)` is the pair of morphisms `(F α, ε_FA)`. It is always a
@@ -292,7 +292,7 @@ def createsGSplitCoequalizersOfMonadic [MonadicRightAdjoint G] ⦃A B⦄ (f g : 
 #align category_theory.monad.creates_G_split_coequalizers_of_monadic CategoryTheory.Monad.createsGSplitCoequalizersOfMonadic
 -/
 
-variable [IsRightAdjoint G]
+variable [CategoryTheory.Functor.IsRightAdjoint G]
 
 section BeckMonadicity
 

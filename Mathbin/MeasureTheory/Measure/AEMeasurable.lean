@@ -286,7 +286,7 @@ protected theorem nullMeasurable (h : AEMeasurable f μ) : NullMeasurable f μ :
 
 end AEMeasurable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 #print aemeasurable_const' /-
 theorem aemeasurable_const' (h : ∀ᵐ (x) (y) ∂μ, f x = f y) : AEMeasurable f μ :=
   by

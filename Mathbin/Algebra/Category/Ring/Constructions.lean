@@ -8,7 +8,7 @@ import LinearAlgebra.TensorProduct.Tower
 import Algebra.Category.Ring.Limits
 import Algebra.Category.Ring.Instances
 import CategoryTheory.Limits.Shapes.StrictInitial
-import RingTheory.Subring.Basic
+import Algebra.Ring.Subring.Basic
 
 #align_import algebra.category.Ring.constructions from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

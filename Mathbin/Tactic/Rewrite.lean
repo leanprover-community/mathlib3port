@@ -25,16 +25,16 @@ unsafe def fill_args : expr → tactic (expr × List expr)
   | e => return (e, [])
 #align tactic.fill_args tactic.fill_args
 
-unsafe def mk_assoc_pattern' (fn : expr) : expr → tactic (Std.DList expr)
+unsafe def mk_assoc_pattern' (fn : expr) : expr → tactic (Batteries.DList expr)
   | e =>
     (do
         let (e₀, e₁) ← match_fn fn e
         (· ++ ·) <$> mk_assoc_pattern' e₀ <*> mk_assoc_pattern' e₁) <|>
-      pure (Std.DList.singleton e)
+      pure (Batteries.DList.singleton e)
 #align tactic.mk_assoc_pattern' tactic.mk_assoc_pattern'
 
 unsafe def mk_assoc_pattern (fn e : expr) : tactic (List expr) :=
-  Std.DList.toList <$> mk_assoc_pattern' fn e
+  Batteries.DList.toList <$> mk_assoc_pattern' fn e
 #align tactic.mk_assoc_pattern tactic.mk_assoc_pattern
 
 unsafe def mk_assoc (fn : expr) : List expr → tactic expr
@@ -145,14 +145,14 @@ unsafe def assoc_rewrite_intl (assoc h e : expr) : tactic (expr × expr) := do
 
 -- TODO(Simon): visit expressions built of `fn` nested inside other such expressions:
 -- e.g.: x + f (a + b + c) + y should generate two rewrite candidates
-unsafe def enum_assoc_subexpr' (fn : expr) : expr → tactic (Std.DList expr)
+unsafe def enum_assoc_subexpr' (fn : expr) : expr → tactic (Batteries.DList expr)
   | e =>
-    Std.DList.singleton e <$ (match_fn fn e >> guard ¬e.has_var) <|>
-      expr.mfoldl (fun es e' => (· ++ es) <$> enum_assoc_subexpr' e') Std.DList.empty e
+    Batteries.DList.singleton e <$ (match_fn fn e >> guard ¬e.has_var) <|>
+      expr.mfoldl (fun es e' => (· ++ es) <$> enum_assoc_subexpr' e') Batteries.DList.empty e
 #align tactic.enum_assoc_subexpr' tactic.enum_assoc_subexpr'
 
 unsafe def enum_assoc_subexpr (fn e : expr) : tactic (List expr) :=
-  Std.DList.toList <$> enum_assoc_subexpr' fn e
+  Batteries.DList.toList <$> enum_assoc_subexpr' fn e
 #align tactic.enum_assoc_subexpr tactic.enum_assoc_subexpr
 
 unsafe def mk_assoc_instance (fn : expr) : tactic expr := do
@@ -192,8 +192,8 @@ unsafe def assoc_rewrite_hyp (h hyp : expr) (opt_assoc : Option expr := none) : 
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
 private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
   rs.mapM' fun r => do
     save_info r
@@ -210,7 +210,7 @@ private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
 private unsafe def uses_hyp (e : expr) (h : expr) : Bool :=
   e.fold false fun t _ r => r || t = h
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
 private unsafe def assoc_rw_hyp : List rw_rule → expr → tactic Unit
   | [], hyp => skip
   | r :: rs, hyp => do

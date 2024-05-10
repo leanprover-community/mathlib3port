@@ -496,7 +496,7 @@ theorem sum_eq_card_of_is_trivial {ψ : AddChar R R'} (hψ : ¬IsNontrivial ψ) 
     ∑ a, ψ a = Fintype.card R := by
   simp only [is_nontrivial] at hψ
   push_neg at hψ
-  simp only [hψ, Finset.sum_const, Nat.smul_one_eq_coe]
+  simp only [hψ, Finset.sum_const, Nat.smul_one_eq_cast]
   rfl
 #align add_char.sum_eq_card_of_is_trivial AddChar.sum_eq_card_of_is_trivial
 -/
@@ -509,7 +509,7 @@ theorem sum_mulShift [DecidableEq R] [IsDomain R'] {ψ : AddChar R R'} (b : R) (
   by
   split_ifs with h
   · -- case `b = 0`
-    simp only [h, MulZeroClass.mul_zero, map_zero_one, Finset.sum_const, Nat.smul_one_eq_coe]
+    simp only [h, MulZeroClass.mul_zero, map_zero_one, Finset.sum_const, Nat.smul_one_eq_cast]
     rfl
   · -- case `b ≠ 0`
     simp_rw [mul_comm]

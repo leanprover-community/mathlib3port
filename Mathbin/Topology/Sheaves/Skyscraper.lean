@@ -434,10 +434,11 @@ def skyscraperPresheafStalkAdjunction [HasColimits C] :
 #align skyscraper_presheaf_stalk_adjunction skyscraperPresheafStalkAdjunction
 -/
 
-instance [HasColimits C] : IsRightAdjoint (skyscraperPresheafFunctor p₀ : C ⥤ Presheaf C X) :=
+instance [HasColimits C] :
+    CategoryTheory.Functor.IsRightAdjoint (skyscraperPresheafFunctor p₀ : C ⥤ Presheaf C X) :=
   ⟨_, skyscraperPresheafStalkAdjunction _⟩
 
-instance [HasColimits C] : IsLeftAdjoint (Presheaf.stalkFunctor C p₀) :=
+instance [HasColimits C] : CategoryTheory.Functor.IsLeftAdjoint (Presheaf.stalkFunctor C p₀) :=
   ⟨_, skyscraperPresheafStalkAdjunction _⟩
 
 #print stalkSkyscraperSheafAdjunction /-
@@ -459,7 +460,8 @@ def stalkSkyscraperSheafAdjunction [HasColimits C] :
 #align stalk_skyscraper_sheaf_adjunction stalkSkyscraperSheafAdjunction
 -/
 
-instance [HasColimits C] : IsRightAdjoint (skyscraperSheafFunctor p₀ : C ⥤ Sheaf C X) :=
+instance [HasColimits C] :
+    CategoryTheory.Functor.IsRightAdjoint (skyscraperSheafFunctor p₀ : C ⥤ Sheaf C X) :=
   ⟨_, stalkSkyscraperSheafAdjunction _⟩
 
 end

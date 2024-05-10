@@ -183,7 +183,7 @@ instance SetTheory.PGame.short1 : SetTheory.PGame.Short 1 :=
 #align pgame.short_1 SetTheory.PGame.short1
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SetTheory.PGame.ListShort /-
 /-- Evidence that every `pgame` in a list is `short`. -/
 inductive SetTheory.PGame.ListShort : List SetTheory.PGame.{u} → Type (u + 1)
@@ -199,8 +199,8 @@ attribute [class] list_short
 
 attribute [instance] list_short.nil list_short.cons
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SetTheory.PGame.listShortGet /-
 instance SetTheory.PGame.listShortGet :
     ∀ (L : List SetTheory.PGame.{u}) [SetTheory.PGame.ListShort L] (i : Fin (List.length L)),

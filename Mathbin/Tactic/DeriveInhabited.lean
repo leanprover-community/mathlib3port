@@ -19,7 +19,7 @@ instances for types in the core library.
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tries to derive an `inhabited` instance for inductives and structures.
 
 For example:
@@ -54,7 +54,7 @@ deriving instance Inhabited for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.T
   Tactic.DunfoldConfig, Tactic.DsimpConfig, Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig,
   Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg, Interactive.Loc, Tactic.UnfoldConfig,
   ParamInfo, SubsingletonInfo, FunInfo, Format.Color, Pos, Environment.ProjectionInfo,
-  ReducibilityHints, CongrArgKind, ULift, PLift, StringImp, String.IteratorImp, Std.RBColor,
+  ReducibilityHints, CongrArgKind, ULift, PLift, StringImp, String.IteratorImp, Batteries.RBColor,
   Ordering, UnificationConstraint, PProd, UnificationHint, DocCategory, TacticDocEntry
 
 instance {α} : Inhabited (BinTree α) :=
@@ -66,11 +66,11 @@ instance : Inhabited Unsigned :=
 instance : Inhabited String.Iterator :=
   String.IteratorImp.inhabited
 
-instance {α} : Inhabited (Std.RBNode α) :=
-  ⟨Std.RBNode.nil⟩
+instance {α} : Inhabited (Batteries.RBNode α) :=
+  ⟨Batteries.RBNode.nil⟩
 
-instance {α lt} : Inhabited (Std.RBSet α lt) :=
-  ⟨Std.mkRBSet _ _⟩
+instance {α lt} : Inhabited (Batteries.RBSet α lt) :=
+  ⟨Batteries.mkRBSet _ _⟩
 
 instance {α β lt} : Inhabited (Rbmap α β lt) :=
   ⟨mkRbmap _ _ _⟩

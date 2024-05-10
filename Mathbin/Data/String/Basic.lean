@@ -20,7 +20,7 @@ Supplementary theorems about the `string` type.
 
 namespace String
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print String.ltb /-
 /-- `<` on string iterators. This coincides with `<` on strings as lists. -/
 def ltb : Iterator → Iterator → Bool

@@ -64,7 +64,7 @@ noncomputable def inducedMap : Σ s : Set (ℕ → β), s → α :=
 
 section Topology
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CantorScheme.Antitone /-
 /-- A scheme is antitone if each set contains its children. -/
 protected def Antitone : Prop :=
@@ -72,7 +72,7 @@ protected def Antitone : Prop :=
 #align cantor_scheme.antitone CantorScheme.Antitone
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CantorScheme.ClosureAntitone /-
 /-- A useful strengthening of being antitone is to require that each set contains
 the closure of each of its children. -/
@@ -81,8 +81,8 @@ def ClosureAntitone [TopologicalSpace α] : Prop :=
 #align cantor_scheme.closure_antitone CantorScheme.ClosureAntitone
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CantorScheme.Disjoint /-
 /-- A scheme is disjoint if the children of each set of pairwise disjoint. -/
 protected def Disjoint : Prop :=
@@ -156,7 +156,7 @@ def VanishingDiam : Prop :=
 
 variable {A}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y z «expr ∈ » A (res[pi_nat.res] x n)) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (y z «expr ∈ » A (res[pi_nat.res] x n)) -/
 #print CantorScheme.VanishingDiam.dist_lt /-
 theorem VanishingDiam.dist_lt (hA : VanishingDiam A) (ε : ℝ) (ε_pos : 0 < ε) (x : ℕ → β) :
     ∃ n : ℕ, ∀ (y) (_ : y ∈ A (res x n)) (z) (_ : z ∈ A (res x n)), dist y z < ε :=

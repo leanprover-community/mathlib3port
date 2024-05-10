@@ -37,7 +37,7 @@ open Category MonoidalCategory
 -- so definitional properties of instances may be important.
 /-- An object `X` is (right) closed if `(X ⊗ -)` is a left adjoint. -/
 class Closed {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C] (X : C) where
-  isAdj : IsLeftAdjoint (tensorLeft X)
+  is_adj : CategoryTheory.Functor.IsLeftAdjoint (tensorLeft X)
 #align category_theory.closed CategoryTheory.Closed
 -/
 
@@ -52,14 +52,14 @@ attribute [instance 100] monoidal_closed.closed'
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.tensorClosed /-
 /-- If `X` and `Y` are closed then `X ⊗ Y` is.
 This isn't an instance because it's not usually how we want to construct internal homs,
 we'll usually prove all objects are closed uniformly.
 -/
 def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) : Closed (X ⊗ Y)
-    where isAdj := by
+    where is_adj := by
     haveI := hX.is_adj
     haveI := hY.is_adj
     exact adjunction.left_adjoint_of_nat_iso (monoidal_category.tensor_left_tensor _ _).symm
@@ -72,7 +72,7 @@ This isn't an instance because most of the time we'll prove closedness for all o
 rather than just for this one.
 -/
 def unitClosed : Closed (𝟙_ C)
-    where isAdj :=
+    where is_adj :=
     { right := 𝟭 C
       adj :=
         Adjunction.mkOfHomEquiv
@@ -94,7 +94,7 @@ variable [Closed A]
 /-- This is the internal hom `A ⟶[C] -`.
 -/
 def ihom : C ⥤ C :=
-  (@Closed.isAdj _ _ _ A _).right
+  (@Closed.is_adj _ _ _ A _).right
 #align category_theory.ihom CategoryTheory.ihom
 -/
 
@@ -103,7 +103,7 @@ namespace Ihom
 #print CategoryTheory.ihom.adjunction /-
 /-- The adjunction between `A ⊗ -` and `A ⟹ -`. -/
 def adjunction : tensorLeft A ⊣ ihom A :=
-  Closed.isAdj.adj
+  Closed.is_adj.adj
 #align category_theory.ihom.adjunction CategoryTheory.ihom.adjunction
 -/
 
@@ -135,7 +135,7 @@ theorem ihom_adjunction_unit : (ihom.adjunction A).Unit = coev A :=
 #align category_theory.ihom.ihom_adjunction_unit CategoryTheory.ihom.ihom_adjunction_unit
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.ihom.ev_naturality /-
 @[simp, reassoc]
 theorem ev_naturality {X Y : C} (f : X ⟶ Y) :
@@ -144,7 +144,7 @@ theorem ev_naturality {X Y : C} (f : X ⟶ Y) :
 #align category_theory.ihom.ev_naturality CategoryTheory.ihom.ev_naturality
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.ihom.coev_naturality /-
 @[simp, reassoc]
 theorem coev_naturality {X Y : C} (f : X ⟶ Y) :
@@ -155,9 +155,9 @@ theorem coev_naturality {X Y : C} (f : X ⟶ Y) :
 
 notation A " ⟶[" C "] " B:10 => (@ihom C _ _ A _).obj B
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.ihom.ev_coev /-
 @[simp, reassoc]
 theorem ev_coev : (𝟙 A ⊗ (coev A).app B) ≫ (ev A).app (A ⊗ B) = 𝟙 (A ⊗ B) :=
@@ -184,7 +184,7 @@ variable {A}
 -- Wrap these in a namespace so we don't clash with the core versions.
 namespace MonoidalClosed
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.curry /-
 /-- Currying in a monoidal closed category. -/
 def curry : (A ⊗ Y ⟶ X) → (Y ⟶ A ⟶[C] X) :=
@@ -192,7 +192,7 @@ def curry : (A ⊗ Y ⟶ X) → (Y ⟶ A ⟶[C] X) :=
 #align category_theory.monoidal_closed.curry CategoryTheory.MonoidalClosed.curry
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.uncurry /-
 /-- Uncurrying in a monoidal closed category. -/
 def uncurry : (Y ⟶ A ⟶[C] X) → (A ⊗ Y ⟶ X) :=
@@ -200,7 +200,7 @@ def uncurry : (Y ⟶ A ⟶[C] X) → (A ⊗ Y ⟶ X) :=
 #align category_theory.monoidal_closed.uncurry CategoryTheory.MonoidalClosed.uncurry
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.homEquiv_apply_eq /-
 @[simp]
 theorem homEquiv_apply_eq (f : A ⊗ Y ⟶ X) : (ihom.adjunction A).homEquiv _ _ f = curry f :=
@@ -216,8 +216,8 @@ theorem homEquiv_symm_apply_eq (f : Y ⟶ A ⟶[C] X) :
 #align category_theory.monoidal_closed.hom_equiv_symm_apply_eq CategoryTheory.MonoidalClosed.homEquiv_symm_apply_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.curry_natural_left /-
 @[reassoc]
 theorem curry_natural_left (f : X ⟶ X') (g : A ⊗ X' ⟶ Y) : curry ((𝟙 _ ⊗ f) ≫ g) = f ≫ curry g :=
@@ -225,7 +225,7 @@ theorem curry_natural_left (f : X ⟶ X') (g : A ⊗ X' ⟶ Y) : curry ((𝟙 _ 
 #align category_theory.monoidal_closed.curry_natural_left CategoryTheory.MonoidalClosed.curry_natural_left
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.curry_natural_right /-
 @[reassoc]
 theorem curry_natural_right (f : A ⊗ X ⟶ Y) (g : Y ⟶ Y') :
@@ -242,7 +242,7 @@ theorem uncurry_natural_right (f : X ⟶ A ⟶[C] Y) (g : Y ⟶ Y') :
 #align category_theory.monoidal_closed.uncurry_natural_right CategoryTheory.MonoidalClosed.uncurry_natural_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.uncurry_natural_left /-
 @[reassoc]
 theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟶[C] Y) :
@@ -251,36 +251,36 @@ theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟶[C] Y) :
 #align category_theory.monoidal_closed.uncurry_natural_left CategoryTheory.MonoidalClosed.uncurry_natural_left
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.uncurry_curry /-
 @[simp]
 theorem uncurry_curry (f : A ⊗ X ⟶ Y) : uncurry (curry f) = f :=
-  (Closed.isAdj.adj.homEquiv _ _).left_inv f
+  (Closed.is_adj.adj.homEquiv _ _).left_inv f
 #align category_theory.monoidal_closed.uncurry_curry CategoryTheory.MonoidalClosed.uncurry_curry
 -/
 
 #print CategoryTheory.MonoidalClosed.curry_uncurry /-
 @[simp]
 theorem curry_uncurry (f : X ⟶ A ⟶[C] Y) : curry (uncurry f) = f :=
-  (Closed.isAdj.adj.homEquiv _ _).right_inv f
+  (Closed.is_adj.adj.homEquiv _ _).right_inv f
 #align category_theory.monoidal_closed.curry_uncurry CategoryTheory.MonoidalClosed.curry_uncurry
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.curry_eq_iff /-
 theorem curry_eq_iff (f : A ⊗ Y ⟶ X) (g : Y ⟶ A ⟶[C] X) : curry f = g ↔ f = uncurry g :=
   Adjunction.homEquiv_apply_eq _ f g
 #align category_theory.monoidal_closed.curry_eq_iff CategoryTheory.MonoidalClosed.curry_eq_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.eq_curry_iff /-
 theorem eq_curry_iff (f : A ⊗ Y ⟶ X) (g : Y ⟶ A ⟶[C] X) : g = curry f ↔ uncurry g = f :=
   Adjunction.eq_homEquiv_apply _ f g
 #align category_theory.monoidal_closed.eq_curry_iff CategoryTheory.MonoidalClosed.eq_curry_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.uncurry_eq /-
 -- I don't think these two should be simp.
 theorem uncurry_eq (g : Y ⟶ A ⟶[C] X) : uncurry g = (𝟙 A ⊗ g) ≫ (ihom.ev A).app X :=
@@ -288,24 +288,24 @@ theorem uncurry_eq (g : Y ⟶ A ⟶[C] X) : uncurry g = (𝟙 A ⊗ g) ≫ (ihom
 #align category_theory.monoidal_closed.uncurry_eq CategoryTheory.MonoidalClosed.uncurry_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.curry_eq /-
 theorem curry_eq (g : A ⊗ Y ⟶ X) : curry g = (ihom.coev A).app Y ≫ (ihom A).map g :=
   Adjunction.homEquiv_unit _
 #align category_theory.monoidal_closed.curry_eq CategoryTheory.MonoidalClosed.curry_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.curry_injective /-
 theorem curry_injective : Function.Injective (curry : (A ⊗ Y ⟶ X) → (Y ⟶ A ⟶[C] X)) :=
-  (Closed.isAdj.adj.homEquiv _ _).Injective
+  (Closed.is_adj.adj.homEquiv _ _).Injective
 #align category_theory.monoidal_closed.curry_injective CategoryTheory.MonoidalClosed.curry_injective
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.uncurry_injective /-
 theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟶[C] X) → (A ⊗ Y ⟶ X)) :=
-  (Closed.isAdj.adj.homEquiv _ _).symm.Injective
+  (Closed.is_adj.adj.homEquiv _ _).symm.Injective
 #align category_theory.monoidal_closed.uncurry_injective CategoryTheory.MonoidalClosed.uncurry_injective
 -/
 
@@ -317,7 +317,7 @@ theorem uncurry_id_eq_ev : uncurry (𝟙 (A ⟶[C] X)) = (ihom.ev A).app X := by
 #align category_theory.monoidal_closed.uncurry_id_eq_ev CategoryTheory.MonoidalClosed.uncurry_id_eq_ev
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.curry_id_eq_coev /-
 theorem curry_id_eq_coev : curry (𝟙 _) = (ihom.coev A).app X := by
   rw [curry_eq, (ihom A).map_id (A ⊗ _)]; apply comp_id
@@ -335,8 +335,8 @@ def pre (f : B ⟶ A) : ihom A ⟶ ihom B :=
 #align category_theory.monoidal_closed.pre CategoryTheory.MonoidalClosed.pre
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.id_tensor_pre_app_comp_ev /-
 @[simp, reassoc]
 theorem id_tensor_pre_app_comp_ev (f : B ⟶ A) (X : C) :
@@ -345,7 +345,7 @@ theorem id_tensor_pre_app_comp_ev (f : B ⟶ A) (X : C) :
 #align category_theory.monoidal_closed.id_tensor_pre_app_comp_ev CategoryTheory.MonoidalClosed.id_tensor_pre_app_comp_ev
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.uncurry_pre /-
 @[simp]
 theorem uncurry_pre (f : B ⟶ A) (X : C) :
@@ -354,8 +354,8 @@ theorem uncurry_pre (f : B ⟶ A) (X : C) :
 #align category_theory.monoidal_closed.uncurry_pre CategoryTheory.MonoidalClosed.uncurry_pre
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.coev_app_comp_pre_app /-
 @[simp, reassoc]
 theorem coev_app_comp_pre_app (f : B ⟶ A) :
@@ -407,7 +407,7 @@ noncomputable def ofEquiv (F : MonoidalFunctor C D)
     [CategoryTheory.Functor.IsEquivalence F.toFunctor] [h : MonoidalClosed D] : MonoidalClosed C
     where closed' X :=
     {
-      isAdj := by
+      is_adj := by
         haveI q : closed (F.to_functor.obj X) := inferInstance
         haveI : is_left_adjoint (tensor_left (F.to_functor.obj X)) := q.is_adj
         have i := comp_inv_iso (monoidal_functor.comm_tensor_left F X)
@@ -415,8 +415,8 @@ noncomputable def ofEquiv (F : MonoidalFunctor C D)
 #align category_theory.monoidal_closed.of_equiv CategoryTheory.MonoidalClosed.ofEquiv
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.ofEquiv_curry_def /-
 /-- Suppose we have a monoidal equivalence `F : C ≌ D`, with `D` monoidal closed. We can pull the
 monoidal closed instance back along the equivalence. For `X, Y, Z : C`, this lemma describes the
@@ -430,12 +430,12 @@ theorem ofEquiv_curry_def (F : MonoidalFunctor C D)
       (F.1.1.Adjunction.homEquiv Y ((ihom _).obj _))
         (MonoidalClosed.curry
           (F.1.1.inv.Adjunction.homEquiv (F.1.1.obj X ⊗ F.1.1.obj Y) Z
-            ((CategoryTheory.Iso.compInvIso (F.commTensorLeft X)).Hom.app Y ≫ f))) :=
+            ((compInvIso (F.commTensorLeft X)).Hom.app Y ≫ f))) :=
   rfl
 #align category_theory.monoidal_closed.of_equiv_curry_def CategoryTheory.MonoidalClosed.ofEquiv_curry_def
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalClosed.ofEquiv_uncurry_def /-
 /-- Suppose we have a monoidal equivalence `F : C ≌ D`, with `D` monoidal closed. We can pull the
 monoidal closed instance back along the equivalence. For `X, Y, Z : C`, this lemma describes the
@@ -446,7 +446,7 @@ theorem ofEquiv_uncurry_def (F : MonoidalFunctor C D)
     [CategoryTheory.Functor.IsEquivalence F.toFunctor] [h : MonoidalClosed D] {X Y Z : C}
     (f : Y ⟶ (@ihom _ _ _ X <| (MonoidalClosed.ofEquiv F).1 X).obj Z) :
     @MonoidalClosed.uncurry _ _ _ _ _ _ ((MonoidalClosed.ofEquiv F).1 _) f =
-      (CategoryTheory.Iso.compInvIso (F.commTensorLeft X)).inv.app Y ≫
+      (compInvIso (F.commTensorLeft X)).inv.app Y ≫
         (F.1.1.inv.Adjunction.homEquiv (F.1.1.obj X ⊗ F.1.1.obj Y) Z).symm
           (MonoidalClosed.uncurry
             ((F.1.1.Adjunction.homEquiv Y ((ihom (F.1.1.obj X)).obj (F.1.1.obj Z))).symm f)) :=

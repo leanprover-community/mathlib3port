@@ -124,8 +124,8 @@ inductive F
   deriving DecidableEq, Inhabited
 #align counterexample.F Counterexample.F
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The same as `list.get_rest`, except that we take the "rest" from the first match, rather than
 from the beginning, returning `[]` if there is no match.  For instance,
 ```lean
@@ -176,7 +176,7 @@ instance : Zero F :=
 instance : One F :=
   ⟨F.one⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic to prove trivial goals by enumeration. -/
 unsafe def boom : tactic Unit :=
   sorry
@@ -189,24 +189,24 @@ def val : F → ℕ
   | 1 => 1
 #align counterexample.F.val Counterexample.F.val
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
 instance : LinearOrder F :=
   LinearOrder.lift' val
     (by
       run_tac
         boom)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
 @[simp]
 theorem z01 : (0 : F) < 1 := by
   run_tac
     boom
 #align counterexample.F.z01 Counterexample.F.z01
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
 /-- `F` would be a `comm_semiring`, using `min` as multiplication.  Again, we do not need this. -/
 instance : AddCommMonoid F where
   add := max
@@ -224,7 +224,7 @@ instance : AddCommMonoid F where
     run_tac
       boom
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
 /-- The `covariant_class`es asserting monotonicity of addition hold for `F`. -/
 instance covariantClass_add_le : CovariantClass F F (· + ·) (· ≤ ·) :=
   ⟨by
@@ -244,7 +244,7 @@ example : AddMonoid F := by infer_instance
 example : ¬CovariantClass F F (· + ·) (· < ·) := fun h =>
   lt_irrefl 1 <| (h.elim : Covariant F F (· + ·) (· < ·)) 1 z01
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
 /-- A few `simp`-lemmas to take care of trivialities in the proof of the example below. -/
 @[simp]
 theorem f1 : ∀ a : F, 1 + a = 1 := by
@@ -272,8 +272,8 @@ theorem f110 : ofLex (single (1 : F) (1 : F)) 0 = 0 :=
   single_apply_eq_zero.mpr fun h => h.symm
 #align counterexample.F.f110 Counterexample.F.f110
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic counterexample.F.boom -/
 /-- Here we see that (not-necessarily strict) monotonicity of addition on `lex (F →₀ F)` is not
 a consequence of monotonicity of addition on `F`.  Strict monotonicity of addition on `F` is
 enough and is the content of `finsupp.lex.covariant_class_le_left`. -/

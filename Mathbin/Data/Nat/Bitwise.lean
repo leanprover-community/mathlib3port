@@ -250,14 +250,14 @@ theorem or_zero (n : ℕ) : lor n 0 = n := by simp [lor]
 #align nat.lor_zero Nat.or_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
   sorry
 #align nat.bitwise_assoc_tac nat.bitwise_assoc_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 #print Nat.xor_assoc /-
 theorem xor_assoc (n m k : ℕ) : xor (xor n m) k = xor n (xor m k) := by
   run_tac
@@ -265,7 +265,7 @@ theorem xor_assoc (n m k : ℕ) : xor (xor n m) k = xor n (xor m k) := by
 #align nat.lxor_assoc Nat.xor_assoc
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 #print Nat.land_assoc /-
 theorem land_assoc (n m k : ℕ) : land (land n m) k = land n (land m k) := by
   run_tac
@@ -273,7 +273,7 @@ theorem land_assoc (n m k : ℕ) : land (land n m) k = land n (land m k) := by
 #align nat.land_assoc Nat.land_assoc
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 #print Nat.lor_assoc /-
 theorem lor_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
   run_tac

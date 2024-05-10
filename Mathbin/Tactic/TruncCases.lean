@@ -43,7 +43,7 @@ private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tacti
   tactic.swap
   return e
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_dependent (e : expr) (ids : List Name) : tactic expr := do
   let-- If all else fails, just use the general induction principle.
@@ -60,7 +60,7 @@ private unsafe def trunc_cases_dependent (e : expr) (ids : List Name) : tactic e
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `trunc_cases e` performs case analysis on a `trunc` expression `e`,
 attempting the following strategies:
 1. when the goal is a subsingleton, calling `induction e using trunc.rec_on_subsingleton`,

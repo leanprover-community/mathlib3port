@@ -49,9 +49,9 @@ theorem staysPositive_nil : [] ∈ staysPositive := fun l hl hl₁ =>
   (hl (List.eq_nil_of_suffix_nil hl₁)).elim
 #align ballot.stays_positive_nil Ballot.staysPositive_nil
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem staysPositive_cons_pos (x : ℤ) (hx : 0 < x) (l : List ℤ) :
     (x::l) ∈ staysPositive ↔ l ∈ staysPositive :=
   by
@@ -134,19 +134,19 @@ theorem counted_succ_succ (p q : ℕ) :
     · refine' Or.inl ⟨l.tail, ⟨_, _, _⟩, _⟩
       · rw [List.count_tail l 1 (List.length_pos_of_ne_nil hlnil), hl₀, if_pos,
           Nat.add_succ_sub_one, add_zero]
-        rw [List.nthLe_zero, hlast]
+        rw [List.get_mk_zero, hlast]
       · rw [List.count_tail l (-1) (List.length_pos_of_ne_nil hlnil), hl₁, if_neg, Nat.sub_zero]
-        rw [List.nthLe_zero, hlast]
+        rw [List.get_mk_zero, hlast]
         norm_num
       · exact fun x hx => hl₂ x (List.mem_of_mem_tail hx)
       · rw [← hlast, List.cons_head!_tail hlnil]
     · refine' Or.inr ⟨l.tail, ⟨_, _, _⟩, _⟩
       · rw [List.count_tail l 1 (List.length_pos_of_ne_nil hlnil), hl₀, if_neg, Nat.sub_zero]
-        rw [List.nthLe_zero, hlast]
+        rw [List.get_mk_zero, hlast]
         norm_num
       · rw [List.count_tail l (-1) (List.length_pos_of_ne_nil hlnil), hl₁, if_pos,
           Nat.add_succ_sub_one, add_zero]
-        rw [List.nthLe_zero, hlast]
+        rw [List.get_mk_zero, hlast]
       · exact fun x hx => hl₂ x (List.mem_of_mem_tail hx)
       · rw [← hlast, List.cons_head!_tail hlnil]
   · rintro (⟨t, ⟨ht₀, ht₁, ht₂⟩, rfl⟩ | ⟨t, ⟨ht₀, ht₁, ht₂⟩, rfl⟩)
@@ -266,7 +266,7 @@ theorem first_vote_pos :
     · infer_instance
 #align ballot.first_vote_pos Ballot.first_vote_pos
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem headI_mem_of_nonempty {α : Type _} [Inhabited α] : ∀ {l : List α} (hl : l ≠ []), l.headI ∈ l
   | [], h => h rfl
   | x::l, _ => Or.inl rfl

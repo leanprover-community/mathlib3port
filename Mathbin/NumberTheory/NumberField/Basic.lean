@@ -69,30 +69,28 @@ protected theorem isAlgebraic : Algebra.IsAlgebraic ℚ K :=
 #align number_field.is_algebraic NumberField.isAlgebraic
 -/
 
-#print NumberField.ringOfIntegers /-
+#print NumberField.RingOfIntegers /-
 /-- The ring of integers (or number ring) corresponding to a number field
 is the integral closure of ℤ in the number field. -/
-def ringOfIntegers :=
+def RingOfIntegers :=
   integralClosure ℤ K
-#align number_field.ring_of_integers NumberField.ringOfIntegers
+#align number_field.ring_of_integers NumberField.RingOfIntegers
 -/
 
-scoped notation "𝓞" => NumberField.ringOfIntegers
+scoped notation "𝓞" => NumberField.RingOfIntegers
 
-#print NumberField.mem_ringOfIntegers /-
 theorem mem_ringOfIntegers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
   Iff.rfl
 #align number_field.mem_ring_of_integers NumberField.mem_ringOfIntegers
--/
 
-#print NumberField.isIntegral_of_mem_ringOfIntegers /-
-theorem isIntegral_of_mem_ringOfIntegers {K : Type _} [Field K] {x : K} (hx : x ∈ 𝓞 K) :
+#print NumberField.RingOfIntegers.isIntegral /-
+theorem NumberField.RingOfIntegers.isIntegral {K : Type _} [Field K] {x : K} (hx : x ∈ 𝓞 K) :
     IsIntegral ℤ (⟨x, hx⟩ : 𝓞 K) := by
   obtain ⟨P, hPm, hP⟩ := hx
   refine' ⟨P, hPm, _⟩
   rw [← Polynomial.aeval_def, ← Subalgebra.coe_eq_zero, Polynomial.aeval_subalgebra_coe,
     Polynomial.aeval_def, Subtype.coe_mk, hP]
-#align number_field.is_integral_of_mem_ring_of_integers NumberField.isIntegral_of_mem_ringOfIntegers
+#align number_field.is_integral_of_mem_ring_of_integers NumberField.RingOfIntegers.isIntegral
 -/
 
 #print NumberField.inst_ringOfIntegersAlgebra /-
@@ -132,12 +130,10 @@ theorem isIntegral_coe (x : 𝓞 K) : IsIntegral ℤ (x : K) :=
 #align number_field.ring_of_integers.is_integral_coe NumberField.RingOfIntegers.isIntegral_coe
 -/
 
-#print NumberField.RingOfIntegers.map_mem /-
 theorem map_mem {F L : Type _} [Field L] [CharZero K] [CharZero L] [AlgHomClass F ℚ K L] (f : F)
     (x : 𝓞 K) : f x ∈ 𝓞 L :=
   (mem_ringOfIntegers _ _).2 <| map_isIntegral_int f <| RingOfIntegers.isIntegral_coe x
 #align number_field.ring_of_integers.map_mem NumberField.RingOfIntegers.map_mem
--/
 
 #print NumberField.RingOfIntegers.equiv /-
 /-- The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/
@@ -226,7 +222,7 @@ instance numberField : NumberField ℚ
 
 #print Rat.ringOfIntegersEquiv /-
 /-- The ring of integers of `ℚ` as a number field is just `ℤ`. -/
-noncomputable def ringOfIntegersEquiv : ringOfIntegers ℚ ≃+* ℤ :=
+noncomputable def ringOfIntegersEquiv : RingOfIntegers ℚ ≃+* ℤ :=
   RingOfIntegers.equiv ℤ
 #align rat.ring_of_integers_equiv Rat.ringOfIntegersEquiv
 -/

@@ -72,7 +72,7 @@ protected theorem IsTransitive.inter (hx : x.IsTransitive) (hy : y.IsTransitive)
 #align Set.is_transitive.inter ZFSet.IsTransitive.inter
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.IsTransitive.sUnion /-
 protected theorem IsTransitive.sUnion (h : x.IsTransitive) : (⋃₀ x).IsTransitive := fun y hy z hz =>
   by
@@ -81,7 +81,7 @@ protected theorem IsTransitive.sUnion (h : x.IsTransitive) : (⋃₀ x).IsTransi
 #align Set.is_transitive.sUnion ZFSet.IsTransitive.sUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.IsTransitive.sUnion' /-
 theorem IsTransitive.sUnion' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀ x).IsTransitive := fun y hy z hz =>
   by
@@ -107,7 +107,7 @@ protected theorem IsTransitive.powerset (h : x.IsTransitive) : (powerset x).IsTr
 #align Set.is_transitive.powerset ZFSet.IsTransitive.powerset
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.isTransitive_iff_sUnion_subset /-
 theorem isTransitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
   ⟨fun h y hy => by rcases mem_sUnion.1 hy with ⟨z, hz, hz'⟩; exact h.mem_trans hz' hz,

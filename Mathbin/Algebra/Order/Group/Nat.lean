@@ -440,7 +440,7 @@ proved above, and some of the results in later sections depend on the definition
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print Nat.diag_induction /-
 /-- Given a predicate on two naturals `P : ℕ → ℕ → Prop`, `P a b` is true for all `a < b` if
 `P (a + 1) (a + 1)` is true for all `a`, `P 0 (b + 1)` is true for all `b` and for all
@@ -696,7 +696,7 @@ theorem div_eq_self : m / n = m ↔ m = 0 ∨ n = 1 :=
 #align nat.div_eq_self Nat.div_eq_self
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:133:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 #print Nat.div_eq_sub_mod_div /-
 theorem div_eq_sub_mod_div : m / n = (m - m % n) / n :=
   by

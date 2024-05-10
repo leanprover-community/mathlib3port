@@ -105,7 +105,7 @@ theorem Tendsto.Ioo {l₁ l₂ : Filter α} [TendstoIxxClass Ioo l₁ l₂] {lb 
 #align filter.tendsto.Ioo Filter.Tendsto.Ioo
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Filter.tendstoIxxClass_principal /-
 theorem tendstoIxxClass_principal {s t : Set α} {Ixx : α → α → Set α} :
     TendstoIxxClass Ixx (𝓟 s) (𝓟 t) ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), Ixx x y ⊆ t :=
@@ -326,7 +326,7 @@ instance tendsto_Ioc_uIcc_uIcc {a b : α} : TendstoIxxClass Ioc (𝓟 [a, b]) (�
 #align filter.tendsto_Ioc_uIcc_uIcc Filter.tendsto_Ioc_uIcc_uIcc
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Filter.tendsto_uIcc_of_Icc /-
 instance tendsto_uIcc_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : TendstoIxxClass uIcc l l :=
   by

@@ -177,7 +177,7 @@ def FractionRing.module : Module K(p, k) K(p, k) :=
 #align witt_vector.fraction_ring.module WittVector.FractionRing.module
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k) -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k) -/
 #print WittVector.StandardOneDimIsocrystal /-
 /-- Type synonym for `K(p, k)` to carry the standard 1-dimensional isocrystal structure
 of slope `m : ℤ`.
@@ -186,7 +186,7 @@ of slope `m : ℤ`.
 def StandardOneDimIsocrystal (m : ℤ) : Type _ :=
   K(p, k)
 deriving AddCommGroup,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k)»
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k)»
 #align witt_vector.standard_one_dim_isocrystal WittVector.StandardOneDimIsocrystal
 -/
 

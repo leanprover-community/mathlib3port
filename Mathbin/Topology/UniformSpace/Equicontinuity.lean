@@ -143,7 +143,7 @@ protected abbrev Set.UniformEquicontinuous (H : Set <| β → α) : Prop :=
 #align set.uniform_equicontinuous Set.UniformEquicontinuous
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » V) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x y «expr ∈ » V) -/
 #print equicontinuousAt_iff_pair /-
 /-- Reformulation of equicontinuity at `x₀` comparing two variables near `x₀` instead of comparing
 only one with `x₀`. -/
@@ -410,7 +410,7 @@ theorem UniformInducing.equicontinuousAt_iff {F : ι → X → α} {x₀ : X} {u
 #align uniform_inducing.equicontinuous_at_iff UniformInducing.equicontinuousAt_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
 #print UniformInducing.equicontinuous_iff /-
 /-- Given `u : α → β` a uniform inducing map, a family `𝓕 : ι → X → α` is equicontinuous iff the
 family `𝓕'`, obtained by precomposing each function of `𝓕` by `u`, is equicontinuous. -/
@@ -418,7 +418,7 @@ theorem UniformInducing.equicontinuous_iff {F : ι → X → α} {u : α → β}
     Equicontinuous F ↔ Equicontinuous ((· ∘ ·) u ∘ F) :=
   by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
+    "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
   rw [hu.equicontinuous_at_iff]
 #align uniform_inducing.equicontinuous_iff UniformInducing.equicontinuous_iff
 -/

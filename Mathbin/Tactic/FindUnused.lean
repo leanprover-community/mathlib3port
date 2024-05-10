@@ -75,7 +75,7 @@ unsafe def parse_file_name (fn : pexpr) : tactic (Option String) :=
   some <$> (to_expr fn >>= eval_expr String) <|> fail "expecting: \"src/dir/file-name\""
 #align tactic.parse_file_name tactic.parse_file_name
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- The command `#list_unused_decls` lists the declarations that that
 are not used the main features of the present file. The main features
 of a file are taken as the declaration tagged with

@@ -5,8 +5,8 @@ Authors: Riccardo Brasca
 -/
 import Data.Set.Pointwise.Finite
 import GroupTheory.QuotientGroup
-import GroupTheory.Submonoid.Operations
-import GroupTheory.Subgroup.Basic
+import Algebra.Group.Submonoid.Operations
+import Algebra.Group.Subgroup.Basic
 import SetTheory.Cardinal.Finite
 import Data.Finset.Preimage
 

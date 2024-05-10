@@ -94,7 +94,7 @@ unsafe def print_sorry_in (nm : Name) (ignore_mathlib := true) : tactic Unit := 
   trace <| format.join <| to_print format.line
 #align print_sorry_in print_sorry_in
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- The command
 ```
 #print_sorry_in nm

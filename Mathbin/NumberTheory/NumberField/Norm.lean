@@ -50,17 +50,17 @@ theorem coe_algebraMap_norm [IsSeparable K L] (x : 𝓞 L) :
 #align ring_of_integers.coe_algebra_map_norm RingOfIntegers.coe_algebraMap_norm
 -/
 
-#print RingOfIntegers.coe_norm_algebraMap /-
-theorem coe_norm_algebraMap [IsSeparable K L] (x : 𝓞 K) :
+#print RingOfIntegers.algebraMap_norm_algebraMap /-
+theorem algebraMap_norm_algebraMap [IsSeparable K L] (x : 𝓞 K) :
     (norm K (algebraMap (𝓞 K) (𝓞 L) x) : K) = Algebra.norm K (algebraMap K L x) :=
   rfl
-#align ring_of_integers.coe_norm_algebra_map RingOfIntegers.coe_norm_algebraMap
+#align ring_of_integers.coe_norm_algebra_map RingOfIntegers.algebraMap_norm_algebraMap
 -/
 
 #print RingOfIntegers.norm_algebraMap /-
 theorem norm_algebraMap [IsSeparable K L] (x : 𝓞 K) :
     norm K (algebraMap (𝓞 K) (𝓞 L) x) = x ^ finrank K L := by
-  rw [← Subtype.coe_inj, RingOfIntegers.coe_norm_algebraMap, Algebra.norm_algebraMap,
+  rw [← Subtype.coe_inj, RingOfIntegers.algebraMap_norm_algebraMap, Algebra.norm_algebraMap,
     SubsemiringClass.coe_pow]
 #align ring_of_integers.norm_algebra_map RingOfIntegers.norm_algebraMap
 -/

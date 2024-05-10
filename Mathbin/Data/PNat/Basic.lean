@@ -223,20 +223,16 @@ theorem bot_eq_one : (⊥ : ℕ+) = 1 :=
 #align pnat.bot_eq_one PNat.bot_eq_one
 -/
 
-#print PNat.mk_bit0 /-
 -- Some lemmas that rewrite `pnat.mk n h`, for `n` an explicit numeral, into explicit numerals.
 @[simp]
 theorem mk_bit0 (n) {h} : (⟨bit0 n, h⟩ : ℕ+) = (bit0 ⟨n, pos_of_bit0_pos h⟩ : ℕ+) :=
   rfl
 #align pnat.mk_bit0 PNat.mk_bit0
--/
 
-#print PNat.mk_bit1 /-
 @[simp]
 theorem mk_bit1 (n) {h} {k} : (⟨bit1 n, h⟩ : ℕ+) = (bit1 ⟨n, k⟩ : ℕ+) :=
   rfl
 #align pnat.mk_bit1 PNat.mk_bit1
--/
 
 #print PNat.bit0_le_bit0 /-
 -- Some lemmas that rewrite inequalities between explicit numerals in `ℕ+`
@@ -315,19 +311,15 @@ theorem lt_add_right (n m : ℕ+) : n < n + m :=
 #align pnat.lt_add_right PNat.lt_add_right
 -/
 
-#print PNat.coe_bit0 /-
 @[simp, norm_cast]
 theorem coe_bit0 (a : ℕ+) : ((bit0 a : ℕ+) : ℕ) = bit0 (a : ℕ) :=
   rfl
 #align pnat.coe_bit0 PNat.coe_bit0
--/
 
-#print PNat.coe_bit1 /-
 @[simp, norm_cast]
 theorem coe_bit1 (a : ℕ+) : ((bit1 a : ℕ+) : ℕ) = bit1 (a : ℕ) :=
   rfl
 #align pnat.coe_bit1 PNat.coe_bit1
--/
 
 #print PNat.pow_coe /-
 @[simp, norm_cast]

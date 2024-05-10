@@ -6,7 +6,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 import Algebra.Module.LinearMap.Basic
 import Algebra.Module.Equiv
 import GroupTheory.GroupAction.SubMulAction
-import GroupTheory.Submonoid.Membership
+import Algebra.Group.Submonoid.Membership
 
 #align_import algebra.module.submodule.basic from "leanprover-community/mathlib"@"8130e5155d637db35907c272de9aec9dc851c03a"
 

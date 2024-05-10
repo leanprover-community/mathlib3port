@@ -75,7 +75,7 @@ variable {α 𝕜 𝕝 R E F M : Type _}
 
 section WeakTopology
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜 -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜 -/
 #print WeakBilin /-
 /-- The space `E` equipped with the weak topology induced by the bilinear form `B`. -/
 @[nolint has_nonempty_instance unused_arguments]
@@ -83,7 +83,7 @@ def WeakBilin [CommSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [AddCommMono
     (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :=
   E
 deriving AddCommMonoid,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜»
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜»
 #align weak_bilin WeakBilin
 -/
 
@@ -226,7 +226,7 @@ theorem topDualPairing_apply (v : E →L[𝕜] 𝕜) (x : E) : topDualPairing �
 #align dual_pairing_apply topDualPairing_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜 -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜 -/
 #print WeakDual /-
 /-- The weak star topology is the topology coarsest topology on `E →L[𝕜] 𝕜` such that all
 functionals `λ v, top_dual_pairing 𝕜 E v x` are continuous. -/
@@ -234,7 +234,7 @@ def WeakDual (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd
     [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] :=
   WeakBilin (topDualPairing 𝕜 E)
 deriving AddCommMonoid,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜»,
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜»,
   TopologicalSpace, ContinuousAdd
 #align weak_dual WeakDual
 -/
@@ -314,7 +314,7 @@ instance [T2Space 𝕜] : T2Space (WeakDual 𝕜 E) :=
 
 end WeakDual
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜 -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜 -/
 #print WeakSpace /-
 /-- The weak topology is the topology coarsest topology on `E` such that all
 functionals `λ x, top_dual_pairing 𝕜 E v x` are continuous. -/
@@ -323,7 +323,7 @@ def WeakSpace (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAd
     [ContinuousConstSMul 𝕜 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] :=
   WeakBilin (topDualPairing 𝕜 E).flip
 deriving AddCommMonoid,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜»,
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜»,
   TopologicalSpace, ContinuousAdd
 #align weak_space WeakSpace
 -/

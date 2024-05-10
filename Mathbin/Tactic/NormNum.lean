@@ -1921,7 +1921,7 @@ A user command to run `norm_num`. Mostly copied from the `#simp` command.
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 -- With this option, turn off the messages if the result is exactly `true`
 initialize
   registerTraceClass.1 `silence_norm_num_if_true

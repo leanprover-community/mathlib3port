@@ -184,10 +184,10 @@ section closure
 variable {R : Type u} {M : Type v} [Semiring R] [TopologicalSpace R] [TopologicalSpace M]
   [AddCommMonoid M] [Module R M] [ContinuousSMul R M]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
     (fun p : R × M => p.1 • p.2) '' Set.univ ×ˢ closure s ⊆ closure s :=
   calc
@@ -204,7 +204,7 @@ theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
       simp [s.smul_mem c hy]
 #align submodule.closure_smul_self_subset Submodule.closure_smul_self_subset
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Submodule.closure_smul_self_eq (s : Submodule R M) :
     (fun p : R × M => p.1 • p.2) '' Set.univ ×ˢ closure s = closure s :=
   s.closure_smul_self_subset.antisymm fun x hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩

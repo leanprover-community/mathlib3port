@@ -36,7 +36,7 @@ theorem Multiset.sum_smul {l : Multiset R} {x : M} : l.Sum • x = (l.map fun r 
 #align multiset.sum_smul Multiset.sum_smul
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Multiset.sum_smul_sum /-
 theorem Multiset.sum_smul_sum {s : Multiset R} {t : Multiset M} :
     s.Sum • t.Sum = ((s ×ˢ t).map fun p : R × M => p.fst • p.snd).Sum :=
@@ -54,7 +54,7 @@ theorem Finset.sum_smul {f : ι → R} {s : Finset ι} {x : M} :
 #align finset.sum_smul Finset.sum_smul
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.sum_smul_sum /-
 theorem Finset.sum_smul_sum {f : α → R} {g : β → M} {s : Finset α} {t : Finset β} :
     (∑ i in s, f i) • ∑ i in t, g i = ∑ p in s ×ˢ t, f p.fst • g p.snd := by
@@ -66,7 +66,7 @@ end AddCommMonoid
 
 #print Finset.cast_card /-
 theorem Finset.cast_card [CommSemiring R] (s : Finset α) : (s.card : R) = ∑ a in s, 1 := by
-  rw [Finset.sum_const, Nat.smul_one_eq_coe]
+  rw [Finset.sum_const, Nat.smul_one_eq_cast]
 #align finset.cast_card Finset.cast_card
 -/
 

@@ -51,57 +51,57 @@ universe w v u
 open Category Iso
 
 #print CategoryTheory.Bicategory /-
-/- ./././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprρ_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprρ_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprρ_ -/
+/- ././././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
+/- ././././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
+/- ././././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
+/- ././././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
+/- ././././Mathport/Syntax/Translate/Command.lean:413:24: unsupported: (notation) in structure -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprρ_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprρ_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ▷ » -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprρ_ -/
 -- intended to be used with explicit universe parameters
 /-- In a bicategory, we can compose the 1-morphisms `f : a ⟶ b` and `g : b ⟶ c` to obtain
 a 1-morphism `f ≫ g : a ⟶ c`. This composition does not need to be strictly associative,

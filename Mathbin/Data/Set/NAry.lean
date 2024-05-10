@@ -122,7 +122,7 @@ theorem image2_subset_iff_right : image2 f s t ⊆ u ↔ ∀ b ∈ t, (fun a => 
 
 variable (f)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.image_prod /-
 @[simp]
 theorem image_prod : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = image2 f s t :=
@@ -132,7 +132,7 @@ theorem image_prod : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = image2 f s t 
 #align set.image_prod Set.image_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.image_uncurry_prod /-
 @[simp]
 theorem image_uncurry_prod (s : Set α) (t : Set β) : uncurry f '' s ×ˢ t = image2 f s t :=
@@ -140,7 +140,7 @@ theorem image_uncurry_prod (s : Set α) (t : Set β) : uncurry f '' s ×ˢ t = i
 #align set.image_uncurry_prod Set.image_uncurry_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.image2_mk_eq_prod /-
 @[simp]
 theorem image2_mk_eq_prod : image2 Prod.mk s t = s ×ˢ t :=
@@ -148,7 +148,7 @@ theorem image2_mk_eq_prod : image2 Prod.mk s t = s ×ˢ t :=
 #align set.image2_mk_eq_prod Set.image2_mk_eq_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.image2_curry /-
 @[simp]
 theorem image2_curry (f : α × β → γ) (s : Set α) (t : Set β) :

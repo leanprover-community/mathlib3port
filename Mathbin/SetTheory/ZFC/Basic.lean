@@ -599,7 +599,7 @@ def sUnion (a : PSet) : PSet :=
 
 prefix:110 "⋃₀ " => PSet.sUnion
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print PSet.mem_sUnion /-
 @[simp]
 theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
@@ -615,8 +615,8 @@ theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈
 #align pSet.mem_sUnion PSet.mem_sUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print PSet.toSet_sUnion /-
 @[simp]
 theorem toSet_sUnion (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) := by ext; simp
@@ -1324,7 +1324,7 @@ noncomputable def sInter (x : ZFSet) : ZFSet := by
 
 prefix:110 "⋂₀ " => ZFSet.sInter
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.mem_sUnion /-
 @[simp]
 theorem mem_sUnion {x y : ZFSet.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
@@ -1334,7 +1334,7 @@ theorem mem_sUnion {x y : ZFSet.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :
 #align Set.mem_sUnion ZFSet.mem_sUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.mem_sInter /-
 theorem mem_sInter {x y : ZFSet} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈ x, y ∈ z :=
   by
@@ -1344,14 +1344,14 @@ theorem mem_sInter {x y : ZFSet} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈
 #align Set.mem_sInter ZFSet.mem_sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.sUnion_empty /-
 @[simp]
 theorem sUnion_empty : ⋃₀ (∅ : ZFSet) = ∅ := by ext; simp
 #align Set.sUnion_empty ZFSet.sUnion_empty
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.sInter_empty /-
 @[simp]
 theorem sInter_empty : ⋂₀ (∅ : ZFSet) = ∅ :=
@@ -1359,7 +1359,7 @@ theorem sInter_empty : ⋂₀ (∅ : ZFSet) = ∅ :=
 #align Set.sInter_empty ZFSet.sInter_empty
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.mem_of_mem_sInter /-
 theorem mem_of_mem_sInter {x y z : ZFSet} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
   by
@@ -1369,21 +1369,21 @@ theorem mem_of_mem_sInter {x y z : ZFSet} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) :
 #align Set.mem_of_mem_sInter ZFSet.mem_of_mem_sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.mem_sUnion_of_mem /-
 theorem mem_sUnion_of_mem {x y z : ZFSet} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀ x :=
   mem_sUnion.2 ⟨z, hz, hy⟩
 #align Set.mem_sUnion_of_mem ZFSet.mem_sUnion_of_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.not_mem_sInter_of_not_mem /-
 theorem not_mem_sInter_of_not_mem {x y z : ZFSet} (hy : ¬y ∈ z) (hz : z ∈ x) : ¬y ∈ ⋂₀ x :=
   fun hx => hy <| mem_of_mem_sInter hx hz
 #align Set.not_mem_sInter_of_not_mem ZFSet.not_mem_sInter_of_not_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.sUnion_singleton /-
 @[simp]
 theorem sUnion_singleton {x : ZFSet.{u}} : ⋃₀ ({x} : ZFSet) = x :=
@@ -1391,7 +1391,7 @@ theorem sUnion_singleton {x : ZFSet.{u}} : ⋃₀ ({x} : ZFSet) = x :=
 #align Set.sUnion_singleton ZFSet.sUnion_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.sInter_singleton /-
 @[simp]
 theorem sInter_singleton {x : ZFSet.{u}} : ⋂₀ ({x} : ZFSet) = x :=
@@ -1399,16 +1399,16 @@ theorem sInter_singleton {x : ZFSet.{u}} : ⋂₀ ({x} : ZFSet) = x :=
 #align Set.sInter_singleton ZFSet.sInter_singleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.toSet_sUnion /-
 @[simp]
 theorem toSet_sUnion (x : ZFSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) := by ext; simp
 #align Set.to_set_sUnion ZFSet.toSet_sUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.toSet_sInter /-
 theorem toSet_sInter {x : ZFSet.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) := by
   ext; simp [mem_sInter h]
@@ -1430,7 +1430,7 @@ theorem singleton_inj {x y : ZFSet} : ({x} : ZFSet) = {y} ↔ x = y :=
 #align Set.singleton_inj ZFSet.singleton_inj
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.union /-
 /-- The binary union operation -/
 protected def union (x y : ZFSet.{u}) : ZFSet.{u} :=
@@ -1502,7 +1502,7 @@ theorem mem_diff {x y z : ZFSet.{u}} : z ∈ x \ y ↔ z ∈ x ∧ z ∉ y :=
 #align Set.mem_diff ZFSet.mem_diff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.sUnion_pair /-
 @[simp]
 theorem sUnion_pair {x y : ZFSet.{u}} : ⋃₀ ({x, y} : ZFSet.{u}) = x ∪ y :=
@@ -1845,8 +1845,8 @@ end Hereditarily
 
 end ZFSet
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_sep[has_sep] Set[Set] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_insert[has_insert] Set[Set] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_sep[has_sep] Set[Set] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_insert[has_insert] Set[Set] -/
 #print Class /-
 /-- The collection of all classes.
 
@@ -1856,9 +1856,9 @@ state that `x : Set` belongs to `A : Class` is to write `A x`. -/
 def Class :=
   Set ZFSet
 deriving HasSubset,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_sep[has_sep] Set[Set]»,
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_sep[has_sep] Set[Set]»,
   EmptyCollection, Inhabited,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_insert[has_insert] Set[Set]»,
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_insert[has_insert] Set[Set]»,
   Union, Inter, HasCompl, SDiff
 #align Class Class
 -/
@@ -2032,7 +2032,7 @@ def powerset (x : Class) : Class :=
 #align Class.powerset Class.powerset
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.sUnion /-
 /-- The union of a class is the class of all members of ZFC sets in the class -/
 def sUnion (x : Class) : Class :=
@@ -2042,7 +2042,7 @@ def sUnion (x : Class) : Class :=
 
 prefix:110 "⋃₀ " => Class.sUnion
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.sInter /-
 /-- The intersection of a class is the class of all members of ZFC sets in the class -/
 def sInter (x : Class) : Class :=
@@ -2142,7 +2142,7 @@ theorem powerset_apply {A : Class.{u}} {x : ZFSet.{u}} : powerset A x ↔ ↑x �
 #align Class.powerset_apply Class.powerset_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.sUnion_apply /-
 @[simp]
 theorem sUnion_apply {x : Class} {y : ZFSet} : (⋃₀ x) y ↔ ∃ z : ZFSet, x z ∧ y ∈ z :=
@@ -2154,8 +2154,8 @@ theorem sUnion_apply {x : Class} {y : ZFSet} : (⋃₀ x) y ↔ ∃ z : ZFSet, x
 #align Class.sUnion_apply Class.sUnion_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.coe_sUnion /-
 @[simp, norm_cast]
 theorem coe_sUnion (x : ZFSet.{u}) : ↑(⋃₀ x) = ⋃₀ (x : Class.{u}) :=
@@ -2164,7 +2164,7 @@ theorem coe_sUnion (x : ZFSet.{u}) : ↑(⋃₀ x) = ⋃₀ (x : Class.{u}) :=
 #align Class.coe_sUnion Class.coe_sUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.mem_sUnion /-
 @[simp]
 theorem mem_sUnion {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y ∈ z :=
@@ -2177,7 +2177,7 @@ theorem mem_sUnion {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y �
 #align Class.mem_sUnion Class.mem_sUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.sInter_apply /-
 @[simp]
 theorem sInter_apply {x : Class.{u}} {y : ZFSet.{u}} : (⋂₀ x) y ↔ ∀ z : ZFSet.{u}, x z → y ∈ z :=
@@ -2190,8 +2190,8 @@ theorem sInter_apply {x : Class.{u}} {y : ZFSet.{u}} : (⋂₀ x) y ↔ ∀ z : 
 
 /- warning: Class.coe_sInter clashes with Class.sInter_coe -> Class.coe_sInter
 Case conversion may be inaccurate. Consider using '#align Class.coe_sInter Class.coe_sInterₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.coe_sInter /-
 @[simp, norm_cast]
 theorem coe_sInter {x : ZFSet.{u}} (h : x.Nonempty) : ↑(⋂₀ x) = ⋂₀ (x : Class.{u}) :=
@@ -2199,14 +2199,14 @@ theorem coe_sInter {x : ZFSet.{u}} (h : x.Nonempty) : ↑(⋂₀ x) = ⋂₀ (x 
 #align Class.coe_sInter Class.coe_sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.mem_of_mem_sInter /-
 theorem mem_of_mem_sInter {x y z : Class} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z := by
   obtain ⟨w, rfl, hw⟩ := hy; exact coe_mem.2 (hw z hz)
 #align Class.mem_of_mem_sInter Class.mem_of_mem_sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.mem_sInter /-
 theorem mem_sInter {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z, z ∈ x → y ∈ z :=
   by
@@ -2219,14 +2219,14 @@ theorem mem_sInter {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z
 #align Class.mem_sInter Class.mem_sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.sUnion_empty /-
 @[simp]
 theorem sUnion_empty : ⋃₀ (∅ : Class.{u}) = ∅ := by ext; simp
 #align Class.sUnion_empty Class.sUnion_empty
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.sInter_empty /-
 @[simp]
 theorem sInter_empty : ⋂₀ (∅ : Class.{u}) = univ := by ext; simp [sInter, ← univ]
@@ -2248,7 +2248,7 @@ theorem eq_univ_of_powerset_subset {A : Class} (hA : powerset A ⊆ A) : A = uni
 #align Class.eq_univ_of_powerset_subset Class.eq_univ_of_powerset_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.iota /-
 /-- The definite description operator, which is `{x}` if `{y | A y} = {x}` and `∅` otherwise. -/
 def iota (A : Class) : Class :=
@@ -2324,7 +2324,7 @@ theorem choice_mem_aux (y : ZFSet.{u}) (yx : y ∈ x) :
 #align Set.choice_mem_aux ZFSet.choice_mem_aux
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.choice_isFunc /-
 theorem choice_isFunc : IsFunc x (⋃₀ x) (choice x) :=
   (@map_isFunc _ (Classical.allDefinable _) _ _).2 fun y yx =>

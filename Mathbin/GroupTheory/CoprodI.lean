@@ -351,7 +351,7 @@ variable {M}
 
 variable [∀ i, DecidableEq (M i)]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Monoid.CoprodI.Word.rcons /-
 /-- Given a pair `(head, tail)`, we can form a word by prepending `head` to `tail`, except if `head`
 is `1 : M i` then we have to just return `word` since we need the result to be reduced. -/
@@ -364,15 +364,15 @@ def Monoid.CoprodI.Word.rcons {i} (p : Monoid.CoprodI.Word.Pair M i) : Monoid.Co
 #align free_product.word.rcons Monoid.CoprodI.Word.rcons
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a word of the form `⟨l :: ls, h1, h2⟩`, we can form a word of the form `⟨ls, _, _⟩`,
 dropping the first letter. -/
 private def mk_aux {l} (ls : List (Σ i, M i)) (h1 : ∀ l' ∈ l::ls, Sigma.snd l' ≠ 1)
     (h2 : (l::ls).Chain' _) : Monoid.CoprodI.Word M :=
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_mem _ hl), h2.tail⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Monoid.CoprodI.Word.cons_eq_rcons {i} {m : M i} {ls h1 h2} :
     Monoid.CoprodI.Word.mk (⟨i, m⟩::ls) h1 h2 =
       Monoid.CoprodI.Word.rcons
@@ -410,7 +410,7 @@ theorem Monoid.CoprodI.Word.rcons_inj {i} :
 
 variable [DecidableEq ι]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- This definition is computable but not very nice to look at. Thankfully we don't have to inspect
 -- it, since `rcons` is known to be injective.
 /-- Given `i : ι`, any reduced word can be decomposed into a pair `p` such that `w = rcons p`. -/
@@ -478,7 +478,7 @@ theorem Monoid.CoprodI.Word.of_smul_def (i) (w : Monoid.CoprodI.Word M) (m : M i
 #align free_product.word.of_smul_def Monoid.CoprodI.Word.of_smul_def
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Monoid.CoprodI.Word.cons_eq_smul /-
 theorem Monoid.CoprodI.Word.cons_eq_smul {i} {m : M i} {ls h1 h2} :
     Monoid.CoprodI.Word.mk (⟨i, m⟩::ls) h1 h2 = Monoid.CoprodI.of m • mkAux ls h1 h2 := by
@@ -641,7 +641,7 @@ def Monoid.CoprodI.NeWord.toWord {i j} (w : Monoid.CoprodI.NeWord M i j) : Monoi
 #align free_product.neword.to_word Monoid.CoprodI.NeWord.toWord
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Monoid.CoprodI.NeWord.of_word /-
 /-- Every nonempty `word M` can be constructed as a `neword M i j` -/
 theorem Monoid.CoprodI.NeWord.of_word (w : Monoid.CoprodI.Word M) (h : w ≠ Empty) :

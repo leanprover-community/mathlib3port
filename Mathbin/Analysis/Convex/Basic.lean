@@ -129,7 +129,7 @@ theorem convex_iInter {ι : Sort _} {s : ι → Set E} (h : ∀ i, Convex 𝕜 (
 #align convex_Inter convex_iInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print convex_iInter₂ /-
 theorem convex_iInter₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i → Set E}
     (h : ∀ i j, Convex 𝕜 (s i j)) : Convex 𝕜 (⋂ (i) (j), s i j) :=
@@ -137,7 +137,7 @@ theorem convex_iInter₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i →
 #align convex_Inter₂ convex_iInter₂
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Convex.prod /-
 theorem Convex.prod {s : Set E} {t : Set F} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) :
     Convex 𝕜 (s ×ˢ t) := fun x hx => (hs hx.1).Prod (ht hx.2)

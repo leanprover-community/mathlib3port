@@ -1469,7 +1469,7 @@ section Prod
 
 variable (S₁ : Subalgebra R B)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Subalgebra.prod /-
 /-- The product of two subalgebras is a subalgebra. -/
 def prod : Subalgebra R (A × B) :=
@@ -1480,7 +1480,7 @@ def prod : Subalgebra R (A × B) :=
 #align subalgebra.prod Subalgebra.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Subalgebra.coe_prod /-
 @[simp]
 theorem coe_prod : (prod S S₁ : Set (A × B)) = S ×ˢ S₁ :=

@@ -68,7 +68,7 @@ ordered map, ordered set, data structure
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Command.lean:377:30: infer kinds are unsupported in Lean 4: nil {} -/
+/- ././././Mathport/Syntax/Translate/Command.lean:377:30: infer kinds are unsupported in Lean 4: nil {} -/
 #print Ordnode /-
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced
@@ -910,7 +910,7 @@ def span (p : α → Prop) [DecidablePred p] : Ordnode α → Ordnode α × Ordn
 #align ordnode.span Ordnode.span
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print Ordnode.ofAscListAux₁ /-
 /-- Auxiliary definition for `of_asc_list`.
 
@@ -934,7 +934,7 @@ termination_by x => WellFounded.wrap (measure_wf List.length) x
 #align ordnode.of_asc_list_aux₁ Ordnode.ofAscListAux₁
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print Ordnode.ofAscListAux₂ /-
 /-- Auxiliary definition for `of_asc_list`. -/
 def ofAscListAux₂ : List α → Ordnode α → ℕ → Ordnode α

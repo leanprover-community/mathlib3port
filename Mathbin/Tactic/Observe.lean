@@ -17,8 +17,8 @@ Calling `observe hp : p` is equivalent to `have hp : p, { library_search }`.
 
 open Tactic Tactic.Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `observe hp : p` asserts the proposition `p`, and tries to prove it using `library_search`.
 If no proof is found, the tactic fails.
 In other words, this tactic is equivalent to `have hp : p, { library_search }`.

@@ -63,12 +63,12 @@ unsafe def decide_eq (l r : expr) : tactic (Bool × expr) := do
       pure (ff, p)
 #align tactic.norm_num.decide_eq tactic.norm_num.decide_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.not_mem_cons {α : Type _} {x y : α} {ys : List α} (h₁ : x ≠ y) (h₂ : x ∉ ys) :
     x ∉ y::ys := fun h => ((List.mem_cons _ _ _).mp h).elim h₁ h₂
 #align tactic.norm_num.list.not_mem_cons Tactic.NormNum.List.not_mem_cons
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Use a decision procedure for the equality of list elements to decide list membership.
 
 If the decision procedure succeeds, the `bool` value indicates whether the expressions are equal,
@@ -95,14 +95,14 @@ unsafe def list.decide_mem (decide_eq : expr → expr → tactic (Bool × expr))
             pure (ff, pf)
 #align tactic.norm_num.list.decide_mem tactic.norm_num.list.decide_mem
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.map_cons_congr {α β : Type _} (f : α → β) {x : α} {xs : List α} {fx : β} {fxs : List β}
     (h₁ : f x = fx) (h₂ : xs.map f = fxs) : (x::xs).map f = fx::fxs := by rw [List.map_cons, h₁, h₂]
 #align tactic.norm_num.list.map_cons_congr Tactic.NormNum.List.map_cons_congr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Apply `ef : α → β` to all elements of the list, constructing an equality proof. -/
 unsafe def eval_list_map (ef : expr) : List expr → tactic (List expr × expr)
   | [] => do
@@ -115,8 +115,8 @@ unsafe def eval_list_map (ef : expr) : List expr → tactic (List expr × expr)
     pure (fx::fxs, Eq)
 #align tactic.norm_num.eval_list_map tactic.norm_num.eval_list_map
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.cons_congr {α : Type _} (x : α) {xs : List α} {xs' : List α} (xs_eq : xs' = xs) :
     (x::xs') = x::xs := by rw [xs_eq]
 #align tactic.norm_num.list.cons_congr Tactic.NormNum.List.cons_congr
@@ -125,7 +125,7 @@ theorem List.map_congr {α β : Type _} (f : α → β) {xs xs' : List α} {ys :
     (ys_eq : xs'.map f = ys) : xs.map f = ys := by rw [← ys_eq, xs_eq]
 #align tactic.norm_num.list.map_congr Tactic.NormNum.List.map_congr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Convert an expression denoting a list to a list of elements. -/
 unsafe def eval_list : expr → tactic (List expr × expr)
   | e@q(List.nil) => do
@@ -163,8 +163,8 @@ theorem Multiset.map_congr {α β : Type _} (f : α → β) {xs : Multiset α} {
   rw [← ys_eq, ← Multiset.map_coe, xs_eq]
 #align tactic.norm_num.multiset.map_congr Tactic.NormNum.Multiset.map_congr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Convert an expression denoting a multiset to a list of elements.
 
 We return a list rather than a finset, so we can more easily iterate over it
@@ -219,8 +219,8 @@ theorem Finset.insert_eq_coe_list_of_mem {α : Type _} [DecidableEq α] (x : α)
   rw [Finset.insert_eq_of_mem h, hxs']
 #align tactic.norm_num.finset.insert_eq_coe_list_of_mem Tactic.NormNum.Finset.insert_eq_coe_list_of_mem
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Finset.insert_eq_coe_list_cons {α : Type _} [DecidableEq α] (x : α) (xs : Finset α)
     {xs' : List α} (h : x ∉ xs') (nd_xs : xs'.Nodup) (nd_xxs : (x::xs').Nodup)
     (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
@@ -264,7 +264,7 @@ unsafe def eval_finset_interval : expr → tactic (Option (List expr × expr × 
   | _ => pure none
 #align tactic.norm_num.eval_finset_interval tactic.norm_num.eval_finset_interval
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Convert an expression denoting a finset to a list of elements,
 a proof that this list is equal to the original finset,
 and a proof that the list contains no duplicates.
@@ -326,14 +326,14 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) :
     pure v
 #align tactic.norm_num.eval_finset tactic.norm_num.eval_finset
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
 theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : α) (his : xs.Prod = y)
     (hi : x * y = z) : (x::xs).Prod = z := by rw [List.prod_cons, his, hi]
 #align tactic.norm_num.list.prod_cons_congr Tactic.NormNum.List.prod_cons_congr
 #align tactic.norm_num.list.sum_cons_congr Tactic.NormNum.List.sum_cons_congr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -375,7 +375,7 @@ theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : �
             pure ( eval_xxs . 1 , proof )
 #align tactic.norm_num.list.prove_prod tactic.norm_num.list.prove_prod
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--

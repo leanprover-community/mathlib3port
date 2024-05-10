@@ -172,7 +172,7 @@ def odd (s : Stream' α) : Stream' α :=
 #align stream.odd Stream'.odd
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.appendStream' /-
 /-- Append a stream to a list. -/
 def appendStream' : List α → Stream' α → Stream' α

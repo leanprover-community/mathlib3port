@@ -99,7 +99,7 @@ theorem card_sups_le : (s ⊻ t).card ≤ s.card * t.card :=
 #align finset.card_sups_le Finset.card_sups_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.card_sups_iff /-
 theorem card_sups_iff :
     (s ⊻ t).card = s.card * t.card ↔ (s ×ˢ t : Set (α × α)).InjOn fun x => x.1 ⊔ x.2 :=
@@ -269,7 +269,7 @@ theorem biUnion_image_sup_right : (t.biUnion fun b => s.image fun a => a ⊔ b) 
 #align finset.bUnion_image_sup_right Finset.biUnion_image_sup_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.image_sup_product /-
 @[simp]
 theorem image_sup_product (s t : Finset α) : (s ×ˢ t).image (uncurry (· ⊔ ·)) = s ⊻ t :=
@@ -362,7 +362,7 @@ theorem card_infs_le : (s ⊼ t).card ≤ s.card * t.card :=
 #align finset.card_infs_le Finset.card_infs_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.card_infs_iff /-
 theorem card_infs_iff :
     (s ⊼ t).card = s.card * t.card ↔ (s ×ˢ t : Set (α × α)).InjOn fun x => x.1 ⊓ x.2 :=
@@ -532,7 +532,7 @@ theorem biUnion_image_inf_right : (t.biUnion fun b => s.image fun a => a ⊓ b) 
 #align finset.bUnion_image_inf_right Finset.biUnion_image_inf_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.image_inf_product /-
 @[simp]
 theorem image_inf_product (s t : Finset α) : (s ×ˢ t).image (uncurry (· ⊓ ·)) = s ⊼ t :=
@@ -625,7 +625,7 @@ section DisjSups
 
 variable [SemilatticeSup α] [OrderBot α] [@DecidableRel α Disjoint] (s s₁ s₂ t t₁ t₂ u : Finset α)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.disjSups /-
 /-- The finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t` and `a` and `b` are disjoint.
 -/

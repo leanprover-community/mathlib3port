@@ -334,7 +334,7 @@ open scoped Positivity
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -959,7 +959,7 @@ private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : 
                 "` is not of the form `a ^ n` for `a` in a `canonically_ordered_comm_semiring` and `n : ℕ`"
 #align tactic.positivity_canon_pow tactic.positivity_canon_pow
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:88:10: unsupported modifiers in user command -/
+/- ././././Mathport/Syntax/Translate/Tactic/Basic.lean:88:10: unsupported modifiers in user command -/
 alias ⟨_, abs_pos_of_ne_zero⟩ := abs_pos
 #align tactic.abs_pos_of_ne_zero Tactic.abs_pos_of_ne_zero
 

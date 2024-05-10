@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
 import Data.Set.Finite
-import GroupTheory.Subgroup.Basic
-import GroupTheory.Submonoid.Membership
+import Algebra.Group.Subgroup.Basic
+import Algebra.Group.Submonoid.Membership
 
 #align_import group_theory.subgroup.finite from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"
 

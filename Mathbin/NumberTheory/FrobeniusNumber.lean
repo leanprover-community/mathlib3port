@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Zhao
 -/
 import Data.Nat.ModEq
-import GroupTheory.Submonoid.Basic
-import GroupTheory.Submonoid.Membership
+import Algebra.Group.Submonoid.Basic
+import Algebra.Group.Submonoid.Membership
 import Tactic.Ring
 import Tactic.Zify
 

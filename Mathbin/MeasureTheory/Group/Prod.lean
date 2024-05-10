@@ -116,7 +116,7 @@ theorem measurePreserving_prod_mul_swap [IsMulLeftInvariant μ] :
 #align measure_theory.measure_preserving_prod_add_swap MeasureTheory.measurePreserving_prod_add_swap
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.measurable_measure_mul_right /-
 @[to_additive]
 theorem measurable_measure_mul_right (hs : MeasurableSet s) :
@@ -178,8 +178,8 @@ theorem measurePreserving_mul_prod_inv [IsMulLeftInvariant ν] :
 #align measure_theory.measure_preserving_add_prod_neg MeasureTheory.measurePreserving_add_prod_neg
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.quasiMeasurePreserving_inv /-
 @[to_additive]
 theorem quasiMeasurePreserving_inv : QuasiMeasurePreserving (Inv.inv : G → G) μ μ :=

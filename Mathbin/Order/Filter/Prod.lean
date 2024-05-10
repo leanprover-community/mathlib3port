@@ -62,7 +62,7 @@ protected def prod (f : Filter α) (g : Filter β) : Filter (α × β) :=
 
 scoped infixl:60 " ×ᶠ " => Filter.prod
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Filter.prod_mem_prod /-
 theorem prod_mem_prod {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} (hs : s ∈ f)
     (ht : t ∈ g) : s ×ˢ t ∈ f ×ᶠ g :=
@@ -70,7 +70,7 @@ theorem prod_mem_prod {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} 
 #align filter.prod_mem_prod Filter.prod_mem_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Filter.mem_prod_iff /-
 theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} :
     s ∈ f ×ᶠ g ↔ ∃ t₁ ∈ f, ∃ t₂ ∈ g, t₁ ×ˢ t₂ ⊆ s :=
@@ -84,7 +84,7 @@ theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} :
 #align filter.mem_prod_iff Filter.mem_prod_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Filter.prod_mem_prod_iff /-
 @[simp]
 theorem prod_mem_prod_iff {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} [f.ne_bot]
@@ -421,8 +421,8 @@ theorem tendsto_swap4_prod {f : Filter α} {g : Filter β} {h : Filter γ} {k : 
 #align filter.tendsto_swap4_prod Filter.tendsto_swap4_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Filter.prod_map_map_eq /-
 theorem prod_map_map_eq.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {β₁ : Type w} {β₂ : Type x}
     {f₁ : Filter α₁} {f₂ : Filter α₂} {m₁ : α₁ → β₁} {m₂ : α₂ → β₂} :
@@ -502,7 +502,7 @@ theorem bot_prod {g : Filter β} : (⊥ : Filter α) ×ᶠ g = ⊥ := by simp [F
 #align filter.bot_prod Filter.bot_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Filter.prod_principal_principal /-
 @[simp]
 theorem prod_principal_principal {s : Set α} {t : Set β} : 𝓟 s ×ᶠ 𝓟 t = 𝓟 (s ×ˢ t) := by
@@ -663,7 +663,7 @@ theorem coprod_neBot_right [NeBot g] [Nonempty α] : (f.coprod g).ne_bot :=
 #align filter.coprod_ne_bot_right Filter.coprod_neBot_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Filter.principal_coprod_principal /-
 theorem principal_coprod_principal (s : Set α) (t : Set β) : (𝓟 s).coprod (𝓟 t) = 𝓟 ((sᶜ ×ˢ tᶜ)ᶜ) :=
   by
@@ -686,8 +686,8 @@ theorem map_prod_map_coprod_le.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {�
 #align filter.map_prod_map_coprod_le Filter.map_prod_map_coprod_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Filter.map_const_principal_coprod_map_id_principal /-
 /-- Characterization of the coproduct of the `filter.map`s of two principal filters `𝓟 {a}` and
 `𝓟 {i}`, the first under the constant function `λ a, b` and the second under the identity function.
@@ -702,7 +702,7 @@ theorem map_const_principal_coprod_map_id_principal {α β ι : Type _} (a : α)
 #align filter.map_const_principal_coprod_map_id_principal Filter.map_const_principal_coprod_map_id_principal
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Filter.map_prod_map_const_id_principal_coprod_principal /-
 /-- Characterization of the `filter.map` of the coproduct of two principal filters `𝓟 {a}` and
 `𝓟 {i}`, under the `prod.map` of two functions, respectively the constant function `λ a, b` and the

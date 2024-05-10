@@ -371,7 +371,7 @@ protected def mul : Mul (Finset α) :=
 
 scoped[Pointwise] attribute [instance] Finset.mul Finset.add
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.mul_def /-
 @[to_additive]
 theorem mul_def : s * t = (s ×ˢ t).image fun p : α × α => p.1 * p.2 :=
@@ -380,7 +380,7 @@ theorem mul_def : s * t = (s ×ˢ t).image fun p : α × α => p.1 * p.2 :=
 #align finset.add_def Finset.add_def
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.image_mul_product /-
 @[to_additive]
 theorem image_mul_product : ((s ×ˢ t).image fun x : α × α => x.fst * x.snd) = s * t :=
@@ -421,7 +421,7 @@ theorem card_mul_le : (s * t).card ≤ s.card * t.card :=
 #align finset.card_add_le Finset.card_add_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.card_mul_iff /-
 @[to_additive]
 theorem card_mul_iff :
@@ -671,7 +671,7 @@ protected def div : Div (Finset α) :=
 
 scoped[Pointwise] attribute [instance] Finset.div Finset.sub
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.div_def /-
 @[to_additive]
 theorem div_def : s / t = (s ×ˢ t).image fun p : α × α => p.1 / p.2 :=
@@ -680,7 +680,7 @@ theorem div_def : s / t = (s ×ˢ t).image fun p : α × α => p.1 / p.2 :=
 #align finset.sub_def Finset.sub_def
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.image_div_product /-
 @[to_additive add_image_prod]
 theorem image_div_product : ((s ×ˢ t).image fun x : α × α => x.fst / x.snd) = s / t :=
@@ -1574,7 +1574,7 @@ protected def smul : SMul (Finset α) (Finset β) :=
 
 scoped[Pointwise] attribute [instance] Finset.smul Finset.vadd
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.smul_def /-
 @[to_additive]
 theorem smul_def : s • t = (s ×ˢ t).image fun p : α × β => p.1 • p.2 :=
@@ -1583,7 +1583,7 @@ theorem smul_def : s • t = (s ×ˢ t).image fun p : α × β => p.1 • p.2 :=
 #align finset.vadd_def Finset.vadd_def
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.image_smul_product /-
 @[to_additive]
 theorem image_smul_product : ((s ×ˢ t).image fun x : α × β => x.fst • x.snd) = s • t :=
@@ -2364,7 +2364,7 @@ section LeftCancelSemigroup
 
 variable [LeftCancelSemigroup α] [DecidableEq α] (s t : Finset α) (a : α)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.pairwiseDisjoint_smul_iff /-
 @[to_additive]
 theorem pairwiseDisjoint_smul_iff {s : Set α} {t : Finset α} :

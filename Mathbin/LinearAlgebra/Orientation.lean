@@ -249,14 +249,14 @@ theorem orientation_unitsSMul [Nontrivial R] (e : Basis ι R M) (w : ι → Unit
 #align basis.orientation_units_smul Basis.orientation_unitsSMul
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ray_of_ne_zero _ _ _]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ray_of_ne_zero _ _ _]] -/
 #print Basis.orientation_isEmpty /-
 @[simp]
 theorem orientation_isEmpty [Nontrivial R] [IsEmpty ι] (b : Basis ι R M) :
     b.Orientation = positiveOrientation :=
   by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ray_of_ne_zero _ _ _]]"
+    "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ray_of_ne_zero _ _ _]]"
   convert b.det_is_empty
 #align basis.orientation_is_empty Basis.orientation_isEmpty
 -/

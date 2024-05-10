@@ -58,7 +58,7 @@ def nil : Seq α :=
 instance : Inhabited (Seq α) :=
   ⟨nil⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.Seq.cons /-
 /-- Prepend an element to a sequence -/
 def cons (a : α) (s : Seq α) : Seq α :=
@@ -69,7 +69,7 @@ def cons (a : α) (s : Seq α) : Seq α :=
 #align stream.seq.cons Stream'.Seq.cons
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.Seq.val_cons /-
 @[simp]
 theorem val_cons (s : Seq α) (x : α) : (cons x s).val = some x::s.val :=
@@ -529,7 +529,7 @@ theorem ofList_get (l : List α) (n : ℕ) : (ofList l).get? n = l.get? n :=
 #align stream.seq.of_list_nth Stream'.Seq.ofList_get
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.Seq.ofList_cons /-
 @[simp]
 theorem ofList_cons (a : α) (l : List α) : ofList (a::l) = cons a (ofList l) := by
@@ -959,7 +959,7 @@ theorem join_append (S T : Seq (Seq1 α)) : join (append S T) = append (join S) 
 #align stream.seq.join_append Stream'.Seq.join_append
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.Seq.ofStream_cons /-
 @[simp]
 theorem ofStream_cons (a : α) (s) : ofStream (a::s) = cons a (ofStream s) := by
@@ -982,7 +982,7 @@ theorem ofStream_append (l : List α) (s : Stream' α) :
 #align stream.seq.of_stream_append Stream'.Seq.ofStream_append
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.Seq.toList' /-
 /-- Convert a sequence into a list, embedded in a computation to allow for
   the possibility of infinite sequences (in which case the computation

@@ -133,7 +133,7 @@ instance {α} [HasVariableNames α] : HasVariableNames (Option α) :=
 instance {α} : HasVariableNames (BinTree α) :=
   ⟨[`t]⟩
 
-instance {α} [HasVariableNames α] {lt : α → α → Prop} : HasVariableNames (Std.RBSet α lt) :=
+instance {α} [HasVariableNames α] {lt : α → α → Prop} : HasVariableNames (Batteries.RBSet α lt) :=
   makeListlikeInstance α
 
 unsafe instance {α} [HasVariableNames α] : HasVariableNames (native.rb_set α) :=

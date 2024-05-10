@@ -759,10 +759,11 @@ def plusPlusAdjunction : plusPlusSheaf J D ⊣ sheafToPresheaf J D :=
 #align category_theory.sheafification_adjunction CategoryTheory.plusPlusAdjunction
 -/
 
-#print CategoryTheory.sheafToPresheafIsRightAdjoint /-
-instance sheafToPresheafIsRightAdjoint : IsRightAdjoint (sheafToPresheaf J D) :=
+#print CategoryTheory.sheafToPresheaf_isRightAdjoint /-
+instance sheafToPresheaf_isRightAdjoint :
+    CategoryTheory.Functor.IsRightAdjoint (sheafToPresheaf J D) :=
   ⟨_, plusPlusAdjunction J D⟩
-#align category_theory.Sheaf_to_presheaf_is_right_adjoint CategoryTheory.sheafToPresheafIsRightAdjoint
+#align category_theory.Sheaf_to_presheaf_is_right_adjoint CategoryTheory.sheafToPresheaf_isRightAdjoint
 -/
 
 #print CategoryTheory.presheaf_mono_of_mono /-

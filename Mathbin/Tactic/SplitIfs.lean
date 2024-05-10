@@ -13,7 +13,7 @@ open Expr Tactic
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 unsafe def find_if_cond : expr → Option expr
   | e =>
     e.fold none fun e _ acc =>

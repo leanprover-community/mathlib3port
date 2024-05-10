@@ -78,14 +78,14 @@ theorem condKernelReal_Iic (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) :
   measure_condCDF_Iic ρ a x
 #align probability_theory.cond_kernel_real_Iic ProbabilityTheory.condKernelReal_Iic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_lintegral_condKernelReal_Iic (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ)
     {s : Set α} (hs : MeasurableSet s) :
     ∫⁻ a in s, condKernelReal ρ a (Iic x) ∂ρ.fst = ρ (s ×ˢ Iic x) := by
   simp_rw [cond_kernel_real_Iic]; exact set_lintegral_cond_cdf ρ x hs
 #align probability_theory.set_lintegral_cond_kernel_real_Iic ProbabilityTheory.set_lintegral_condKernelReal_Iic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_lintegral_condKernelReal_univ (ρ : Measure (α × ℝ)) {s : Set α} (hs : MeasurableSet s) :
     ∫⁻ a in s, condKernelReal ρ a univ ∂ρ.fst = ρ (s ×ˢ univ) := by
   simp only [measure_univ, lintegral_const, measure.restrict_apply, MeasurableSet.univ, univ_inter,
@@ -100,10 +100,10 @@ theorem lintegral_condKernelReal_univ (ρ : Measure (α × ℝ)) :
 
 variable (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_lintegral_condKernelReal_prod {s : Set α} (hs : MeasurableSet s) {t : Set ℝ}
     (ht : MeasurableSet t) : ∫⁻ a in s, condKernelReal ρ a t ∂ρ.fst = ρ (s ×ˢ t) :=
   by
@@ -144,10 +144,10 @@ theorem set_lintegral_condKernelReal_prod {s : Set α} (hs : MeasurableSet s) {t
     · exact fun i => MeasurableSet.prod hs (hf_meas i)
 #align probability_theory.set_lintegral_cond_kernel_real_prod ProbabilityTheory.set_lintegral_condKernelReal_prod
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem lintegral_condKernelReal_mem {s : Set (α × ℝ)} (hs : MeasurableSet s) :
     ∫⁻ a, condKernelReal ρ a {x | (a, x) ∈ s} ∂ρ.fst = ρ s :=
   by
@@ -440,9 +440,9 @@ theorem MeasureTheory.Measure.lintegral_condKernel_mem {s : Set (α × Ω)} (hs 
 #align probability_theory.lintegral_cond_kernel_mem MeasureTheory.Measure.lintegral_condKernel_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.Measure.set_lintegral_condKernel_eq_measure_prod /-
 theorem MeasureTheory.Measure.set_lintegral_condKernel_eq_measure_prod {s : Set α}
     (hs : MeasurableSet s) {t : Set Ω} (ht : MeasurableSet t) :
@@ -475,7 +475,7 @@ theorem MeasureTheory.Measure.lintegral_condKernel {f : α × Ω → ℝ≥0∞}
 #align probability_theory.lintegral_cond_kernel MeasureTheory.Measure.lintegral_condKernel
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.Measure.set_lintegral_condKernel /-
 theorem MeasureTheory.Measure.set_lintegral_condKernel {f : α × Ω → ℝ≥0∞} (hf : Measurable f)
     {s : Set α} (hs : MeasurableSet s) {t : Set Ω} (ht : MeasurableSet t) :
@@ -488,7 +488,7 @@ theorem MeasureTheory.Measure.set_lintegral_condKernel {f : α × Ω → ℝ≥0
 #align probability_theory.set_lintegral_cond_kernel MeasureTheory.Measure.set_lintegral_condKernel
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.Measure.set_lintegral_condKernel_univ_right /-
 theorem MeasureTheory.Measure.set_lintegral_condKernel_univ_right {f : α × Ω → ℝ≥0∞}
     (hf : Measurable f) {s : Set α} (hs : MeasurableSet s) :
@@ -497,7 +497,7 @@ theorem MeasureTheory.Measure.set_lintegral_condKernel_univ_right {f : α × Ω 
 #align probability_theory.set_lintegral_cond_kernel_univ_right MeasureTheory.Measure.set_lintegral_condKernel_univ_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.Measure.set_lintegral_condKernel_univ_left /-
 theorem MeasureTheory.Measure.set_lintegral_condKernel_univ_left {f : α × Ω → ℝ≥0∞}
     (hf : Measurable f) {t : Set Ω} (ht : MeasurableSet t) :
@@ -534,8 +534,8 @@ theorem MeasureTheory.Measure.integral_condKernel {ρ : Measure (α × Ω)} [IsF
 #align probability_theory.integral_cond_kernel MeasureTheory.Measure.integral_condKernel
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.Measure.setIntegral_condKernel /-
 theorem MeasureTheory.Measure.setIntegral_condKernel {ρ : Measure (α × Ω)} [IsFiniteMeasure ρ]
     {f : α × Ω → E} {s : Set α} (hs : MeasurableSet s) {t : Set Ω} (ht : MeasurableSet t)
@@ -549,8 +549,8 @@ theorem MeasureTheory.Measure.setIntegral_condKernel {ρ : Measure (α × Ω)} [
 #align probability_theory.set_integral_cond_kernel MeasureTheory.Measure.setIntegral_condKernel
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.Measure.setIntegral_condKernel_univ_right /-
 theorem MeasureTheory.Measure.setIntegral_condKernel_univ_right {ρ : Measure (α × Ω)}
     [IsFiniteMeasure ρ] {f : α × Ω → E} {s : Set α} (hs : MeasurableSet s)
@@ -560,8 +560,8 @@ theorem MeasureTheory.Measure.setIntegral_condKernel_univ_right {ρ : Measure (�
 #align probability_theory.set_integral_cond_kernel_univ_right MeasureTheory.Measure.setIntegral_condKernel_univ_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.Measure.setIntegral_condKernel_univ_left /-
 theorem MeasureTheory.Measure.setIntegral_condKernel_univ_left {ρ : Measure (α × Ω)}
     [IsFiniteMeasure ρ] {f : α × Ω → E} {t : Set Ω} (ht : MeasurableSet t)

@@ -440,8 +440,8 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
 #align polynomial.gal.card_of_separable Polynomial.Gal.card_of_separable
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print Polynomial.Gal.prime_degree_dvd_card /-
 theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.natDegree.Prime) :
     p.natDegree ∣ Fintype.card p.Gal :=

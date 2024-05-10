@@ -3,7 +3,7 @@ Copyright (c) 2021 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import GroupTheory.Subgroup.Actions
+import Algebra.Group.Subgroup.Actions
 import LinearAlgebra.LinearIndependent
 
 #align_import linear_algebra.ray from "leanprover-community/mathlib"@"ee05e9ce1322178f0c12004eb93c00d2c8c00ed2"

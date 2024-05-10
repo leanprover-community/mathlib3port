@@ -43,7 +43,7 @@ section Asymmetric
 variable [LinearOrderedField 𝕜] (r : α → β → Prop) [∀ a, DecidablePred (r a)] {s s₁ s₂ : Finset α}
   {t t₁ t₂ : Finset β} {a : α} {b : β} {δ : 𝕜}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Rel.interedges /-
 /-- Finset of edges of a relation between two finsets of vertices. -/
 def interedges (s : Finset α) (t : Finset β) : Finset (α × β) :=
@@ -136,7 +136,7 @@ theorem interedges_biUnion_right (s : Finset α) (t : Finset ι) (f : ι → Fin
 #align rel.interedges_bUnion_right Rel.interedges_biUnion_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Rel.interedges_biUnion /-
 theorem interedges_biUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset β) :
     interedges r (s.biUnion f) (t.biUnion g) =
@@ -211,7 +211,7 @@ theorem card_interedges_finpartition_right [DecidableEq β] (s : Finset α) (P :
 #align rel.card_interedges_finpartition_right Rel.card_interedges_finpartition_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Rel.card_interedges_finpartition /-
 theorem card_interedges_finpartition [DecidableEq α] [DecidableEq β] (P : Finpartition s)
     (Q : Finpartition t) :
@@ -376,7 +376,7 @@ def edgeDensity : Finset α → Finset α → ℚ :=
 #align simple_graph.edge_density SimpleGraph.edgeDensity
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.interedges_def /-
 theorem interedges_def (s t : Finset α) :
     G.interedges s t = (s ×ˢ t).filterₓ fun e => G.Adj e.1 e.2 :=
@@ -456,7 +456,7 @@ theorem interedges_biUnion_right (s : Finset α) (t : Finset ι) (f : ι → Fin
 #align simple_graph.interedges_bUnion_right SimpleGraph.interedges_biUnion_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.interedges_biUnion /-
 theorem interedges_biUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset α) :
     G.interedges (s.biUnion f) (t.biUnion g) =
@@ -465,8 +465,8 @@ theorem interedges_biUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α
 #align simple_graph.interedges_bUnion SimpleGraph.interedges_biUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SimpleGraph.card_interedges_add_card_interedges_compl /-
 theorem card_interedges_add_card_interedges_compl (h : Disjoint s t) :
     (G.interedges s t).card + (Gᶜ.interedges s t).card = s.card * t.card :=

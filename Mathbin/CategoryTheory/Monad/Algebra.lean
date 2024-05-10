@@ -231,22 +231,18 @@ theorem algebra_mono_of_mono {X Y : Algebra T} (f : X ⟶ Y) [h : Mono f.f] : Mo
 #align category_theory.monad.algebra_mono_of_mono CategoryTheory.Monad.algebra_mono_of_mono
 -/
 
-instance : IsRightAdjoint T.forget :=
+instance : CategoryTheory.Functor.IsRightAdjoint T.forget :=
   ⟨T.free, T.adj⟩
 
-#print CategoryTheory.Monad.leftAdjoint_forget /-
 @[simp]
-theorem leftAdjoint_forget : leftAdjoint T.forget = T.free :=
+theorem leftAdjoint_forget : CategoryTheory.Functor.leftAdjoint T.forget = T.free :=
   rfl
 #align category_theory.monad.left_adjoint_forget CategoryTheory.Monad.leftAdjoint_forget
--/
 
-#print CategoryTheory.Monad.ofRightAdjoint_forget /-
 @[simp]
-theorem ofRightAdjoint_forget : Adjunction.ofRightAdjoint T.forget = T.adj :=
+theorem ofIsRightAdjoint_forget : Adjunction.ofIsRightAdjoint T.forget = T.adj :=
   rfl
-#align category_theory.monad.of_right_adjoint_forget CategoryTheory.Monad.ofRightAdjoint_forget
--/
+#align category_theory.monad.of_right_adjoint_forget CategoryTheory.Monad.ofIsRightAdjoint_forget
 
 #print CategoryTheory.Monad.algebraFunctorOfMonadHom /-
 /--
@@ -521,22 +517,18 @@ theorem algebra_mono_of_mono {X Y : Coalgebra G} (f : X ⟶ Y) [h : Mono f.f] : 
 #align category_theory.comonad.algebra_mono_of_mono CategoryTheory.Comonad.algebra_mono_of_mono
 -/
 
-instance : IsLeftAdjoint G.forget :=
+instance : CategoryTheory.Functor.IsLeftAdjoint G.forget :=
   ⟨_, G.adj⟩
 
-#print CategoryTheory.Comonad.rightAdjoint_forget /-
 @[simp]
-theorem rightAdjoint_forget : rightAdjoint G.forget = G.cofree :=
+theorem rightAdjoint_forget : CategoryTheory.Functor.rightAdjoint G.forget = G.cofree :=
   rfl
 #align category_theory.comonad.right_adjoint_forget CategoryTheory.Comonad.rightAdjoint_forget
--/
 
-#print CategoryTheory.Comonad.ofLeftAdjoint_forget /-
 @[simp]
-theorem ofLeftAdjoint_forget : Adjunction.ofLeftAdjoint G.forget = G.adj :=
+theorem ofIsLeftAdjoint_forget : Adjunction.ofIsLeftAdjoint G.forget = G.adj :=
   rfl
-#align category_theory.comonad.of_left_adjoint_forget CategoryTheory.Comonad.ofLeftAdjoint_forget
--/
+#align category_theory.comonad.of_left_adjoint_forget CategoryTheory.Comonad.ofIsLeftAdjoint_forget
 
 end Comonad
 

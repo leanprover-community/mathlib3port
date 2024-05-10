@@ -26,11 +26,9 @@ def dist (n m : ℕ) :=
 #align nat.dist Nat.dist
 -/
 
-#print Nat.dist.def /-
 theorem dist.def (n m : ℕ) : dist n m = n - m + (m - n) :=
   rfl
 #align nat.dist.def Nat.dist.def
--/
 
 #print Nat.dist_comm /-
 theorem dist_comm (n m : ℕ) : dist n m = dist m n := by simp [dist.def, add_comm]

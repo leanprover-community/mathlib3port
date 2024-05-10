@@ -6,7 +6,7 @@ Amelia Livingston, Yury Kudryashov
 -/
 import Algebra.Group.Hom.Defs
 import Algebra.Group.Units
-import GroupTheory.Subsemigroup.Basic
+import Algebra.Group.Subsemigroup.Basic
 
 #align_import group_theory.submonoid.basic from "leanprover-community/mathlib"@"feb99064803fd3108e37c18b0f77d0a8344677a3"
 

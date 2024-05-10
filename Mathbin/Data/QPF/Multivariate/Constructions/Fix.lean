@@ -236,7 +236,7 @@ instance Fix.mvfunctor : MvFunctor (Fix F) where map := @Fix.map _ _ _ _
 
 variable {α : TypeVec.{u} n}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MvQPF.Fix.rec /-
 /-- Recursor for `fix F` -/
 def Fix.rec {β : Type u} (g : F (α ::: β) → β) : Fix F α → β :=
@@ -393,8 +393,8 @@ instance mvqpfFix : MvQPF (Fix F) where
 #align mvqpf.mvqpf_fix MvQPF.mvqpfFix
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MvQPF.Fix.drec /-
 /-- Dependent recursor for `fix F` -/
 def Fix.drec {β : Fix F α → Type u}

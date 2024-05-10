@@ -221,7 +221,7 @@ instance : CommRing ((𝟙_ (ModuleCat.{u} R) : ModuleCat.{u} R) : Type u) :=
 
 namespace MonoidalCategory
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.hom_apply /-
 @[simp]
 theorem hom_apply {K L M N : ModuleCat.{u} R} (f : K ⟶ L) (g : M ⟶ N) (k : K) (m : M) :
@@ -230,7 +230,7 @@ theorem hom_apply {K L M N : ModuleCat.{u} R} (f : K ⟶ L) (g : M ⟶ N) (k : K
 #align Module.monoidal_category.hom_apply ModuleCat.MonoidalCategory.hom_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.leftUnitor_hom_apply /-
 @[simp]
 theorem leftUnitor_hom_apply {M : ModuleCat.{u} R} (r : R) (m : M) :
@@ -239,7 +239,7 @@ theorem leftUnitor_hom_apply {M : ModuleCat.{u} R} (r : R) (m : M) :
 #align Module.monoidal_category.left_unitor_hom_apply ModuleCat.MonoidalCategory.leftUnitor_hom_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.leftUnitor_inv_apply /-
 @[simp]
 theorem leftUnitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
@@ -248,7 +248,7 @@ theorem leftUnitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
 #align Module.monoidal_category.left_unitor_inv_apply ModuleCat.MonoidalCategory.leftUnitor_inv_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.rightUnitor_hom_apply /-
 @[simp]
 theorem rightUnitor_hom_apply {M : ModuleCat.{u} R} (m : M) (r : R) :
@@ -257,7 +257,7 @@ theorem rightUnitor_hom_apply {M : ModuleCat.{u} R} (m : M) (r : R) :
 #align Module.monoidal_category.right_unitor_hom_apply ModuleCat.MonoidalCategory.rightUnitor_hom_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.rightUnitor_inv_apply /-
 @[simp]
 theorem rightUnitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
@@ -266,10 +266,10 @@ theorem rightUnitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
 #align Module.monoidal_category.right_unitor_inv_apply ModuleCat.MonoidalCategory.rightUnitor_inv_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.associator_hom_apply /-
 @[simp]
 theorem associator_hom_apply {M N K : ModuleCat.{u} R} (m : M) (n : N) (k : K) :
@@ -278,10 +278,10 @@ theorem associator_hom_apply {M N K : ModuleCat.{u} R} (m : M) (n : N) (k : K) :
 #align Module.monoidal_category.associator_hom_apply ModuleCat.MonoidalCategory.associator_hom_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.MonoidalCategory.associator_inv_apply /-
 @[simp]
 theorem associator_inv_apply {M N K : ModuleCat.{u} R} (m : M) (n : N) (k : K) :

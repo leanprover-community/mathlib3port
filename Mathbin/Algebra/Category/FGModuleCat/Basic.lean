@@ -208,7 +208,7 @@ def FGModuleCatDual : FGModuleCat K :=
 
 open CategoryTheory.MonoidalCategory
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FGModuleCat.FGModuleCatCoevaluation /-
 /-- The coevaluation map is defined in `linear_algebra.coevaluation`. -/
 def FGModuleCatCoevaluation : 𝟙_ (FGModuleCat K) ⟶ V ⊗ FGModuleCatDual K V := by
@@ -225,7 +225,7 @@ theorem FGModuleCatCoevaluation_apply_one :
 #align fgModule.fgModule_coevaluation_apply_one FGModuleCat.FGModuleCatCoevaluation_apply_one
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FGModuleCat.FGModuleCatEvaluation /-
 /-- The evaluation morphism is given by the contraction map. -/
 def FGModuleCatEvaluation : FGModuleCatDual K V ⊗ V ⟶ 𝟙_ (FGModuleCat K) := by
@@ -240,16 +240,16 @@ theorem FGModuleCatEvaluation_apply (f : (FGModuleCatDual K V).obj) (x : V.obj) 
 #align fgModule.fgModule_evaluation_apply FGModuleCat.FGModuleCatEvaluation_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private theorem coevaluation_evaluation :
     let V' : FGModuleCat K := FGModuleCatDual K V
     (𝟙 V' ⊗ FGModuleCatCoevaluation K V) ≫ (α_ V' V V').inv ≫ (FGModuleCatEvaluation K V ⊗ 𝟙 V') =
       (ρ_ V').Hom ≫ (λ_ V').inv :=
   by apply contractLeft_assoc_coevaluation K V.obj
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private theorem evaluation_coevaluation :
     (FGModuleCatCoevaluation K V ⊗ 𝟙 V) ≫
         (α_ V (FGModuleCatDual K V) V).Hom ≫ (𝟙 V ⊗ FGModuleCatEvaluation K V) =

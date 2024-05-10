@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky, Jireh Loreaux
 -/
-import GroupTheory.Subsemigroup.Basic
+import Algebra.Group.Subsemigroup.Basic
 import Algebra.Group.Prod
 import Algebra.Group.TypeTags
 
@@ -761,7 +761,7 @@ theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s →
 #align add_subsemigroup.closure_closure_coe_preimage AddSubsemigroup.closure_closure_coe_preimage
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Subsemigroup.prod /-
 /-- Given `subsemigroup`s `s`, `t` of semigroups `M`, `N` respectively, `s × t` as a subsemigroup
 of `M × N`. -/
@@ -775,7 +775,7 @@ def prod (s : Subsemigroup M) (t : Subsemigroup N) : Subsemigroup (M × N)
 #align add_subsemigroup.prod AddSubsemigroup.prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Subsemigroup.coe_prod /-
 @[to_additive coe_prod]
 theorem coe_prod (s : Subsemigroup M) (t : Subsemigroup N) : (s.Prod t : Set (M × N)) = s ×ˢ t :=

@@ -61,7 +61,7 @@ theorem char_one (V : FdRep k G) : V.character 1 = FiniteDimensional.finrank k V
 #align fdRep.char_one FdRep.char_one
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FdRep.char_tensor /-
 /-- The character is multiplicative under the tensor product. -/
 @[simp]

@@ -198,7 +198,7 @@ instance : CategoryTheory.Functor.EssSurj incl :=
           inv := ULift.up ∘ F }⟩
 
 noncomputable instance : CategoryTheory.Functor.IsEquivalence incl :=
-  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _
+  Functor.asEquivalence _
 
 #print FintypeCat.Skeleton.equivalence /-
 /-- The equivalence between `Fintype.skeleton` and `Fintype`. -/

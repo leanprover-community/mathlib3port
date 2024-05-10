@@ -90,7 +90,7 @@ theorem mem_or_not_mem (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ ∈ 
 #align first_order.language.Theory.complete_type.mem_or_not_mem FirstOrder.Language.Theory.CompleteType.mem_or_not_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.CompleteType.mem_of_models /-
 theorem mem_of_models (p : T.CompleteType α) {φ : L[[α]].Sentence}
     (h : (L.lhomWithConstants α).onTheory T ⊨ φ) : φ ∈ p :=
@@ -139,7 +139,7 @@ theorem setOf_subset_eq_empty_iff (S : L[[α]].Theory) :
 #align first_order.language.Theory.complete_type.set_of_subset_eq_empty_iff FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_empty_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.CompleteType.setOf_mem_eq_univ_iff /-
 theorem setOf_mem_eq_univ_iff (φ : L[[α]].Sentence) :
     {p : T.CompleteType α | φ ∈ p} = univ ↔ (L.lhomWithConstants α).onTheory T ⊨ φ :=
@@ -149,7 +149,7 @@ theorem setOf_mem_eq_univ_iff (φ : L[[α]].Sentence) :
 #align first_order.language.Theory.complete_type.set_of_mem_eq_univ_iff FirstOrder.Language.Theory.CompleteType.setOf_mem_eq_univ_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_univ_iff /-
 theorem setOf_subset_eq_univ_iff (S : L[[α]].Theory) :
     {p : T.CompleteType α | S ⊆ ↑p} = univ ↔ ∀ φ, φ ∈ S → (L.lhomWithConstants α).onTheory T ⊨ φ :=
@@ -199,7 +199,7 @@ theorem toList_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Sentenc
 
 end CompleteType
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 variable {M : Type w'} [L.Structure M] [Nonempty M] [M ⊨ T] (T)
 
 #print FirstOrder.Language.Theory.typeOf /-

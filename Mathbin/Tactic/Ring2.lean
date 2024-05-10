@@ -455,7 +455,7 @@ theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr
     unsafe
   def
     reflect_expr
-    : expr → CsringExpr × Std.DList expr
+    : expr → CsringExpr × Batteries.DList expr
     |
         q( $ ( e₁ ) + $ ( e₂ ) )
         =>
@@ -475,15 +475,15 @@ theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr
           reflect_expr e₁ , expr.to_nat e₂
           with
           | ( r₁ , l₁ ) , some n₂ => ( r₁ . pow ( Num.ofNat' n₂ ) , l₁ )
-            | ( r₁ , l₁ ) , none => ( CsringExpr.atom 1 , Std.DList.singleton e )
+            | ( r₁ , l₁ ) , none => ( CsringExpr.atom 1 , Batteries.DList.singleton e )
       |
         e
         =>
         match
           expr.to_nat e
           with
-          | some n => ( CsringExpr.const ( Num.ofNat' n ) , Std.DList.empty )
-            | none => ( CsringExpr.atom 1 , Std.DList.singleton e )
+          | some n => ( CsringExpr.const ( Num.ofNat' n ) , Batteries.DList.empty )
+            | none => ( CsringExpr.atom 1 , Batteries.DList.singleton e )
 #align tactic.ring2.reflect_expr tactic.ring2.reflect_expr
 
 /-- In the output of `reflect_expr`, `atom`s are initialized with incorrect indices.
@@ -517,7 +517,7 @@ open Tactic.Ring2
 
 local postfix:1024 "?" => optional
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--

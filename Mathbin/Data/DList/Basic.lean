@@ -24,27 +24,28 @@ useful for append-heavy uses such as logging and pretty printing.
 -/
 
 
-#print Std.DList.join /-
+#print Batteries.DList.join /-
 /-- Concatenates a list of difference lists to form a single difference list. Similar to
 `list.join`. -/
-def Std.DList.join {α : Type _} : List (Std.DList α) → Std.DList α
-  | [] => Std.DList.empty
-  | x :: xs => x ++ Std.DList.join xs
-#align dlist.join Std.DList.join
+def Batteries.DList.join {α : Type _} : List (Batteries.DList α) → Batteries.DList α
+  | [] => Batteries.DList.empty
+  | x :: xs => x ++ Batteries.DList.join xs
+#align dlist.join Batteries.DList.join
 -/
 
-#print Std.DList_singleton /-
+#print Batteries.DList_singleton /-
 @[simp]
-theorem Std.DList_singleton {α : Type _} {a : α} :
-    Std.DList.singleton a = Std.DList.lazy_ofList [a] :=
+theorem Batteries.DList_singleton {α : Type _} {a : α} :
+    Batteries.DList.singleton a = Batteries.DList.lazy_ofList [a] :=
   rfl
-#align dlist_singleton Std.DList_singleton
+#align dlist_singleton Batteries.DList_singleton
 -/
 
-#print Std.DList_lazy /-
+#print Batteries.DList_lazy /-
 @[simp]
-theorem Std.DList_lazy {α : Type _} {l : List α} : Std.DList.lazy_ofList l = Std.DList.ofList l :=
+theorem Batteries.DList_lazy {α : Type _} {l : List α} :
+    Batteries.DList.lazy_ofList l = Batteries.DList.ofList l :=
   rfl
-#align dlist_lazy Std.DList_lazy
+#align dlist_lazy Batteries.DList_lazy
 -/
 

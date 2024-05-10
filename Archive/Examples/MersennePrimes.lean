@@ -20,28 +20,28 @@ for ideas about extending this to larger Mersenne primes.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
 example : (mersenne 13).Prime :=
   lucas_lehmer_sufficiency _ (by norm_num)
     (by
       run_tac
         lucas_lehmer.run_test)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
 example : (mersenne 17).Prime :=
   lucas_lehmer_sufficiency _ (by norm_num)
     (by
       run_tac
         lucas_lehmer.run_test)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
 example : (mersenne 19).Prime :=
   lucas_lehmer_sufficiency _ (by norm_num)
     (by
       run_tac
         lucas_lehmer.run_test)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic lucas_lehmer.run_test -/
 /-- 2147483647.prime, Euler (1772) -/
 example : (mersenne 31).Prime :=
   lucas_lehmer_sufficiency _ (by norm_num)

@@ -212,14 +212,14 @@ theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) :
 #print CategoryTheory.CartesianClosed.uncurry_curry /-
 @[simp]
 theorem uncurry_curry (f : A ⨯ X ⟶ Y) : uncurry (curry f) = f :=
-  (Closed.isAdj.adj.homEquiv _ _).left_inv f
+  (Closed.is_adj.adj.homEquiv _ _).left_inv f
 #align category_theory.cartesian_closed.uncurry_curry CategoryTheory.CartesianClosed.uncurry_curry
 -/
 
 #print CategoryTheory.CartesianClosed.curry_uncurry /-
 @[simp]
 theorem curry_uncurry (f : X ⟶ A ⟹ Y) : curry (uncurry f) = f :=
-  (Closed.isAdj.adj.homEquiv _ _).right_inv f
+  (Closed.is_adj.adj.homEquiv _ _).right_inv f
 #align category_theory.cartesian_closed.curry_uncurry CategoryTheory.CartesianClosed.curry_uncurry
 -/
 
@@ -262,13 +262,13 @@ theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coe
 
 #print CategoryTheory.CartesianClosed.curry_injective /-
 theorem curry_injective : Function.Injective (curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X)) :=
-  (Closed.isAdj.adj.homEquiv _ _).Injective
+  (Closed.is_adj.adj.homEquiv _ _).Injective
 #align category_theory.cartesian_closed.curry_injective CategoryTheory.CartesianClosed.curry_injective
 -/
 
 #print CategoryTheory.CartesianClosed.uncurry_injective /-
 theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟹ X) → (A ⨯ Y ⟶ X)) :=
-  (Closed.isAdj.adj.homEquiv _ _).symm.Injective
+  (Closed.is_adj.adj.homEquiv _ _).symm.Injective
 #align category_theory.cartesian_closed.uncurry_injective CategoryTheory.CartesianClosed.uncurry_injective
 -/
 
@@ -472,7 +472,7 @@ along the `prod_comparison` isomorphism.
 def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] : CartesianClosed D
     where closed' X :=
     {
-      isAdj := by
+      is_adj := by
         haveI q : exponentiable (e.inverse.obj X) := inferInstance
         have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj
         have : e.functor ⋙ prod.functor.obj X ⋙ e.inverse ≅ prod.functor.obj (e.inverse.obj X)

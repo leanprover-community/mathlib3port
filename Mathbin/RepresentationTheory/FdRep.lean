@@ -44,7 +44,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:342:31: unsupported: @[derive] abbrev -/
+/- ././././Mathport/Syntax/Translate/Command.lean:342:31: unsupported: @[derive] abbrev -/
 #print FdRep /-
 /-- The category of finite dimensional `k`-linear representations of a monoid `G`. -/
 abbrev FdRep (k G : Type u) [Field k] [Monoid G] :=
@@ -183,7 +183,7 @@ variable [FiniteDimensional k V]
 
 variable (ρV : Representation k G V) (W : FdRep k G)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FdRep.dualTensorIsoLinHomAux /-
 /-- Auxiliary definition for `fdRep.dual_tensor_iso_lin_hom`. -/
 noncomputable def dualTensorIsoLinHomAux :
@@ -192,7 +192,7 @@ noncomputable def dualTensorIsoLinHomAux :
 #align fdRep.dual_tensor_iso_lin_hom_aux FdRep.dualTensorIsoLinHomAux
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FdRep.dualTensorIsoLinHom /-
 /-- When `V` and `W` are finite dimensional representations of a group `G`, the isomorphism
 `dual_tensor_hom_equiv k V W` of vector spaces induces an isomorphism of representations. -/

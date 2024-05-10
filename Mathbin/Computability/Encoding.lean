@@ -108,8 +108,8 @@ theorem inclusionBoolΓ'_injective : Function.Injective inclusionBoolΓ' :=
 #align computability.inclusion_bool_Γ'_injective Computability.inclusionBoolΓ'_injective
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Computability.encodePosNum /-
 /-- An encoding function of the positive binary numbers in bool. -/
 def encodePosNum : PosNum → List Bool
@@ -134,8 +134,8 @@ def encodeNat (n : ℕ) : List Bool :=
 #align computability.encode_nat Computability.encodeNat
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Computability.decodePosNum /-
 /-- A decoding function from `list bool` to the positive binary numbers. -/
 def decodePosNum : List Bool → PosNum
@@ -233,7 +233,7 @@ def finEncodingNatΓ' : FinEncoding ℕ :=
 #align computability.fin_encoding_nat_Γ' Computability.finEncodingNatΓ'
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Computability.unaryEncodeNat /-
 /-- A unary encoding function of ℕ in bool. -/
 def unaryEncodeNat : Nat → List Bool
@@ -273,7 +273,7 @@ def encodeBool : Bool → List Bool :=
 #align computability.encode_bool Computability.encodeBool
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Computability.decodeBool /-
 /-- A decoding function from `list bool` to bool. -/
 def decodeBool : List Bool → Bool

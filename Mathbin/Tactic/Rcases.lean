@@ -324,8 +324,9 @@ pattern against its constructor. It returns the list of names that will be passe
 and the list of `(constructor name, patterns)` for each constructor, where `patterns` is the
 (conjunctive) list of patterns to apply to each constructor argument. -/
 unsafe def rcases.process_constructors (params : Nat) :
-    listΣ Name → listΣ rcases_patt → tactic (Std.DList Name × listΣ (Name × listΠ rcases_patt))
-  | [], ps => pure (Std.DList.empty, [])
+    listΣ Name →
+      listΣ rcases_patt → tactic (Batteries.DList Name × listΣ (Name × listΠ rcases_patt))
+  | [], ps => pure (Batteries.DList.empty, [])
   | c :: cs, ps => do
     let l ← mk_const c >>= get_arity_list
     let ((explicit, h), t) :=
@@ -339,7 +340,7 @@ unsafe def rcases.process_constructors (params : Nat) :
         _)
     let (ns, ps) := rcases.process_constructor explicit (l.drop params) h
     let (l, r) ← rcases.process_constructors cs t
-    pure (Std.DList.ofList ns ++ l, (c, ps) :: r)
+    pure (Batteries.DList.ofList ns ++ l, (c, ps) :: r)
 #align tactic.rcases.process_constructors tactic.rcases.process_constructors
 
 /-- Like `zip`, but only elements satisfying a matching predicate `p` will go in the list,
@@ -743,7 +744,7 @@ unsafe def rintro_hint (depth : Nat) : tactic (listΠ rcases_patt) := do
       pure p
 #align tactic.rintro_hint tactic.rintro_hint
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 mutual
   /-- * `rcases_patt_parse_hi` will parse a high precedence `rcases` pattern, `patt_hi`.
     This means only tuples and identifiers are allowed; alternations and type ascriptions
@@ -882,7 +883,7 @@ unsafe def rcases_patt_parse_list :=
   with_desc "patt_med" rcases_patt_parse_list'
 #align tactic.rcases_patt_parse_list tactic.rcases_patt_parse_list
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Parse the optional depth argument `(: n)?` of `rcases?` and `rintro?`, with default depth 5. -/
 unsafe def rcases_parse_depth : parser Nat := do
   let o ← parser.optional (tk ":" *> small_nat)
@@ -902,8 +903,8 @@ unsafe inductive rcases_args
   deriving has_reflect
 #align tactic.rcases_args tactic.rcases_args
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Syntax for a `rcases` pattern:
 * `rcases? expr (: n)?`
 * `rcases (h :)? expr (with patt_list (: expr)?)?`. -/
@@ -930,7 +931,7 @@ unsafe def rcases_parse : parser rcases_args :=
         pure <| rcases_args.hint p depth
 #align tactic.rcases_parse tactic.rcases_parse
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 mutual
   /-- `rintro_patt_parse_hi` and `rintro_patt_parse` are like `rcases_patt_parse`, but is used for
   parsing top level `rintro` patterns, which allow sequences like `(x y : t)` in addition to simple
@@ -1150,8 +1151,8 @@ add_tactic_doc
     tags := ["induction"]
     inheritDescriptionFrom := `tactic.interactive.rintro }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Parses `patt? (: expr)? (:= expr)?`, the arguments for `obtain`.
  (This is almost the same as `rcases_patt_parse`,
 but it allows the pattern part to be empty.) -/

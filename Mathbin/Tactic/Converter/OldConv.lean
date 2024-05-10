@@ -219,7 +219,7 @@ unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
   return result
 #align old_conv.funext old_conv.funext
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `f_type -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `f_type -/
 unsafe def congr_core (c_f c_a : old_conv Unit) : old_conv Unit := fun r lhs => do
   guard (r = `eq)
   let expr.app f a ← return lhs

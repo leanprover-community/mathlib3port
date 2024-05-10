@@ -573,8 +573,8 @@ theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : Integrable (uncur
 #align measure_theory.integral_integral_swap MeasureTheory.integral_integral_swap
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.setIntegral_prod /-
 /-- **Fubini's Theorem** for set integrals. -/
 theorem setIntegral_prod (f : α × β → E) {s : Set α} {t : Set β}
@@ -601,7 +601,7 @@ theorem integral_prod_mul {L : Type _} [RCLike L] (f : α → L) (g : β → L) 
 #align measure_theory.integral_prod_mul MeasureTheory.integral_prod_mul
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.setIntegral_prod_mul /-
 theorem setIntegral_prod_mul {L : Type _} [RCLike L] (f : α → L) (g : β → L) (s : Set α)
     (t : Set β) : ∫ z in s ×ˢ t, f z.1 * g z.2 ∂μ.Prod ν = (∫ x in s, f x ∂μ) * ∫ y in t, g y ∂ν :=

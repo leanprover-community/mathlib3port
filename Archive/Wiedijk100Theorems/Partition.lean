@@ -108,7 +108,7 @@ def cut {ι : Type _} (s : Finset ι) (n : ℕ) : Finset (ι → ℕ) :=
         simpa [dif_pos hi] using congr_fun h i⟩)
 #align theorems_100.cut Theorems100.cut
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem mem_cut {ι : Type _} (s : Finset ι) (n : ℕ) (f : ι → ℕ) :
     f ∈ cut s n ↔ s.Sum f = n ∧ ∀ (i) (_ : i ∉ s), f i = 0 :=
   by
@@ -203,8 +203,8 @@ theorem cut_insert {ι : Type _} (n : ℕ) (a : ι) (s : Finset ι) (h : a ∉ s
       simp [if_neg h₁, hg₂ _ h₂]
 #align theorems_100.cut_insert Theorems100.cut_insert
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.sum _ (λ i, _)]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr * »(_, _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.sum _ (λ i, _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr * »(_, _)]] -/
 theorem coeff_prod_range [CommSemiring α] {ι : Type _} (s : Finset ι) (f : ι → PowerSeries α)
     (n : ℕ) : coeff α n (∏ j in s, f j) = ∑ l in cut s n, ∏ i in s, coeff α (l i) (f i) :=
   by
@@ -216,7 +216,7 @@ theorem coeff_prod_range [CommSemiring α] {ι : Type _} (s : Finset ι) (f : ι
   intro a s hi ih n
   rw [cut_insert _ _ _ hi, prod_insert hi, coeff_mul, sum_bUnion]
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.sum _ (λ i, _)]]"
+      "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.sum _ (λ i, _)]]"
     simp only [sum_map, Pi.add_apply, Function.Embedding.coeFn_mk, prod_insert hi, if_pos rfl, ih,
       mul_sum]
     apply sum_congr rfl _
@@ -224,7 +224,7 @@ theorem coeff_prod_range [CommSemiring α] {ι : Type _} (s : Finset ι) (f : ι
     rw [mem_cut] at hx
     rw [hx.2 a hi, zero_add]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr * »(_, _)]]"
+      "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr * »(_, _)]]"
     apply prod_congr rfl
     intro k hk
     rw [if_neg, add_zero]
@@ -323,7 +323,7 @@ def mkOdd : ℕ ↪ ℕ :=
   ⟨fun i => 2 * i + 1, fun x y h => by linarith⟩
 #align theorems_100.mk_odd Theorems100.mkOdd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
 -- The main workhorse of the partition theorem proof.
 theorem partial_gf_prop (α : Type _) [CommSemiring α] (n : ℕ) (s : Finset ℕ) (hs : ∀ i ∈ s, 0 < i)
     (c : ℕ → Set ℕ) (hc : ∀ (i) (_ : i ∉ s), 0 ∈ c i) :
@@ -392,8 +392,8 @@ theorem partial_gf_prop (α : Type _) [CommSemiring α] (n : ℕ) (s : Finset �
       · rw [zero_smul, hf₂ i h]
 #align theorems_100.partial_gf_prop Theorems100.partial_gf_prop
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, _) _)]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.prod _ (λ x, indicator_series α _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, _) _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.prod _ (λ x, indicator_series α _)]] -/
 theorem partialOddGf_prop [Field α] (n m : ℕ) :
     (Finset.card
           ((univ : Finset (Nat.Partition n)).filterₓ fun p =>
@@ -405,12 +405,12 @@ theorem partialOddGf_prop [Field α] (n m : ℕ) :
   convert partial_gf_prop α n ((range m).map mk_odd) _ (fun _ => Set.univ) fun _ _ => trivial using
     2
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, _) _)]]"
+      "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, _) _)]]"
     simp only [true_and_iff, forall_const, Set.mem_univ]
   · rw [Finset.prod_map]
     simp_rw [num_series']
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.prod _ (λ x, indicator_series α _)]]"
+      "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.prod _ (λ x, indicator_series α _)]]"
     ext k
     constructor
     · rintro ⟨p, rfl⟩
@@ -424,14 +424,14 @@ theorem partialOddGf_prop [Field α] (n m : ℕ) :
     exact Nat.succ_pos _
 #align theorems_100.partial_odd_gf_prop Theorems100.partialOddGf_prop
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, (_ : exprProp())) _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, (_ : exprProp())) _)]] -/
 /-- If m is big enough, the partial product's coefficient counts the number of odd partitions -/
 theorem odd_gf_prop [Field α] (n m : ℕ) (h : n < m * 2) :
     (Finset.card (Nat.Partition.odds n) : α) = coeff α n (partialOddGf m) :=
   by
   rw [← partial_odd_gf_prop]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, (_ : exprProp())) _)]]"
+    "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, (_ : exprProp())) _)]]"
   apply forall₂_congr
   intro i hi
   have hin : i ≤ n := by
@@ -450,9 +450,9 @@ theorem odd_gf_prop [Field α] (n m : ℕ) (h : n < m * 2) :
     apply Nat.two_not_dvd_two_mul_add_one
 #align theorems_100.odd_gf_prop Theorems100.odd_gf_prop
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, «expr ∧ »(_, _)) _)]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ i : exprℕ(), (_ : exprProp())]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.prod _ (λ i, indicator_series _ _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, «expr ∧ »(_, _)) _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ i : exprℕ(), (_ : exprProp())]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.prod _ (λ i, indicator_series _ _)]] -/
 theorem partialDistinctGf_prop [CommSemiring α] (n m : ℕ) :
     (Finset.card
           ((univ : Finset (Nat.Partition n)).filterₓ fun p =>
@@ -466,21 +466,21 @@ theorem partialDistinctGf_prop [CommSemiring α] (n m : ℕ) :
       fun _ _ => Or.inl rfl using
     2
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, «expr ∧ »(_, _)) _)]]"
+      "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, «expr ∧ »(_, _)) _)]]"
     rw [Multiset.nodup_iff_count_le_one]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ i : exprℕ(), (_ : exprProp())]]"
+      "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr ∀ i : exprℕ(), (_ : exprProp())]]"
     rcases Multiset.count i p.parts with (_ | _ | ms) <;> simp
   · simp_rw [Finset.prod_map, two_series]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.prod _ (λ i, indicator_series _ _)]]"
+      "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr finset.prod _ (λ i, indicator_series _ _)]]"
     simp [Set.image_pair]
   · simp only [mem_map, Function.Embedding.coeFn_mk]
     rintro i ⟨_, _, rfl⟩
     apply Nat.succ_pos
 #align theorems_100.partial_distinct_gf_prop Theorems100.partialDistinctGf_prop
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, _) _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, _) _)]] -/
 /-- If m is big enough, the partial product's coefficient counts the number of distinct partitions
 -/
 theorem distinct_gf_prop [CommSemiring α] (n m : ℕ) (h : n < m + 1) :
@@ -488,7 +488,7 @@ theorem distinct_gf_prop [CommSemiring α] (n m : ℕ) (h : n < m + 1) :
   by
   erw [← partial_distinct_gf_prop]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, _) _)]]"
+    "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr card (filter (λ p, _) _)]]"
   apply (and_iff_left _).symm
   intro i hi
   have : i ≤ n := by

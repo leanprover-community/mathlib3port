@@ -31,7 +31,7 @@ variable (K : Type _) [Field K] [NumberField K]
 
 namespace RingOfIntegers
 
-noncomputable instance : Fintype (ClassGroup (ringOfIntegers K)) :=
+noncomputable instance : Fintype (ClassGroup (RingOfIntegers K)) :=
   ClassGroup.fintypeOfAdmissibleOfFinite ℚ K AbsoluteValue.absIsAdmissible
 
 end RingOfIntegers
@@ -39,7 +39,7 @@ end RingOfIntegers
 #print NumberField.classNumber /-
 /-- The class number of a number field is the (finite) cardinality of the class group. -/
 noncomputable def classNumber : ℕ :=
-  Fintype.card (ClassGroup (ringOfIntegers K))
+  Fintype.card (ClassGroup (RingOfIntegers K))
 #align number_field.class_number NumberField.classNumber
 -/
 
@@ -47,7 +47,7 @@ variable {K}
 
 #print NumberField.classNumber_eq_one_iff /-
 /-- The class number of a number field is `1` iff the ring of integers is a PID. -/
-theorem classNumber_eq_one_iff : classNumber K = 1 ↔ IsPrincipalIdealRing (ringOfIntegers K) :=
+theorem classNumber_eq_one_iff : classNumber K = 1 ↔ IsPrincipalIdealRing (RingOfIntegers K) :=
   card_classGroup_eq_one_iff
 #align number_field.class_number_eq_one_iff NumberField.classNumber_eq_one_iff
 -/

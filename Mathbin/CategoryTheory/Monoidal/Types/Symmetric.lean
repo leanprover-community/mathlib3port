@@ -30,8 +30,8 @@ instance typesSymmetric : SymmetricCategory.{u} (Type u) :=
 #align category_theory.types_symmetric CategoryTheory.typesSymmetric
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.braiding_hom_apply /-
 @[simp]
 theorem braiding_hom_apply {X Y : Type u} {x : X} {y : Y} :
@@ -40,8 +40,8 @@ theorem braiding_hom_apply {X Y : Type u} {x : X} {y : Y} :
 #align category_theory.braiding_hom_apply CategoryTheory.braiding_hom_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.braiding_inv_apply /-
 @[simp]
 theorem braiding_inv_apply {X Y : Type u} {x : X} {y : Y} :

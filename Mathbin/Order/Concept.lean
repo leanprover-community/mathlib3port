@@ -140,8 +140,8 @@ theorem extentClosure_iUnion (f : ι → Set β) :
 #align extent_closure_Union extentClosure_iUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print intentClosure_iUnion₂ /-
 @[simp]
 theorem intentClosure_iUnion₂ (f : ∀ i, κ i → Set α) :
@@ -150,8 +150,8 @@ theorem intentClosure_iUnion₂ (f : ∀ i, κ i → Set α) :
 #align intent_closure_Union₂ intentClosure_iUnion₂
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print extentClosure_iUnion₂ /-
 @[simp]
 theorem extentClosure_iUnion₂ (f : ∀ i, κ i → Set β) :

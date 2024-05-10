@@ -81,7 +81,7 @@ class NonPreadditiveAbelian extends HasZeroMorphisms C, NormalMonoCategory C,
 #align category_theory.non_preadditive_abelian CategoryTheory.NonPreadditiveAbelian
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option default_priority -/
 set_option default_priority 100
 
 attribute [instance] non_preadditive_abelian.has_zero_object

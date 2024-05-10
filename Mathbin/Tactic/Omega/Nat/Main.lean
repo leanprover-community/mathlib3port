@@ -28,7 +28,7 @@ attribute [sugar_nat] Ne not_le not_lt Nat.lt_iff_add_one_le Nat.succ_eq_add_one
   false_or_iff and_true_iff true_and_iff GE.ge GT.gt mul_add add_mul mul_comm one_mul mul_one
   imp_iff_not_or iff_iff_not_or_and_or_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=
   sorry
 #align omega.nat.desugar omega.nat.desugar

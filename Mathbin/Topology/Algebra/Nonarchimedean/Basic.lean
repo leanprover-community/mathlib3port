@@ -3,7 +3,7 @@ Copyright (c) 2021 Ashwin Iyengar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Ashwin Iyengar, Patrick Massot
 -/
-import GroupTheory.Subgroup.Basic
+import Algebra.Group.Subgroup.Basic
 import Topology.Algebra.OpenSubgroup
 import Topology.Algebra.Ring.Basic
 
@@ -92,7 +92,7 @@ theorem nonarchimedean_of_emb (f : G →* H) (emb : OpenEmbedding f) : Nonarchim
 #align nonarchimedean_add_group.nonarchimedean_of_emb NonarchimedeanAddGroup.nonarchimedean_of_emb
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print NonarchimedeanGroup.prod_subset /-
 /-- An open neighborhood of the identity in the cartesian product of two nonarchimedean groups
 contains the cartesian product of an open neighborhood in each group. -/
@@ -113,7 +113,7 @@ theorem prod_subset {U} (hU : U ∈ nhds (1 : G × K)) :
 #align nonarchimedean_add_group.prod_subset NonarchimedeanAddGroup.prod_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print NonarchimedeanGroup.prod_self_subset /-
 /-- An open neighborhood of the identity in the cartesian square of a nonarchimedean group
 contains the cartesian square of an open neighborhood in the group. -/

@@ -153,7 +153,7 @@ theorem hasSum_iff_hasSum {g : γ → α}
 #align has_sum_iff_has_sum hasSum_iff_hasSum
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
 #print Function.Injective.hasSum_iff /-
 theorem Function.Injective.hasSum_iff {g : γ → β} (hg : Injective g)
     (hf : ∀ (x) (_ : x ∉ Set.range g), f x = 0) : HasSum (f ∘ g) a ↔ HasSum f a := by
@@ -161,7 +161,7 @@ theorem Function.Injective.hasSum_iff {g : γ → β} (hg : Injective g)
 #align function.injective.has_sum_iff Function.Injective.hasSum_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
 #print Function.Injective.summable_iff /-
 theorem Function.Injective.summable_iff {g : γ → β} (hg : Injective g)
     (hf : ∀ (x) (_ : x ∉ Set.range g), f x = 0) : Summable (f ∘ g) ↔ Summable f :=
@@ -225,7 +225,7 @@ protected theorem Set.Finite.summable {s : Set β} (hs : s.Finite) (f : β → �
 #align set.finite.summable Set.Finite.summable
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∉ » s) -/
 #print hasSum_sum_of_ne_finset_zero /-
 /-- If a function `f` vanishes outside of a finite set `s`, then it `has_sum` `∑ b in s, f b`. -/
 theorem hasSum_sum_of_ne_finset_zero (hf : ∀ (b) (_ : b ∉ s), f b = 0) : HasSum f (∑ b in s, f b) :=
@@ -233,14 +233,14 @@ theorem hasSum_sum_of_ne_finset_zero (hf : ∀ (b) (_ : b ∉ s), f b = 0) : Has
 #align has_sum_sum_of_ne_finset_zero hasSum_sum_of_ne_finset_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∉ » s) -/
 #print summable_of_ne_finset_zero /-
 theorem summable_of_ne_finset_zero (hf : ∀ (b) (_ : b ∉ s), f b = 0) : Summable f :=
   (hasSum_sum_of_ne_finset_zero hf).Summable
 #align summable_of_ne_finset_zero summable_of_ne_finset_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b' «expr ≠ » b) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b' «expr ≠ » b) -/
 #print hasSum_single /-
 theorem hasSum_single {f : β → α} (b : β) (hf : ∀ (b') (_ : b' ≠ b), f b' = 0) : HasSum f (f b) :=
   suffices HasSum f (∑ b' in {b}, f b') by simpa using this
@@ -634,7 +634,7 @@ theorem tsum_empty [IsEmpty β] : ∑' b, f b = 0 :=
 #align tsum_empty tsum_empty
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b «expr ∉ » s) -/
 #print tsum_eq_sum /-
 theorem tsum_eq_sum {f : β → α} {s : Finset β} (hf : ∀ (b) (_ : b ∉ s), f b = 0) :
     ∑' b, f b = ∑ b in s, f b :=
@@ -642,7 +642,7 @@ theorem tsum_eq_sum {f : β → α} {s : Finset β} (hf : ∀ (b) (_ : b ∉ s),
 #align tsum_eq_sum tsum_eq_sum
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print sum_eq_tsum_indicator /-
 theorem sum_eq_tsum_indicator (f : β → α) (s : Finset β) :
     ∑ x in s, f x = ∑' x, Set.indicator (↑s) f x :=
@@ -673,16 +673,16 @@ theorem tsum_bool (f : Bool → α) : ∑' i : Bool, f i = f False + f True := b
 #align tsum_bool tsum_bool
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b' «expr ≠ » b) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b' «expr ≠ » b) -/
 #print tsum_eq_single /-
 theorem tsum_eq_single {f : β → α} (b : β) (hf : ∀ (b') (_ : b' ≠ b), f b' = 0) : ∑' b, f b = f b :=
   (hasSum_single b hf).tsum_eq
 #align tsum_eq_single tsum_eq_single
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b' c') -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b' «expr ≠ » b) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b' c') -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b' c') -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (b' «expr ≠ » b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b' c') -/
 #print tsum_tsum_eq_single /-
 theorem tsum_tsum_eq_single (f : β → γ → α) (b : β) (c : γ) (hfb : ∀ (b') (_ : b' ≠ b), f b' c = 0)
     (hfc : ∀ (b' : β) (c' : γ), c' ≠ c → f b' c' = 0) : ∑' (b') (c'), f b' c' = f b c :=
@@ -861,7 +861,7 @@ theorem tsum_eq_add_tsum_ite' {f : β → α} (b : β) (hf : Summable (f.update 
 
 variable [AddCommMonoid δ] [TopologicalSpace δ] [T3Space δ] [ContinuousAdd δ]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
 #print tsum_sigma' /-
 theorem tsum_sigma' {γ : β → Type _} {f : (Σ b : β, γ b) → δ} (h₁ : ∀ b, Summable fun c => f ⟨b, c⟩)
     (h₂ : Summable f) : ∑' p, f p = ∑' (b) (c), f ⟨b, c⟩ :=
@@ -869,7 +869,7 @@ theorem tsum_sigma' {γ : β → Type _} {f : (Σ b : β, γ b) → δ} (h₁ : 
 #align tsum_sigma' tsum_sigma'
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
 #print tsum_prod' /-
 theorem tsum_prod' {f : β × γ → δ} (h : Summable f) (h₁ : ∀ b, Summable fun c => f (b, c)) :
     ∑' p, f p = ∑' (b) (c), f (b, c) :=
@@ -877,8 +877,8 @@ theorem tsum_prod' {f : β × γ → δ} (h : Summable f) (h₁ : ∀ b, Summabl
 #align tsum_prod' tsum_prod'
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c b) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
 #print tsum_comm' /-
 theorem tsum_comm' {f : β → γ → δ} (h : Summable (Function.uncurry f)) (h₁ : ∀ b, Summable (f b))
     (h₂ : ∀ c, Summable fun b => f b c) : ∑' (c) (b), f b c = ∑' (b) (c), f b c :=
@@ -1522,7 +1522,7 @@ attribute [local instance] inferInstance
 -- disable getting a T0-space from a T3-space as this causes loops
 attribute [-instance] T3Space.to_t0Space
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
 #print tsum_sigma /-
 theorem tsum_sigma [T0Space α] {γ : β → Type _} {f : (Σ b : β, γ b) → α} (ha : Summable f) :
     ∑' p, f p = ∑' (b) (c), f ⟨b, c⟩ :=
@@ -1530,15 +1530,15 @@ theorem tsum_sigma [T0Space α] {γ : β → Type _} {f : (Σ b : β, γ b) → 
 #align tsum_sigma tsum_sigma
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
 #print tsum_prod /-
 theorem tsum_prod [T0Space α] {f : β × γ → α} (h : Summable f) : ∑' p, f p = ∑' (b) (c), f ⟨b, c⟩ :=
   tsum_prod' h h.prod_factor
 #align tsum_prod tsum_prod
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c b) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
 #print tsum_comm /-
 theorem tsum_comm [T0Space α] {f : β → γ → α} (h : Summable (Function.uncurry f)) :
     ∑' (c) (b), f b c = ∑' (b) (c), f b c :=

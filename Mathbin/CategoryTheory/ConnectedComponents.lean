@@ -168,7 +168,7 @@ instance : CategoryTheory.Functor.EssSurj (decomposedTo J)
     where mem_essImage j := ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
 
 instance : CategoryTheory.Functor.IsEquivalence (decomposedTo J) :=
-  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj _
+  Functor.asEquivalence _
 
 #print CategoryTheory.decomposedEquiv /-
 /-- This gives that any category is equivalent to a disjoint union of connected categories. -/

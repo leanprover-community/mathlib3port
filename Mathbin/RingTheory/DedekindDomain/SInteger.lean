@@ -62,8 +62,8 @@ variable {R : Type u} [CommRing R] [IsDomain R] [IsDedekindDomain R]
 /-! ## `S`-integers -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
 #print Set.integer /-
 /-- The `R`-subalgebra of `S`-integers of `K`. -/
 @[simps]
@@ -76,7 +76,7 @@ def integer : Subalgebra R K :=
 #align set.integer Set.integer
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
 #print Set.integer_eq /-
 theorem integer_eq :
     (S.integer K).toSubring =
@@ -95,8 +95,8 @@ theorem integer_valuation_le_one (x : S.integer K) {v : HeightOneSpectrum R} (hv
 /-! ## `S`-units -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
 #print Set.unit /-
 /-- The subgroup of `S`-units of `Kˣ`. -/
 @[simps]
@@ -107,7 +107,7 @@ def unit : Subgroup Kˣ :=
 #align set.unit Set.unit
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (v «expr ∉ » S) -/
 #print Set.unit_eq /-
 theorem unit_eq :
     S.Unit K = ⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.unitGroup :=

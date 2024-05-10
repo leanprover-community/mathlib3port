@@ -169,7 +169,7 @@ namespace Set
 
 open List
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.tprod /-
 /-- A product of sets in `tprod α l`. -/
 @[simp]

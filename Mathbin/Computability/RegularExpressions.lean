@@ -335,7 +335,7 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
 #align regular_expression.mul_rmatch_iff RegularExpression.mul_rmatch_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print RegularExpression.star_rmatch_iff /-
 theorem star_rmatch_iff (P : RegularExpression α) :
     ∀ x : List α, (star P).rmatch x ↔ ∃ S : List (List α), x = S.join ∧ ∀ t ∈ S, t ≠ [] ∧ P.rmatch t

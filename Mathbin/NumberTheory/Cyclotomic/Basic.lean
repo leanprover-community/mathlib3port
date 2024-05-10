@@ -602,7 +602,7 @@ end IsCyclotomicExtension
 
 section CyclotomicField
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] K -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] K -/
 #print CyclotomicField /-
 /-- Given `n : ℕ+` and a field `K`, we define `cyclotomic_field n K` as the
 splitting field of `cyclotomic n K`. If `n` is nonzero in `K`, it has
@@ -610,7 +610,7 @@ the instance `is_cyclotomic_extension {n} K (cyclotomic_field n K)`. -/
 def CyclotomicField : Type w :=
   (cyclotomic n K).SplittingField
 deriving Field,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] K»,
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] K»,
   Inhabited
 #align cyclotomic_field CyclotomicField
 -/

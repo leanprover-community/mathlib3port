@@ -352,7 +352,7 @@ theorem countable_leftLim_ne (f : StieltjesFunction) : Set.Countable {x | leftLi
 /-! ### The outer measure associated to a Stieltjes function -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print StieltjesFunction.length /-
 /-- Length of an interval. This is the largest monotone function which correctly measures all
 intervals. -/

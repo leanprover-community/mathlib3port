@@ -98,11 +98,11 @@ theorem sqrtTwoAddSeries_step_up (c d : ℕ) {a b n : ℕ} {z : ℝ} (hz : sqrtT
 #align real.sqrt_two_add_series_step_up Real.sqrtTwoAddSeries_step_up
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- Create a proof of `a < π` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
 `sqrt (2 + r i) ≤ r(i+1)`, where `r 0 = 0` and `sqrt (2 - r n) ≥ a/2^(n+1)`. -/
@@ -148,12 +148,12 @@ theorem sqrtTwoAddSeries_step_down (a b : ℕ) {c d n : ℕ} {z : ℝ}
 #align real.sqrt_two_add_series_step_down Real.sqrtTwoAddSeries_step_down
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- Create a proof of `π < a` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
 `sqrt (2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `sqrt (2 - r n) ≥ (a - 1/4^n) / 2^(n+1)`. -/
@@ -169,7 +169,7 @@ unsafe def pi_upper_bound (l : List ℚ) : tactic Unit := do
   sorry
 #align real.pi_upper_bound real.pi_upper_bound
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_lower_bound -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_lower_bound -/
 #print Real.pi_gt_three /-
 theorem pi_gt_three : 3 < π := by
   run_tac
@@ -177,7 +177,7 @@ theorem pi_gt_three : 3 < π := by
 #align real.pi_gt_three Real.pi_gt_three
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_lower_bound -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_lower_bound -/
 #print Real.pi_gt_314 /-
 theorem pi_gt_314 : 3.14 < π := by
   run_tac
@@ -185,7 +185,7 @@ theorem pi_gt_314 : 3.14 < π := by
 #align real.pi_gt_314 Real.pi_gt_314
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_upper_bound -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_upper_bound -/
 #print Real.pi_lt_315 /-
 theorem pi_lt_315 : π < 3.15 := by
   run_tac
@@ -193,7 +193,7 @@ theorem pi_lt_315 : π < 3.15 := by
 #align real.pi_lt_315 Real.pi_lt_315
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_lower_bound -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_lower_bound -/
 #print Real.pi_gt_31415 /-
 theorem pi_gt_31415 : 3.1415 < π := by
   run_tac
@@ -202,7 +202,7 @@ theorem pi_gt_31415 : 3.1415 < π := by
 #align real.pi_gt_31415 Real.pi_gt_31415
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_upper_bound -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_upper_bound -/
 #print Real.pi_lt_31416 /-
 theorem pi_lt_31416 : π < 3.1416 := by
   run_tac
@@ -212,7 +212,7 @@ theorem pi_lt_31416 : π < 3.1416 := by
 #align real.pi_lt_31416 Real.pi_lt_31416
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_lower_bound -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_lower_bound -/
 #print Real.pi_gt_3141592 /-
 theorem pi_gt_3141592 : 3.141592 < π := by
   run_tac
@@ -222,7 +222,7 @@ theorem pi_gt_3141592 : 3.141592 < π := by
 #align real.pi_gt_3141592 Real.pi_gt_3141592
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_upper_bound -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic real.pi_upper_bound -/
 #print Real.pi_lt_3141593 /-
 theorem pi_lt_3141593 : π < 3.141593 := by
   run_tac

@@ -838,8 +838,8 @@ def finTwoArrow : (Fin 2 → α) ≃ₜ α × α :=
 #align homeomorph.fin_two_arrow Homeomorph.finTwoArrow
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:303:22: continuitity! not supported at the moment -/
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:303:22: continuitity! not supported at the moment -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:303:22: continuitity! not supported at the moment -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:303:22: continuitity! not supported at the moment -/
 #print Homeomorph.image /-
 /-- A subset of a topological space is homeomorphic to its image under a homeomorphism.
 -/
@@ -863,7 +863,7 @@ def Set.univ (α : Type _) [TopologicalSpace α] : (univ : Set α) ≃ₜ α
 #align homeomorph.set.univ Homeomorph.Set.univ
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Homeomorph.Set.prod /-
 /-- `s ×ˢ t` is homeomorphic to `s × t`. -/
 @[simps]

@@ -306,7 +306,7 @@ theorem Closeds.isAtom_iff [T1Space α] {s : Closeds α} : IsAtom s ↔ ∃ x, s
 #align topological_space.closeds.is_atom_iff TopologicalSpace.Closeds.isAtom_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]] -/
 #print TopologicalSpace.Opens.isCoatom_iff /-
 /-- in a `t1_space`, coatoms of `opens α` are precisely complements of singletons:
 `(closeds.singleton x).compl`. -/
@@ -317,7 +317,7 @@ theorem Opens.isCoatom_iff [T1Space α] {s : Opens α} :
   change IsAtom (closeds.compl_order_iso α s.compl) ↔ _
   rw [(closeds.compl_order_iso α).isAtom_iff_le_of_ge, closeds.is_atom_iff]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
+    "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
   exact closeds.compl_bijective.injective.eq_iff.symm
 #align topological_space.opens.is_coatom_iff TopologicalSpace.Opens.isCoatom_iff
 -/

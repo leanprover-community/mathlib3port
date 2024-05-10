@@ -223,11 +223,11 @@ theorem testBit_bit_succ (m b) : ∀ n, testBit (bit b n) (Nat.succ m) = testBit
 #align int.test_bit_succ Int.testBit_bit_succ
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def bitwise_tac : tactic Unit :=
   sorry
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 #print Int.bitwise_or /-
 theorem bitwise_or : bitwise or = lor := by
   run_tac
@@ -235,7 +235,7 @@ theorem bitwise_or : bitwise or = lor := by
 #align int.bitwise_or Int.bitwise_or
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 #print Int.bitwise_and /-
 theorem bitwise_and : bitwise and = land := by
   run_tac
@@ -243,7 +243,7 @@ theorem bitwise_and : bitwise and = land := by
 #align int.bitwise_and Int.bitwise_and
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 #print Int.bitwise_diff /-
 theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
   run_tac
@@ -251,7 +251,7 @@ theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
 #align int.bitwise_diff Int.bitwise_diff
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 #print Int.bitwise_xor /-
 theorem bitwise_xor : bitwise xor = xor := by
   run_tac
@@ -259,7 +259,7 @@ theorem bitwise_xor : bitwise xor = xor := by
 #align int.bitwise_xor Int.bitwise_xor
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:508:27: warning: unsupported: unfold config -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:508:27: warning: unsupported: unfold config -/
 #print Int.bitwise_bit /-
 @[simp]
 theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :

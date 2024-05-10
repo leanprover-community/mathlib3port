@@ -99,7 +99,7 @@ theorem increment_isEquipartition (hP : P.IsEquipartition) (G : SimpleGraph α) 
 #align szemeredi_regularity.increment_is_equipartition SzemerediRegularity.increment_isEquipartition
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private theorem distinct_pairs_increment :
     (P.parts.offDiag.attach.biUnion fun UV =>
         (chunk hP G ε (mem_offDiag.1 UV.2).1).parts ×ˢ
@@ -118,7 +118,7 @@ private theorem distinct_pairs_increment :
       (P.disjoint.elim_finset hUV.1 hUV.2.1 i (Finpartition.le _ hUi hi) <|
         Finpartition.le _ hVj hi)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The contribution to `finpartition.energy` of a pair of distinct parts of a finpartition. -/
 private noncomputable def pair_contrib (G : SimpleGraph α) (ε : ℝ) (hP : P.IsEquipartition)
     (x : { x // x ∈ P.parts.offDiag }) : ℚ :=

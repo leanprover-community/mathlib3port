@@ -23,8 +23,8 @@ unsafe def delta_instance (ids : List Name) : tactic Unit :=
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- `delta_instance id₁ id₂ ...` tries to solve the goal by calling `apply_instance`,
 first unfolding the definitions in `idᵢ`.
 -/

@@ -53,7 +53,7 @@ def monoidalClosedHomEquiv (M N P : ModuleCat.{u} R) :
 instance : MonoidalClosed (ModuleCat.{u} R)
     where closed' M :=
     {
-      isAdj :=
+      is_adj :=
         { right := (linearCoyoneda R (ModuleCat.{u} R)).obj (op M)
           adj := Adjunction.mkOfHomEquiv { homEquiv := fun N P => monoidalClosedHomEquiv M N P } } }
 
@@ -64,7 +64,7 @@ theorem ihom_map_apply {M N P : ModuleCat.{u} R} (f : N ⟶ P) (g : ModuleCat.of
 #align Module.ihom_map_apply ModuleCat.ihom_map_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ModuleCat.monoidalClosed_curry /-
 -- I can't seem to express the function coercion here without writing `@coe_fn`.
 @[simp]

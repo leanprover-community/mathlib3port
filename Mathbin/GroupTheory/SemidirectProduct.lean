@@ -5,7 +5,7 @@ Authors: Chris Hughes
 -/
 import Algebra.Group.Aut
 import Logic.Function.Basic
-import GroupTheory.Subgroup.Basic
+import Algebra.Group.Subgroup.Basic
 
 #align_import group_theory.semidirect_product from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

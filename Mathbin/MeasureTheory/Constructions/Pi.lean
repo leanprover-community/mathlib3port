@@ -269,7 +269,7 @@ theorem tprod_nil (μ : ∀ i, Measure (π i)) : Measure.tprod [] μ = dirac PUn
 #align measure_theory.measure.tprod_nil MeasureTheory.Measure.tprod_nil
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.Measure.tprod_cons /-
 @[simp]
 theorem tprod_cons (i : δ) (l : List δ) (μ : ∀ i, Measure (π i)) :
@@ -826,7 +826,7 @@ measures of corresponding sets (images or preimages) have equal measures and fun
 
 section MeasurePreserving
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.measurePreserving_piEquivPiSubtypeProd /-
 theorem measurePreserving_piEquivPiSubtypeProd {ι : Type u} {α : ι → Type v} [Fintype ι]
     {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)]

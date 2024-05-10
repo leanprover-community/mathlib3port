@@ -5,7 +5,7 @@ Authors: Patrick Massot
 -/
 import Topology.Algebra.UniformRing
 import Topology.Algebra.Field
-import FieldTheory.Subfield
+import Algebra.Field.Subfield
 
 #align_import topology.algebra.uniform_field from "leanprover-community/mathlib"@"19cb3751e5e9b3d97adb51023949c50c13b5fdfd"
 

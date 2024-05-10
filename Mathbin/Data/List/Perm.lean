@@ -343,7 +343,7 @@ theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
 #align list.filter_append_perm List.filter_append_perm
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (l₁' list.perm l₁) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (l₁' list.perm l₁) -/
 #print List.exists_perm_sublist /-
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _) (_ : l₁' ~ l₁), l₁' <+ l₂' :=
@@ -458,7 +458,7 @@ end Rel
 
 section Subperm
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (l list.perm l₁) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (l list.perm l₁) -/
 #print List.Subperm /-
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
@@ -1519,7 +1519,7 @@ theorem length_permutations (l : List α) : length (permutations l) = (length l)
 #align list.length_permutations List.length_permutations
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (ts' list.perm «expr[ ,]»([])) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (ts' list.perm «expr[ ,]»([])) -/
 #print List.mem_permutations_of_perm_lemma /-
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _) (_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
@@ -1527,7 +1527,7 @@ theorem mem_permutations_of_perm_lemma {is l : List α}
 #align list.mem_permutations_of_perm_lemma List.mem_permutations_of_perm_lemma
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (is' list.perm is) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (is' list.perm is) -/
 #print List.mem_permutationsAux_of_perm /-
 theorem mem_permutationsAux_of_perm :
     ∀ {ts is l : List α},
@@ -1641,9 +1641,8 @@ theorem perm_permutations'_iff {s t : List α} : permutations' s ~ permutations'
 #align list.perm_permutations'_iff List.perm_permutations'_iff
 -/
 
-#print List.nthLe_permutations'Aux /-
-theorem nthLe_permutations'Aux (s : List α) (x : α) (n : ℕ)
-    (hn : n < length (permutations'Aux x s)) :
+#print List.get_permutations'Aux /-
+theorem get_permutations'Aux (s : List α) (x : α) (n : ℕ) (hn : n < length (permutations'Aux x s)) :
     (permutations'Aux x s).nthLe n hn = s.insertNth n x :=
   by
   induction' s with y s IH generalizing n
@@ -1652,7 +1651,7 @@ theorem nthLe_permutations'Aux (s : List α) (x : α) (n : ℕ)
   · cases n
     · simp
     · simpa using IH _ _
-#align list.nth_le_permutations'_aux List.nthLe_permutations'Aux
+#align list.nth_le_permutations'_aux List.get_permutations'Aux
 -/
 
 #print List.count_permutations'Aux_self /-
@@ -1685,13 +1684,13 @@ theorem length_permutations'Aux (s : List α) (x : α) :
 #align list.length_permutations'_aux List.length_permutations'Aux
 -/
 
-#print List.permutations'Aux_nthLe_zero /-
+#print List.permutations'Aux_get_zero /-
 @[simp]
-theorem permutations'Aux_nthLe_zero (s : List α) (x : α)
+theorem permutations'Aux_get_zero (s : List α) (x : α)
     (hn : 0 < length (permutations'Aux x s) := (by simp)) :
     (permutations'Aux x s).nthLe 0 hn = x :: s :=
-  nthLe_permutations'Aux _ _ _ _
-#align list.permutations'_aux_nth_le_zero List.permutations'Aux_nthLe_zero
+  get_permutations'Aux _ _ _ _
+#align list.permutations'_aux_nth_le_zero List.permutations'Aux_get_zero
 -/
 
 #print List.injective_permutations'Aux /-

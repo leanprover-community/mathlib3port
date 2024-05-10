@@ -169,13 +169,15 @@ theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Init
 -/
 
 #print CategoryTheory.Functor.final_of_isRightAdjoint /-
-instance (priority := 100) final_of_isRightAdjoint (F : C ⥤ D) [h : IsRightAdjoint F] : Final F :=
+instance (priority := 100) final_of_isRightAdjoint (F : C ⥤ D)
+    [h : CategoryTheory.Functor.IsRightAdjoint F] : Final F :=
   final_of_adjunction h.adj
 #align category_theory.functor.final_of_is_right_adjoint CategoryTheory.Functor.final_of_isRightAdjoint
 -/
 
 #print CategoryTheory.Functor.initial_of_isLeftAdjoint /-
-instance (priority := 100) initial_of_isLeftAdjoint (F : C ⥤ D) [h : IsLeftAdjoint F] : Initial F :=
+instance (priority := 100) initial_of_isLeftAdjoint (F : C ⥤ D)
+    [h : CategoryTheory.Functor.IsLeftAdjoint F] : Initial F :=
   initial_of_adjunction h.adj
 #align category_theory.functor.initial_of_is_left_adjoint CategoryTheory.Functor.initial_of_isLeftAdjoint
 -/

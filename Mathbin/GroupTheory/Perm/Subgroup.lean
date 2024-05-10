@@ -5,7 +5,7 @@ Authors: Eric Wieser
 -/
 import GroupTheory.Perm.Basic
 import Data.Fintype.Perm
-import GroupTheory.Subgroup.Finite
+import Algebra.Group.Subgroup.Finite
 
 #align_import group_theory.perm.subgroup from "leanprover-community/mathlib"@"50832daea47b195a48b5b33b1c8b2162c48c3afc"
 

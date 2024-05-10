@@ -1612,7 +1612,7 @@ def reverseRecOn {C : List α → Sort _} (l : List α) (H0 : C [])
 #align list.reverse_rec_on List.reverseRecOn
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 /-- Bidirectional induction principle for lists: if a property holds for the empty list, the
 singleton list, and `a :: (l ++ [b])` from `l`, then it holds for all lists. This can be used to
 prove statements about palindromes. The principle is given for a `Sort`-valued predicate, i.e., it
@@ -2086,8 +2086,8 @@ theorem get?_zero (l : List α) : l.get? 0 = l.head? := by cases l <;> rfl
 #align list.nth_zero List.get?_zero
 -/
 
-#print List.get?_injective /-
-theorem get?_injective {α : Type u} {xs : List α} {i j : ℕ} (h₀ : i < xs.length) (h₁ : Nodup xs)
+#print List.get?_inj /-
+theorem get?_inj {α : Type u} {xs : List α} {i j : ℕ} (h₀ : i < xs.length) (h₁ : Nodup xs)
     (h₂ : xs.get? i = xs.get? j) : i = j :=
   by
   induction' xs with x xs generalizing i j
@@ -2105,7 +2105,7 @@ theorem get?_injective {α : Type u} {xs : List α} {i j : ℕ} (h₀ : i < xs.l
       first
       | exact ⟨_, h₂.symm⟩
       | exact ⟨_, h₂⟩
-#align list.nth_injective List.get?_injective
+#align list.nth_injective List.get?_inj
 -/
 
 #print List.get?_map /-
@@ -2139,28 +2139,28 @@ theorem nthLe_map' (f : α → β) {l n} (H) :
 #align list.nth_le_map' List.nthLe_map'
 -/
 
-#print List.nthLe_of_eq /-
+#print List.get_of_eq /-
 /-- If one has `nth_le L i hi` in a formula and `h : L = L'`, one can not `rw h` in the formula as
 `hi` gives `i < L.length` and not `i < L'.length`. The lemma `nth_le_of_eq` can be used to make
 such a rewrite, with `rw (nth_le_of_eq h)`. -/
-theorem nthLe_of_eq {L L' : List α} (h : L = L') {i : ℕ} (hi : i < L.length) :
+theorem get_of_eq {L L' : List α} (h : L = L') {i : ℕ} (hi : i < L.length) :
     nthLe L i hi = nthLe L' i (h ▸ hi) := by congr; exact h
-#align list.nth_le_of_eq List.nthLe_of_eq
+#align list.nth_le_of_eq List.get_of_eq
 -/
 
-#print List.nthLe_singleton /-
+#print List.get_singleton /-
 @[simp]
-theorem nthLe_singleton (a : α) {n : ℕ} (hn : n < 1) : nthLe [a] n hn = a :=
+theorem get_singleton (a : α) {n : ℕ} (hn : n < 1) : nthLe [a] n hn = a :=
   by
   have hn0 : n = 0 := Nat.eq_zero_of_le_zero (le_of_lt_succ hn)
   subst hn0 <;> rfl
-#align list.nth_le_singleton List.nthLe_singleton
+#align list.nth_le_singleton List.get_singleton
 -/
 
-#print List.nthLe_zero /-
-theorem nthLe_zero [Inhabited α] {L : List α} (h : 0 < L.length) : L.nthLe 0 h = L.headI := by
+#print List.get_mk_zero /-
+theorem get_mk_zero [Inhabited α] {L : List α} (h : 0 < L.length) : L.nthLe 0 h = L.headI := by
   cases L; cases h; simp
-#align list.nth_le_zero List.nthLe_zero
+#align list.nth_le_zero List.get_mk_zero
 -/
 
 #print List.get_append /-
@@ -2301,13 +2301,13 @@ theorem ext_nthLe {l₁ l₂ : List α} (hl : length l₁ = length l₂)
 #align list.ext_le List.ext_nthLe
 -/
 
-#print List.indexOf_nthLe /-
+#print List.indexOf_get /-
 @[simp]
-theorem indexOf_nthLe [DecidableEq α] {a : α} : ∀ {l : List α} (h), nthLe l (indexOf a l) h = a
+theorem indexOf_get [DecidableEq α] {a : α} : ∀ {l : List α} (h), nthLe l (indexOf a l) h = a
   | b :: l, h => by
     by_cases h' : a = b <;>
       simp only [h', if_pos, if_false, index_of_cons, nth_le, @index_of_nth_le l]
-#align list.index_of_nth_le List.indexOf_nthLe
+#align list.index_of_nth_le List.indexOf_get
 -/
 
 #print List.indexOf_get? /-
@@ -2439,12 +2439,12 @@ theorem modifyNthTail_id : ∀ (n) (l : List α), l.modifyNthTail id n = l
 #align list.modify_nth_tail_id List.modifyNthTail_id
 -/
 
-#print List.removeNth_eq_nthTail /-
-theorem removeNth_eq_nthTail : ∀ (n) (l : List α), removeNth l n = modifyNthTail tail n l
+#print List.eraseIdx_eq_modifyNthTail /-
+theorem eraseIdx_eq_modifyNthTail : ∀ (n) (l : List α), eraseIdx l n = modifyNthTail tail n l
   | 0, l => by cases l <;> rfl
   | n + 1, [] => rfl
   | n + 1, a :: l => congr_arg (cons _) (remove_nth_eq_nth_tail _ _)
-#align list.remove_nth_eq_nth_tail List.removeNth_eq_nthTail
+#align list.remove_nth_eq_nth_tail List.eraseIdx_eq_modifyNthTail
 -/
 
 #print List.set_eq_modifyNth /-
@@ -2623,35 +2623,35 @@ theorem length_insertNth : ∀ n as, n ≤ length as → length (insertNth n a a
 #align list.length_insert_nth List.length_insertNth
 -/
 
-#print List.removeNth_insertNth /-
-theorem removeNth_insertNth (n : ℕ) (l : List α) : (l.insertNth n a).removeNth n = l := by
+#print List.eraseIdx_insertNth /-
+theorem eraseIdx_insertNth (n : ℕ) (l : List α) : (l.insertNth n a).eraseIdx n = l := by
   rw [remove_nth_eq_nth_tail, insert_nth, modify_nth_tail_modify_nth_tail_same] <;>
     exact modify_nth_tail_id _ _
-#align list.remove_nth_insert_nth List.removeNth_insertNth
+#align list.remove_nth_insert_nth List.eraseIdx_insertNth
 -/
 
-#print List.insertNth_removeNth_of_ge /-
-theorem insertNth_removeNth_of_ge :
+#print List.insertNth_eraseIdx_of_ge /-
+theorem insertNth_eraseIdx_of_ge :
     ∀ n m as,
-      n < length as → n ≤ m → insertNth m a (as.removeNth n) = (as.insertNth (m + 1) a).removeNth n
+      n < length as → n ≤ m → insertNth m a (as.eraseIdx n) = (as.insertNth (m + 1) a).eraseIdx n
   | 0, 0, [], has, _ => (lt_irrefl _ has).elim
   | 0, 0, a :: as, has, hmn => by simp [remove_nth, insert_nth]
   | 0, m + 1, a :: as, has, hmn => rfl
   | n + 1, m + 1, a :: as, has, hmn =>
     congr_arg (cons a) <|
       insert_nth_remove_nth_of_ge n m as (Nat.lt_of_succ_lt_succ has) (Nat.le_of_succ_le_succ hmn)
-#align list.insert_nth_remove_nth_of_ge List.insertNth_removeNth_of_ge
+#align list.insert_nth_remove_nth_of_ge List.insertNth_eraseIdx_of_ge
 -/
 
-#print List.insertNth_removeNth_of_le /-
-theorem insertNth_removeNth_of_le :
+#print List.insertNth_eraseIdx_of_le /-
+theorem insertNth_eraseIdx_of_le :
     ∀ n m as,
-      n < length as → m ≤ n → insertNth m a (as.removeNth n) = (as.insertNth m a).removeNth (n + 1)
+      n < length as → m ≤ n → insertNth m a (as.eraseIdx n) = (as.insertNth m a).eraseIdx (n + 1)
   | n, 0, a :: as, has, hmn => rfl
   | n + 1, m + 1, a :: as, has, hmn =>
     congr_arg (cons a) <|
       insert_nth_remove_nth_of_le n m as (Nat.lt_of_succ_lt_succ has) (Nat.le_of_succ_le_succ hmn)
-#align list.insert_nth_remove_nth_of_le List.insertNth_removeNth_of_le
+#align list.insert_nth_remove_nth_of_le List.insertNth_eraseIdx_of_le
 -/
 
 #print List.insertNth_comm /-
@@ -4529,15 +4529,15 @@ theorem find?_some (H : find? p l = some a) : p a :=
 #align list.find_some List.find?_some
 -/
 
-#print List.find?_mem /-
+#print List.mem_of_find?_eq_some /-
 @[simp]
-theorem find?_mem (H : find? p l = some a) : a ∈ l :=
+theorem mem_of_find?_eq_some (H : find? p l = some a) : a ∈ l :=
   by
   induction' l with b l IH; · contradiction
   by_cases h : p b
   · rw [find_cons_of_pos _ h] at H; cases H; apply mem_cons_self
   · rw [find_cons_of_neg _ h] at H; exact mem_cons_of_mem _ (IH H)
-#align list.find_mem List.find?_mem
+#align list.find_mem List.mem_of_find?_eq_some
 -/
 
 end Find
@@ -6309,12 +6309,10 @@ theorem getLast_reverse {l : List α} (hl : l.reverse ≠ [])
 #align list.last_reverse List.getLast_reverse
 -/
 
-#print List.ilast'_mem /-
 theorem ilast'_mem : ∀ a l, @ilast' α a l ∈ a :: l
   | a, [] => Or.inl rfl
   | a, b :: l => Or.inr (ilast'_mem b l)
 #align list.ilast'_mem List.ilast'_mem
--/
 
 #print List.get_attach /-
 @[simp]

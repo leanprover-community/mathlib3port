@@ -312,7 +312,7 @@ variable {α : ι → Type _} {δ : ∀ i, α i → Type w}
 
 variable [∀ i j, AddCommMonoid (δ i j)] [∀ i j, Module R (δ i j)]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DirectSum.sigmaLcurry /-
 /-- `curry` as a linear map.-/
 noncomputable def sigmaLcurry : (⨁ i : Σ i, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
@@ -328,7 +328,7 @@ theorem sigmaLcurry_apply (f : ⨁ i : Σ i, _, δ i.1 i.2) (i : ι) (j : α i) 
 #align direct_sum.sigma_lcurry_apply DirectSum.sigmaLcurry_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DirectSum.sigmaLuncurry /-
 /-- `uncurry` as a linear map.-/
 def sigmaLuncurry [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
@@ -337,7 +337,7 @@ def sigmaLuncurry [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
 #align direct_sum.sigma_luncurry DirectSum.sigmaLuncurry
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DirectSum.sigmaLuncurry_apply /-
 @[simp]
 theorem sigmaLuncurry_apply [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)]
@@ -346,7 +346,7 @@ theorem sigmaLuncurry_apply [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (�
 #align direct_sum.sigma_luncurry_apply DirectSum.sigmaLuncurry_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DirectSum.sigmaLcurryEquiv /-
 /-- `curry_equiv` as a linear equiv.-/
 noncomputable def sigmaLcurryEquiv [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :

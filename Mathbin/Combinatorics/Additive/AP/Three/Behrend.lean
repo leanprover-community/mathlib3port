@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
 import Analysis.InnerProductSpace.PiL2
-import Combinatorics.Additive.SalemSpencer
+import Combinatorics.Additive.AP.Three.Defs
 import Combinatorics.Pigeonhole
 import Data.Complex.ExponentialBounds
 
@@ -215,36 +215,35 @@ theorem map_le_of_mem_box (hx : x ∈ box n d) :
 #align behrend.map_le_of_mem_box Behrend.map_le_of_mem_box
 -/
 
-#print Behrend.addSalemSpencer_sphere /-
-theorem addSalemSpencer_sphere : AddSalemSpencer (sphere n d k : Set (Fin n → ℕ)) :=
+#print Behrend.threeAPFree_sphere /-
+theorem threeAPFree_sphere : ThreeAPFree (sphere n d k : Set (Fin n → ℕ)) :=
   by
   set f : (Fin n → ℕ) →+ EuclideanSpace ℝ (Fin n) :=
     { toFun := fun f => (coe : ℕ → ℝ) ∘ f
       map_zero' := funext fun _ => cast_zero
       map_add' := fun _ _ => funext fun _ => cast_add _ _ }
-  refine' AddSalemSpencer.of_image (f.to_add_freiman_hom (sphere n d k) 2) _ _
+  refine' ThreeAPFree.of_image (f.to_add_freiman_hom (sphere n d k) 2) _ _
   · exact cast_injective.comp_left.inj_on _
-  refine' (addSalemSpencer_sphere 0 <| sqrt k).mono (Set.image_subset_iff.2 fun x => _)
+  refine' (threeAPFree_sphere 0 <| sqrt k).mono (Set.image_subset_iff.2 fun x => _)
   rw [Set.mem_preimage, mem_sphere_zero_iff_norm]
   exact norm_of_mem_sphere
-#align behrend.add_salem_spencer_sphere Behrend.addSalemSpencer_sphere
+#align behrend.add_salem_spencer_sphere Behrend.threeAPFree_sphere
 -/
 
-#print Behrend.addSalemSpencer_image_sphere /-
-theorem addSalemSpencer_image_sphere :
-    AddSalemSpencer ((sphere n d k).image (map (2 * d - 1)) : Set ℕ) :=
+#print Behrend.threeAPFree_image_sphere /-
+theorem threeAPFree_image_sphere : ThreeAPFree ((sphere n d k).image (map (2 * d - 1)) : Set ℕ) :=
   by
   rw [coe_image]
   refine'
-    @AddSalemSpencer.image _ (Fin n → ℕ) ℕ _ _ (sphere n d k) _ (map (2 * d - 1))
-      (map_inj_on.mono _) addSalemSpencer_sphere
+    @ThreeAPFree.image _ (Fin n → ℕ) ℕ _ _ (sphere n d k) _ (map (2 * d - 1)) (map_inj_on.mono _)
+      threeAPFree_sphere
   rw [Set.add_subset_iff]
   rintro a ha b hb i
   have hai := mem_box.1 (sphere_subset_box ha) i
   have hbi := mem_box.1 (sphere_subset_box hb) i
   rw [lt_tsub_iff_right, ← succ_le_iff, two_mul]
   exact (add_add_add_comm _ _ 1 1).trans_le (add_le_add hai hbi)
-#align behrend.add_salem_spencer_image_sphere Behrend.addSalemSpencer_image_sphere
+#align behrend.add_salem_spencer_image_sphere Behrend.threeAPFree_image_sphere
 -/
 
 #print Behrend.sum_sq_le_of_mem_box /-

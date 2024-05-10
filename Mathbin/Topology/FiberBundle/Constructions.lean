@@ -179,7 +179,7 @@ def Prod.toFun' : TotalSpace (F₁ × F₂) (E₁ ×ᵇ E₂) → B × F₁ × F
 
 variable {e₁ e₂}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.Prod.continuous_to_fun /-
 theorem Prod.continuous_to_fun :
     ContinuousOn (Prod.toFun' e₁ e₂) (π (F₁ × F₂) (E₁ ×ᵇ E₂) ⁻¹' (e₁.baseSet ∩ e₂.baseSet)) :=
@@ -229,7 +229,7 @@ theorem Prod.left_inv {x : TotalSpace (F₁ × F₂) (E₁ ×ᵇ E₂)}
 #align trivialization.prod.left_inv Trivialization.Prod.left_inv
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.Prod.right_inv /-
 theorem Prod.right_inv {x : B × F₁ × F₂}
     (h : x ∈ (e₁.baseSet ∩ e₂.baseSet) ×ˢ (univ : Set (F₁ × F₂))) :
@@ -241,7 +241,7 @@ theorem Prod.right_inv {x : B × F₁ × F₂}
 #align trivialization.prod.right_inv Trivialization.Prod.right_inv
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.Prod.continuous_inv_fun /-
 theorem Prod.continuous_inv_fun :
     ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.baseSet ∩ e₂.baseSet) ×ˢ univ) :=
@@ -256,7 +256,7 @@ theorem Prod.continuous_inv_fun :
 
 variable (e₁ e₂)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.prod /-
 /-- Given trivializations `e₁`, `e₂` for bundle types `E₁`, `E₂` over a base `B`, the induced
 trivialization for the fiberwise product of `E₁` and `E₂`, whose base set is
@@ -408,7 +408,7 @@ theorem Pullback.continuous_totalSpaceMk [∀ x, TopologicalSpace (E x)] [FiberB
 
 variable {E F} [∀ b, Zero (E b)] {K : Type _} [ContinuousMapClass K B' B]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.pullback /-
 /-- A fiber bundle trivialization can be pulled back to a trivialization on the pullback bundle. -/
 noncomputable def Trivialization.pullback (e : Trivialization F (π F E)) (f : K) :

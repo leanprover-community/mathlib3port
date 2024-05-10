@@ -79,7 +79,7 @@ protected def Theory.simpleGraph : Language.graph.Theory :=
 #align first_order.language.Theory.simple_graph FirstOrder.Language.Theory.simpleGraph
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.simpleGraph_model_iff /-
 @[simp]
 theorem Theory.simpleGraph_model_iff [Language.graph.Structure V] :
@@ -100,7 +100,7 @@ instance simpleGraph_model (G : SimpleGraph V) : @Theory.Model _ V G.Structure T
 
 variable (V)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.simpleGraphOfStructure /-
 /-- Any model of the theory of simple graphs represents a simple graph. -/
 @[simps]
@@ -126,7 +126,7 @@ theorem SimpleGraph.simpleGraphOfStructure (G : SimpleGraph V) :
 #align simple_graph.simple_graph_of_structure SimpleGraph.simpleGraphOfStructure
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.structure_simpleGraphOfStructure /-
 @[simp]
 theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨ Theory.simpleGraph] :

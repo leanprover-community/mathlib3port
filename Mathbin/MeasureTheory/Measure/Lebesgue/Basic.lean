@@ -581,7 +581,7 @@ def regionBetween (f g : α → ℝ) (s : Set α) : Set (α × ℝ) :=
 #align region_between regionBetween
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print regionBetween_subset /-
 theorem regionBetween_subset (f g : α → ℝ) (s : Set α) : regionBetween f g s ⊆ s ×ˢ univ := by
   simpa only [prod_univ, regionBetween, Set.preimage, set_of_subset_set_of] using fun a => And.left

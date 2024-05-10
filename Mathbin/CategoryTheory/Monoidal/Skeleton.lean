@@ -27,7 +27,7 @@ universe v u
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.monoidOfSkeletalMonoidal /-
 /-- If `C` is monoidal and skeletal, it is a monoid.
 See note [reducible non-instances]. -/
@@ -59,7 +59,7 @@ The skeleton of a monoidal category can be viewed as a monoid, where the multipl
 the tensor product, and satisfies the monoid axioms since it is a skeleton.
 -/
 noncomputable instance : Monoid (Skeleton C) :=
-  monoidOfSkeletalMonoidal (skeletonIsSkeleton _).skel
+  monoidOfSkeletalMonoidal (skeleton_isSkeleton _).skel
 
 -- TODO: Transfer the braided structure to the skeleton of C along the equivalence, and show that
 -- the skeleton is a commutative monoid.

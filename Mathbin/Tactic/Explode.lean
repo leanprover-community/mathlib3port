@@ -193,7 +193,7 @@ unsafe def explode (n : Name) : tactic Unit := do
   explode_expr v <* trace (to_fmt n ++ " : " ++ t) >>= trace
 #align tactic.explode tactic.explode
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /--
 `#explode decl_name` displays a proof term in a line-by-line format somewhat akin to a Fitch-style
 proof or the Metamath proof style.

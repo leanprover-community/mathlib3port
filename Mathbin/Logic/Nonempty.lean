@@ -25,7 +25,7 @@ This file proves a few extra facts about `nonempty`, which is defined in core Le
 
 variable {α β : Type _} {γ : α → Type _}
 
-attribute [simp] instNonempty
+attribute [simp] instNonemptyOfInhabited
 
 instance (priority := 20) Zero.nonempty [Zero α] : Nonempty α :=
   ⟨0⟩

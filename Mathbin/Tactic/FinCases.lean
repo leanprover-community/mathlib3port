@@ -46,7 +46,7 @@ unsafe def expr_list_to_list_expr : ∀ e : expr, tactic (List expr)
   | _ => failed
 #align tactic.expr_list_to_list_expr tactic.expr_list_to_list_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), tactic Unit
   | with_list, e => do
     let result ← cases_core e
@@ -138,7 +138,7 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def hyp :=
   tk "*" *> return none <|> some <$> ident
 

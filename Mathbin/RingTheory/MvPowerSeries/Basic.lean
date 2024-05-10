@@ -866,7 +866,7 @@ section Ring
 
 variable [Ring R]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
+/- ././././Mathport/Syntax/Translate/Command.lean:299:8: warning: using_well_founded used, estimated equivalent -/
 #print MvPowerSeries.inv.aux /-
 /-
 The inverse of a multivariate formal power series is defined by

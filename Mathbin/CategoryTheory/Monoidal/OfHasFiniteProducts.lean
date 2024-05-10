@@ -95,7 +95,7 @@ variable [HasTerminal C] [HasBinaryProducts C]
 
 attribute [local instance] monoidal_of_has_finite_products
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.monoidalOfHasFiniteProducts.tensorObj /-
 @[simp]
 theorem tensorObj (X Y : C) : X ⊗ Y = (X ⨯ Y) :=
@@ -103,7 +103,7 @@ theorem tensorObj (X Y : C) : X ⊗ Y = (X ⨯ Y) :=
 #align category_theory.monoidal_of_has_finite_products.tensor_obj CategoryTheory.monoidalOfHasFiniteProducts.tensorObj
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.monoidalOfHasFiniteProducts.tensorHom /-
 @[simp]
 theorem tensorHom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.prod.map f g :=
@@ -203,7 +203,7 @@ variable [HasInitial C] [HasBinaryCoproducts C]
 
 attribute [local instance] monoidal_of_has_finite_coproducts
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.monoidalOfHasFiniteCoproducts.tensorObj /-
 @[simp]
 theorem tensorObj (X Y : C) : X ⊗ Y = (X ⨿ Y) :=
@@ -211,7 +211,7 @@ theorem tensorObj (X Y : C) : X ⊗ Y = (X ⨿ Y) :=
 #align category_theory.monoidal_of_has_finite_coproducts.tensor_obj CategoryTheory.monoidalOfHasFiniteCoproducts.tensorObj
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.monoidalOfHasFiniteCoproducts.tensorHom /-
 @[simp]
 theorem tensorHom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.coprod.map f g :=

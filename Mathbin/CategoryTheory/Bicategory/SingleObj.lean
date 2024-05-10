@@ -50,9 +50,9 @@ deriving Inhabited
 
 open MonoidalCategory
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance : Bicategory (MonoidalSingleObj C)
     where
   Hom _ _ := C
@@ -104,12 +104,12 @@ def endMonoidalStarFunctor : MonoidalFunctor (EndMonoidal (MonoidalSingleObj.sta
 
 noncomputable section
 
-#print CategoryTheory.MonoidalSingleObj.endMonoidalStarFunctorIsEquivalence /-
+#print CategoryTheory.MonoidalSingleObj.endMonoidalStarFunctor_isEquivalence /-
 /-- The equivalence between the endomorphisms of the single object
 when we promote a monoidal category to a single object bicategory,
 and the original monoidal category.
 -/
-def endMonoidalStarFunctorIsEquivalence :
+def endMonoidalStarFunctor_isEquivalence :
     CategoryTheory.Functor.IsEquivalence (endMonoidalStarFunctor C).toFunctor
     where
   inverse :=
@@ -117,7 +117,7 @@ def endMonoidalStarFunctorIsEquivalence :
       map := fun X Y f => f }
   unitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)
   counitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)
-#align category_theory.monoidal_single_obj.End_monoidal_star_functor_is_equivalence CategoryTheory.MonoidalSingleObj.endMonoidalStarFunctorIsEquivalence
+#align category_theory.monoidal_single_obj.End_monoidal_star_functor_is_equivalence CategoryTheory.MonoidalSingleObj.endMonoidalStarFunctor_isEquivalence
 -/
 
 end MonoidalSingleObj

@@ -92,7 +92,7 @@ theorem image2_smul : image2 SMul.smul s t = s • t :=
 #align set.image2_vadd Set.image2_vadd
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.image_smul_prod /-
 @[to_additive add_image_prod]
 theorem image_smul_prod : (fun x : α × β => x.fst • x.snd) '' s ×ˢ t = s • t :=
@@ -310,8 +310,8 @@ theorem smul_iUnion (s : Set α) (t : ι → Set β) : (s • ⋃ i, t i) = ⋃ 
 #align set.vadd_Union Set.vadd_iUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.iUnion₂_smul /-
 @[to_additive]
 theorem iUnion₂_smul (s : ∀ i, κ i → Set α) (t : Set β) :
@@ -321,8 +321,8 @@ theorem iUnion₂_smul (s : ∀ i, κ i → Set α) (t : Set β) :
 #align set.Union₂_vadd Set.iUnion₂_vadd
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.smul_iUnion₂ /-
 @[to_additive]
 theorem smul_iUnion₂ (s : Set α) (t : ∀ i, κ i → Set β) :
@@ -348,8 +348,8 @@ theorem smul_iInter_subset (s : Set α) (t : ι → Set β) : (s • ⋂ i, t i)
 #align set.vadd_Inter_subset Set.vadd_iInter_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.iInter₂_smul_subset /-
 @[to_additive]
 theorem iInter₂_smul_subset (s : ∀ i, κ i → Set α) (t : Set β) :
@@ -359,8 +359,8 @@ theorem iInter₂_smul_subset (s : ∀ i, κ i → Set α) (t : Set β) :
 #align set.Inter₂_vadd_subset Set.iInter₂_vadd_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.smul_iInter₂_subset /-
 @[to_additive]
 theorem smul_iInter₂_subset (s : Set α) (t : ∀ i, κ i → Set β) :
@@ -488,8 +488,8 @@ theorem smul_set_iUnion (a : α) (s : ι → Set β) : (a • ⋃ i, s i) = ⋃ 
 #align set.vadd_set_Union Set.vadd_set_iUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.smul_set_iUnion₂ /-
 @[to_additive]
 theorem smul_set_iUnion₂ (a : α) (s : ∀ i, κ i → Set β) :
@@ -507,8 +507,8 @@ theorem smul_set_iInter_subset (a : α) (t : ι → Set β) : (a • ⋂ i, t i)
 #align set.vadd_set_Inter_subset Set.vadd_set_iInter_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.smul_set_iInter₂_subset /-
 @[to_additive]
 theorem smul_set_iInter₂_subset (a : α) (t : ∀ i, κ i → Set β) :
@@ -756,7 +756,7 @@ theorem image2_vsub : (image2 VSub.vsub s t : Set α) = s -ᵥ t :=
 #align set.image2_vsub Set.image2_vsub
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.image_vsub_prod /-
 theorem image_vsub_prod : (fun x : β × β => x.fst -ᵥ x.snd) '' s ×ˢ t = s -ᵥ t :=
   image_prod _
@@ -933,8 +933,8 @@ theorem vsub_iUnion (s : Set β) (t : ι → Set β) : (s -ᵥ ⋃ i, t i) = ⋃
 #align set.vsub_Union Set.vsub_iUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.iUnion₂_vsub /-
 theorem iUnion₂_vsub (s : ∀ i, κ i → Set β) (t : Set β) :
     (⋃ (i) (j), s i j) -ᵥ t = ⋃ (i) (j), s i j -ᵥ t :=
@@ -942,8 +942,8 @@ theorem iUnion₂_vsub (s : ∀ i, κ i → Set β) (t : Set β) :
 #align set.Union₂_vsub Set.iUnion₂_vsub
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.vsub_iUnion₂ /-
 theorem vsub_iUnion₂ (s : Set β) (t : ∀ i, κ i → Set β) :
     (s -ᵥ ⋃ (i) (j), t i j) = ⋃ (i) (j), s -ᵥ t i j :=
@@ -963,8 +963,8 @@ theorem vsub_iInter_subset (s : Set β) (t : ι → Set β) : (s -ᵥ ⋂ i, t i
 #align set.vsub_Inter_subset Set.vsub_iInter_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.iInter₂_vsub_subset /-
 theorem iInter₂_vsub_subset (s : ∀ i, κ i → Set β) (t : Set β) :
     (⋂ (i) (j), s i j) -ᵥ t ⊆ ⋂ (i) (j), s i j -ᵥ t :=
@@ -972,8 +972,8 @@ theorem iInter₂_vsub_subset (s : ∀ i, κ i → Set β) (t : Set β) :
 #align set.Inter₂_vsub_subset Set.iInter₂_vsub_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.vsub_iInter₂_subset /-
 theorem vsub_iInter₂_subset (s : Set β) (t : ∀ i, κ i → Set β) :
     (s -ᵥ ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s -ᵥ t i j :=
@@ -1122,7 +1122,7 @@ section LeftCancelSemigroup
 
 variable [LeftCancelSemigroup α] {s t : Set α}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.pairwiseDisjoint_smul_iff /-
 @[to_additive]
 theorem pairwiseDisjoint_smul_iff :

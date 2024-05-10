@@ -330,8 +330,8 @@ theorem closure_iSup_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f 
 #align closure_operator.closure_supr_closure ClosureOperator.closure_iSup_closure
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print ClosureOperator.closure_iSup₂_closure /-
 @[simp]
 theorem closure_iSup₂_closure (f : ∀ i, κ i → α) :
@@ -569,8 +569,8 @@ theorem closure_iSup_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l
 #align lower_adjoint.closure_supr_closure LowerAdjoint.closure_iSup_closure
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print LowerAdjoint.closure_iSup₂_closure /-
 theorem closure_iSup₂_closure (f : ∀ i, κ i → α) :
     u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
@@ -650,8 +650,8 @@ theorem closure_iUnion_closure (f : ι → α) : l (⋃ i, l (f i)) = l (⋃ i, 
 #align lower_adjoint.closure_Union_closure LowerAdjoint.closure_iUnion_closure
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print LowerAdjoint.closure_iUnion₂_closure /-
 @[simp]
 theorem closure_iUnion₂_closure (f : ∀ i, κ i → α) :

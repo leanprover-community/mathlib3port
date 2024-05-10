@@ -359,7 +359,7 @@ defined later.
 -- We mark some existing extensionality lemmas.
 attribute [ext] Array'.ext propext Function.hfunext
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Ext.lean:18:19: unsupported: attribute [ext id] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Ext.lean:18:19: unsupported: attribute [ext id] -/
 attribute [ext] _root_.funext
 
 -- This line is equivalent to:

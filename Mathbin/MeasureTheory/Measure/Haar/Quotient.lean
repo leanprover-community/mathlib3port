@@ -190,7 +190,7 @@ theorem essSup_comp_quotient_group_mk [μ.IsMulRightInvariant] {g : G ⧸ Γ →
 #align ess_sup_comp_quotient_group_mk essSup_comp_quotient_group_mk
 #align ess_sup_comp_quotient_add_group_mk ess_sup_comp_quotient_add_group_mk
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∈ »(_, s)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∈ »(_, s)]] -/
 #print MeasureTheory.IsFundamentalDomain.absolutelyContinuous_map /-
 /-- Given a quotient space `G ⧸ Γ` where `Γ` is `countable`, and the restriction,
   `μ_𝓕`, of a right-invariant measure `μ` on `G` to a fundamental domain `𝓕`, a set
@@ -213,7 +213,7 @@ theorem MeasureTheory.IsFundamentalDomain.absolutelyContinuous_map [μ.IsMulRigh
     ext g
     rw [Set.mem_smul_set_iff_inv_smul_mem, mem_preimage, mem_preimage]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∈ »(_, s)]]"
+      "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∈ »(_, s)]]"
     convert QuotientGroup.mk_mul_of_mem g γ⁻¹.2
   exact measurableSet_preimage meas_π s_meas
 #align measure_theory.is_fundamental_domain.absolutely_continuous_map MeasureTheory.IsFundamentalDomain.absolutelyContinuous_map

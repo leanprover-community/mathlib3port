@@ -27,13 +27,13 @@ noncomputable section
 
 namespace Real
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ() -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ() -/
 #print Real.Angle /-
 /-- The type of angles -/
 def Angle : Type :=
   AddCircle (2 * π)
 deriving NormedAddCommGroup, Inhabited,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ()»
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ()»
 #align real.angle Real.Angle
 -/
 

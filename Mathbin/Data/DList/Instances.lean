@@ -21,29 +21,29 @@ for `dlist`.
 
 open Function Equiv
 
-namespace Std.DList
+namespace Batteries.DList
 
 variable (α : Type _)
 
-#print Std.DList.listEquivDList /-
+#print Batteries.DList.listEquivDList /-
 /-- The natural equivalence between lists and difference lists, using
 `dlist.of_list` and `dlist.to_list`. -/
-def Std.DList.listEquivDList : List α ≃ Std.DList α := by
+def Batteries.DList.listEquivDList : List α ≃ Batteries.DList α := by
   refine'
-      { toFun := Std.DList.ofList
-        invFun := Std.DList.toList .. } <;>
+      { toFun := Batteries.DList.ofList
+        invFun := Batteries.DList.toList .. } <;>
     simp [Function.RightInverse, left_inverse, to_list_of_list, of_list_to_list]
-#align dlist.list_equiv_dlist Std.DList.listEquivDList
+#align dlist.list_equiv_dlist Batteries.DList.listEquivDList
 -/
 
-instance : Traversable Std.DList :=
-  Equiv.traversable Std.DList.listEquivDList
+instance : Traversable Batteries.DList :=
+  Equiv.traversable Batteries.DList.listEquivDList
 
-instance : LawfulTraversable Std.DList :=
-  Equiv.isLawfulTraversable Std.DList.listEquivDList
+instance : LawfulTraversable Batteries.DList :=
+  Equiv.isLawfulTraversable Batteries.DList.listEquivDList
 
-instance {α} : Inhabited (Std.DList α) :=
-  ⟨Std.DList.empty⟩
+instance {α} : Inhabited (Batteries.DList α) :=
+  ⟨Batteries.DList.empty⟩
 
-end Std.DList
+end Batteries.DList
 

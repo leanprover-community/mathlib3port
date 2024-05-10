@@ -383,7 +383,7 @@ namespace VectorBundleCore
 variable {ι : Type _} {F} (Z : VectorBundleCore 𝕜 B F ι)
 
 #print VectorBundleCore.IsSmooth /-
-/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coordChangeL] [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coordChangeL] [] -/
 /-- Mixin for a `vector_bundle_core` stating smoothness (of transition functions). -/
 class IsSmooth (IB : ModelWithCorners 𝕜 EB HB) : Prop where
   smoothOn_coordChangeL :
@@ -391,7 +391,7 @@ class IsSmooth (IB : ModelWithCorners 𝕜 EB HB) : Prop where
 #align vector_bundle_core.is_smooth VectorBundleCore.IsSmooth
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:240:13: unsupported: advanced export style -/
+/- ././././Mathport/Syntax/Translate/Command.lean:240:13: unsupported: advanced export style -/
 export IsSmooth ()
 
 variable [Z.IsSmooth IB]
@@ -471,7 +471,7 @@ namespace VectorPrebundle
 variable [∀ x, TopologicalSpace (E x)] {F E}
 
 #print VectorPrebundle.IsSmooth /-
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (e e' «expr ∈ » a.pretrivialization_atlas) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (e e' «expr ∈ » a.pretrivialization_atlas) -/
 /-- Mixin for a `vector_prebundle` stating smoothness of coordinate changes. -/
 class IsSmooth (a : VectorPrebundle 𝕜 F E) : Prop where
   exists_smooth_coord_change :

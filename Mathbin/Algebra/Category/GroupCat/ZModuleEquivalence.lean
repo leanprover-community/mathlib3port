@@ -56,8 +56,7 @@ instance forget₂_addCommGroupCat_essSurj :
 #print ModuleCat.forget₂AddCommGroupIsEquivalence /-
 noncomputable instance forget₂AddCommGroupIsEquivalence :
     CategoryTheory.Functor.IsEquivalence (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u}) :=
-  CategoryTheory.Functor.IsEquivalence.ofFullyFaithfullyEssSurj
-    (forget₂ (ModuleCat ℤ) AddCommGroupCat)
+  Functor.asEquivalence (forget₂ (ModuleCat ℤ) AddCommGroupCat)
 #align Module.forget₂_AddCommGroup_is_equivalence ModuleCat.forget₂AddCommGroupIsEquivalence
 -/
 

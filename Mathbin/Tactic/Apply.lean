@@ -139,7 +139,7 @@ unsafe def transitivity' (md := semireducible) : tactic Unit :=
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Similarly to `apply`, the `apply'` tactic tries to match the current goal against the conclusion
 of the type of term.
 
@@ -210,7 +210,7 @@ unsafe def symmetry' : parse location → tactic Unit
   | loc.ns hs => (Loc.ns hs.reverse).apply symmetry_hyp tactic.symmetry'
 #align tactic.interactive.symmetry' tactic.interactive.symmetry'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Similar to `transitivity` with the difference that `apply'` is used instead of `apply`.
 -/
 unsafe def transitivity' (q : parse (parser.optional texpr)) : tactic Unit :=

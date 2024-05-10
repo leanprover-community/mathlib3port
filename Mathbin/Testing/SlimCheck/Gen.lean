@@ -163,7 +163,7 @@ def elements (xs : List α) (pos : 0 < xs.length) : Gen α := do
 #align slim_check.gen.elements SlimCheck.Gen.elements
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `freq_aux xs i _` takes a weighted list of generator and a number meant to select one of the
 generators.
 
@@ -198,7 +198,7 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
     freqAux xs i.1 (by rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 #align slim_check.gen.freq SlimCheck.Gen.freq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print SlimCheck.Gen.permutationOf /-
 /-- Generate a random permutation of a given list. -/
 def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs)

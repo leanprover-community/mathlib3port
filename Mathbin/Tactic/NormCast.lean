@@ -31,7 +31,7 @@ The algorithm implemented here is described in the paper
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 namespace Tactic
 
 /-- Runs `mk_instance` with a time limit.

@@ -317,16 +317,16 @@ variable {J : Type u} [Category.{v} J]
 #print CategoryTheory.comp_comparison_forget_hasLimit /-
 instance comp_comparison_forget_hasLimit (F : J ⥤ D) (R : D ⥤ C) [MonadicRightAdjoint R]
     [HasLimit (F ⋙ R)] :
-    HasLimit ((F ⋙ Monad.comparison (Adjunction.ofRightAdjoint R)) ⋙ Monad.forget _) :=
+    HasLimit ((F ⋙ Monad.comparison (Adjunction.ofIsRightAdjoint R)) ⋙ Monad.forget _) :=
   @hasLimitOfIso _ _ _ _ (F ⋙ R) _ _
-    (isoWhiskerLeft F (Monad.comparisonForget (Adjunction.ofRightAdjoint R)).symm)
+    (isoWhiskerLeft F (Monad.comparisonForget (Adjunction.ofIsRightAdjoint R)).symm)
 #align category_theory.comp_comparison_forget_has_limit CategoryTheory.comp_comparison_forget_hasLimit
 -/
 
 #print CategoryTheory.comp_comparison_hasLimit /-
 instance comp_comparison_hasLimit (F : J ⥤ D) (R : D ⥤ C) [MonadicRightAdjoint R]
-    [HasLimit (F ⋙ R)] : HasLimit (F ⋙ Monad.comparison (Adjunction.ofRightAdjoint R)) :=
-  Monad.hasLimit_of_comp_forget_hasLimit (F ⋙ Monad.comparison (Adjunction.ofRightAdjoint R))
+    [HasLimit (F ⋙ R)] : HasLimit (F ⋙ Monad.comparison (Adjunction.ofIsRightAdjoint R)) :=
+  Monad.hasLimit_of_comp_forget_hasLimit (F ⋙ Monad.comparison (Adjunction.ofIsRightAdjoint R))
 #align category_theory.comp_comparison_has_limit CategoryTheory.comp_comparison_hasLimit
 -/
 
@@ -334,7 +334,7 @@ instance comp_comparison_hasLimit (F : J ⥤ D) (R : D ⥤ C) [MonadicRightAdjoi
 /-- Any monadic functor creates limits. -/
 noncomputable def monadicCreatesLimits (R : D ⥤ C) [MonadicRightAdjoint R] :
     CreatesLimitsOfSize.{v, u} R :=
-  createsLimitsOfNatIso (Monad.comparisonForget (Adjunction.ofRightAdjoint R))
+  createsLimitsOfNatIso (Monad.comparisonForget (Adjunction.ofIsRightAdjoint R))
 #align category_theory.monadic_creates_limits CategoryTheory.monadicCreatesLimits
 -/
 
@@ -343,8 +343,10 @@ noncomputable def monadicCreatesLimits (R : D ⥤ C) [MonadicRightAdjoint R] :
 which the monad itself preserves.
 -/
 noncomputable def monadicCreatesColimitOfPreservesColimit (R : D ⥤ C) (K : J ⥤ D)
-    [MonadicRightAdjoint R] [PreservesColimit (K ⋙ R) (leftAdjoint R ⋙ R)]
-    [PreservesColimit ((K ⋙ R) ⋙ leftAdjoint R ⋙ R) (leftAdjoint R ⋙ R)] : CreatesColimit K R :=
+    [MonadicRightAdjoint R] [PreservesColimit (K ⋙ R) (CategoryTheory.Functor.leftAdjoint R ⋙ R)]
+    [PreservesColimit ((K ⋙ R) ⋙ CategoryTheory.Functor.leftAdjoint R ⋙ R)
+        (CategoryTheory.Functor.leftAdjoint R ⋙ R)] :
+    CreatesColimit K R :=
   by
   apply creates_colimit_of_nat_iso (monad.comparison_forget (adjunction.of_right_adjoint R))
   apply CategoryTheory.compCreatesColimit _ _
@@ -438,7 +440,7 @@ theorem hasColimits_of_reflective (R : D ⥤ C) [Reflective R] [HasColimitsOfSiz
 limit.
 -/
 noncomputable def leftAdjointPreservesTerminalOfReflective (R : D ⥤ C) [Reflective R] :
-    PreservesLimitsOfShape (Discrete.{v} PEmpty) (leftAdjoint R)
+    PreservesLimitsOfShape (Discrete.{v} PEmpty) (CategoryTheory.Functor.leftAdjoint R)
     where PreservesLimit K := by
     let F := Functor.empty.{v} D
     apply preserves_limit_of_iso_diagram _ (functor.empty_ext (F ⋙ R) _)

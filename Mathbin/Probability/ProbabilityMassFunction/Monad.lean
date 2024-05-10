@@ -211,8 +211,8 @@ section Measure
 
 variable (s : Set β)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b a) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b a) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print PMF.toOuterMeasure_bind_apply /-
 @[simp]
 theorem toOuterMeasure_bind_apply :
@@ -385,8 +385,8 @@ section Measure
 
 variable (s : Set β)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b a) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b a) -/
 #print PMF.toOuterMeasure_bindOnSupport_apply /-
 @[simp]
 theorem toOuterMeasure_bindOnSupport_apply :

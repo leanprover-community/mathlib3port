@@ -23,8 +23,8 @@ variable {C D : Type _} [Category C] [Category D] [MonoidalCategory C] [Monoidal
 
 variable (F : MonoidalFunctor C D)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.exactPairingOfFaithful /-
 /-- Given candidate data for an exact pairing,
 which is sent by a faithful monoidal functor to an exact pairing,
@@ -55,7 +55,7 @@ def exactPairingOfFullyFaithful [CategoryTheory.Functor.Full F.toFunctor]
 #align category_theory.exact_pairing_of_fully_faithful CategoryTheory.exactPairingOfFullyFaithful
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.hasLeftDualOfEquivalence /-
 /-- Pull back a left dual along an equivalence. -/
 def hasLeftDualOfEquivalence [CategoryTheory.Functor.IsEquivalence F.toFunctor] (X : C)
@@ -70,7 +70,7 @@ def hasLeftDualOfEquivalence [CategoryTheory.Functor.IsEquivalence F.toFunctor] 
 #align category_theory.has_left_dual_of_equivalence CategoryTheory.hasLeftDualOfEquivalence
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.hasRightDualOfEquivalence /-
 /-- Pull back a right dual along an equivalence. -/
 def hasRightDualOfEquivalence [CategoryTheory.Functor.IsEquivalence F.toFunctor] (X : C)

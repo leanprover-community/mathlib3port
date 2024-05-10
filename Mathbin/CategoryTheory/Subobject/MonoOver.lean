@@ -481,7 +481,8 @@ def imageForgetAdj : image ⊣ forget X :=
 #align category_theory.mono_over.image_forget_adj CategoryTheory.MonoOver.imageForgetAdj
 -/
 
-instance : IsRightAdjoint (forget X) where
+instance : CategoryTheory.Functor.IsRightAdjoint (forget X)
+    where
   left := image
   adj := imageForgetAdj
 

@@ -37,7 +37,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:342:31: unsupported: @[derive] abbrev -/
+/- ././././Mathport/Syntax/Translate/Command.lean:342:31: unsupported: @[derive] abbrev -/
 #print Rep /-
 /-- The category of `k`-linear representations of a monoid `G`. -/
 abbrev Rep (k G : Type u) [Ring k] [Monoid G] :=
@@ -392,7 +392,7 @@ protected theorem ihom_obj_ρ_apply {A B : Rep k G} (g : G) (x : A →ₗ[k] B) 
 #align Rep.ihom_obj_ρ_apply Rep.ihom_obj_ρ_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Rep.homEquiv /-
 /-- Given a `k`-linear `G`-representation `A`, this is the Hom-set bijection in the adjunction
 `A ⊗ - ⊣ ihom(A, -)`. It sends `f : A ⊗ B ⟶ C` to a `Rep k G` morphism defined by currying the
@@ -425,7 +425,7 @@ protected def homEquiv (A B C : Rep k G) : (A ⊗ B ⟶ C) ≃ (B ⟶ (Rep.ihom 
 instance : MonoidalClosed (Rep k G)
     where closed' A :=
     {
-      isAdj :=
+      is_adj :=
         { right := Rep.ihom A
           adj :=
             Adjunction.mkOfHomEquiv
@@ -464,7 +464,7 @@ theorem ihom_coev_app_hom (A B : Rep k G) :
 
 variable (A B C)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Rep.MonoidalClosed.linearHomEquiv /-
 /-- There is a `k`-linear isomorphism between the sets of representation morphisms`Hom(A ⊗ B, C)`
 and `Hom(B, Homₖ(A, C))`. -/
@@ -477,7 +477,7 @@ def MonoidalClosed.linearHomEquiv : (A ⊗ B ⟶ C) ≃ₗ[k] B ⟶ A ⟶[Rep k 
 #align Rep.monoidal_closed.linear_hom_equiv Rep.MonoidalClosed.linearHomEquiv
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Rep.MonoidalClosed.linearHomEquivComm /-
 /-- There is a `k`-linear isomorphism between the sets of representation morphisms`Hom(A ⊗ B, C)`
 and `Hom(A, Homₖ(B, C))`. -/
@@ -488,7 +488,7 @@ def MonoidalClosed.linearHomEquivComm : (A ⊗ B ⟶ C) ≃ₗ[k] A ⟶ B ⟶[Re
 
 variable {A B C}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Rep.MonoidalClosed.linearHomEquiv_hom /-
 @[simp]
 theorem MonoidalClosed.linearHomEquiv_hom (f : A ⊗ B ⟶ C) :
@@ -497,7 +497,7 @@ theorem MonoidalClosed.linearHomEquiv_hom (f : A ⊗ B ⟶ C) :
 #align Rep.monoidal_closed.linear_hom_equiv_hom Rep.MonoidalClosed.linearHomEquiv_hom
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Rep.MonoidalClosed.linearHomEquivComm_hom /-
 @[simp]
 theorem MonoidalClosed.linearHomEquivComm_hom (f : A ⊗ B ⟶ C) :
@@ -531,7 +531,7 @@ namespace Representation
 variable {k G : Type u} [CommRing k] [Monoid G] {V W : Type u} [AddCommGroup V] [AddCommGroup W]
   [Module k V] [Module k W] (ρ : Representation k G V) (τ : Representation k G W)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Representation.repOfTprodIso /-
 /-- Tautological isomorphism to help Lean in typechecking. -/
 def repOfTprodIso : Rep.of (ρ.tprod τ) ≅ Rep.of ρ ⊗ Rep.of τ :=

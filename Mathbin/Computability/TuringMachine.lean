@@ -1864,7 +1864,7 @@ theorem tr_eval (l : List Γ) : TM0.eval tr l = TM1.eval M l :=
 
 variable [Fintype σ]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Turing.TM1to0.trStmts /-
 /-- Given a finite set of accessible `Λ` machine states, there is a finite set of accessible
 machine states in the target (even though the type `Λ'` is infinite). -/
@@ -3041,7 +3041,7 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
       split_ifs <;> simp only [List.reverse_cons, Function.update_same, list_blank.nth_mk, List.map]
       ·
         rw [List.getI_eq_get, List.nthLe_append_right] <;>
-          simp only [h, List.nthLe_singleton, List.length_map, List.length_reverse, Nat.succ_pos',
+          simp only [h, List.get_singleton, List.length_map, List.length_reverse, Nat.succ_pos',
             List.length_append, lt_add_iff_pos_right, List.length]
       rw [← proj_map_nth, hL, list_blank.nth_mk]
       cases' lt_or_gt_of_ne h with h h
@@ -3118,7 +3118,7 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
 #align turing.TM2to1.tr_cfg Turing.TM2to1.TrCfg
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
 #print Turing.TM2to1.tr_respects_aux₁ /-
 theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) (n) (_ : n ≤ S.length) :

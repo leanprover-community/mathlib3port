@@ -233,9 +233,9 @@ theorem preservesEpimorphsisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj : 
 -/
 
 #print CategoryTheory.Functor.preservesEpimorphisms_of_isLeftAdjoint /-
-instance (priority := 100) preservesEpimorphisms_of_isLeftAdjoint (F : C ⥤ D) [IsLeftAdjoint F] :
-    PreservesEpimorphisms F :=
-  preservesEpimorphsisms_of_adjunction (Adjunction.ofLeftAdjoint F)
+instance (priority := 100) preservesEpimorphisms_of_isLeftAdjoint (F : C ⥤ D)
+    [CategoryTheory.Functor.IsLeftAdjoint F] : PreservesEpimorphisms F :=
+  preservesEpimorphsisms_of_adjunction (Adjunction.ofIsLeftAdjoint F)
 #align category_theory.functor.preserves_epimorphisms_of_is_left_adjoint CategoryTheory.Functor.preservesEpimorphisms_of_isLeftAdjoint
 -/
 
@@ -253,9 +253,9 @@ theorem preservesMonomorphisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj : 
 -/
 
 #print CategoryTheory.Functor.preservesMonomorphisms_of_isRightAdjoint /-
-instance (priority := 100) preservesMonomorphisms_of_isRightAdjoint (F : C ⥤ D) [IsRightAdjoint F] :
-    PreservesMonomorphisms F :=
-  preservesMonomorphisms_of_adjunction (Adjunction.ofRightAdjoint F)
+instance (priority := 100) preservesMonomorphisms_of_isRightAdjoint (F : C ⥤ D)
+    [CategoryTheory.Functor.IsRightAdjoint F] : PreservesMonomorphisms F :=
+  preservesMonomorphisms_of_adjunction (Adjunction.ofIsRightAdjoint F)
 #align category_theory.functor.preserves_monomorphisms_of_is_right_adjoint CategoryTheory.Functor.preservesMonomorphisms_of_isRightAdjoint
 -/
 

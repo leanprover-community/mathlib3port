@@ -62,7 +62,7 @@ variable {ι : Type _} {B : Type _} {F : Type _} {E : B → Type _}
 variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z → B}
 
 #print Pretrivialization /-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- This structure contains the information left for a local trivialization (which is implemented
 below as `trivialization F proj`) if the total space has not been given a topology, but we
 have a topology on both the fiber and the base space. Through the construction
@@ -202,8 +202,8 @@ theorem preimage_symm_proj_baseSet :
 #align pretrivialization.preimage_symm_proj_base_set Pretrivialization.preimage_symm_proj_baseSet
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Pretrivialization.preimage_symm_proj_inter /-
 @[simp, mfld_simps]
 theorem preimage_symm_proj_inter (s : Set B) :
@@ -217,7 +217,7 @@ theorem preimage_symm_proj_inter (s : Set B) :
 #align pretrivialization.preimage_symm_proj_inter Pretrivialization.preimage_symm_proj_inter
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Pretrivialization.target_inter_preimage_symm_source_eq /-
 theorem target_inter_preimage_symm_source_eq (e f : Pretrivialization F proj) :
     f.target ∩ f.toPartialEquiv.symm ⁻¹' e.source = (e.baseSet ∩ f.baseSet) ×ˢ univ := by
@@ -225,7 +225,7 @@ theorem target_inter_preimage_symm_source_eq (e f : Pretrivialization F proj) :
 #align pretrivialization.target_inter_preimage_symm_source_eq Pretrivialization.target_inter_preimage_symm_source_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Pretrivialization.trans_source /-
 theorem trans_source (e f : Pretrivialization F proj) :
     (f.toPartialEquiv.symm.trans e.toPartialEquiv).source = (e.baseSet ∩ f.baseSet) ×ˢ univ := by
@@ -241,7 +241,7 @@ theorem symm_trans_symm (e e' : Pretrivialization F proj) :
 #align pretrivialization.symm_trans_symm Pretrivialization.symm_trans_symm
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Pretrivialization.symm_trans_source_eq /-
 theorem symm_trans_source_eq (e e' : Pretrivialization F proj) :
     (e.toPartialEquiv.symm.trans e'.toPartialEquiv).source = (e.baseSet ∩ e'.baseSet) ×ˢ univ := by
@@ -250,7 +250,7 @@ theorem symm_trans_source_eq (e e' : Pretrivialization F proj) :
 #align pretrivialization.symm_trans_source_eq Pretrivialization.symm_trans_source_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Pretrivialization.symm_trans_target_eq /-
 theorem symm_trans_target_eq (e e' : Pretrivialization F proj) :
     (e.toPartialEquiv.symm.trans e'.toPartialEquiv).target = (e.baseSet ∩ e'.baseSet) ×ˢ univ := by
@@ -356,7 +356,7 @@ end Pretrivialization
 variable [TopologicalSpace Z] [TopologicalSpace (TotalSpace F E)]
 
 #print Trivialization /-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A structure extending local homeomorphisms, defining a local trivialization of a projection
 `proj : Z → B` with fiber `F`, as a local homeomorphism between `Z` and `B × F` defined between two
 sets of the form `proj ⁻¹' base_set` and `base_set × F`, acting trivially on the first coordinate.
@@ -508,7 +508,7 @@ theorem symm_apply_mk_proj (ex : x ∈ e.source) : e.toPartialHomeomorph.symm (p
 #align trivialization.symm_apply_mk_proj Trivialization.symm_apply_mk_proj
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.symm_trans_source_eq /-
 theorem symm_trans_source_eq (e e' : Trivialization F proj) :
     (e.toPartialEquiv.symm.trans e'.toPartialEquiv).source = (e.baseSet ∩ e'.baseSet) ×ˢ univ :=
@@ -516,7 +516,7 @@ theorem symm_trans_source_eq (e e' : Trivialization F proj) :
 #align trivialization.symm_trans_source_eq Trivialization.symm_trans_source_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.symm_trans_target_eq /-
 theorem symm_trans_target_eq (e e' : Trivialization F proj) :
     (e.toPartialEquiv.symm.trans e'.toPartialEquiv).target = (e.baseSet ∩ e'.baseSet) ×ˢ univ :=
@@ -549,7 +549,7 @@ theorem preimage_subset_source {s : Set B} (hb : s ⊆ e.baseSet) : proj ⁻¹' 
 #align trivialization.preimage_subset_source Trivialization.preimage_subset_source
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.image_preimage_eq_prod_univ /-
 theorem image_preimage_eq_prod_univ {s : Set B} (hb : s ⊆ e.baseSet) :
     e '' (proj ⁻¹' s) = s ×ˢ univ :=
@@ -793,8 +793,8 @@ theorem apply_mk_symm (e : Trivialization F (π F E)) {b : B} (hb : b ∈ e.base
 #align trivialization.apply_mk_symm Trivialization.apply_mk_symm
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.continuousOn_symm /-
 theorem continuousOn_symm (e : Trivialization F (π F E)) :
     ContinuousOn (fun z : B × F => (total_space.mk' F) z.1 (e.symm z.1 z.2)) (e.baseSet ×ˢ univ) :=
@@ -926,7 +926,7 @@ theorem coordChangeHomeomorph_coe (e₁ e₂ : Trivialization F proj) {b : B} (h
 
 variable {F} {B' : Type _} [TopologicalSpace B']
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.isImage_preimage_prod /-
 theorem isImage_preimage_prod (e : Trivialization F proj) (s : Set B) :
     e.toPartialHomeomorph.IsImage (proj ⁻¹' s) (s ×ˢ univ) := fun x hx => by simp [e.coe_fst', hx]
@@ -958,7 +958,7 @@ theorem frontier_preimage (e : Trivialization F proj) (s : Set B) :
 #align trivialization.frontier_preimage Trivialization.frontier_preimage
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.piecewise /-
 /-- Given two bundle trivializations `e`, `e'` of `proj : Z → B` and a set `s : set B` such that
 the base sets of `e` and `e'` intersect `frontier s` on the same set and `e p = e' p` whenever

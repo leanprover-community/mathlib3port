@@ -7,7 +7,7 @@ import GroupTheory.Exponent
 import GroupTheory.OrderOfElement
 import GroupTheory.PGroup
 import GroupTheory.QuotientGroup
-import GroupTheory.Submonoid.Operations
+import Algebra.Group.Submonoid.Operations
 
 #align_import group_theory.torsion from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
 

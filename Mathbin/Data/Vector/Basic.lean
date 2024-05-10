@@ -652,39 +652,38 @@ theorem insertNth_val {i : Fin (n + 1)} {v : Vector α n} :
 #align vector.insert_nth_val Vector.insertNth_val
 -/
 
-#print Vector.removeNth_val /-
+#print Vector.eraseIdx_val /-
 @[simp]
-theorem removeNth_val {i : Fin n} : ∀ {v : Vector α n}, (removeNth i v).val = v.val.removeNth i
+theorem eraseIdx_val {i : Fin n} : ∀ {v : Vector α n}, (eraseIdx i v).val = v.val.eraseIdx i
   | ⟨l, hl⟩ => rfl
-#align vector.remove_nth_val Vector.removeNth_val
+#align vector.remove_nth_val Vector.eraseIdx_val
 -/
 
-#print Vector.removeNth_insertNth /-
-theorem removeNth_insertNth {v : Vector α n} {i : Fin (n + 1)} :
-    removeNth i (insertNth a i v) = v :=
-  Subtype.eq <| List.removeNth_insertNth i.1 v.1
-#align vector.remove_nth_insert_nth Vector.removeNth_insertNth
+#print Vector.eraseIdx_insertNth /-
+theorem eraseIdx_insertNth {v : Vector α n} {i : Fin (n + 1)} : eraseIdx i (insertNth a i v) = v :=
+  Subtype.eq <| List.eraseIdx_insertNth i.1 v.1
+#align vector.remove_nth_insert_nth Vector.eraseIdx_insertNth
 -/
 
-#print Vector.removeNth_insertNth' /-
-theorem removeNth_insertNth' {v : Vector α (n + 1)} :
+#print Vector.eraseIdx_insertNth' /-
+theorem eraseIdx_insertNth' {v : Vector α (n + 1)} :
     ∀ {i : Fin (n + 1)} {j : Fin (n + 2)},
-      removeNth (j.succAboveEmb i) (insertNth a j v) = insertNth a (i.predAbove j) (removeNth i v)
+      eraseIdx (j.succAboveEmb i) (insertNth a j v) = insertNth a (i.predAbove j) (eraseIdx i v)
   | ⟨i, hi⟩, ⟨j, hj⟩ =>
     by
     dsimp [insert_nth, remove_nth, Fin.succAboveEmb, Fin.predAbove]
     simp only [Subtype.mk_eq_mk]
     split_ifs
-    · convert (List.insertNth_removeNth_of_ge i (j - 1) _ _ _).symm
+    · convert (List.insertNth_eraseIdx_of_ge i (j - 1) _ _ _).symm
       · convert (Nat.succ_pred_eq_of_pos _).symm; exact lt_of_le_of_lt (zero_le _) h
       · apply remove_nth_val
       · convert hi; exact v.2
       · exact Nat.le_pred_of_lt h
-    · convert (List.insertNth_removeNth_of_le i j _ _ _).symm
+    · convert (List.insertNth_eraseIdx_of_le i j _ _ _).symm
       · apply remove_nth_val
       · convert hi; exact v.2
       · simpa using h
-#align vector.remove_nth_insert_nth' Vector.removeNth_insertNth'
+#align vector.remove_nth_insert_nth' Vector.eraseIdx_insertNth'
 -/
 
 #print Vector.insertNth_comm /-
@@ -868,20 +867,20 @@ instance : LawfulTraversable.{u} (flip Vector n)
   id_map := by intros <;> cases x <;> simp! [(· <$> ·)]
   comp_map := by intros <;> cases x <;> simp! [(· <$> ·)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 unsafe instance reflect [Lean.ToLevel.{u}] {α : Type u} [has_reflect α] [reflected _ α] {n : ℕ} :
     has_reflect (Vector α n) := fun v =>
   @Vector.inductionOn α (fun n => reflected _) n v
     ((by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
+            "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.nil.{u}).subst
       q(α))
     fun n x xs ih =>
     (by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
+            "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
           reflected _ @Vector.cons.{u}).subst₄
       q(α) q(n) q(x) ih
 #align vector.reflect vector.reflect

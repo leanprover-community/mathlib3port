@@ -87,7 +87,7 @@ the presence of a natural isomorphism `i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ 
 The converse is given in `exponential_ideal.mk_of_iso`.
 -/
 def exponentialIdealReflective (A : C) [Reflective i] [ExponentialIdeal i] :
-    i ⋙ exp A ⋙ leftAdjoint i ⋙ i ≅ i ⋙ exp A :=
+    i ⋙ exp A ⋙ CategoryTheory.Functor.leftAdjoint i ⋙ i ≅ i ⋙ exp A :=
   by
   symm
   apply nat_iso.of_components _ _
@@ -103,8 +103,8 @@ def exponentialIdealReflective (A : C) [Reflective i] [ExponentialIdeal i] :
 is an exponential ideal.
 -/
 theorem ExponentialIdeal.mk_of_iso [Reflective i]
-    (h : ∀ A : C, i ⋙ exp A ⋙ leftAdjoint i ⋙ i ≅ i ⋙ exp A) : ExponentialIdeal i :=
-  by
+    (h : ∀ A : C, i ⋙ exp A ⋙ CategoryTheory.Functor.leftAdjoint i ⋙ i ≅ i ⋙ exp A) :
+    ExponentialIdeal i := by
   apply exponential_ideal.mk'
   intro B A
   exact ⟨_, ⟨(h A).app B⟩⟩
@@ -136,8 +136,8 @@ variable [HasFiniteProducts C] [Reflective i] [CartesianClosed C]
 This is the converse of `preserves_binary_products_of_exponential_ideal`.
 -/
 instance (priority := 10) exponentialIdeal_of_preservesBinaryProducts
-    [PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i)] : ExponentialIdeal i :=
-  by
+    [PreservesLimitsOfShape (Discrete WalkingPair) (CategoryTheory.Functor.leftAdjoint i)] :
+    ExponentialIdeal i := by
   let ir := adjunction.of_right_adjoint i
   let L : C ⥤ D := left_adjoint i
   let η : 𝟭 C ⟶ L ⋙ i := ir.unit
@@ -169,8 +169,8 @@ itself cartesian closed.
 def cartesianClosedOfReflective : CartesianClosed D
     where closed' B :=
     {
-      isAdj :=
-        { right := i ⋙ exp (i.obj B) ⋙ leftAdjoint i
+      is_adj :=
+        { right := i ⋙ exp (i.obj B) ⋙ CategoryTheory.Functor.leftAdjoint i
           adj := by
             apply adjunction.restrict_fully_faithful i i (exp.adjunction (i.obj B))
             · symm
@@ -202,28 +202,45 @@ Together these help show that `L` preserves binary products. This should be cons
 *internal implementation* towards `preserves_binary_products_of_exponential_ideal`.
 -/
 noncomputable def bijection (A B : C) (X : D) :
-    ((leftAdjoint i).obj (A ⨯ B) ⟶ X) ≃ ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B ⟶ X) :=
+    ((CategoryTheory.Functor.leftAdjoint i).obj (A ⨯ B) ⟶ X) ≃
+      ((CategoryTheory.Functor.leftAdjoint i).obj A ⨯ (CategoryTheory.Functor.leftAdjoint i).obj B ⟶
+        X) :=
   calc
-    _ ≃ (A ⨯ B ⟶ i.obj X) := (Adjunction.ofRightAdjoint i).homEquiv _ _
+    _ ≃ (A ⨯ B ⟶ i.obj X) := (Adjunction.ofIsRightAdjoint i).homEquiv _ _
     _ ≃ (B ⨯ A ⟶ i.obj X) := ((Limits.prod.braiding _ _).homCongr (Iso.refl _))
     _ ≃ (A ⟶ B ⟹ i.obj X) := ((exp.adjunction _).homEquiv _ _)
-    _ ≃ (i.obj ((leftAdjoint i).obj A) ⟶ B ⟹ i.obj X) :=
+    _ ≃ (i.obj ((CategoryTheory.Functor.leftAdjoint i).obj A) ⟶ B ⟹ i.obj X) :=
       (unitCompPartialBijective _ (ExponentialIdeal.exp_closed (i.obj_mem_essImage _) _))
-    _ ≃ (B ⨯ i.obj ((leftAdjoint i).obj A) ⟶ i.obj X) := ((exp.adjunction _).homEquiv _ _).symm
-    _ ≃ (i.obj ((leftAdjoint i).obj A) ⨯ B ⟶ i.obj X) :=
-      ((Limits.prod.braiding _ _).homCongr (Iso.refl _))
-    _ ≃ (B ⟶ i.obj ((leftAdjoint i).obj A) ⟹ i.obj X) := ((exp.adjunction _).homEquiv _ _)
-    _ ≃ (i.obj ((leftAdjoint i).obj B) ⟶ i.obj ((leftAdjoint i).obj A) ⟹ i.obj X) :=
-      (unitCompPartialBijective _ (ExponentialIdeal.exp_closed (i.obj_mem_essImage _) _))
-    _ ≃ (i.obj ((leftAdjoint i).obj A) ⨯ i.obj ((leftAdjoint i).obj B) ⟶ i.obj X) :=
+    _ ≃ (B ⨯ i.obj ((CategoryTheory.Functor.leftAdjoint i).obj A) ⟶ i.obj X) :=
       ((exp.adjunction _).homEquiv _ _).symm
-    _ ≃ (i.obj ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B) ⟶ i.obj X) :=
+    _ ≃ (i.obj ((CategoryTheory.Functor.leftAdjoint i).obj A) ⨯ B ⟶ i.obj X) :=
+      ((Limits.prod.braiding _ _).homCongr (Iso.refl _))
+    _ ≃ (B ⟶ i.obj ((CategoryTheory.Functor.leftAdjoint i).obj A) ⟹ i.obj X) :=
+      ((exp.adjunction _).homEquiv _ _)
+    _ ≃
+        (i.obj ((CategoryTheory.Functor.leftAdjoint i).obj B) ⟶
+          i.obj ((CategoryTheory.Functor.leftAdjoint i).obj A) ⟹ i.obj X) :=
+      (unitCompPartialBijective _ (ExponentialIdeal.exp_closed (i.obj_mem_essImage _) _))
+    _ ≃
+        (i.obj ((CategoryTheory.Functor.leftAdjoint i).obj A) ⨯
+            i.obj ((CategoryTheory.Functor.leftAdjoint i).obj B) ⟶
+          i.obj X) :=
+      ((exp.adjunction _).homEquiv _ _).symm
+    _ ≃
+        (i.obj
+            ((CategoryTheory.Functor.leftAdjoint i).obj A ⨯
+              (CategoryTheory.Functor.leftAdjoint i).obj B) ⟶
+          i.obj X) :=
       by
       apply iso.hom_congr _ (iso.refl _)
       haveI : preserves_limits i := (adjunction.of_right_adjoint i).rightAdjointPreservesLimits
       haveI := preserves_smallest_limits_of_preserves_limits i
       exact (preserves_limit_pair.iso _ _ _).symm
-    _ ≃ ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B ⟶ X) := (equivOfFullyFaithful _).symm
+    _ ≃
+        ((CategoryTheory.Functor.leftAdjoint i).obj A ⨯
+            (CategoryTheory.Functor.leftAdjoint i).obj B ⟶
+          X) :=
+      (equivOfFullyFaithful _).symm
 #align category_theory.bijection CategoryTheory.bijection
 -/
 
@@ -246,7 +263,8 @@ theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = 
 -/
 
 #print CategoryTheory.bijection_natural /-
-theorem bijection_natural (A B : C) (X X' : D) (f : (leftAdjoint i).obj (A ⨯ B) ⟶ X) (g : X ⟶ X') :
+theorem bijection_natural (A B : C) (X X' : D)
+    (f : (CategoryTheory.Functor.leftAdjoint i).obj (A ⨯ B) ⟶ X) (g : X ⟶ X') :
     bijection i _ _ _ (f ≫ g) = bijection i _ _ _ f ≫ g :=
   by
   dsimp [bijection]
@@ -263,7 +281,8 @@ theorem bijection_natural (A B : C) (X X' : D) (f : (leftAdjoint i).obj (A ⨯ B
 The bijection allows us to show that `prod_comparison L A B` is an isomorphism, where the inverse
 is the forward map of the identity morphism.
 -/
-theorem prodComparison_iso (A B : C) : IsIso (prodComparison (leftAdjoint i) A B) :=
+theorem prodComparison_iso (A B : C) :
+    IsIso (prodComparison (CategoryTheory.Functor.leftAdjoint i) A B) :=
   ⟨⟨bijection i _ _ _ (𝟙 _), by
       rw [← (bijection i _ _ _).Injective.eq_iff, bijection_natural, ← bijection_symm_apply_id,
         Equiv.apply_symm_apply, id_comp],
@@ -279,7 +298,7 @@ If a reflective subcategory is an exponential ideal, then the reflector preserve
 This is the converse of `exponential_ideal_of_preserves_binary_products`.
 -/
 noncomputable def preservesBinaryProductsOfExponentialIdeal :
-    PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i)
+    PreservesLimitsOfShape (Discrete WalkingPair) (CategoryTheory.Functor.leftAdjoint i)
     where PreservesLimit K :=
     by
     apply limits.preserves_limit_of_iso_diagram _ (diagram_iso_pair K).symm
@@ -292,7 +311,7 @@ noncomputable def preservesBinaryProductsOfExponentialIdeal :
 If a reflective subcategory is an exponential ideal, then the reflector preserves finite products.
 -/
 noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type) [Fintype J] :
-    PreservesLimitsOfShape (Discrete J) (leftAdjoint i) :=
+    PreservesLimitsOfShape (Discrete J) (CategoryTheory.Functor.leftAdjoint i) :=
   by
   letI := preserves_binary_products_of_exponential_ideal i
   letI := leftAdjointPreservesTerminalOfReflective.{0} i

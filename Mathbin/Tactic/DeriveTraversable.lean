@@ -19,7 +19,7 @@ unsafe def with_prefix : Option Name → Name → Name
   | some p, n => p ++ n
 #align tactic.interactive.with_prefix tactic.interactive.with_prefix
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `t -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `t -/
 /-- similar to `nested_traverse` but for `functor` -/
 unsafe def nested_map (f v : expr) : expr → tactic expr
   | t => do
@@ -129,7 +129,7 @@ unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) 
   return ()
 #align tactic.interactive.derive_map_equations tactic.interactive.derive_map_equations
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `d -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `d -/
 unsafe def derive_functor (pre : Option Name) : tactic Unit := do
   let vs ← local_context
   let q(Functor $(f)) ← target
@@ -159,7 +159,7 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
       | e , Sum.inl x :: xs => Prod.map ( cons <| pure x ) id <$> seq_apply_constructor e xs
       | e , [ ] => return ( [ ] , e )
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `t -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `t -/
 /-- ``nested_traverse f α (list (array n (list α)))`` synthesizes the expression
 `traverse (traverse (traverse f))`. `nested_traverse` assumes that `α` appears in
 `(list (array n (list α)))` -/
@@ -298,7 +298,7 @@ unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List e
   return ()
 #align tactic.interactive.derive_traverse_equations tactic.interactive.derive_traverse_equations
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `d -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `d -/
 unsafe def derive_traverse (pre : Option Name) : tactic Unit := do
   let vs ← local_context
   let q(Traversable $(f)) ← target

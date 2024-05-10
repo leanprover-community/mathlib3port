@@ -33,7 +33,7 @@ section SeminormedAddCommGroup
 
 section Prio
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option extends_priority -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option extends_priority -/
 set_option extends_priority 920
 
 #print NormedSpace /-
@@ -82,7 +82,7 @@ instance NormedField.to_boundedSMul : BoundedSMul α α :=
 
 #print norm_zsmul /-
 theorem norm_zsmul (α) [NormedField α] [NormedSpace α β] (n : ℤ) (x : β) :
-    ‖n • x‖ = ‖(n : α)‖ * ‖x‖ := by rw [← norm_smul, ← Int.smul_one_eq_coe, smul_assoc, one_smul]
+    ‖n • x‖ = ‖(n : α)‖ * ‖x‖ := by rw [← norm_smul, ← Int.smul_one_eq_cast, smul_assoc, one_smul]
 #align norm_zsmul norm_zsmul
 -/
 
@@ -664,7 +664,7 @@ norm. -/
 instance normedAlgebraRat {𝕜} [NormedDivisionRing 𝕜] [CharZero 𝕜] [NormedAlgebra ℝ 𝕜] :
     NormedAlgebra ℚ 𝕜
     where norm_smul_le q x := by
-    rw [← smul_one_smul ℝ q x, Rat.smul_one_eq_coe, norm_smul, Rat.norm_cast_real]
+    rw [← smul_one_smul ℝ q x, Rat.smul_one_eq_cast, norm_smul, Rat.norm_cast_real]
 #align normed_algebra_rat normedAlgebraRat
 -/
 

@@ -630,7 +630,7 @@ unsafe def extract_def (n : Name) (trusted : Bool) (elab_def : tactic Unit) : ta
   applyc n
 #align tactic.extract_def tactic.extract_def
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- Attempts to close the goal with `dec_trivial`. -/
 unsafe def exact_dec_trivial : tactic Unit :=
   sorry
@@ -1011,14 +1011,14 @@ unsafe def subobject_names (struct_n : Name) : tactic (List Name × List Name) :
   return <| fields fun fn => ↑("_" ++ fn) ∈ vs
 #align tactic.subobject_names tactic.subobject_names
 
-private unsafe def expanded_field_list' : Name → tactic (Std.DList <| Name × Name)
+private unsafe def expanded_field_list' : Name → tactic (Batteries.DList <| Name × Name)
   | struct_n => do
     let (so, fs) ← subobject_names struct_n
     let ts ←
       so.mapM fun n => do
           let (_, e) ← mk_const (n.updatePrefix struct_n) >>= infer_type >>= open_pis
           expanded_field_list' <| e
-    return <| Std.DList.join ts ++ Std.DList.ofList (fs <| Prod.mk struct_n)
+    return <| Batteries.DList.join ts ++ Batteries.DList.ofList (fs <| Prod.mk struct_n)
 
 open Functor Function
 
@@ -1028,7 +1028,7 @@ of the projection is `prefix.name`.
 
 `struct_n` cannot be a synonym for a `structure`, it must be itself a `structure` -/
 unsafe def expanded_field_list (struct_n : Name) : tactic (List <| Name × Name) :=
-  Std.DList.toList <$> expanded_field_list' struct_n
+  Batteries.DList.toList <$> expanded_field_list' struct_n
 #align tactic.expanded_field_list tactic.expanded_field_list
 
 /-- Return a list of all type classes which can be instantiated
@@ -1467,7 +1467,7 @@ add_tactic_doc
     declNames := [`tactic.interactive.fsplit]
     tags := ["logic", "goal management"] }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results -/
 /-- Calls `injection` on each hypothesis, and then, for each hypothesis on which `injection`
 succeeds, clears the old hypothesis. -/
 unsafe def injections_and_clear : tactic Unit := do
@@ -1485,7 +1485,7 @@ add_tactic_doc
     declNames := [`tactic.interactive.injections_and_clear]
     tags := ["context management"] }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `r -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `r -/
 /-- Calls `cases` on every local hypothesis, succeeding if
 it succeeds on at least one hypothesis. -/
 unsafe def case_bash : tactic Unit := do

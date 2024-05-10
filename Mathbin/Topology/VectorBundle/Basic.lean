@@ -469,7 +469,7 @@ variable [NontriviallyNormedField R] [∀ x, AddCommMonoid (E x)] [∀ x, Module
   [∀ x, TopologicalSpace (E x)] [FiberBundle F E]
 
 #print VectorBundle /-
-/- ./././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`continuousOn_coord_change'] [] -/
+/- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`continuousOn_coord_change'] [] -/
 /-- The space `total_space F E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
 `vector_bundle R F E`) if around every point there is a fiber bundle trivialization
@@ -1043,7 +1043,7 @@ open TopologicalSpace
 open VectorBundle
 
 #print VectorPrebundle /-
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
 /-- This structure permits to define a vector bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space or the fibers.
 The total space is hence given a topology in such a way that there is a fiber bundle structure for
@@ -1113,7 +1113,7 @@ theorem mk_coordChange (a : VectorPrebundle R F E) {e e' : Pretrivialization F (
 #align vector_prebundle.mk_coord_change VectorPrebundle.mk_coordChange
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print VectorPrebundle.toFiberPrebundle /-
 /-- Natural identification of `vector_prebundle` as a `fiber_prebundle`. -/
 def toFiberPrebundle (a : VectorPrebundle R F E) : FiberPrebundle F E :=

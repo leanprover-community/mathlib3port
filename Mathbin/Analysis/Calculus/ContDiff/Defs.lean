@@ -1392,7 +1392,7 @@ theorem contDiffOn_succ_iff_hasFDerivWithin {n : ℕ} (hs : UniqueDiffOn 𝕜 s)
 #align cont_diff_on_succ_iff_has_fderiv_within contDiffOn_succ_iff_hasFDerivWithin
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
 #print contDiffOn_succ_iff_fderiv_of_isOpen /-
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (expressed with `fderiv`) is `C^n`. -/
@@ -1402,7 +1402,7 @@ theorem contDiffOn_succ_iff_fderiv_of_isOpen {n : ℕ} (hs : IsOpen s) :
   by
   rw [contDiffOn_succ_iff_fderivWithin hs.unique_diff_on]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+    "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply contDiffOn_congr
   intro x hx
   exact fderivWithin_of_isOpen hs hx
@@ -1429,7 +1429,7 @@ theorem contDiffOn_top_iff_fderivWithin (hs : UniqueDiffOn 𝕜 s) :
 #align cont_diff_on_top_iff_fderiv_within contDiffOn_top_iff_fderivWithin
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
 #print contDiffOn_top_iff_fderiv_of_isOpen /-
 /-- A function is `C^∞` on an open domain if and only if it is differentiable there, and its
 derivative (expressed with `fderiv`) is `C^∞`. -/
@@ -1438,7 +1438,7 @@ theorem contDiffOn_top_iff_fderiv_of_isOpen (hs : IsOpen s) :
   by
   rw [contDiffOn_top_iff_fderivWithin hs.unique_diff_on]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+    "././././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
   apply contDiffOn_congr
   intro x hx
   exact fderivWithin_of_isOpen hs hx
@@ -1899,10 +1899,10 @@ theorem norm_iteratedFDeriv_zero : ‖iteratedFDeriv 𝕜 0 f x‖ = ‖f x‖ :
 #align norm_iterated_fderiv_zero norm_iteratedFDeriv_zero
 -/
 
-#print iteratedFDeriv_with_zero_eq /-
-theorem iteratedFDeriv_with_zero_eq : iteratedFDerivWithin 𝕜 0 f s = iteratedFDeriv 𝕜 0 f := by ext;
-  rfl
-#align iterated_fderiv_with_zero_eq iteratedFDeriv_with_zero_eq
+#print iteratedFDerivWithin_zero_eq /-
+theorem iteratedFDerivWithin_zero_eq : iteratedFDerivWithin 𝕜 0 f s = iteratedFDeriv 𝕜 0 f := by
+  ext; rfl
+#align iterated_fderiv_with_zero_eq iteratedFDerivWithin_zero_eq
 -/
 
 #print iteratedFDeriv_succ_apply_left /-

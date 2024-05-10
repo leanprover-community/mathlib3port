@@ -482,11 +482,11 @@ def ModuleCat.restrictCoextendScalarsAdj {R : Type u₁} {S : Type u₂} [Ring R
 -/
 
 instance {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) :
-    CategoryTheory.IsLeftAdjoint (ModuleCat.restrictScalars f) :=
+    CategoryTheory.Functor.IsLeftAdjoint (ModuleCat.restrictScalars f) :=
   ⟨_, ModuleCat.restrictCoextendScalarsAdj f⟩
 
 instance {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) :
-    CategoryTheory.IsRightAdjoint (ModuleCat.coextendScalars f) :=
+    CategoryTheory.Functor.IsRightAdjoint (ModuleCat.coextendScalars f) :=
   ⟨_, ModuleCat.restrictCoextendScalarsAdj f⟩
 
 namespace ExtendRestrictScalarsAdj
@@ -678,11 +678,11 @@ def ModuleCat.extendRestrictScalarsAdj {R : Type u₁} {S : Type u₂} [CommRing
 -/
 
 instance {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
-    CategoryTheory.IsLeftAdjoint (ModuleCat.extendScalars f) :=
+    CategoryTheory.Functor.IsLeftAdjoint (ModuleCat.extendScalars f) :=
   ⟨_, ModuleCat.extendRestrictScalarsAdj f⟩
 
 instance {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
-    CategoryTheory.IsRightAdjoint (ModuleCat.restrictScalars f) :=
+    CategoryTheory.Functor.IsRightAdjoint (ModuleCat.restrictScalars f) :=
   ⟨_, ModuleCat.extendRestrictScalarsAdj f⟩
 
 end CategoryTheory.Module

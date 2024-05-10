@@ -67,7 +67,7 @@ theorem eq_zero_of_sub_eq_zero {α} [AddGroup α] {x y : α} (h : y = 0) (h2 : x
 /-! ### Configuration -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linear_combination`.
 
 `normalize` describes whether or not the normalization step should be used.
@@ -385,7 +385,7 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
 
 section InteractiveMode
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `linear_combination` attempts to simplify the target by creating a linear combination
   of a list of equalities and subtracting it from the target.
   The tactic will create a linear

@@ -183,7 +183,7 @@ namespace Tree
 
 open scoped Tree
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Tree.pairwiseNode /-
 /-- Given two finsets, find all trees that can be formed with
   left child in `a` and right child in `b` -/

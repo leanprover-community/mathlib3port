@@ -642,7 +642,7 @@ end NormFin
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Rewrites occurrences of fin expressions to normal form anywhere in the goal.
 The `norm_num` extension will only rewrite fin expressions if they appear in equalities and
 inequalities. For example if the goal is `P (2 + 2 : fin 3)` then `norm_num` will not do anything

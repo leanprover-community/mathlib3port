@@ -173,7 +173,7 @@ unsafe def generalizes_intro (args : List (Name × Option Name × expr)) (md := 
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def generalizes_arg_parser_eq : pexpr → lean.parser (pexpr × Name)
   | app (app (macro _ [const `eq _]) e) (local_const x _ _ _) => pure (e, x)
   | app (app (macro _ [const `heq _]) e) (local_const x _ _ _) => pure (e, x)

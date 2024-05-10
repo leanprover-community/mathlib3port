@@ -58,9 +58,9 @@ instance : Inhabited (Tree α) :=
 
 #print Tree.ofRBNode /-
 /-- Makes a `tree α` out of a red-black tree. -/
-def ofRBNode : Std.RBNode α → Tree α
-  | Std.RBNode.nil => nil
-  | Std.RBNode.node l a r => node a (of_rbnode l) (of_rbnode r)
+def ofRBNode : Batteries.RBNode α → Tree α
+  | Batteries.RBNode.nil => nil
+  | Batteries.RBNode.node l a r => node a (of_rbnode l) (of_rbnode r)
   | rbnode.black_node l a r => node a (of_rbnode l) (of_rbnode r)
 #align tree.of_rbnode Tree.ofRBNode
 -/

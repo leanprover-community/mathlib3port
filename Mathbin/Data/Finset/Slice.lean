@@ -75,7 +75,7 @@ theorem sized_iUnion {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀
 #align set.sized_Union Set.sized_iUnion
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.sized_iUnion₂ /-
 @[simp]
 theorem sized_iUnion₂ {f : ∀ i, κ i → Set (Finset α)} :

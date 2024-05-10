@@ -4,25 +4,19 @@ open Lake DSL System
 -- Usually the `tag` will be of the form `nightly-2021-11-22`.
 -- If you would like to use an artifact from a PR build,
 -- it will be of the form `pr-branchname-sha`.
-def tag : String := "nightly-2024-05-06-08"
+def tag : String := "nightly-2024-05-10-08"
 def releaseRepo : String := "leanprover-community/mathport"
 def oleanTarName : String := "mathlib3-binport.tar.gz"
 
-def download (url : String) (to : FilePath) : BuildM PUnit := Lake.proc
-{ -- We use `curl -O` to ensure we clobber any existing file.
-  cmd := "curl",
-  args := #["-L", "-O", url]
-  cwd := to }
+def untar (file : FilePath) : JobM PUnit := Lake.proc
+  { cmd := "tar",
+    args := #["-xzf", file.fileName.getD "."] -- really should throw an error if `file.fileName = none`
+    cwd := file.parent }
 
-def untar (file : FilePath) : BuildM PUnit := Lake.proc
-{ cmd := "tar",
-  args := #["-xzf", file.fileName.getD "."] -- really should throw an error if `file.fileName = none`
-  cwd := file.parent }
+def getReleaseArtifact (repo tag artifact : String) (to : FilePath) : JobM PUnit :=
+  download s!"https://github.com/{repo}/releases/download/{tag}/{artifact}" (to / artifact)
 
-def getReleaseArtifact (repo tag artifact : String) (to : FilePath) : BuildM PUnit :=
-download s!"https://github.com/{repo}/releases/download/{tag}/{artifact}" to
-
-def untarReleaseArtifact (repo tag artifact : String) (to : FilePath) : BuildM PUnit := do
+def untarReleaseArtifact (repo tag artifact : String) (to : FilePath) : JobM PUnit := do
   getReleaseArtifact repo tag artifact to
   untar (to / artifact)
 
@@ -30,7 +24,7 @@ package mathlib3port where
   extraDepTargets := #[`fetchOleans]
 
 target fetchOleans (_pkg) : Unit := do
-  let libDir : FilePath := __dir__ / "build" / "lib"
+  let libDir : FilePath := __dir__ / ".lake" / "build" / "lib"
   IO.FS.createDirAll libDir
   let oldTrace := Hash.ofString tag
   let _ ← buildFileUnlessUpToDate (libDir / oleanTarName) oldTrace do
@@ -38,7 +32,7 @@ target fetchOleans (_pkg) : Unit := do
     untarReleaseArtifact releaseRepo tag oleanTarName libDir
   return .nil
 
-require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"55c566e5745d44dc7db8ba902ef73568e1646249"
+require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"99499a89b7036b7c48f798633e89b913af35f1a9"
 
 @[default_target]
 lean_lib Mathbin where

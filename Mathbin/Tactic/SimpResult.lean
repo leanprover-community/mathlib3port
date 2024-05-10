@@ -104,7 +104,7 @@ unsafe def simp_result {α} (t : tactic α) (cfg : SimpConfig := { failIfUnchang
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `dsimp_result { tac }`
 attempts to run a tactic block `tac`,
 intercepts any results the tactic block would have assigned to the goals,

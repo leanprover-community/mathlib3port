@@ -186,7 +186,7 @@ namespace Tactic.Interactive
 
 open Tactic Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Assume that the goal is of the form `lhs = rhs` or `lhs ↔ rhs`.
 `congrm e` takes an expression `e` containing placeholders `_` and scans `e, lhs, rhs` in parallel.
 

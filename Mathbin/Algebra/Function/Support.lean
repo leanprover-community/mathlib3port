@@ -92,7 +92,7 @@ theorem mulSupport_subset_iff {f : α → M} {s : Set α} : mulSupport f ⊆ s �
 #align function.support_subset_iff Function.support_subset_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (x «expr ∉ » s) -/
 #print Function.mulSupport_subset_iff' /-
 @[to_additive]
 theorem mulSupport_subset_iff' {f : α → M} {s : Set α} :

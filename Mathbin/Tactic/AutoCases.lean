@@ -74,7 +74,7 @@ unsafe def auto_cases_at (find : expr → Option auto_cases.auto_cases_tac) (hyp
     | none => fail "hypothesis type unsupported"
 #align tactic.auto_cases_at tactic.auto_cases_at
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results -/
 /-- Applies `cases` or `induction` on certain hypotheses. -/
 @[hint_tactic]
 unsafe def auto_cases (find := tactic.auto_cases.find_tac) : tactic String := do

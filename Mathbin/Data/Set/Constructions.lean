@@ -71,7 +71,7 @@ theorem finiteInter_mem (cond : FiniteInter S) (F : Finset (Set α)) :
 #align has_finite_inter.finite_inter_mem FiniteInter.finiteInter_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S)) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S)) -/
 #print FiniteInter.finiteInterClosure_insert /-
 theorem finiteInterClosure_insert {A : Set α} (cond : FiniteInter S) (P)
     (_ : P ∈ finiteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q :=

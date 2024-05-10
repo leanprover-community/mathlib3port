@@ -40,7 +40,7 @@ open Iso
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C] (P : C → Prop)
 
 #print CategoryTheory.MonoidalCategory.MonoidalPredicate /-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A property `C → Prop` is a monoidal predicate if it is closed under `𝟙_` and `⊗`.
 -/
 class MonoidalPredicate : Prop where
@@ -53,10 +53,10 @@ open MonoidalPredicate
 
 variable [MonoidalPredicate P]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalCategory.fullMonoidalSubcategory /-
 /--
 When `P` is a monoidal predicate, the full subcategory for `P` inherits the monoidal structure of
@@ -269,7 +269,7 @@ variable [ClosedPredicate P]
 instance fullMonoidalClosedSubcategory : MonoidalClosed (FullSubcategory P)
     where closed' X :=
     {
-      isAdj :=
+      is_adj :=
         { right :=
             FullSubcategory.lift P (fullSubcategoryInclusion P ⋙ ihom X.1) fun Y => propIhom X.2 Y.2
           adj :=

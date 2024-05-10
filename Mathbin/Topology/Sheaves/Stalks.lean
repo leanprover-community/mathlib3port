@@ -181,7 +181,7 @@ namespace StalkPushforward
 
 attribute [local tidy] tactic.op_induction'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.op_induction' -/
+/- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.op_induction' -/
 #print TopCat.Presheaf.stalkPushforward.id /-
 @[simp]
 theorem id (ℱ : X.Presheaf C) (x : X) :

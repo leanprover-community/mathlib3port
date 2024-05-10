@@ -288,8 +288,8 @@ theorem hom_ext (h : IsLimit t) {W : C} {f f' : W ⟶ t.pt}
 the image of a limit cone is a limit cone.
 -/
 def ofRightAdjoint {D : Type u₄} [Category.{v₄} D] {G : K ⥤ D} (h : Cone G ⥤ Cone F)
-    [IsRightAdjoint h] {c : Cone G} (t : IsLimit c) : IsLimit (h.obj c) :=
-  mkConeMorphism (fun s => (Adjunction.ofRightAdjoint h).homEquiv s c (t.liftConeMorphism _))
+    [CategoryTheory.Functor.IsRightAdjoint h] {c : Cone G} (t : IsLimit c) : IsLimit (h.obj c) :=
+  mkConeMorphism (fun s => (Adjunction.ofIsRightAdjoint h).homEquiv s c (t.liftConeMorphism _))
     fun s m => (Adjunction.eq_homEquiv_apply _ _ _).2 t.uniq_cone_morphism
 #align category_theory.limits.is_limit.of_right_adjoint CategoryTheory.Limits.IsLimit.ofRightAdjoint
 -/
@@ -901,10 +901,11 @@ theorem hom_ext (h : IsColimit t) {W : C} {f f' : t.pt ⟶ W}
 the image of a colimit cocone is a colimit cocone.
 -/
 def ofLeftAdjoint {D : Type u₄} [Category.{v₄} D] {G : K ⥤ D} (h : Cocone G ⥤ Cocone F)
-    [IsLeftAdjoint h] {c : Cocone G} (t : IsColimit c) : IsColimit (h.obj c) :=
+    [CategoryTheory.Functor.IsLeftAdjoint h] {c : Cocone G} (t : IsColimit c) :
+    IsColimit (h.obj c) :=
   mkCoconeMorphism
-    (fun s => ((Adjunction.ofLeftAdjoint h).homEquiv c s).symm (t.descCoconeMorphism _)) fun s m =>
-    (Adjunction.homEquiv_apply_eq _ _ _).1 t.uniq_cocone_morphism
+    (fun s => ((Adjunction.ofIsLeftAdjoint h).homEquiv c s).symm (t.descCoconeMorphism _))
+    fun s m => (Adjunction.homEquiv_apply_eq _ _ _).1 t.uniq_cocone_morphism
 #align category_theory.limits.is_colimit.of_left_adjoint CategoryTheory.Limits.IsColimit.ofLeftAdjoint
 -/
 

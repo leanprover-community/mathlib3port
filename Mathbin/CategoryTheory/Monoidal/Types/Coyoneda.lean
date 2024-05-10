@@ -30,7 +30,7 @@ open Opposite
 
 open MonoidalCategory
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.coyonedaTensorUnit /-
 /-- `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
 def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] :

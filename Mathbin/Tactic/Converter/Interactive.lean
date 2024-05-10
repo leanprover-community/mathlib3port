@@ -35,7 +35,7 @@ unsafe def execute (c : old_conv Unit) : tactic Unit :=
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 unsafe def itactic : Type :=
   old_conv Unit
 #align old_conv.interactive.itactic old_conv.interactive.itactic
@@ -110,7 +110,7 @@ unsafe def discharge_eq_lhs (tac : tactic Unit) : conv Unit := do
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic.Interactive (rw_rules)
 
 /-- The `conv` tactic provides a `conv` within a `conv`. It allows the user to return to a
@@ -152,7 +152,7 @@ namespace Tactic
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
   let t ← target
   let (new_t, pr) ← c.to_tactic `eq t
@@ -163,16 +163,16 @@ unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic)
   old_conv <| old_conv.interactive.find p c
 #align tactic.interactive.find tactic.interactive.find
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 unsafe def conv_lhs (loc : parse (parser.optional (tk "at" *> ident)))
     (p : parse (parser.optional (tk "in" *> parser.pexpr))) (c : conv.interactive.itactic) :
     tactic Unit :=
   conv loc p (conv.interactive.to_lhs >> c)
 #align tactic.interactive.conv_lhs tactic.interactive.conv_lhs
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 unsafe def conv_rhs (loc : parse (parser.optional (tk "at" *> ident)))
     (p : parse (parser.optional (tk "in" *> parser.pexpr))) (c : conv.interactive.itactic) :
     tactic Unit :=

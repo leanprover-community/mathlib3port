@@ -8,7 +8,7 @@ import Algebra.Category.Ring.Colimits
 import Algebra.Category.Ring.Limits
 import Topology.Sheaves.LocalPredicate
 import RingTheory.Localization.AtPrime
-import RingTheory.Subring.Basic
+import Algebra.Ring.Subring.Basic
 
 #align_import algebraic_geometry.structure_sheaf from "leanprover-community/mathlib"@"5dc6092d09e5e489106865241986f7f2ad28d4c8"
 
@@ -834,8 +834,8 @@ theorem locally_const_basicOpen (U : Opens (PrimeSpectrum.Top R))
 #align algebraic_geometry.structure_sheaf.locally_const_basic_open AlgebraicGeometry.StructureSheaf.locally_const_basicOpen
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 #print AlgebraicGeometry.StructureSheaf.normalize_finite_fraction_representation /-
 /-
 Auxiliary lemma for surjectivity of `to_basic_open`.

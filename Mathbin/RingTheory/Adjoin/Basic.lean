@@ -271,7 +271,7 @@ theorem adjoin_insert_adjoin (x : A) : adjoin R (insert x ↑(adjoin R s)) = adj
 #align algebra.adjoin_insert_adjoin Algebra.adjoin_insert_adjoin
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Algebra.adjoin_prod_le /-
 theorem adjoin_prod_le (s : Set A) (t : Set B) :
     adjoin R (s ×ˢ t) ≤ (adjoin R s).Prod (adjoin R t) :=

@@ -57,7 +57,7 @@ def wittPolyProd (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
 #align witt_vector.witt_poly_prod WittVector.wittPolyProd
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.wittPolyProd_vars /-
 theorem wittPolyProd_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ range (n + 1) :=
   by
@@ -76,7 +76,7 @@ def wittPolyProdRemainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
 #align witt_vector.witt_poly_prod_remainder WittVector.wittPolyProdRemainder
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.wittPolyProdRemainder_vars /-
 theorem wittPolyProdRemainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars ⊆ univ ×ˢ range n :=
   by
@@ -112,7 +112,7 @@ def remainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
 #align witt_vector.remainder WittVector.remainder
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.remainder_vars /-
 theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n + 1) :=
   by
@@ -227,7 +227,7 @@ theorem mul_polyOfInterest_aux5 (n : ℕ) :
 #align witt_vector.mul_poly_of_interest_aux5 WittVector.mul_polyOfInterest_aux5
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.mul_polyOfInterest_vars /-
 theorem mul_polyOfInterest_vars (n : ℕ) :
     ((p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) * polyOfInterest p n).vars ⊆
@@ -257,7 +257,7 @@ theorem polyOfInterest_vars_eq (n : ℕ) :
 #align witt_vector.poly_of_interest_vars_eq WittVector.polyOfInterest_vars_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print WittVector.polyOfInterest_vars /-
 theorem polyOfInterest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [poly_of_interest_vars_eq] <;> apply mul_poly_of_interest_vars

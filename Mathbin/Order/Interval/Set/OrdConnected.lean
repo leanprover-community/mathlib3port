@@ -147,7 +147,7 @@ instance ordConnected_iInter' {ι : Sort _} {s : ι → Set α} [∀ i, OrdConne
 #align set.ord_connected_Inter' Set.ordConnected_iInter'
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 #print Set.ordConnected_biInter /-
 theorem ordConnected_biInter {ι : Sort _} {p : ι → Prop} {s : ∀ (i : ι) (hi : p i), Set α}
     (hs : ∀ i hi, OrdConnected (s i hi)) : OrdConnected (⋂ (i) (hi), s i hi) :=

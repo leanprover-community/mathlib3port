@@ -128,14 +128,14 @@ theorem continuousAt_toIocMod : ContinuousAt (toIocMod hp a) x :=
 
 end Continuity
 
-/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜 -/
+/- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜 -/
 #print AddCircle /-
 /-- The "additive circle": `𝕜 ⧸ (ℤ ∙ p)`. See also `circle` and `real.angle`. -/
 @[nolint unused_arguments]
 def AddCircle [LinearOrderedAddCommGroup 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] (p : 𝕜) :=
   𝕜 ⧸ zmultiples p
 deriving AddCommGroup, TopologicalSpace, TopologicalAddGroup, Inhabited,
-  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜»
+  «././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜»
 #align add_circle AddCircle
 -/
 
@@ -610,7 +610,7 @@ end AddCircle
 
 attribute [local instance] Real.fact_zero_lt_one
 
-/- ./././Mathport/Syntax/Translate/Command.lean:342:31: unsupported: @[derive] abbrev -/
+/- ././././Mathport/Syntax/Translate/Command.lean:342:31: unsupported: @[derive] abbrev -/
 #print UnitAddCircle /-
 /-- The unit circle `ℝ ⧸ ℤ`. -/
 abbrev UnitAddCircle :=

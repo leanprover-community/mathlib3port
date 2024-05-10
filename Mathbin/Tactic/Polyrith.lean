@@ -209,7 +209,7 @@ The following section contains code that can convert an a `poly` object into a `
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `n -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `n -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -525,15 +525,15 @@ unsafe def component_to_lc_format : expr × expr → tactic (Bool × format)
     Prod.mk ff <$> f!"{(← f)} * {← ex}"
 #align polyrith.component_to_lc_format polyrith.component_to_lc_format
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private unsafe def intersperse_ops_aux : List (Bool × format) → format
   | [] => ""
   | (ff, fmt)::t => " +" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
   | (tt, fmt)::t => " -" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a `list (bool × format)`, this function uses `+` and `-` to conjoin the
 `format`s in the list. A `format` is negated if its corresponding `bool` is `tt`.
 -/
@@ -558,7 +558,7 @@ The following section contains code that allows lean to communicate with a pytho
 initialize
   registerTraceClass.1 `polyrith
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The first half of `tactic.polyrith` produces a list of arguments to be sent to Sage.
 -/
 unsafe def create_args (only_on : Bool) (hyps : List pexpr) :
@@ -591,7 +591,7 @@ unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sag
     return <| "linear_combination " ++ format.nest 2 (format.group expr_string)
 #align polyrith.process_output polyrith.process_output
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when no hypotheses are available. -/
 unsafe def no_hypotheses_case : tactic (Option format) :=
   (do
@@ -600,7 +600,7 @@ unsafe def no_hypotheses_case : tactic (Option format) :=
     fail "polyrith did not find any relevant hypotheses and the goal is not provable by ring"
 #align polyrith.no_hypotheses_case polyrith.no_hypotheses_case
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:337:4: warning: unsupported (TODO): `[tacs] -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when there are no variables. -/
 unsafe def no_variables_case : tactic (Option format) :=
   (do
@@ -652,7 +652,7 @@ unsafe def _root_.tactic.polyrith (only_on : Bool) (hyps : List pexpr) : tactic 
 /-! # Interactivity -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Attempts to prove polynomial equality goals through polynomial arithmetic
 on the hypotheses (and additional proof terms if the user specifies them).
 It proves the goal by generating an appropriate call to the tactic

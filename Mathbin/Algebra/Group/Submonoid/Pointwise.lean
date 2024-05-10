@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Data.Set.Pointwise.SMul
-import GroupTheory.Submonoid.Membership
+import Algebra.Group.Submonoid.Membership
 import Order.WellFoundedSet
 
 #align_import group_theory.submonoid.pointwise from "leanprover-community/mathlib"@"2bbc7e3884ba234309d2a43b19144105a753292e"

@@ -618,21 +618,17 @@ section StrictOrderedRing
 
 variable [StrictOrderedRing R] {a : R}
 
-#print pow_bit0_pos_of_neg /-
 theorem pow_bit0_pos_of_neg (ha : a < 0) (n : ℕ) : 0 < a ^ bit0 n :=
   by
   rw [pow_bit0']
   exact pow_pos (mul_pos_of_neg_of_neg ha ha) _
 #align pow_bit0_pos_of_neg pow_bit0_pos_of_neg
--/
 
-#print pow_bit1_neg /-
 theorem pow_bit1_neg (ha : a < 0) (n : ℕ) : a ^ bit1 n < 0 :=
   by
   rw [bit1, pow_succ']
   exact mul_neg_of_neg_of_pos ha (pow_bit0_pos_of_neg ha n)
 #align pow_bit1_neg pow_bit1_neg
--/
 
 #print sq_pos_of_neg /-
 theorem sq_pos_of_neg (ha : a < 0) : 0 < a ^ 2 :=

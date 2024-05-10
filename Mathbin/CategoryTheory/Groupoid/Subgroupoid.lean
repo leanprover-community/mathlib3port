@@ -8,7 +8,7 @@ import CategoryTheory.Groupoid.Basic
 import CategoryTheory.Groupoid
 import Algebra.Group.Defs
 import Data.Set.Lattice
-import GroupTheory.Subgroup.Basic
+import Algebra.Group.Subgroup.Basic
 import Order.GaloisConnection
 
 #align_import category_theory.groupoid.subgroupoid from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"

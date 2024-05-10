@@ -6,7 +6,7 @@ Authors: Johannes Hölzl, Kenny Lau
 import Algebra.Module.LinearMap.Basic
 import Algebra.BigOperators.Basic
 import Data.Set.Finite
-import GroupTheory.Submonoid.Membership
+import Algebra.Group.Submonoid.Membership
 import GroupTheory.GroupAction.BigOperators
 import Data.Finset.Preimage
 
@@ -1388,7 +1388,7 @@ instance decidableZero : DecidablePred (Eq (0 : Π₀ i, β i)) := fun f =>
 #align dfinsupp.decidable_zero DFinsupp.decidableZero
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (i «expr ∉ » s) -/
 #print DFinsupp.support_subset_iff /-
 theorem support_subset_iff {s : Set ι} {f : Π₀ i, β i} :
     ↑f.support ⊆ s ↔ ∀ (i) (_ : i ∉ s), f i = 0 := by
@@ -1743,7 +1743,7 @@ instance distribMulAction₂ [Monoid γ] [∀ i j, AddMonoid (δ i j)]
 #align dfinsupp.distrib_mul_action₂ DFinsupp.distribMulAction₂
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DFinsupp.sigmaCurry /-
 /-- The natural map between `Π₀ (i : Σ i, α i), δ i.1 i.2` and `Π₀ i (j : α i), δ i j`.  -/
 noncomputable def sigmaCurry [∀ i j, Zero (δ i j)] (f : Π₀ i : Σ i, _, δ i.1 i.2) :
@@ -1817,7 +1817,7 @@ theorem sigmaCurry_single [DecidableEq ι] [∀ i, DecidableEq (α i)] [∀ i j,
 #align dfinsupp.sigma_curry_single DFinsupp.sigmaCurry_single
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DFinsupp.sigmaUncurry /-
 /-- The natural map between `Π₀ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
@@ -1840,7 +1840,7 @@ def sigmaUncurry [∀ i j, Zero (δ i j)] [∀ i, DecidableEq (α i)]
 #align dfinsupp.sigma_uncurry DFinsupp.sigmaUncurry
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DFinsupp.sigmaUncurry_apply /-
 @[simp]
 theorem sigmaUncurry_apply [∀ i j, Zero (δ i j)] [∀ i, DecidableEq (α i)]
@@ -1850,7 +1850,7 @@ theorem sigmaUncurry_apply [∀ i j, Zero (δ i j)] [∀ i, DecidableEq (α i)]
 #align dfinsupp.sigma_uncurry_apply DFinsupp.sigmaUncurry_apply
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DFinsupp.sigmaUncurry_zero /-
 @[simp]
 theorem sigmaUncurry_zero [∀ i j, Zero (δ i j)] [∀ i, DecidableEq (α i)]
@@ -1859,7 +1859,7 @@ theorem sigmaUncurry_zero [∀ i j, Zero (δ i j)] [∀ i, DecidableEq (α i)]
 #align dfinsupp.sigma_uncurry_zero DFinsupp.sigmaUncurry_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DFinsupp.sigmaUncurry_add /-
 @[simp]
 theorem sigmaUncurry_add [∀ i j, AddZeroClass (δ i j)] [∀ i, DecidableEq (α i)]
@@ -1869,7 +1869,7 @@ theorem sigmaUncurry_add [∀ i j, AddZeroClass (δ i j)] [∀ i, DecidableEq (�
 #align dfinsupp.sigma_uncurry_add DFinsupp.sigmaUncurry_add
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DFinsupp.sigmaUncurry_smul /-
 @[simp]
 theorem sigmaUncurry_smul [Monoid γ] [∀ i j, AddMonoid (δ i j)] [∀ i, DecidableEq (α i)]
@@ -1899,7 +1899,7 @@ theorem sigmaUncurry_single [∀ i j, Zero (δ i j)] [DecidableEq ι] [∀ i, De
 #align dfinsupp.sigma_uncurry_single DFinsupp.sigmaUncurry_single
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print DFinsupp.sigmaCurryEquiv /-
 /-- The natural bijection between `Π₀ (i : Σ i, α i), δ i.1 i.2` and `Π₀ i (j : α i), δ i j`.
 

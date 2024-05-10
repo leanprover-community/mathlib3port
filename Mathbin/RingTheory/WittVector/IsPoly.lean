@@ -105,7 +105,7 @@ namespace Tactic
 
 namespace Interactive
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- A macro for a common simplification when rewriting with ghost component equations. -/
 unsafe def ghost_simp (lems : parse simp_arg_list) : tactic Unit := do
   tactic.try tactic.intro1

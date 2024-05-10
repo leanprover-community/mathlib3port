@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 -/
 import Algebra.Ring.Regular
-import GroupTheory.Submonoid.Basic
+import Algebra.Group.Submonoid.Basic
 
 #align_import ring_theory.ore_localization.ore_set from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

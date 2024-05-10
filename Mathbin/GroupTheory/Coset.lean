@@ -6,7 +6,7 @@ Authors: Mitchell Rowett, Scott Morrison
 import Algebra.Quotient
 import Data.Fintype.Prod
 import GroupTheory.GroupAction.Basic
-import GroupTheory.Subgroup.MulOpposite
+import Algebra.Group.Subgroup.MulOpposite
 import Tactic.Group
 
 #align_import group_theory.coset from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"

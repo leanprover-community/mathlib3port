@@ -944,7 +944,7 @@ theorem isClopenable_iff_measurableSet : IsClopenable s ↔ MeasurableSet s :=
 #align measure_theory.is_clopenable_iff_measurable_set MeasureTheory.isClopenable_iff_measurableSet
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MeasureTheory.measurableSet_exists_tendsto /-
 /-- The set of points for which a measurable sequence of functions converges is measurable. -/
 @[measurability]

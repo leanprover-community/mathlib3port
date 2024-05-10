@@ -85,10 +85,12 @@ variable {α β R R' : Type _} {ms : Set (OuterMeasure α)} {m : OuterMeasure α
 instance : CoeFun (OuterMeasure α) fun _ => Set α → ℝ≥0∞ :=
   ⟨fun m => m.measureOf⟩
 
+#print MeasureTheory.OuterMeasure.measureOf_eq_coe /-
 @[simp]
 theorem measureOf_eq_coe (m : OuterMeasure α) : m.measureOf = m :=
   rfl
 #align measure_theory.outer_measure.measure_of_eq_coe MeasureTheory.OuterMeasure.measureOf_eq_coe
+-/
 
 #print MeasureTheory.OuterMeasure.empty' /-
 @[simp]
@@ -173,7 +175,7 @@ protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪
 #align measure_theory.outer_measure.union MeasureTheory.OuterMeasure.union
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print MeasureTheory.OuterMeasure.null_of_locally_null /-
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
@@ -769,7 +771,7 @@ end Basic
 
 section OfFunction
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option eqn_compiler.zeta -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:340:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
 variable {α : Type _} (m : Set α → ℝ≥0∞) (m_empty : m ∅ = 0)
@@ -862,7 +864,7 @@ theorem ofFunction_eq_sSup : OuterMeasure.ofFunction m m_empty = sSup {μ | ∀ 
 #align measure_theory.outer_measure.of_function_eq_Sup MeasureTheory.OuterMeasure.ofFunction_eq_sSup
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
+/- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
 #print MeasureTheory.OuterMeasure.ofFunction_union_of_top_of_nonempty_inter /-
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.

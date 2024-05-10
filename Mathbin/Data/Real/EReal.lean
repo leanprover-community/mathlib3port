@@ -1319,7 +1319,7 @@ theorem bot_mul_coe_of_neg {x : ℝ} (h : x < 0) : (⊥ : EReal) * x = ⊤ :=
 #align ereal.bot_mul_coe_of_neg EReal.bot_mul_coe_of_neg
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:146:2: warning: unsupported: with_cases -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:146:2: warning: unsupported: with_cases -/
 #print EReal.toReal_mul /-
 theorem toReal_mul {x y : EReal} : toReal (x * y) = toReal x * toReal y :=
   by
@@ -1352,7 +1352,7 @@ theorem toReal_mul {x y : EReal} : toReal (x * y) = toReal x * toReal y :=
 #align ereal.to_real_mul EReal.toReal_mul
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:146:2: warning: unsupported: with_cases -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:146:2: warning: unsupported: with_cases -/
 #print EReal.neg_mul /-
 protected theorem neg_mul (x y : EReal) : -x * y = -(x * y) :=
   by
@@ -1446,7 +1446,7 @@ theorem coe_abs (x : ℝ) : ((x : EReal).abs : EReal) = (|x| : ℝ) := by
 #align ereal.coe_abs EReal.coe_abs
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:146:2: warning: unsupported: with_cases -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:146:2: warning: unsupported: with_cases -/
 #print EReal.abs_mul /-
 @[simp]
 theorem abs_mul (x y : EReal) : (x * y).abs = x.abs * y.abs :=
@@ -1509,7 +1509,7 @@ theorem sign_coe (x : ℝ) : SignType.sign (x : EReal) = SignType.sign x := by
 #align ereal.sign_coe EReal.sign_coe
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:146:2: warning: unsupported: with_cases -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:146:2: warning: unsupported: with_cases -/
 #print EReal.sign_mul /-
 @[simp]
 theorem sign_mul (x y : EReal) : SignType.sign (x * y) = SignType.sign x * SignType.sign y :=

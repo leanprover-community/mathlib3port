@@ -111,7 +111,7 @@ unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
         "It is intended for use with `auto_param`s for structure fields."
 #align tactic.def_replacer tactic.def_replacer
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `def_replacer foo` sets up a stub definition `foo : tactic unit`, which can
 effectively be defined and re-defined later, by tagging definitions with `@[foo]`.
 

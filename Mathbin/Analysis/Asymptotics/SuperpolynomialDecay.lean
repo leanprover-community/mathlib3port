@@ -409,7 +409,9 @@ theorem superpolynomialDecay_iff_isBigO (hk : Tendsto k l atTop) :
   refine' (superpolynomial_decay_iff_zpow_tendsto_zero f hk).trans _
   have hk0 : ∀ᶠ x in l, k x ≠ 0 := hk.eventually_ne_at_top 0
   refine' ⟨fun h z => _, fun h z => _⟩
-  · refine' is_O_of_div_tendsto_nhds (hk0.mono fun x hx hxz => absurd (zpow_eq_zero hxz) hx) 0 _
+  · refine'
+      is_O_of_div_tendsto_nhds (hk0.mono fun x hx hxz => absurd (eq_zero_of_zpow_eq_zero hxz) hx) 0
+        _
     have : (fun a : α => k a ^ z)⁻¹ = fun a : α => k a ^ (-z) := funext fun x => by simp
     rw [div_eq_mul_inv, mul_comm f, this]
     exact h (-z)

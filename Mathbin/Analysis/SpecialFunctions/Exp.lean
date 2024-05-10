@@ -161,11 +161,11 @@ variable {α : Type _}
 
 open Real
 
-#print Filter.Tendsto.exp /-
-theorem Filter.Tendsto.exp {l : Filter α} {f : α → ℝ} {z : ℝ} (hf : Tendsto f l (𝓝 z)) :
+#print Filter.Tendsto.rexp /-
+theorem Filter.Tendsto.rexp {l : Filter α} {f : α → ℝ} {z : ℝ} (hf : Tendsto f l (𝓝 z)) :
     Tendsto (fun x => exp (f x)) l (𝓝 (exp z)) :=
   (continuous_exp.Tendsto _).comp hf
-#align filter.tendsto.exp Filter.Tendsto.exp
+#align filter.tendsto.exp Filter.Tendsto.rexp
 -/
 
 variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {x : α}

@@ -245,7 +245,7 @@ theorem mk_l_inv {X : F C} : ⟦Hom.l_inv X⟧ = (λ_ X).inv :=
 #align category_theory.free_monoidal_category.mk_l_inv CategoryTheory.FreeMonoidalCategory.mk_l_inv
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.FreeMonoidalCategory.tensor_eq_tensor /-
 @[simp]
 theorem tensor_eq_tensor {X Y : F C} : X.tensor Y = X ⊗ Y :=
@@ -264,7 +264,7 @@ section Functor
 
 variable {D : Type u'} [Category.{v'} D] [MonoidalCategory D] (f : C → D)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.FreeMonoidalCategory.projectObj /-
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 def projectObj : F C → D
@@ -278,7 +278,7 @@ section
 
 open Hom
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.FreeMonoidalCategory.projectMapAux /-
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 @[simp]

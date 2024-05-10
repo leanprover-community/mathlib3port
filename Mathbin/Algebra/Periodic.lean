@@ -9,8 +9,8 @@ import Algebra.Module.Defs
 import Algebra.Order.Archimedean
 import Data.Int.Parity
 import GroupTheory.Coset
-import GroupTheory.Subgroup.ZPowers
-import GroupTheory.Submonoid.Membership
+import Algebra.Group.Subgroup.ZPowers
+import Algebra.Group.Submonoid.Membership
 
 #align_import algebra.periodic from "leanprover-community/mathlib"@"30413fc89f202a090a54d78e540963ed3de0056e"
 

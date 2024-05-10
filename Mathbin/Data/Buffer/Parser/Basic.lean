@@ -52,7 +52,7 @@ section DefnLemmas
 
 variable {α β : Type} (msgs : Thunk (List String)) (msg : Thunk String)
 
-variable (p q : Parser α) (cb : CharBuffer) (n n' : ℕ) {err : Std.DList String}
+variable (p q : Parser α) (cb : CharBuffer) (n n' : ℕ) {err : Batteries.DList String}
 
 variable {a : α} {b : β}
 
@@ -78,7 +78,8 @@ class Static : Prop where
 /-- A `parser α` is defined to be `err_static` if it does not move on error.
 -/
 class ErrStatic : Prop where
-  of_fail : ∀ {cb : CharBuffer} {n n' : ℕ} {err : Std.DList String}, p cb n = fail n' err → n = n'
+  of_fail :
+    ∀ {cb : CharBuffer} {n n' : ℕ} {err : Batteries.DList String}, p cb n = fail n' err → n = n'
 #align parser.err_static Parser.ErrStatic
 
 /-- A `parser α` is defined to be `step` if it always moves exactly one char forward on success.
@@ -99,11 +100,11 @@ class Prog : Prop where
 class Bounded : Prop where
   ex' :
     ∀ {cb : CharBuffer} {n : ℕ},
-      cb.size ≤ n → ∃ (n' : ℕ) (err : Std.DList String), p cb n = fail n' err
+      cb.size ≤ n → ∃ (n' : ℕ) (err : Batteries.DList String), p cb n = fail n' err
 #align parser.bounded Parser.Bounded
 
 theorem Bounded.exists (p : Parser α) [p.Bounded] {cb : CharBuffer} {n : ℕ} (h : cb.size ≤ n) :
-    ∃ (n' : ℕ) (err : Std.DList String), p cb n = fail n' err :=
+    ∃ (n' : ℕ) (err : Batteries.DList String), p cb n = fail n' err :=
   Bounded.ex' h
 #align parser.bounded.exists Parser.Bounded.exists
 
@@ -122,7 +123,7 @@ class ConditionallyUnfailing : Prop where
 
 theorem fail_iff :
     (∀ pos' result, p cb n ≠ done pos' result) ↔
-      ∃ (pos' : ℕ) (err : Std.DList String), p cb n = fail pos' err :=
+      ∃ (pos' : ℕ) (err : Batteries.DList String), p cb n = fail pos' err :=
   by cases p cb n <;> simp
 #align parser.fail_iff Parser.fail_iff
 
@@ -185,7 +186,7 @@ theorem ConditionallyUnfailing.of_fail [p.ConditionallyUnfailing] (h : p cb n = 
 #align parser.conditionally_unfailing.of_fail Parser.ConditionallyUnfailing.of_fail
 
 theorem decorateErrors_fail (h : p cb n = fail n' err) :
-    @decorateErrors α msgs p cb n = fail n (Std.DList.lazy_ofList (msgs ())) := by
+    @decorateErrors α msgs p cb n = fail n (Batteries.DList.lazy_ofList (msgs ())) := by
   simp [decorate_errors, h]
 #align parser.decorate_errors_fail Parser.decorateErrors_fail
 
@@ -194,7 +195,7 @@ theorem decorateErrors_success (h : p cb n = done n' a) :
 #align parser.decorate_errors_success Parser.decorateErrors_success
 
 theorem decorateError_fail (h : p cb n = fail n' err) :
-    @decorateError α msg p cb n = fail n (Std.DList.lazy_ofList [msg ()]) :=
+    @decorateError α msg p cb n = fail n (Batteries.DList.lazy_ofList [msg ()]) :=
   decorateErrors_fail h
 #align parser.decorate_error_fail Parser.decorateError_fail
 
@@ -215,14 +216,14 @@ theorem decorateError_eq_done : @decorateError α msg p cb n = done n' a ↔ p c
 @[simp]
 theorem decorateErrors_eq_fail :
     @decorateErrors α msgs p cb n = fail n' err ↔
-      n = n' ∧ err = Std.DList.lazy_ofList (msgs ()) ∧ ∃ np err', p cb n = fail np err' :=
+      n = n' ∧ err = Batteries.DList.lazy_ofList (msgs ()) ∧ ∃ np err', p cb n = fail np err' :=
   by cases h : p cb n <;> simp [decorate_errors, h, eq_comm]
 #align parser.decorate_errors_eq_fail Parser.decorateErrors_eq_fail
 
 @[simp]
 theorem decorateError_eq_fail :
     @decorateError α msg p cb n = fail n' err ↔
-      n = n' ∧ err = Std.DList.lazy_ofList [msg ()] ∧ ∃ np err', p cb n = fail np err' :=
+      n = n' ∧ err = Batteries.DList.lazy_ofList [msg ()] ∧ ∃ np err', p cb n = fail np err' :=
   decorateErrors_eq_fail
 #align parser.decorate_error_eq_fail Parser.decorateError_eq_fail
 
@@ -396,7 +397,7 @@ theorem failure_eq_failure : @Parser.failure α = failure :=
 #align parser.failure_eq_failure Parser.failure_eq_failure
 
 @[simp]
-theorem failure_def : (failure : Parser α) cb n = fail n Std.DList.empty :=
+theorem failure_def : (failure : Parser α) cb n = fail n Batteries.DList.empty :=
   rfl
 #align parser.failure_def Parser.failure_def
 
@@ -404,7 +405,8 @@ theorem not_failure_eq_done : ¬(failure : Parser α) cb n = done n' a := by sim
 #align parser.not_failure_eq_done Parser.not_failure_eq_done
 
 theorem failure_eq_fail :
-    (failure : Parser α) cb n = fail n' err ↔ n = n' ∧ err = Std.DList.empty := by simp [eq_comm]
+    (failure : Parser α) cb n = fail n' err ↔ n = n' ∧ err = Batteries.DList.empty := by
+  simp [eq_comm]
 #align parser.failure_eq_fail Parser.failure_eq_fail
 
 theorem seq_eq_done {f : Parser (α → β)} {p : Parser α} :
@@ -446,15 +448,15 @@ theorem seqRight_eq_fail {p : Parser α} {q : Parser β} :
   by simp [seq_right_eq, seq_eq_fail]
 #align parser.seq_right_eq_fail Parser.seqRight_eq_fail
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mapM_eq_done {f : α → Parser β} {a : α} {l : List α} {b : β} {l' : List β} :
     (a::l).mapM f cb n = done n' (b::l') ↔
       ∃ np : ℕ, f a cb n = done np b ∧ l.mapM f cb np = done n' l' :=
   by simp [mmap, and_comm, and_assoc, and_left_comm, pure_eq_done]
 #align parser.mmap_eq_done Parser.mapM_eq_done
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mapM'_eq_done {f : α → Parser β} {a : α} {l : List α} :
     (a::l).mapM' f cb n = done n' () ↔
       ∃ (np : ℕ) (b : β), f a cb n = done np b ∧ l.mapM' f cb np = done n' () :=
@@ -467,7 +469,7 @@ theorem guard_eq_done {p : Prop} [Decidable p] {u : Unit} :
 #align parser.guard_eq_done Parser.guard_eq_done
 
 theorem guard_eq_fail {p : Prop} [Decidable p] :
-    @guard Parser _ p _ cb n = fail n' err ↔ ¬p ∧ n = n' ∧ err = Std.DList.empty := by
+    @guard Parser _ p _ cb n = fail n' err ↔ ¬p ∧ n = n' ∧ err = Batteries.DList.empty := by
   by_cases hp : p <;> simp [guard, hp, eq_comm, pure_eq_done]
 #align parser.guard_eq_fail Parser.guard_eq_fail
 
@@ -505,7 +507,7 @@ instance seq {f : Parser (α → β)} [f.mono] [p.mono] : (f <*> p).mono :=
   Mono.bind
 #align parser.mono.seq Parser.Mono.seq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mono], (l.mapM f).mono
   | [], _, _ => Mono.pure
   | a::l, f, h => by
@@ -517,7 +519,7 @@ instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mon
       exact fun _ ha => h _ (List.mem_cons_of_mem _ ha)
 #align parser.mono.mmap Parser.Mono.mapM
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mono], (l.mapM' f).mono
   | [], _, _ => Mono.pure
   | a::l, f, h => by
@@ -696,7 +698,7 @@ end DefnLemmas
 section Done
 
 variable {α β : Type} {cb : CharBuffer} {n n' : ℕ} {a a' : α} {b : β} {c : Char} {u : Unit}
-  {err : Std.DList String}
+  {err : Batteries.DList String}
 
 theorem anyChar_eq_done :
     anyChar cb n = done n' c ↔ ∃ hn : n < cb.size, n' = n + 1 ∧ cb.read ⟨n, hn⟩ = c :=
@@ -706,7 +708,7 @@ theorem anyChar_eq_done :
 #align parser.any_char_eq_done Parser.anyChar_eq_done
 
 theorem anyChar_eq_fail :
-    anyChar cb n = fail n' err ↔ n = n' ∧ err = Std.DList.empty ∧ cb.size ≤ n :=
+    anyChar cb n = fail n' err ↔ n = n' ∧ err = Batteries.DList.empty ∧ cb.size ≤ n :=
   by
   simp_rw [any_char]
   split_ifs with h <;> simp [← not_lt, h, eq_comm]
@@ -729,7 +731,7 @@ theorem sat_eq_done {p : Char → Prop} [DecidablePred p] :
 
 theorem sat_eq_fail {p : Char → Prop} [DecidablePred p] :
     sat p cb n = fail n' err ↔
-      n = n' ∧ err = Std.DList.empty ∧ ∀ h : n < cb.size, ¬p (cb.read ⟨n, h⟩) :=
+      n = n' ∧ err = Batteries.DList.empty ∧ ∀ h : n < cb.size, ¬p (cb.read ⟨n, h⟩) :=
   by
   dsimp only [sat]
   split_ifs <;> simp [*, eq_comm]
@@ -826,12 +828,13 @@ theorem foldrCore_eq_done {f : α → β → β} {p : Parser α} {reps : ℕ} {b
 #align parser.foldr_core_eq_done Parser.foldrCore_eq_done
 
 @[simp]
-theorem foldrCore_zero_eq_fail {f : α → β → β} {p : Parser α} {err : Std.DList String} :
-    foldrCore f p b 0 cb n = fail n' err ↔ n = n' ∧ err = Std.DList.empty := by
+theorem foldrCore_zero_eq_fail {f : α → β → β} {p : Parser α} {err : Batteries.DList String} :
+    foldrCore f p b 0 cb n = fail n' err ↔ n = n' ∧ err = Batteries.DList.empty := by
   simp [foldr_core, eq_comm]
 #align parser.foldr_core_zero_eq_fail Parser.foldrCore_zero_eq_fail
 
-theorem foldrCore_succ_eq_fail {f : α → β → β} {p : Parser α} {reps : ℕ} {err : Std.DList String} :
+theorem foldrCore_succ_eq_fail {f : α → β → β} {p : Parser α} {reps : ℕ}
+    {err : Batteries.DList String} :
     foldrCore f p b (reps + 1) cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -852,10 +855,10 @@ theorem foldr_eq_done {f : α → β → β} {p : Parser α} {b' : β} :
   by simp [foldr, foldr_core_eq_done]
 #align parser.foldr_eq_done Parser.foldr_eq_done
 
-theorem foldr_eq_fail_iff_mono_at_end {f : α → β → β} {p : Parser α} {err : Std.DList String}
+theorem foldr_eq_fail_iff_mono_at_end {f : α → β → β} {p : Parser α} {err : Batteries.DList String}
     [p.mono] (hc : cb.size ≤ n) :
     foldr f p b cb n = fail n' err ↔
-      n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Std.DList.empty) :=
+      n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Batteries.DList.empty) :=
   by
   have : cb.size - n = 0 := tsub_eq_zero_iff_le.mpr hc
   simp only [foldr, foldr_core_succ_eq_fail, this, and_left_comm, foldr_core_zero_eq_fail,
@@ -865,7 +868,7 @@ theorem foldr_eq_fail_iff_mono_at_end {f : α → β → β} {p : Parser α} {er
   · exact mono.of_done h
 #align parser.foldr_eq_fail_iff_mono_at_end Parser.foldr_eq_fail_iff_mono_at_end
 
-theorem foldr_eq_fail {f : α → β → β} {p : Parser α} {err : Std.DList String} :
+theorem foldr_eq_fail {f : α → β → β} {p : Parser α} {err : Batteries.DList String} :
     foldr f p b cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -892,12 +895,13 @@ theorem foldlCore_eq_done {f : β → α → β} {p : Parser α} {reps : ℕ} {b
 #align parser.foldl_core_eq_done Parser.foldlCore_eq_done
 
 @[simp]
-theorem foldlCore_zero_eq_fail {f : β → α → β} {p : Parser α} {err : Std.DList String} :
-    foldlCore f b p 0 cb n = fail n' err ↔ n = n' ∧ err = Std.DList.empty := by
+theorem foldlCore_zero_eq_fail {f : β → α → β} {p : Parser α} {err : Batteries.DList String} :
+    foldlCore f b p 0 cb n = fail n' err ↔ n = n' ∧ err = Batteries.DList.empty := by
   simp [foldl_core, eq_comm]
 #align parser.foldl_core_zero_eq_fail Parser.foldlCore_zero_eq_fail
 
-theorem foldlCore_succ_eq_fail {f : β → α → β} {p : Parser α} {reps : ℕ} {err : Std.DList String} :
+theorem foldlCore_succ_eq_fail {f : β → α → β} {p : Parser α} {reps : ℕ}
+    {err : Batteries.DList String} :
     foldlCore f b p (reps + 1) cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -919,7 +923,7 @@ theorem foldl_eq_done {f : β → α → β} {p : Parser α} {b' : β} :
   by simp [foldl, foldl_core_eq_done]
 #align parser.foldl_eq_done Parser.foldl_eq_done
 
-theorem foldl_eq_fail {f : β → α → β} {p : Parser α} {err : Std.DList String} :
+theorem foldl_eq_fail {f : β → α → β} {p : Parser α} {err : Batteries.DList String} :
     foldl f b p cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -928,10 +932,10 @@ theorem foldl_eq_fail {f : β → α → β} {p : Parser α} {err : Std.DList St
   by simp [foldl, foldl_core_succ_eq_fail]
 #align parser.foldl_eq_fail Parser.foldl_eq_fail
 
-theorem foldl_eq_fail_iff_mono_at_end {f : β → α → β} {p : Parser α} {err : Std.DList String}
+theorem foldl_eq_fail_iff_mono_at_end {f : β → α → β} {p : Parser α} {err : Batteries.DList String}
     [p.mono] (hc : cb.size ≤ n) :
     foldl f b p cb n = fail n' err ↔
-      n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Std.DList.empty) :=
+      n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Batteries.DList.empty) :=
   by
   have : cb.size - n = 0 := tsub_eq_zero_iff_le.mpr hc
   simp only [foldl, foldl_core_succ_eq_fail, this, and_left_comm, ne_iff_lt_iff_le, exists_eq_left,
@@ -951,14 +955,14 @@ theorem many_eq_done_nil {p : Parser α} :
   by simp [many, foldr_eq_done]
 #align parser.many_eq_done_nil Parser.many_eq_done_nil
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem many_eq_done {p : Parser α} {x : α} {xs : List α} :
     many p cb n = done n' (x::xs) ↔
       ∃ np : ℕ, p cb n = done np x ∧ foldrCore List.cons p [] (cb.size - n) cb np = done n' xs :=
   by simp [many, foldr_eq_done, and_comm, and_assoc, and_left_comm]
 #align parser.many_eq_done Parser.many_eq_done
 
-theorem many_eq_fail {p : Parser α} {err : Std.DList String} :
+theorem many_eq_fail {p : Parser α} {err : Batteries.DList String} :
     many p cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -990,8 +994,8 @@ theorem manyChar_eq_many_of_toList {p : Parser Char} {s : String} :
   simp [many_char, List.asString_eq]
 #align parser.many_char_eq_many_of_to_list Parser.manyChar_eq_many_of_toList
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem many'_eq_done {p : Parser α} :
     many' p cb n = done n' u ↔
       many p cb n = done n' [] ∨
@@ -1018,13 +1022,13 @@ theorem many'_eq_done {p : Parser α} :
 theorem many1_ne_done_nil {p : Parser α} : many1 p cb n ≠ done n' [] := by simp [many1, seq_eq_done]
 #align parser.many1_ne_done_nil Parser.many1_ne_done_nil
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem many1_eq_done {p : Parser α} {l : List α} :
     many1 p cb n = done n' (a::l) ↔ ∃ np : ℕ, p cb n = done np a ∧ many p cb np = done n' l := by
   simp [many1, seq_eq_done, map_eq_done]
 #align parser.many1_eq_done Parser.many1_eq_done
 
-theorem many1_eq_fail {p : Parser α} {err : Std.DList String} :
+theorem many1_eq_fail {p : Parser α} {err : Batteries.DList String} :
     many1 p cb n = fail n' err ↔
       p cb n = fail n' err ∨ ∃ (np : ℕ) (a : α), p cb n = done np a ∧ many p cb np = fail n' err :=
   by simp [many1, seq_eq_fail]
@@ -1048,7 +1052,7 @@ theorem sepBy1_ne_done_nil {sep : Parser Unit} {p : Parser α} : sepBy1 sep p cb
   simp [sep_by1, seq_eq_done]
 #align parser.sep_by1_ne_done_nil Parser.sepBy1_ne_done_nil
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem sepBy1_eq_done {sep : Parser Unit} {p : Parser α} {l : List α} :
     sepBy1 sep p cb n = done n' (a::l) ↔
       ∃ np : ℕ, p cb n = done np a ∧ (sep >> p).anyM cb np = done n' l :=
@@ -1096,7 +1100,7 @@ theorem digit_eq_done {k : ℕ} :
 theorem digit_eq_fail :
     digit cb n = fail n' err ↔
       n = n' ∧
-        err = Std.DList.ofList ["<digit>"] ∧
+        err = Batteries.DList.ofList ["<digit>"] ∧
           ∀ h : n < cb.size, ¬(fun c => '0' ≤ c ∧ c ≤ '9') (cb.read ⟨n, h⟩) :=
   by simp [digit, sat_eq_fail]
 #align parser.digit_eq_fail Parser.digit_eq_fail
@@ -1106,7 +1110,7 @@ end Done
 namespace Static
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Batteries.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_of_ne (h : p cb n = done n' a) (hne : n ≠ n') : ¬Static p := by intro;
   exact hne (of_done h)
@@ -1133,7 +1137,7 @@ instance seq {f : Parser (α → β)} [f.Static] [p.Static] : (f <*> p).Static :
   Static.bind
 #align parser.static.seq Parser.Static.seq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mapM f).Static
   | [], _, _ => Static.pure
   | a::l, _, h => by
@@ -1146,7 +1150,7 @@ instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], 
       · exact fun _ => static.pure
 #align parser.static.mmap Parser.Static.mapM
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mapM' f).Static
   | [], _, _ => Static.pure
   | a::l, _, h => by
@@ -1224,8 +1228,8 @@ theorem charBuf_iff {cb' : CharBuffer} : Static (charBuf cb') ↔ cb' = Buffer.n
     simpa [Nat.succ_ne_zero] using not_of_ne this (Nat.succ_ne_zero n).symm
 #align parser.static.char_buf_iff Parser.Static.charBuf_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem oneOf_iff {cs : List Char} : Static (oneOf cs) ↔ cs = [] :=
   by
   cases' cs with hd tl
@@ -1237,8 +1241,8 @@ theorem oneOf_iff {cs : List Char} : Static (oneOf cs) ↔ cs = [] :=
 instance oneOf : Static (oneOf []) := by apply one_of_iff.mpr; rfl
 #align parser.static.one_of Parser.Static.oneOf
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem oneOf'_iff {cs : List Char} : Static (oneOf' cs) ↔ cs = [] :=
   by
   cases' cs with hd tl
@@ -1357,7 +1361,7 @@ namespace Bounded
 
 variable {α β : Type} {msgs : Thunk (List String)} {msg : Thunk String}
 
-variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Std.DList String}
+variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Batteries.DList String}
 
 variable {a : α} {b : β}
 
@@ -1398,13 +1402,13 @@ instance seq {f : Parser (α → β)} [f.Bounded] : (f <*> p).Bounded :=
   Bounded.bind
 #align parser.bounded.seq Parser.Bounded.seq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM {a : α} {l : List α} {f : α → Parser β} [∀ a, (f a).Bounded] :
     ((a::l).mapM f).Bounded :=
   Bounded.bind
 #align parser.bounded.mmap Parser.Bounded.mapM
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' {a : α} {l : List α} {f : α → Parser β} [∀ a, (f a).Bounded] :
     ((a::l).mapM' f).Bounded :=
   Bounded.andThen
@@ -1620,7 +1624,7 @@ end Bounded
 namespace Unfailing
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Batteries.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem of_bounded [p.Bounded] : ¬Unfailing p :=
   by
@@ -1679,7 +1683,7 @@ instance mapM' {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] : (
 theorem failure : ¬@Parser.Unfailing α failure :=
   by
   intro h
-  have : (failure : Parser α) Buffer.nil 0 = fail 0 Std.DList.empty := by simp
+  have : (failure : Parser α) Buffer.nil 0 = fail 0 Batteries.DList.empty := by simp
   exact of_fail this
 #align parser.unfailing.failure Parser.Unfailing.failure
 
@@ -1766,7 +1770,7 @@ end Unfailing
 namespace ErrStatic
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Batteries.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_of_ne (h : p cb n = fail n' err) (hne : n ≠ n') : ¬ErrStatic p := by intro;
   exact hne (of_fail h)
@@ -1814,7 +1818,7 @@ instance seq_of_unfailing {f : Parser (α → β)} [f.ErrStatic] [p.Unfailing] :
   ErrStatic.bind_of_unfailing
 #align parser.err_static.seq_of_unfailing Parser.ErrStatic.seq_of_unfailing
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [∀ a, (f a).ErrStatic],
       (l.mapM f).ErrStatic
@@ -1833,7 +1837,7 @@ instance mapM :
       · exact fun _ => err_static.pure
 #align parser.err_static.mmap Parser.ErrStatic.mapM
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM_of_unfailing :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] [∀ a, (f a).ErrStatic],
       (l.mapM f).ErrStatic
@@ -1848,7 +1852,7 @@ instance mapM_of_unfailing :
       · exact fun _ => unfailing.pure
 #align parser.err_static.mmap_of_unfailing Parser.ErrStatic.mapM_of_unfailing
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [∀ a, (f a).ErrStatic],
       (l.mapM' f).ErrStatic
@@ -1862,7 +1866,7 @@ instance mapM' :
       · exact h'
 #align parser.err_static.mmap' Parser.ErrStatic.mapM'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM'_of_unfailing :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] [∀ a, (f a).ErrStatic],
       (l.mapM' f).ErrStatic
@@ -1965,7 +1969,7 @@ end ErrStatic
 namespace Step
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Batteries.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_step_of_static_done [Static p] (h : ∃ cb n n' a, p cb n = done n' a) : ¬Step p :=
   by
@@ -2157,11 +2161,11 @@ end Step
 section Step
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Batteries.DList String} {a : α} {b : β} {sep : Parser Unit}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem many1_eq_done_iff_many_eq_done [p.step] [p.Bounded] {x : α} {xs : List α} :
     many1 p cb n = done n' (x::xs) ↔ many p cb n = done n' (x::xs) :=
   by
@@ -2215,7 +2219,7 @@ end Step
 namespace Prog
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Batteries.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 -- see Note [lower instance priority]
 instance (priority := 100) of_step [Step p] : Prog p :=
@@ -2247,7 +2251,7 @@ instance seq {f : Parser (α → β)} [f.Prog] [p.mono] : (f <*> p).Prog :=
   Prog.bind
 #align parser.prog.seq Parser.Prog.seq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] :
     ((a::l).mapM f).Prog := by
   constructor
@@ -2256,7 +2260,7 @@ instance mapM {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mo
   exact lt_of_lt_of_le (of_done h) (mono.of_done hp)
 #align parser.prog.mmap Parser.Prog.mapM
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] :
     ((a::l).mapM' f).Prog := by
   constructor
@@ -2394,7 +2398,7 @@ end Prog
 
 variable {α β : Type} {msgs : Thunk (List String)} {msg : Thunk String}
 
-variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Std.DList String}
+variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Batteries.DList String}
 
 variable {a : α} {b : β}
 
@@ -2811,8 +2815,8 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
     exact hl h
 #align parser.nat_of_done_bounded Parser.nat_of_done_bounded
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:570:6: unsupported: specialize @hyp -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ././././Mathport/Syntax/Translate/Tactic/Lean3.lean:570:6: unsupported: specialize @hyp -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The `val : ℕ` produced by a successful parse of a `cb : char_buffer` is the numerical value
 represented by the string of decimal digits (possibly padded with 0s on the left)
 starting from the parsing position `n` and ending at position `n'`, where `n < n'`. The number

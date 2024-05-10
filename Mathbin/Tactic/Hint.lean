@@ -27,7 +27,7 @@ add_tactic_doc
     declNames := [`tactic.hint.hint_tactic_attribute]
     tags := ["rewrite", "search"] }
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit := do
   add_decl <| declaration.defn n [] q(tactic String) t ReducibilityHints.opaque ff
   hint_tactic_attribute n () tt
