@@ -83,17 +83,15 @@ structure Measure (α : Type _) [MeasurableSpace α] extends OuterMeasure α whe
 #align measure_theory.measure MeasureTheory.Measure
 -/
 
-#print MeasureTheory.Measure.instCoeFun /-
 /-- Measure projections for a measure space.
 
 For measurable sets this returns the measure assigned by the `measure_of` field in `measure`.
 But we can extend this to _all_ sets, but using the outer measure. This gives us monotonicity and
 subadditivity for all sets.
 -/
-instance Measure.instCoeFun [MeasurableSpace α] : CoeFun (Measure α) fun _ => Set α → ℝ≥0∞ :=
+instance Measure.hasCoeToFun [MeasurableSpace α] : CoeFun (Measure α) fun _ => Set α → ℝ≥0∞ :=
   ⟨fun m => m.toOuterMeasure⟩
-#align measure_theory.measure.has_coe_to_fun MeasureTheory.Measure.instCoeFun
--/
+#align measure_theory.measure.has_coe_to_fun MeasureTheory.Measure.hasCoeToFun
 
 section
 
@@ -160,14 +158,18 @@ theorem ext_iff : μ₁ = μ₂ ↔ ∀ s, MeasurableSet s → μ₁ s = μ₂ s
 
 end Measure
 
+#print MeasureTheory.Measure.coe_toOuterMeasure /-
 @[simp]
-theorem coe_toOuterMeasure : ⇑μ.toOuterMeasure = μ :=
+theorem MeasureTheory.Measure.coe_toOuterMeasure : ⇑μ.toOuterMeasure = μ :=
   rfl
-#align measure_theory.coe_to_outer_measure MeasureTheory.coe_toOuterMeasure
+#align measure_theory.coe_to_outer_measure MeasureTheory.Measure.coe_toOuterMeasure
+-/
 
-theorem toOuterMeasure_apply (s : Set α) : μ.toOuterMeasure s = μ s :=
+#print MeasureTheory.Measure.toOuterMeasure_apply /-
+theorem MeasureTheory.Measure.toOuterMeasure_apply (s : Set α) : μ.toOuterMeasure s = μ s :=
   rfl
-#align measure_theory.to_outer_measure_apply MeasureTheory.toOuterMeasure_apply
+#align measure_theory.to_outer_measure_apply MeasureTheory.Measure.toOuterMeasure_apply
+-/
 
 #print MeasureTheory.measure_eq_trim /-
 theorem measure_eq_trim (s : Set α) : μ s = μ.toOuterMeasure.trim s := by rw [μ.trimmed] <;> rfl
