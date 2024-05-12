@@ -3,7 +3,7 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Algebra.CharP.Basic
+import Algebra.CharP.Defs
 import GroupTheory.Perm.Cycle.Type
 
 #align_import algebra.char_p.char_and_card from "leanprover-community/mathlib"@"75be6b616681ab6ca66d798ead117e75cd64f125"

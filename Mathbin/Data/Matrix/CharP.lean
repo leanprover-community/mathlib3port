@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
 import Data.Matrix.Basic
-import Algebra.CharP.Basic
+import Algebra.CharP.Defs
 
 #align_import data.matrix.char_p from "leanprover-community/mathlib"@"d64d67d000b974f0d86a2be7918cf800be6271c8"
 

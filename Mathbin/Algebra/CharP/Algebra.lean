@@ -3,7 +3,7 @@ Copyright (c) 2021 Jon Eugster. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster, Eric Wieser
 -/
-import Algebra.CharP.Basic
+import Algebra.CharP.Defs
 import RingTheory.Localization.FractionRing
 import Algebra.FreeAlgebra
 

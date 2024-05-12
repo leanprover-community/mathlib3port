@@ -158,7 +158,7 @@ import Algebra.Category.SemigroupCat.Basic
 import Algebra.Category.FGModuleCat.Basic
 import Algebra.Category.FGModuleCat.Limits
 import Algebra.CharP.Algebra
-import Algebra.CharP.Basic
+import Algebra.CharP.Defs
 import Algebra.CharP.CharAndCard
 import Algebra.CharP.ExpChar
 import Algebra.CharP.Invertible

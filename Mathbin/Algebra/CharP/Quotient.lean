@@ -3,7 +3,7 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 -/
-import Algebra.CharP.Basic
+import Algebra.CharP.Defs
 import RingTheory.Ideal.Quotient
 
 #align_import algebra.char_p.quotient from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"

@@ -3,7 +3,7 @@ Copyright (c) 2022 Jon Eugster. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
 -/
-import Algebra.CharP.Basic
+import Algebra.CharP.Defs
 import RingTheory.Ideal.LocalRing
 import Algebra.IsPrimePow
 import Data.Nat.Factorization.Basic

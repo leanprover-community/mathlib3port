@@ -3,7 +3,7 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Algebra.CharP.Basic
+import Algebra.CharP.Defs
 import Algebra.Polynomial.AlgebraMap
 import Algebra.MvPolynomial.Degrees
 import LinearAlgebra.FinsuppVectorSpace
