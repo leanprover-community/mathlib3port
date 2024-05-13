@@ -169,13 +169,11 @@ open scoped Isocrystal
 /-! ### Classification of isocrystals in dimension 1 -/
 
 
-#print WittVector.FractionRing.module /-
 /-- A helper instance for type class inference. -/
 @[local instance]
 def FractionRing.module : Module K(p, k) K(p, k) :=
   Semiring.toModule
 #align witt_vector.fraction_ring.module WittVector.FractionRing.module
--/
 
 /- ././././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k) -/
 #print WittVector.StandardOneDimIsocrystal /-

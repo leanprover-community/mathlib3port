@@ -572,10 +572,10 @@ theorem Subgroup.nilpotencyClass_le (H : Subgroup G) [hG : IsNilpotent G] :
 #align subgroup.nilpotency_class_le Subgroup.nilpotencyClass_le
 -/
 
-#print isNilpotent_of_subsingleton /-
-instance (priority := 100) isNilpotent_of_subsingleton [Subsingleton G] : IsNilpotent G :=
+#print Group.isNilpotent_of_subsingleton /-
+instance (priority := 100) Group.isNilpotent_of_subsingleton [Subsingleton G] : IsNilpotent G :=
   nilpotent_iff_lowerCentralSeries.2 ⟨0, Subsingleton.elim ⊤ ⊥⟩
-#align is_nilpotent_of_subsingleton isNilpotent_of_subsingleton
+#align is_nilpotent_of_subsingleton Group.isNilpotent_of_subsingleton
 -/
 
 #print upperCentralSeries.map /-
