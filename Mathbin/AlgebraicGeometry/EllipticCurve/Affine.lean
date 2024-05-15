@@ -359,7 +359,7 @@ theorem WeierstrassCurve.Affine.CoordinateRing.XYIdeal_add_eq :
 /- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.721409751.eval_simp -/
 #print WeierstrassCurve.Affine.equation_add_iff /-
 theorem WeierstrassCurve.Affine.equation_add_iff :
-    W.equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) ↔
+    W.Equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) ↔
       (W.addPolynomial x₁ y₁ L).eval (W.addX x₁ x₂ L) = 0 :=
   by
   rw [equation, add_Y', add_polynomial, line_polynomial, WeierstrassCurve.Affine.polynomial]
@@ -374,9 +374,9 @@ theorem WeierstrassCurve.Affine.equation_add_iff :
 /- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.721409751.eval_simp -/
 #print WeierstrassCurve.Affine.nonsingular_add_of_eval_derivative_ne_zero /-
 theorem WeierstrassCurve.Affine.nonsingular_add_of_eval_derivative_ne_zero
-    (hx' : W.equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L))
+    (hx' : W.Equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L))
     (hx : (derivative <| W.addPolynomial x₁ y₁ L).eval (W.addX x₁ x₂ L) ≠ 0) :
-    W.nonsingular (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) :=
+    W.Nonsingular (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) :=
   by
   rw [nonsingular, and_iff_right hx', add_Y', polynomial_X, polynomial_Y]
   run_tac
@@ -404,7 +404,7 @@ satisfying the equation $y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6$ of `W`.
 extension `S` of `R`, the type of nonsingular `S`-rational points on `W` is denoted `W⟮S⟯`. -/
 inductive WeierstrassCurve.Affine.Point
   | zero
-  | some {x y : R} (h : W.nonsingular x y)
+  | some {x y : R} (h : W.Nonsingular x y)
 #align weierstrass_curve.point WeierstrassCurve.Affine.Point
 -/
 
@@ -432,29 +432,29 @@ variable {W x₁ y₁}
 
 #print WeierstrassCurve.Affine.equation_neg_iff /-
 theorem WeierstrassCurve.Affine.equation_neg_iff :
-    W.equation x₁ (W.negY x₁ y₁) ↔ W.equation x₁ y₁ := by rw [equation_iff, equation_iff, neg_Y];
+    W.Equation x₁ (W.negY x₁ y₁) ↔ W.Equation x₁ y₁ := by rw [equation_iff, equation_iff, neg_Y];
   congr 2; ring1
 #align weierstrass_curve.equation_neg_iff WeierstrassCurve.Affine.equation_neg_iff
 -/
 
 #print WeierstrassCurve.Affine.equation_neg_of /-
-theorem WeierstrassCurve.Affine.equation_neg_of (h : W.equation x₁ <| W.negY x₁ y₁) :
-    W.equation x₁ y₁ :=
+theorem WeierstrassCurve.Affine.equation_neg_of (h : W.Equation x₁ <| W.negY x₁ y₁) :
+    W.Equation x₁ y₁ :=
   WeierstrassCurve.Affine.equation_neg_iff.mp h
 #align weierstrass_curve.equation_neg_of WeierstrassCurve.Affine.equation_neg_of
 -/
 
 #print WeierstrassCurve.Affine.equation_neg /-
 /-- The negation of an affine point in `W` lies in `W`. -/
-theorem WeierstrassCurve.Affine.equation_neg (h : W.equation x₁ y₁) :
-    W.equation x₁ <| W.negY x₁ y₁ :=
+theorem WeierstrassCurve.Affine.equation_neg (h : W.Equation x₁ y₁) :
+    W.Equation x₁ <| W.negY x₁ y₁ :=
   WeierstrassCurve.Affine.equation_neg_iff.mpr h
 #align weierstrass_curve.equation_neg WeierstrassCurve.Affine.equation_neg
 -/
 
 #print WeierstrassCurve.Affine.nonsingular_neg_iff /-
 theorem WeierstrassCurve.Affine.nonsingular_neg_iff :
-    W.nonsingular x₁ (W.negY x₁ y₁) ↔ W.nonsingular x₁ y₁ :=
+    W.Nonsingular x₁ (W.negY x₁ y₁) ↔ W.Nonsingular x₁ y₁ :=
   by
   rw [nonsingular_iff, equation_neg_iff, ← neg_Y, neg_Y_neg_Y, ← @ne_comm _ y₁, nonsingular_iff]
   exact
@@ -465,16 +465,16 @@ theorem WeierstrassCurve.Affine.nonsingular_neg_iff :
 -/
 
 #print WeierstrassCurve.Affine.nonsingular_neg_of /-
-theorem WeierstrassCurve.Affine.nonsingular_neg_of (h : W.nonsingular x₁ <| W.negY x₁ y₁) :
-    W.nonsingular x₁ y₁ :=
+theorem WeierstrassCurve.Affine.nonsingular_neg_of (h : W.Nonsingular x₁ <| W.negY x₁ y₁) :
+    W.Nonsingular x₁ y₁ :=
   WeierstrassCurve.Affine.nonsingular_neg_iff.mp h
 #align weierstrass_curve.nonsingular_neg_of WeierstrassCurve.Affine.nonsingular_neg_of
 -/
 
 #print WeierstrassCurve.Affine.nonsingular_neg /-
 /-- The negation of a nonsingular affine point in `W` is nonsingular. -/
-theorem WeierstrassCurve.Affine.nonsingular_neg (h : W.nonsingular x₁ y₁) :
-    W.nonsingular x₁ <| W.negY x₁ y₁ :=
+theorem WeierstrassCurve.Affine.nonsingular_neg (h : W.Nonsingular x₁ y₁) :
+    W.Nonsingular x₁ <| W.negY x₁ y₁ :=
   WeierstrassCurve.Affine.nonsingular_neg_iff.mpr h
 #align weierstrass_curve.nonsingular_neg WeierstrassCurve.Affine.nonsingular_neg
 -/
@@ -510,7 +510,7 @@ theorem WeierstrassCurve.Affine.Point.neg_zero : (-0 : W.Point) = 0 :=
 
 #print WeierstrassCurve.Affine.Point.neg_some /-
 @[simp]
-theorem WeierstrassCurve.Affine.Point.neg_some (h : W.nonsingular x₁ y₁) :
+theorem WeierstrassCurve.Affine.Point.neg_some (h : W.Nonsingular x₁ y₁) :
     -WeierstrassCurve.Affine.Point.some h =
       WeierstrassCurve.Affine.Point.some (WeierstrassCurve.Affine.nonsingular_neg h) :=
   rfl
@@ -551,8 +551,8 @@ noncomputable def WeierstrassCurve.Affine.slope : F :=
 #align weierstrass_curve.slope WeierstrassCurve.Affine.slope
 -/
 
-variable {W x₁ x₂ y₁ y₂} (h₁ : W.nonsingular x₁ y₁) (h₂ : W.nonsingular x₂ y₂)
-  (h₁' : W.equation x₁ y₁) (h₂' : W.equation x₂ y₂)
+variable {W x₁ x₂ y₁ y₂} (h₁ : W.Nonsingular x₁ y₁) (h₂ : W.Nonsingular x₂ y₂)
+  (h₁' : W.Equation x₁ y₁) (h₂' : W.Equation x₂ y₂)
 
 @[simp]
 theorem slope_of_Y_eq (hx : x₁ = x₂) (hy : y₁ = W.negY x₂ y₂) : W.slope x₁ x₂ y₁ y₂ = 0 := by
@@ -720,7 +720,7 @@ theorem WeierstrassCurve.Affine.derivative_addPolynomial_slope (hxy : x₁ = x�
 /-- The addition of two affine points in `W` on a sloped line,
 before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, lies in `W`. -/
 theorem WeierstrassCurve.Affine.equation_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    W.equation (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
+    W.Equation (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   by
   rw [equation_add_iff, add_polynomial_slope h₁' h₂' hxy];
   run_tac
@@ -732,7 +732,7 @@ theorem WeierstrassCurve.Affine.equation_add' (hxy : x₁ = x₂ → y₁ ≠ W.
 #print WeierstrassCurve.Affine.equation_add /-
 /-- The addition of two affine points in `W` on a sloped line lies in `W`. -/
 theorem WeierstrassCurve.Affine.equation_add (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    W.equation (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
+    W.Equation (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   WeierstrassCurve.Affine.equation_neg <| WeierstrassCurve.Affine.equation_add' h₁' h₂' hxy
 #align weierstrass_curve.equation_add WeierstrassCurve.Affine.equation_add
 -/
@@ -742,7 +742,7 @@ theorem WeierstrassCurve.Affine.equation_add (hxy : x₁ = x₂ → y₁ ≠ W.n
 /-- The addition of two nonsingular affine points in `W` on a sloped line,
 before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, is nonsingular. -/
 theorem WeierstrassCurve.Affine.nonsingular_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    W.nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
+    W.Nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   by
   by_cases hx₁ : W.add_X x₁ x₂ (W.slope x₁ x₂ y₁ y₂) = x₁
   · rwa [add_Y', hx₁, sub_self, MulZeroClass.mul_zero, zero_add]
@@ -765,7 +765,7 @@ theorem WeierstrassCurve.Affine.nonsingular_add' (hxy : x₁ = x₂ → y₁ ≠
 #print WeierstrassCurve.Affine.nonsingular_add /-
 /-- The addition of two nonsingular affine points in `W` on a sloped line is nonsingular. -/
 theorem WeierstrassCurve.Affine.nonsingular_add (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    W.nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
+    W.Nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   WeierstrassCurve.Affine.nonsingular_neg <| WeierstrassCurve.Affine.nonsingular_add' h₁ h₂ hxy
 #align weierstrass_curve.nonsingular_add WeierstrassCurve.Affine.nonsingular_add
 -/
@@ -876,8 +876,8 @@ section Group
 
 
 variable {F : Type u} [Field F] {W : WeierstrassCurve F} {x₁ x₂ y₁ y₂ : F}
-  (h₁ : W.nonsingular x₁ y₁) (h₂ : W.nonsingular x₂ y₂) (h₁' : W.equation x₁ y₁)
-  (h₂' : W.equation x₂ y₂)
+  (h₁ : W.Nonsingular x₁ y₁) (h₂ : W.Nonsingular x₂ y₂) (h₁' : W.Equation x₁ y₁)
+  (h₂' : W.Equation x₂ y₂)
 
 /- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3423248015.C_simp -/
 /- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3423248015.C_simp -/
@@ -1275,8 +1275,8 @@ variable {R : Type} [Nontrivial R] [CommRing R] (E : EllipticCurve R)
 
 #print EllipticCurve.Affine.Point.mk /-
 /-- An affine point on an elliptic curve `E` over `R`. -/
-def EllipticCurve.Affine.Point.mk {x y : R} (h : E.equation x y) : E.Point :=
-  WeierstrassCurve.Affine.Point.some <| E.nonsingular h
+def EllipticCurve.Affine.Point.mk {x y : R} (h : E.Equation x y) : E.Point :=
+  WeierstrassCurve.Affine.Point.some <| E.Nonsingular h
 #align elliptic_curve.point.mk EllipticCurve.Affine.Point.mk
 -/
 

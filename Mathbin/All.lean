@@ -232,7 +232,7 @@ import Algebra.GroupWithZero.Commute
 import Algebra.GroupWithZero.Defs
 import Algebra.GroupWithZero.Divisibility
 import Algebra.GroupWithZero.InjSurj
-import Algebra.GroupWithZero.Power
+import Algebra.GroupWithZero.Bitwise
 import Algebra.GroupWithZero.Semiconj
 import Algebra.GroupWithZero.Units.Basic
 import Algebra.GroupWithZero.Units.Lemmas

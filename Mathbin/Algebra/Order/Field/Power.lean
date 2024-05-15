@@ -5,7 +5,7 @@ Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
 import Algebra.Parity
 import Algebra.CharZero.Lemmas
-import Algebra.GroupWithZero.Power
+import Algebra.GroupWithZero.Bitwise
 import Algebra.Order.Field.Basic
 
 #align_import algebra.order.field.power from "leanprover-community/mathlib"@"acb3d204d4ee883eb686f45d486a2a6811a01329"
