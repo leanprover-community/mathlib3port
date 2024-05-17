@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
 import Algebra.Order.Group.Int
-import Data.Int.Units
+import Algebra.Group.Int
 import Algebra.GroupPower.Order
 
 #align_import data.int.order.units from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"

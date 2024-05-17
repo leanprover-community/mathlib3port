@@ -5,7 +5,7 @@ Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
 import Algebra.Field.Defs
 import Algebra.GroupWithZero.Bitwise
-import Algebra.Parity
+import Algebra.Group.Even
 
 #align_import algebra.field.power from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

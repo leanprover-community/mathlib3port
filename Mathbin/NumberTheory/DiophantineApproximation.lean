@@ -6,7 +6,7 @@ Authors: Michael Geißer, Michael Stoll
 import Algebra.ContinuedFractions.Computation.ApproximationCorollaries
 import Algebra.ContinuedFractions.Computation.Translations
 import Combinatorics.Pigeonhole
-import Data.Int.Units
+import Algebra.Group.Int
 import Data.Real.Irrational
 import RingTheory.Coprime.Lemmas
 import Tactic.Basic

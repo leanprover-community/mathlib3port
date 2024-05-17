@@ -432,7 +432,7 @@ import Algebra.Order.ToIntervalMod
 import Algebra.Order.UpperLower
 import Algebra.Order.WithZero
 import Algebra.Order.ZeroLEOne
-import Algebra.Parity
+import Algebra.Group.Even
 import Algebra.PEmptyInstances
 import Algebra.Periodic
 import Algebra.Polynomial.BigOperators
@@ -1399,7 +1399,7 @@ import Data.HashMap
 import Data.Holor
 import Data.Int.AbsoluteValue
 import Data.Int.Associated
-import Algebra.Group.Int
+import Algebra.Ring.Int
 import Data.Int.Bitwise
 import Data.Int.Cast.Basic
 import Data.Int.Cast.Defs
@@ -1425,7 +1425,7 @@ import Data.Int.Parity
 import Data.Int.Range
 import Data.Int.Sqrt
 import Data.Int.SuccPred
-import Data.Int.Units
+import Algebra.Group.Int
 import Analysis.RCLike.Basic
 import Analysis.RCLike.Lemmas
 import Lean.Json

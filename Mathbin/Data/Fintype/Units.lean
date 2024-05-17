@@ -5,7 +5,7 @@ Authors: Mario Carneiro
 -/
 import Data.Fintype.Prod
 import Data.Fintype.Sum
-import Data.Int.Units
+import Algebra.Group.Int
 
 #align_import data.fintype.units from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

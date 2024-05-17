@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
 import Algebra.Associated
-import Algebra.Parity
+import Algebra.Group.Even
 import Data.Int.Dvd.Basic
-import Data.Int.Units
+import Algebra.Group.Int
 import Data.Nat.Factorial.Basic
 import Data.Nat.GCD.Basic
 import Data.Nat.Defs

@@ -12,7 +12,7 @@ import Algebra.Order.WithZero
 import Algebra.Ring.Basic
 import Algebra.Ring.Divisibility.Basic
 import Algebra.Ring.Commute
-import Data.Int.Units
+import Algebra.Group.Int
 import Data.Set.Basic
 
 #align_import data.list.big_operators.lemmas from "leanprover-community/mathlib"@"f694c7dead66f5d4c80f446c796a5aad14707f0e"

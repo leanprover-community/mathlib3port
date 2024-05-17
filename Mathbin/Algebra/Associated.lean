@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Jens Wagemaker
 -/
 import Algebra.Divisibility.Basic
 import Algebra.GroupPower.Lemmas
-import Algebra.Parity
+import Algebra.Group.Even
 
 #align_import algebra.associated from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

@@ -8,7 +8,7 @@ import Data.Nat.Bits
 import Data.Nat.Log
 import Data.List.Indexes
 import Data.List.Palindrome
-import Algebra.Parity
+import Algebra.Group.Even
 import Tactic.IntervalCases
 import Mathbin.Tactic.Linarith.Default
 

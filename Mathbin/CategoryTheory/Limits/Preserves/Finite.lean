@@ -108,10 +108,8 @@ def preservesFiniteLimitsOfPreservesFiniteLimitsOfSize (F : C ⥤ D)
 #align category_theory.limits.preserves_finite_limits_of_preserves_finite_limits_of_size CategoryTheory.Limits.preservesFiniteLimitsOfPreservesFiniteLimitsOfSize
 -/
 
-#print CategoryTheory.Limits.idPreservesFiniteLimits /-
 instance idPreservesFiniteLimits : PreservesFiniteLimits (𝟭 C) where
 #align category_theory.limits.id_preserves_finite_limits CategoryTheory.Limits.idPreservesFiniteLimits
--/
 
 #print CategoryTheory.Limits.compPreservesFiniteLimits /-
 /-- The composition of two left exact functors is left exact. -/
@@ -186,10 +184,8 @@ def preservesFiniteColimitsOfPreservesFiniteColimitsOfSize (F : C ⥤ D)
 #align category_theory.limits.preserves_finite_colimits_of_preserves_finite_colimits_of_size CategoryTheory.Limits.preservesFiniteColimitsOfPreservesFiniteColimitsOfSize
 -/
 
-#print CategoryTheory.Limits.idPreservesFiniteColimits /-
 instance idPreservesFiniteColimits : PreservesFiniteColimits (𝟭 C) where
 #align category_theory.limits.id_preserves_finite_colimits CategoryTheory.Limits.idPreservesFiniteColimits
--/
 
 #print CategoryTheory.Limits.compPreservesFiniteColimits /-
 /-- The composition of two right exact functors is right exact. -/
