@@ -143,7 +143,7 @@ def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.imag
   haveI : preserves_colimits G := adj.left_adjoint_preserves_colimits
   calc
     abelian.coimage f ≅ cokernel (kernel.ι f) := iso.refl _
-    _ ≅ G.obj (cokernel (F.map (kernel.ι f))) := (cokernel_iso _ _ i adj _).symm
+    _ ≅ G.obj (cokernel (F.map (kernel.ι f))) := (cokernel_iso _ _ i MonCat.adj _).symm
     _ ≅ G.obj (cokernel (kernel_comparison f F ≫ kernel.ι (F.map f))) :=
       (G.map_iso (cokernel_iso_of_eq (by simp)))
     _ ≅ G.obj (cokernel (kernel.ι (F.map f))) := (G.map_iso (cokernel_epi_comp _ _))
@@ -151,7 +151,7 @@ def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.imag
     _ ≅ G.obj (abelian.image (F.map f)) := (G.map_iso (abelian.coimage_iso_image _))
     _ ≅ G.obj (kernel (cokernel.π (F.map f))) := (iso.refl _)
     _ ≅ kernel (G.map (cokernel.π (F.map f))) := (preserves_kernel.iso _ _)
-    _ ≅ kernel (cokernel.π f) := (coimage_iso_image_aux F G i adj f)
+    _ ≅ kernel (cokernel.π f) := (coimage_iso_image_aux F G i MonCat.adj f)
     _ ≅ abelian.image f := iso.refl _
 #align category_theory.abelian_of_adjunction.coimage_iso_image CategoryTheory.AbelianOfAdjunction.coimageIsoImage
 -/
@@ -161,7 +161,7 @@ attribute [local simp] cokernel_iso coimage_iso_image coimage_iso_image_aux
 #print CategoryTheory.AbelianOfAdjunction.coimageIsoImage_hom /-
 -- The account of this proof in the Stacks project omits this calculation.
 theorem coimageIsoImage_hom {X Y : C} (f : X ⟶ Y) :
-    (coimageIsoImage F G i adj f).Hom = Abelian.coimageImageComparison f :=
+    (coimageIsoImage F G i MonCat.adj f).Hom = Abelian.coimageImageComparison f :=
   by
   ext
   simpa only [← G.map_comp_assoc, coimage_iso_image, nat_iso.inv_inv_app, cokernel_iso,
@@ -193,9 +193,9 @@ def abelianOfAdjunction {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFin
     {D : Type u₂} [Category.{v} D] [Abelian D] (F : C ⥤ D) [Functor.PreservesZeroMorphisms F]
     (G : D ⥤ C) [Functor.PreservesZeroMorphisms G] [PreservesFiniteLimits G] (i : F ⋙ G ≅ 𝟭 C)
     (adj : G ⊣ F) : Abelian C := by
-  haveI := has_kernels F G i; haveI := has_cokernels F G i adj
+  haveI := has_kernels F G i; haveI := has_cokernels F G i MonCat.adj
   have : ∀ {X Y : C} (f : X ⟶ Y), is_iso (abelian.coimage_image_comparison f) := by intro X Y f;
-    rw [← coimage_iso_image_hom F G i adj f]; infer_instance
+    rw [← coimage_iso_image_hom F G i MonCat.adj f]; infer_instance
   apply abelian.of_coimage_image_comparison_is_iso
 #align category_theory.abelian_of_adjunction CategoryTheory.abelianOfAdjunction
 -/

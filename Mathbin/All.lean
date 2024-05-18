@@ -1433,8 +1433,8 @@ import Data.LazyList
 import Data.LazyList.Basic
 import Data.List.AList
 import Data.List.Basic
-import Algebra.BigOperators.List.Basic
-import Algebra.BigOperators.List.Lemmas
+import Algebra.BigOperators.Group.List
+import Data.List.BigOperators.Lemmas
 import Data.List.Chain
 import Data.List.Count
 import Data.List.Cycle

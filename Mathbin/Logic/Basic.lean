@@ -2555,13 +2555,11 @@ theorem exists_prop_congr {p p' : Prop} {q q' : p → Prop} (hq : ∀ h, q h ↔
 #align exists_prop_congr exists_prop_congr
 -/
 
-#print exists_prop_congr' /-
 @[congr]
 theorem exists_prop_congr' {p p' : Prop} {q q' : p → Prop} (hq : ∀ h, q h ↔ q' h) (hp : p ↔ p') :
     Exists q = ∃ h : p', q' (hp.2 h) :=
   propext (exists_prop_congr hq _)
 #align exists_prop_congr' exists_prop_congr'
--/
 
 #print exists_true_left /-
 /-- See `is_empty.exists_iff` for the `false` version. -/

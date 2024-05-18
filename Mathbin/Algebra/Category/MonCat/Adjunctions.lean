@@ -30,34 +30,34 @@ universe u
 
 open CategoryTheory
 
-#print adjoinOne /-
+#print MonCat.adjoinOne /-
 /-- The functor of adjoining a neutral element `one` to a semigroup.
  -/
 @[to_additive "The functor of adjoining a neutral element `zero` to a semigroup", simps]
-def adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u}
+def MonCat.adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u}
     where
   obj S := MonCat.of (WithOne S)
   map X Y := WithOne.map
   map_id' X := WithOne.map_id
   map_comp' X Y Z := WithOne.map_comp
-#align adjoin_one adjoinOne
-#align adjoin_zero adjoinZero
+#align adjoin_one MonCat.adjoinOne
+#align adjoin_zero AddMonCat.adjoinZero
 -/
 
-#print hasForgetToSemigroup /-
-@[to_additive hasForgetToAddSemigroup]
-instance hasForgetToSemigroup : HasForget₂ MonCat SemigroupCat
+#print MonCat.hasForgetToSemigroup /-
+@[to_additive AddMonCat.hasForgetToAddSemigroup]
+instance MonCat.hasForgetToSemigroup : HasForget₂ MonCat SemigroupCat
     where forget₂ :=
     { obj := fun M => SemigroupCat.of M
       map := fun M N => MonoidHom.toMulHom }
-#align has_forget_to_Semigroup hasForgetToSemigroup
-#align has_forget_to_AddSemigroup hasForgetToAddSemigroup
+#align has_forget_to_Semigroup MonCat.hasForgetToSemigroup
+#align has_forget_to_AddSemigroup AddMonCat.hasForgetToAddSemigroup
 -/
 
-#print adjoinOneAdj /-
+#print MonCat.adjoinOneAdj /-
 /-- The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/
 @[to_additive "The adjoin_one-forgetful adjunction from `AddSemigroup` to `AddMon`"]
-def adjoinOneAdj : adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
+def MonCat.adjoinOneAdj : MonCat.adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun S M => WithOne.lift.symm
       homEquiv_naturality_left_symm := by
@@ -68,30 +68,30 @@ def adjoinOneAdj : adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
         apply WithOne.cases_on x
         · rfl
         · simp }
-#align adjoin_one_adj adjoinOneAdj
-#align adjoin_zero_adj adjoinZeroAdj
+#align adjoin_one_adj MonCat.adjoinOneAdj
+#align adjoin_zero_adj AddMonCat.adjoinZeroAdj
 -/
 
-#print free /-
+#print MonCat.free /-
 /-- The free functor `Type u ⥤ Mon` sending a type `X` to the free monoid on `X`. -/
-def free : Type u ⥤ MonCat.{u}
+def MonCat.free : Type u ⥤ MonCat.{u}
     where
   obj α := MonCat.of (FreeMonoid α)
   map X Y := FreeMonoid.map
   map_id' := by intros; ext1; rfl
   map_comp' := by intros; ext1; rfl
-#align free free
+#align free MonCat.free
 -/
 
-#print adj /-
+#print MonCat.adj /-
 /-- The free-forgetful adjunction for monoids. -/
-def adj : free ⊣ forget MonCat.{u} :=
+def MonCat.adj : MonCat.free ⊣ forget MonCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeMonoid.lift.symm
       homEquiv_naturality_left_symm := fun X Y G f g => by ext1; rfl }
-#align adj adj
+#align adj MonCat.adj
 -/
 
 instance : CategoryTheory.Functor.IsRightAdjoint (forget MonCat.{u}) :=
-  ⟨_, adj⟩
+  ⟨_, MonCat.adj⟩
 

@@ -93,8 +93,8 @@ see `simple_graph.edge_set` for the corresponding edge set.
 @[ext]
 structure SimpleGraph (V : Type u) where
   Adj : V → V → Prop
-  symm : Symmetric adj := by obviously
-  loopless : Irreflexive adj := by obviously
+  symm : Symmetric MonCat.adj := by obviously
+  loopless : Irreflexive MonCat.adj := by obviously
 #align simple_graph SimpleGraph
 -/
 
@@ -386,7 +386,7 @@ instance : CompleteBooleanAlgebra (SimpleGraph V) :=
     iInf_sup_le_sup_inf := fun G s a b hab =>
       by
       simp only [sup_adj, Inf_adj, infi_adj] at hab ⊢
-      have : (∀ G' ∈ s, adj G a b ∨ adj G' a b) ∧ a ≠ b :=
+      have : (∀ G' ∈ s, MonCat.adj G a b ∨ MonCat.adj G' a b) ∧ a ≠ b :=
         (and_congr_left fun h => forall_congr' fun H => _).1 hab
       simpa [forall_or_left, or_and_right, and_iff_left_of_imp adj.ne] using this
       exact and_iff_left h }

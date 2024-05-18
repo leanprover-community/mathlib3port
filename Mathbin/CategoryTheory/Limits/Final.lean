@@ -139,15 +139,17 @@ theorem initial_of_final_op (F : C ⥤ D) [Final F.op] : Initial F :=
 theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Final R :=
   {
     out := fun c =>
-      let u : StructuredArrow c R := StructuredArrow.mk (adj.Unit.app c)
+      let u : StructuredArrow c R := StructuredArrow.mk (MonCat.adj.Unit.app c)
       @zigzag_isConnected _ _ ⟨u⟩ fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show Zag f u from
-              Or.inr ⟨StructuredArrow.homMk ((adj.homEquiv c f.right).symm f.Hom) (by simp)⟩))
+              Or.inr
+                ⟨StructuredArrow.homMk ((MonCat.adj.homEquiv c f.right).symm f.Hom) (by simp)⟩))
           (Relation.ReflTransGen.single
             (show Zag u g from
-              Or.inl ⟨StructuredArrow.homMk ((adj.homEquiv c g.right).symm g.Hom) (by simp)⟩)) }
+              Or.inl
+                ⟨StructuredArrow.homMk ((MonCat.adj.homEquiv c g.right).symm g.Hom) (by simp)⟩)) }
 #align category_theory.functor.final_of_adjunction CategoryTheory.Functor.final_of_adjunction
 -/
 
@@ -156,15 +158,15 @@ theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Final 
 theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Initial L :=
   {
     out := fun d =>
-      let u : CostructuredArrow L d := CostructuredArrow.mk (adj.counit.app d)
+      let u : CostructuredArrow L d := CostructuredArrow.mk (MonCat.adj.counit.app d)
       @zigzag_isConnected _ _ ⟨u⟩ fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show Zag f u from
-              Or.inl ⟨CostructuredArrow.homMk (adj.homEquiv f.left d f.Hom) (by simp)⟩))
+              Or.inl ⟨CostructuredArrow.homMk (MonCat.adj.homEquiv f.left d f.Hom) (by simp)⟩))
           (Relation.ReflTransGen.single
             (show Zag u g from
-              Or.inr ⟨CostructuredArrow.homMk (adj.homEquiv g.left d g.Hom) (by simp)⟩)) }
+              Or.inr ⟨CostructuredArrow.homMk (MonCat.adj.homEquiv g.left d g.Hom) (by simp)⟩)) }
 #align category_theory.functor.initial_of_adjunction CategoryTheory.Functor.initial_of_adjunction
 -/
 

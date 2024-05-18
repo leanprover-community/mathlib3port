@@ -147,10 +147,11 @@ variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
 
 /-- For an adjunction `F ⊣ G` with counit `ε`, the pair `(FGε_B, ε_FGB)` is reflexive. -/
 instance (B : D) :
-    IsReflexivePair (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
-  IsReflexivePair.mk' (F.map (adj.Unit.app (G.obj B)))
+    IsReflexivePair (F.map (G.map (MonCat.adj.counit.app B)))
+      (MonCat.adj.counit.app (F.obj (G.obj B))) :=
+  IsReflexivePair.mk' (F.map (MonCat.adj.Unit.app (G.obj B)))
     (by rw [← F.map_comp, adj.right_triangle_components]; apply F.map_id)
-    adj.left_triangle_components
+    MonCat.adj.left_triangle_components
 
 namespace Limits
 

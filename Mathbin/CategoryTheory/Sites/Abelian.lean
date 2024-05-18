@@ -61,7 +61,7 @@ variable [CategoryTheory.Functor.ReflectsIsomorphisms (forget D)]
 #print CategoryTheory.sheafIsAbelian /-
 instance sheafIsAbelian [HasFiniteLimits D] : Abelian (Sheaf J D) :=
   let adj := plusPlusAdjunction J D
-  abelianOfAdjunction _ _ (asIso adj.counit) adj
+  abelianOfAdjunction _ _ (asIso MonCat.adj.counit) MonCat.adj
 #align category_theory.Sheaf_is_abelian CategoryTheory.sheafIsAbelian
 -/
 

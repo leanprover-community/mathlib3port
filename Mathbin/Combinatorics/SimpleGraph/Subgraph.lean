@@ -64,9 +64,9 @@ Thinking of `V → V → Prop` as `set (V × V)`, a set of darts (i.e., half-edg
 structure Subgraph {V : Type u} (G : SimpleGraph V) where
   verts : Set V
   Adj : V → V → Prop
-  adj_sub : ∀ {v w : V}, adj v w → G.Adj v w
-  edge_vert : ∀ {v w : V}, adj v w → v ∈ verts
-  symm : Symmetric adj := by obviously
+  adj_sub : ∀ {v w : V}, MonCat.adj v w → G.Adj v w
+  edge_vert : ∀ {v w : V}, MonCat.adj v w → v ∈ verts
+  symm : Symmetric MonCat.adj := by obviously
 #align simple_graph.subgraph SimpleGraph.Subgraph
 -/
 
@@ -598,7 +598,7 @@ instance : CompleteDistribLattice G.Subgraph :=
       · simp only [Set.le_eq_subset, verts_infi, verts_sup, verts_Inf]
         exact (Set.union_iInter₂ _ _).Superset
       simp only [spanning_coe_adj, sup_adj, Inf_adj, sup_adj, Inf_adj, infi_adj] at hab ⊢
-      have : (∀ G'' ∈ s, adj G' a b ∨ adj G'' a b) ∧ G.adj a b :=
+      have : (∀ G'' ∈ s, MonCat.adj G' a b ∨ MonCat.adj G'' a b) ∧ G.adj a b :=
         (and_congr_left fun h => forall_congr' fun H => _).1 hab
       simpa [forall_or_left, or_and_right, and_iff_left_of_imp G'.adj_sub] using this
       exact and_iff_left h }

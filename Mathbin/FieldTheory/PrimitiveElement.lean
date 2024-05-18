@@ -219,7 +219,7 @@ theorem exists_primitive_element : ∃ α : E, F⟮⟯ = ⊤ :=
   by
   rcases isEmpty_or_nonempty (Fintype F) with (F_inf | ⟨⟨F_finite⟩⟩)
   · let P : IntermediateField F E → Prop := fun K => ∃ α : E, F⟮⟯ = K
-    have base : P ⊥ := ⟨0, adjoinZero⟩
+    have base : P ⊥ := ⟨0, AddMonCat.adjoinZero⟩
     have ih : ∀ (K : IntermediateField F E) (x : E), P K → P (K⟮⟯.restrictScalars F) :=
       by
       intro K β hK

@@ -3312,7 +3312,7 @@ instance (priority := 100) hasPullbacks_of_hasWidePullbacks [HasWidePullbacks.{w
 
 variable {C}
 
-#print CategoryTheory.Limits.baseChange /-
+#print CategoryTheory.Over.baseChange /-
 /-- Given a morphism `f : X ⟶ Y`, we can take morphisms over `Y` to morphisms over `X` via
 pullbacks. This is right adjoint to `over.map` (TODO) -/
 @[simps (config :=
@@ -3322,7 +3322,7 @@ def baseChange [HasPullbacks C] {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X
     where
   obj g := Over.mk (pullback.snd : pullback g.Hom f ⟶ _)
   map g₁ g₂ i := Over.homMk (pullback.map _ _ _ _ i.left (𝟙 _) (𝟙 _) (by simp) (by simp)) (by simp)
-#align category_theory.limits.base_change CategoryTheory.Limits.baseChange
+#align category_theory.limits.base_change CategoryTheory.Over.baseChange
 -/
 
 end CategoryTheory.Limits

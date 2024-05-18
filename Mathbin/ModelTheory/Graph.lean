@@ -142,7 +142,7 @@ theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨
       · exact r.elim
       · cases n
         · cases r
-          change rel_map adj ![xs 0, xs 1] = _
+          change rel_map MonCat.adj ![xs 0, xs 1] = _
           refine' congr rfl (funext _)
           simp [Fin.forall_fin_two]
         · exact r.elim

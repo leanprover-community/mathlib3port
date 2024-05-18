@@ -47,11 +47,9 @@ class Normal : Prop where
 
 variable {F K}
 
-#print Normal.isAlgebraic /-
 theorem Normal.isAlgebraic (h : Normal F K) (x : K) : IsAlgebraic F x :=
   Normal.is_algebraic' x
 #align normal.is_algebraic Normal.isAlgebraic
--/
 
 #print Normal.isIntegral /-
 theorem Normal.isIntegral (h : Normal F K) (x : K) : IsIntegral F x :=

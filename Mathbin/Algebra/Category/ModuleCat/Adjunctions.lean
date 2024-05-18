@@ -69,7 +69,7 @@ instance : CategoryTheory.Functor.IsRightAdjoint (forget (ModuleCat.{u} R)) :=
 
 end
 
-namespace free
+namespace MonCat.free
 
 variable [CommRing R]
 
@@ -177,7 +177,7 @@ instance : LaxMonoidal.{u} (free R).obj
 instance : IsIso (LaxMonoidal.ε (free R).obj) :=
   ⟨⟨Finsupp.lapply PUnit.unit, ⟨by ext; simp, by ext ⟨⟩ ⟨⟩; simp⟩⟩⟩
 
-end free
+end MonCat.free
 
 variable [CommRing R]
 

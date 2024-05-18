@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 -/
-import Algebra.BigOperators.List.Basic
+import Algebra.BigOperators.Group.List
 import Algebra.Order.Monoid.MinMax
 
 #align_import data.list.zip from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"

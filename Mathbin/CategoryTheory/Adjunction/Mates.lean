@@ -219,7 +219,8 @@ theorem transferNatTransSelf_comp (f g) :
 
 #print CategoryTheory.transferNatTransSelf_adjunction_id /-
 theorem transferNatTransSelf_adjunction_id {L R : C ⥤ C} (adj : L ⊣ R) (f : 𝟭 C ⟶ L) (X : C) :
-    (transferNatTransSelf adj Adjunction.id f).app X = f.app (R.obj X) ≫ adj.counit.app X :=
+    (transferNatTransSelf MonCat.adj Adjunction.id f).app X =
+      f.app (R.obj X) ≫ MonCat.adj.counit.app X :=
   by
   dsimp [transfer_nat_trans_self, transfer_nat_trans, adjunction.id]
   simp only [comp_id, id_comp]
@@ -228,7 +229,8 @@ theorem transferNatTransSelf_adjunction_id {L R : C ⥤ C} (adj : L ⊣ R) (f : 
 
 #print CategoryTheory.transferNatTransSelf_adjunction_id_symm /-
 theorem transferNatTransSelf_adjunction_id_symm {L R : C ⥤ C} (adj : L ⊣ R) (g : R ⟶ 𝟭 C) (X : C) :
-    ((transferNatTransSelf adj Adjunction.id).symm g).app X = adj.Unit.app X ≫ g.app (L.obj X) :=
+    ((transferNatTransSelf MonCat.adj Adjunction.id).symm g).app X =
+      MonCat.adj.Unit.app X ≫ g.app (L.obj X) :=
   by
   dsimp [transfer_nat_trans_self, transfer_nat_trans, adjunction.id]
   simp only [comp_id, id_comp]

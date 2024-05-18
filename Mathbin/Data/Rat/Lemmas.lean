@@ -239,8 +239,8 @@ theorem mul_den_eq_num {q : ℚ} : q * q.den = q.num :=
 #align rat.mul_denom_eq_num Rat.mul_den_eq_num
 -/
 
-#print Rat.den_div_cast_eq_one_iff /-
-theorem den_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).den = 1 ↔ n ∣ m :=
+#print Rat.den_div_intCast_eq_one_iff /-
+theorem den_div_intCast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).den = 1 ↔ n ∣ m :=
   by
   replace hn : (n : ℚ) ≠ 0; · rwa [Ne.def, ← Int.cast_zero, coe_int_inj]
   constructor
@@ -250,7 +250,7 @@ theorem den_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).den
     rwa [eq_div_iff_mul_eq hn, ← Int.cast_mul, mul_comm, eq_comm, coe_int_inj] at hk
   · rintro ⟨d, rfl⟩
     rw [Int.cast_mul, mul_comm, mul_div_cancel_right₀ _ hn, Rat.den_intCast]
-#align rat.denom_div_cast_eq_one_iff Rat.den_div_cast_eq_one_iff
+#align rat.denom_div_cast_eq_one_iff Rat.den_div_intCast_eq_one_iff
 -/
 
 #print Rat.num_div_eq_of_coprime /-

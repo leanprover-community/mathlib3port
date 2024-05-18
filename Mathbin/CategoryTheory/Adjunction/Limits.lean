@@ -60,7 +60,7 @@ Auxiliary definition for `functoriality_is_left_adjoint`.
 -/
 def functorialityRightAdjoint : Cocone (K ⋙ F) ⥤ Cocone K :=
   Cocones.functoriality _ G ⋙
-    Cocones.precompose (K.rightUnitor.inv ≫ whiskerLeft K adj.Unit ≫ (associator _ _ _).inv)
+    Cocones.precompose (K.rightUnitor.inv ≫ whiskerLeft K MonCat.adj.Unit ≫ (associator _ _ _).inv)
 #align category_theory.adjunction.functoriality_right_adjoint CategoryTheory.Adjunction.functorialityRightAdjoint
 -/
 
@@ -72,8 +72,9 @@ attribute [local reducible] functoriality_right_adjoint
 Auxiliary definition for `functoriality_is_left_adjoint`.
 -/
 @[simps]
-def functorialityUnit : 𝟭 (Cocone K) ⟶ Cocones.functoriality _ F ⋙ functorialityRightAdjoint adj K
-    where app c := { Hom := adj.Unit.app c.pt }
+def functorialityUnit :
+    𝟭 (Cocone K) ⟶ Cocones.functoriality _ F ⋙ functorialityRightAdjoint MonCat.adj K
+    where app c := { Hom := MonCat.adj.Unit.app c.pt }
 #align category_theory.adjunction.functoriality_unit CategoryTheory.Adjunction.functorialityUnit
 -/
 
@@ -84,8 +85,8 @@ Auxiliary definition for `functoriality_is_left_adjoint`.
 -/
 @[simps]
 def functorialityCounit :
-    functorialityRightAdjoint adj K ⋙ Cocones.functoriality _ F ⟶ 𝟭 (Cocone (K ⋙ F))
-    where app c := { Hom := adj.counit.app c.pt }
+    functorialityRightAdjoint MonCat.adj K ⋙ Cocones.functoriality _ F ⟶ 𝟭 (Cocone (K ⋙ F))
+    where app c := { Hom := MonCat.adj.counit.app c.pt }
 #align category_theory.adjunction.functoriality_counit CategoryTheory.Adjunction.functorialityCounit
 -/
 
@@ -93,11 +94,11 @@ def functorialityCounit :
 /-- The functor `cocones.functoriality K F : cocone K ⥤ cocone (K ⋙ F)` is a left adjoint. -/
 def functorialityAdjunction : CategoryTheory.Functor.IsLeftAdjoint (Cocones.functoriality K F)
     where
-  right := functorialityRightAdjoint adj K
+  right := functorialityRightAdjoint MonCat.adj K
   adj :=
     mkOfUnitCounit
-      { Unit := functorialityUnit adj K
-        counit := functorialityCounit adj K }
+      { Unit := functorialityUnit MonCat.adj K
+        counit := functorialityCounit MonCat.adj K }
 #align category_theory.adjunction.functoriality_is_left_adjoint CategoryTheory.Adjunction.functorialityAdjunction
 -/
 
@@ -209,7 +210,7 @@ Auxiliary definition for `functoriality_is_right_adjoint`.
 -/
 def functorialityLeftAdjoint : Cone (K ⋙ G) ⥤ Cone K :=
   Cones.functoriality _ F ⋙
-    Cones.postcompose ((associator _ _ _).Hom ≫ whiskerLeft K adj.counit ≫ K.rightUnitor.Hom)
+    Cones.postcompose ((associator _ _ _).Hom ≫ whiskerLeft K MonCat.adj.counit ≫ K.rightUnitor.Hom)
 #align category_theory.adjunction.functoriality_left_adjoint CategoryTheory.Adjunction.functorialityLeftAdjoint
 -/
 
@@ -221,8 +222,9 @@ attribute [local reducible] functoriality_left_adjoint
 Auxiliary definition for `functoriality_is_right_adjoint`.
 -/
 @[simps]
-def functorialityUnit' : 𝟭 (Cone (K ⋙ G)) ⟶ functorialityLeftAdjoint adj K ⋙ Cones.functoriality _ G
-    where app c := { Hom := adj.Unit.app c.pt }
+def functorialityUnit' :
+    𝟭 (Cone (K ⋙ G)) ⟶ functorialityLeftAdjoint MonCat.adj K ⋙ Cones.functoriality _ G
+    where app c := { Hom := MonCat.adj.Unit.app c.pt }
 #align category_theory.adjunction.functoriality_unit' CategoryTheory.Adjunction.functorialityUnit'
 -/
 
@@ -232,8 +234,9 @@ def functorialityUnit' : 𝟭 (Cone (K ⋙ G)) ⟶ functorialityLeftAdjoint adj 
 Auxiliary definition for `functoriality_is_right_adjoint`.
 -/
 @[simps]
-def functorialityCounit' : Cones.functoriality _ G ⋙ functorialityLeftAdjoint adj K ⟶ 𝟭 (Cone K)
-    where app c := { Hom := adj.counit.app c.pt }
+def functorialityCounit' :
+    Cones.functoriality _ G ⋙ functorialityLeftAdjoint MonCat.adj K ⟶ 𝟭 (Cone K)
+    where app c := { Hom := MonCat.adj.counit.app c.pt }
 #align category_theory.adjunction.functoriality_counit' CategoryTheory.Adjunction.functorialityCounit'
 -/
 
@@ -241,11 +244,11 @@ def functorialityCounit' : Cones.functoriality _ G ⋙ functorialityLeftAdjoint 
 /-- The functor `cones.functoriality K G : cone K ⥤ cone (K ⋙ G)` is a right adjoint. -/
 def functorialityAdjunction' : CategoryTheory.Functor.IsRightAdjoint (Cones.functoriality K G)
     where
-  left := functorialityLeftAdjoint adj K
+  left := functorialityLeftAdjoint MonCat.adj K
   adj :=
     mkOfUnitCounit
-      { Unit := functorialityUnit' adj K
-        counit := functorialityCounit' adj K }
+      { Unit := functorialityUnit' MonCat.adj K
+        counit := functorialityCounit' MonCat.adj K }
 #align category_theory.adjunction.functoriality_is_right_adjoint CategoryTheory.Adjunction.functorialityAdjunction'
 -/
 
@@ -351,7 +354,7 @@ end PreservationLimits
 def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
     (t : ((cocones J D).obj (op (K ⋙ F))).obj Y) : (G ⋙ (cocones J C).obj (op K)).obj Y
     where
-  app j := (adj.homEquiv (K.obj j) Y) (t.app j)
+  app j := (MonCat.adj.homEquiv (K.obj j) Y) (t.app j)
   naturality' j j' f := by erw [← adj.hom_equiv_naturality_left, t.naturality]; dsimp; simp
 #align category_theory.adjunction.cocones_iso_component_hom CategoryTheory.Adjunction.coconesIsoComponentHom
 -/
@@ -362,7 +365,7 @@ def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
 def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
     (t : (G ⋙ (cocones J C).obj (op K)).obj Y) : ((cocones J D).obj (op (K ⋙ F))).obj Y
     where
-  app j := (adj.homEquiv (K.obj j) Y).symm (t.app j)
+  app j := (MonCat.adj.homEquiv (K.obj j) Y).symm (t.app j)
   naturality' j j' f :=
     by
     erw [← adj.hom_equiv_naturality_left_symm, ← adj.hom_equiv_naturality_right_symm, t.naturality]
@@ -376,7 +379,7 @@ def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
 def conesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒᵖ)
     (t : (Functor.op F ⋙ (cones J D).obj K).obj X) : ((cones J C).obj (K ⋙ G)).obj X
     where
-  app j := (adj.homEquiv (unop X) (K.obj j)) (t.app j)
+  app j := (MonCat.adj.homEquiv (unop X) (K.obj j)) (t.app j)
   naturality' j j' f :=
     by
     erw [← adj.hom_equiv_naturality_right, ← t.naturality, category.id_comp, category.id_comp]
@@ -390,7 +393,7 @@ def conesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒ�
 def conesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒᵖ)
     (t : ((cones J C).obj (K ⋙ G)).obj X) : (Functor.op F ⋙ (cones J D).obj K).obj X
     where
-  app j := (adj.homEquiv (unop X) (K.obj j)).symm (t.app j)
+  app j := (MonCat.adj.homEquiv (unop X) (K.obj j)).symm (t.app j)
   naturality' j j' f := by
     erw [← adj.hom_equiv_naturality_right_symm, ← t.naturality, category.id_comp, category.id_comp]
 #align category_theory.adjunction.cones_iso_component_inv CategoryTheory.Adjunction.conesIsoComponentInv
@@ -412,8 +415,8 @@ def coconesIso {J : Type u} [Category.{v} J] {K : J ⥤ C} :
     (cocones J D).obj (op (K ⋙ F)) ≅ G ⋙ (cocones J C).obj (op K) :=
   NatIso.ofComponents
     (fun Y =>
-      { Hom := coconesIsoComponentHom adj Y
-        inv := coconesIsoComponentInv adj Y })
+      { Hom := coconesIsoComponentHom MonCat.adj Y
+        inv := coconesIsoComponentInv MonCat.adj Y })
     (by tidy)
 #align category_theory.adjunction.cocones_iso CategoryTheory.Adjunction.coconesIso
 -/
@@ -429,8 +432,8 @@ def conesIso {J : Type u} [Category.{v} J] {K : J ⥤ D} :
     F.op ⋙ (cones J D).obj K ≅ (cones J C).obj (K ⋙ G) :=
   NatIso.ofComponents
     (fun X =>
-      { Hom := conesIsoComponentHom adj X
-        inv := conesIsoComponentInv adj X })
+      { Hom := conesIsoComponentHom MonCat.adj X
+        inv := conesIsoComponentInv MonCat.adj X })
     (by tidy)
 #align category_theory.adjunction.cones_iso CategoryTheory.Adjunction.conesIso
 -/

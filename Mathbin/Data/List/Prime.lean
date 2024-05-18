@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 -/
 import Algebra.Associated
-import Algebra.BigOperators.List.Lemmas
+import Data.List.BigOperators.Lemmas
 import Data.List.Perm
 
 #align_import data.list.prime from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"

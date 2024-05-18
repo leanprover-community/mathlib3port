@@ -1079,7 +1079,7 @@ theorem rank_self : Module.rank R R = 1 := by
 
 end StrongRankCondition
 
-section free
+section MonCat.free
 
 variable [Ring K] [StrongRankCondition K]
 
@@ -1251,7 +1251,7 @@ def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fi
 #align fin_dim_vectorspace_equiv finDimVectorspaceEquiv
 -/
 
-end free
+end MonCat.free
 
 section DivisionRing
 

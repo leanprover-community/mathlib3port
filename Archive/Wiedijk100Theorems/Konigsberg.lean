@@ -66,10 +66,10 @@ Eulerian property or switch this file to use multigraphs. -/
 def graph : SimpleGraph Verts where
   Adj v w := adj v w
   symm := by
-    dsimp [Symmetric, adj]
+    dsimp [Symmetric, MonCat.adj]
     decide
   loopless := by
-    dsimp [Irreflexive, adj]
+    dsimp [Irreflexive, MonCat.adj]
     decide
 #align konigsberg.graph Konigsberg.graph
 

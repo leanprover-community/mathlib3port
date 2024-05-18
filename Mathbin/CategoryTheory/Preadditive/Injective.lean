@@ -384,7 +384,7 @@ def mapInjectivePresentation (adj : F ⊣ G) [F.PreservesMonomorphisms] (X : D)
     (I : InjectivePresentation X) : InjectivePresentation (G.obj X)
     where
   j := G.obj I.j
-  Injective := adj.map_injective _ I.Injective
+  Injective := MonCat.adj.map_injective _ I.Injective
   f := G.map I.f
   Mono := by
     haveI : PreservesLimitsOfSize.{0, 0} G := adj.right_adjoint_preserves_limits <;> infer_instance

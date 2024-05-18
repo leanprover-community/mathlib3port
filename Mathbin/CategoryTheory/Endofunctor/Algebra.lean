@@ -525,14 +525,16 @@ variable {F : C ⥤ C} {G : C ⥤ C}
 
 #print CategoryTheory.Endofunctor.Adjunction.Algebra.homEquiv_naturality_str /-
 theorem Algebra.homEquiv_naturality_str (adj : F ⊣ G) (A₁ A₂ : Algebra F) (f : A₁ ⟶ A₂) :
-    (adj.homEquiv A₁.a A₁.a) A₁.str ≫ G.map f.f = f.f ≫ (adj.homEquiv A₂.a A₂.a) A₂.str := by
-  rw [← adjunction.hom_equiv_naturality_right, ← adjunction.hom_equiv_naturality_left, f.h]
+    (MonCat.adj.homEquiv A₁.a A₁.a) A₁.str ≫ G.map f.f =
+      f.f ≫ (MonCat.adj.homEquiv A₂.a A₂.a) A₂.str :=
+  by rw [← adjunction.hom_equiv_naturality_right, ← adjunction.hom_equiv_naturality_left, f.h]
 #align category_theory.endofunctor.adjunction.algebra.hom_equiv_naturality_str CategoryTheory.Endofunctor.Adjunction.Algebra.homEquiv_naturality_str
 -/
 
 #print CategoryTheory.Endofunctor.Adjunction.Coalgebra.homEquiv_naturality_str_symm /-
 theorem Coalgebra.homEquiv_naturality_str_symm (adj : F ⊣ G) (V₁ V₂ : Coalgebra G) (f : V₁ ⟶ V₂) :
-    F.map f.f ≫ (adj.homEquiv V₂.V V₂.V).symm V₂.str = (adj.homEquiv V₁.V V₁.V).symm V₁.str ≫ f.f :=
+    F.map f.f ≫ (MonCat.adj.homEquiv V₂.V V₂.V).symm V₂.str =
+      (MonCat.adj.homEquiv V₁.V V₁.V).symm V₁.str ≫ f.f :=
   by
   rw [← adjunction.hom_equiv_naturality_left_symm, ← adjunction.hom_equiv_naturality_right_symm,
     f.h]
@@ -546,10 +548,10 @@ def Algebra.toCoalgebraOf (adj : F ⊣ G) : Algebra F ⥤ Coalgebra G
     where
   obj A :=
     { V := A.1
-      str := (adj.homEquiv A.1 A.1).toFun A.2 }
+      str := (MonCat.adj.homEquiv A.1 A.1).toFun A.2 }
   map A₁ A₂ f :=
     { f := f.1
-      h' := Algebra.homEquiv_naturality_str adj A₁ A₂ f }
+      h' := Algebra.homEquiv_naturality_str MonCat.adj A₁ A₂ f }
 #align category_theory.endofunctor.adjunction.algebra.to_coalgebra_of CategoryTheory.Endofunctor.Adjunction.Algebra.toCoalgebraOf
 -/
 
@@ -560,10 +562,10 @@ def Coalgebra.toAlgebraOf (adj : F ⊣ G) : Coalgebra G ⥤ Algebra F
     where
   obj V :=
     { a := V.1
-      str := (adj.homEquiv V.1 V.1).invFun V.2 }
+      str := (MonCat.adj.homEquiv V.1 V.1).invFun V.2 }
   map V₁ V₂ f :=
     { f := f.1
-      h' := Coalgebra.homEquiv_naturality_str_symm adj V₁ V₂ f }
+      h' := Coalgebra.homEquiv_naturality_str_symm MonCat.adj V₁ V₂ f }
 #align category_theory.endofunctor.adjunction.coalgebra.to_algebra_of CategoryTheory.Endofunctor.Adjunction.Coalgebra.toAlgebraOf
 -/
 
@@ -571,7 +573,7 @@ def Coalgebra.toAlgebraOf (adj : F ⊣ G) : Coalgebra G ⥤ Algebra F
 /-- Given an adjunction, assigning to an algebra over the left adjoint a coalgebra over its right
 adjoint and going back is isomorphic to the identity functor. -/
 def AlgCoalgEquiv.unitIso (adj : F ⊣ G) :
-    𝟭 (Algebra F) ≅ Algebra.toCoalgebraOf adj ⋙ Coalgebra.toAlgebraOf adj
+    𝟭 (Algebra F) ≅ Algebra.toCoalgebraOf MonCat.adj ⋙ Coalgebra.toAlgebraOf MonCat.adj
     where
   Hom :=
     { app := fun A =>
@@ -596,7 +598,7 @@ def AlgCoalgEquiv.unitIso (adj : F ⊣ G) :
 /-- Given an adjunction, assigning to a coalgebra over the right adjoint an algebra over the left
 adjoint and going back is isomorphic to the identity functor. -/
 def AlgCoalgEquiv.counitIso (adj : F ⊣ G) :
-    Coalgebra.toAlgebraOf adj ⋙ Algebra.toCoalgebraOf adj ≅ 𝟭 (Coalgebra G)
+    Coalgebra.toAlgebraOf MonCat.adj ⋙ Algebra.toCoalgebraOf MonCat.adj ≅ 𝟭 (Coalgebra G)
     where
   Hom :=
     { app := fun V =>
@@ -622,10 +624,10 @@ def AlgCoalgEquiv.counitIso (adj : F ⊣ G) :
 category of coalgebras over `G`. -/
 def algebraCoalgebraEquiv (adj : F ⊣ G) : Algebra F ≌ Coalgebra G
     where
-  Functor := Algebra.toCoalgebraOf adj
-  inverse := Coalgebra.toAlgebraOf adj
-  unitIso := AlgCoalgEquiv.unitIso adj
-  counitIso := AlgCoalgEquiv.counitIso adj
+  Functor := Algebra.toCoalgebraOf MonCat.adj
+  inverse := Coalgebra.toAlgebraOf MonCat.adj
+  unitIso := AlgCoalgEquiv.unitIso MonCat.adj
+  counitIso := AlgCoalgEquiv.counitIso MonCat.adj
   functor_unitIso_comp' A := by ext; exact category.comp_id _
 #align category_theory.endofunctor.adjunction.algebra_coalgebra_equiv CategoryTheory.Endofunctor.Adjunction.algebraCoalgebraEquiv
 -/

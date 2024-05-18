@@ -41,7 +41,8 @@ variable {A B : C} {X Y : D} {i : A ⟶ B} {p : X ⟶ Y} {u : G.obj A ⟶ X} {v 
 /-- When we have an adjunction `G ⊣ F`, any commutative square where the left
 map is of the form `G.map i` and the right map is `p` has an "adjoint" commutative
 square whose left map is `i` and whose right map is `F.map p`. -/
-theorem right_adjoint : CommSq (adj.homEquiv _ _ u) i (F.map p) (adj.homEquiv _ _ v) :=
+theorem right_adjoint :
+    CommSq (MonCat.adj.homEquiv _ _ u) i (F.map p) (MonCat.adj.homEquiv _ _ v) :=
   ⟨by
     simp only [adjunction.hom_equiv_unit, assoc, ← F.map_comp, sq.w]
     rw [F.map_comp, adjunction.unit_naturality_assoc]⟩
@@ -51,14 +52,14 @@ theorem right_adjoint : CommSq (adj.homEquiv _ _ u) i (F.map p) (adj.homEquiv _ 
 #print CategoryTheory.CommSq.rightAdjointLiftStructEquiv /-
 /-- The liftings of a commutative are in bijection with the liftings of its (right)
 adjoint square. -/
-def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftStruct
+def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint MonCat.adj).LiftStruct
     where
   toFun l :=
-    { l := adj.homEquiv _ _ l.l
+    { l := MonCat.adj.homEquiv _ _ l.l
       fac_left' := by rw [← adj.hom_equiv_naturality_left, l.fac_left]
       fac_right' := by rw [← adjunction.hom_equiv_naturality_right, l.fac_right] }
   invFun l :=
-    { l := (adj.homEquiv _ _).symm l.l
+    { l := (MonCat.adj.homEquiv _ _).symm l.l
       fac_left' := by
         rw [← adjunction.hom_equiv_naturality_left_symm, l.fac_left]
         apply (adj.hom_equiv _ _).left_inv
@@ -72,14 +73,14 @@ def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftSt
 
 #print CategoryTheory.CommSq.right_adjoint_hasLift_iff /-
 /-- A square has a lifting if and only if its (right) adjoint square has a lifting. -/
-theorem right_adjoint_hasLift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq :=
+theorem right_adjoint_hasLift_iff : HasLift (sq.rightAdjoint MonCat.adj) ↔ HasLift sq :=
   by
   simp only [has_lift.iff]
-  exact Equiv.nonempty_congr (sq.right_adjoint_lift_struct_equiv adj).symm
+  exact Equiv.nonempty_congr (sq.right_adjoint_lift_struct_equiv MonCat.adj).symm
 #align category_theory.comm_sq.right_adjoint_has_lift_iff CategoryTheory.CommSq.right_adjoint_hasLift_iff
 -/
 
-instance [HasLift sq] : HasLift (sq.rightAdjoint adj) := by rw [right_adjoint_has_lift_iff];
+instance [HasLift sq] : HasLift (sq.rightAdjoint MonCat.adj) := by rw [right_adjoint_has_lift_iff];
   infer_instance
 
 end
@@ -93,7 +94,8 @@ variable {A B : C} {X Y : D} {i : A ⟶ B} {p : X ⟶ Y} {u : A ⟶ F.obj X} {v 
 /-- When we have an adjunction `G ⊣ F`, any commutative square where the left
 map is of the form `i` and the right map is `F.map p` has an "adjoint" commutative
 square whose left map is `G.map i` and whose right map is `p`. -/
-theorem left_adjoint : CommSq ((adj.homEquiv _ _).symm u) (G.map i) p ((adj.homEquiv _ _).symm v) :=
+theorem left_adjoint :
+    CommSq ((MonCat.adj.homEquiv _ _).symm u) (G.map i) p ((MonCat.adj.homEquiv _ _).symm v) :=
   ⟨by
     simp only [adjunction.hom_equiv_counit, assoc, ← G.map_comp_assoc, ← sq.w]
     rw [G.map_comp, assoc, adjunction.counit_naturality]⟩
@@ -103,14 +105,14 @@ theorem left_adjoint : CommSq ((adj.homEquiv _ _).symm u) (G.map i) p ((adj.homE
 #print CategoryTheory.CommSq.leftAdjointLiftStructEquiv /-
 /-- The liftings of a commutative are in bijection with the liftings of its (left)
 adjoint square. -/
-def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStruct
+def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint MonCat.adj).LiftStruct
     where
   toFun l :=
-    { l := (adj.homEquiv _ _).symm l.l
+    { l := (MonCat.adj.homEquiv _ _).symm l.l
       fac_left' := by rw [← adj.hom_equiv_naturality_left_symm, l.fac_left]
       fac_right' := by rw [← adj.hom_equiv_naturality_right_symm, l.fac_right] }
   invFun l :=
-    { l := (adj.homEquiv _ _) l.l
+    { l := (MonCat.adj.homEquiv _ _) l.l
       fac_left' := by
         rw [← adj.hom_equiv_naturality_left, l.fac_left]
         apply (adj.hom_equiv _ _).right_inv
@@ -124,14 +126,14 @@ def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStru
 
 #print CategoryTheory.CommSq.left_adjoint_hasLift_iff /-
 /-- A (left) adjoint square has a lifting if and only if the original square has a lifting. -/
-theorem left_adjoint_hasLift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq :=
+theorem left_adjoint_hasLift_iff : HasLift (sq.leftAdjoint MonCat.adj) ↔ HasLift sq :=
   by
   simp only [has_lift.iff]
-  exact Equiv.nonempty_congr (sq.left_adjoint_lift_struct_equiv adj).symm
+  exact Equiv.nonempty_congr (sq.left_adjoint_lift_struct_equiv MonCat.adj).symm
 #align category_theory.comm_sq.left_adjoint_has_lift_iff CategoryTheory.CommSq.left_adjoint_hasLift_iff
 -/
 
-instance [HasLift sq] : HasLift (sq.leftAdjoint adj) := by rw [left_adjoint_has_lift_iff];
+instance [HasLift sq] : HasLift (sq.leftAdjoint MonCat.adj) := by rw [left_adjoint_has_lift_iff];
   infer_instance
 
 end
@@ -145,9 +147,9 @@ theorem hasLiftingProperty_iff (adj : G ⊣ F) {A B : C} {X Y : D} (i : A ⟶ B)
     HasLiftingProperty (G.map i) p ↔ HasLiftingProperty i (F.map p) :=
   by
   constructor <;> intro <;> constructor <;> intro f g sq
-  · rw [← sq.left_adjoint_has_lift_iff adj]
+  · rw [← sq.left_adjoint_has_lift_iff MonCat.adj]
     infer_instance
-  · rw [← sq.right_adjoint_has_lift_iff adj]
+  · rw [← sq.right_adjoint_has_lift_iff MonCat.adj]
     infer_instance
 #align category_theory.adjunction.has_lifting_property_iff CategoryTheory.Adjunction.hasLiftingProperty_iff
 -/

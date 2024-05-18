@@ -49,7 +49,7 @@ namespace CategoryTheory
 
 namespace Groupoid
 
-namespace free
+namespace MonCat.free
 
 universe u v u' v' u'' v''
 
@@ -254,7 +254,7 @@ theorem freeGroupoidFunctor_comp (φ : V ⥤q V') (φ' : V' ⥤q V'') :
 
 end Functoriality
 
-end free
+end MonCat.free
 
 end Groupoid
 

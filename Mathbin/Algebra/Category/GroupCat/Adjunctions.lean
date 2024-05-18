@@ -127,10 +127,10 @@ end GroupCat
 
 section Abelianization
 
-#print abelianize /-
+#print GroupCat.abelianize /-
 /-- The abelianization functor `Group ⥤ CommGroup` sending a group `G` to its abelianization `Gᵃᵇ`.
  -/
-def abelianize : GroupCat.{u} ⥤ CommGroupCat.{u}
+def GroupCat.abelianize : GroupCat.{u} ⥤ CommGroupCat.{u}
     where
   obj G :=
     { α := Abelianization G
@@ -142,16 +142,16 @@ def abelianize : GroupCat.{u} ⥤ CommGroupCat.{u}
         map_mul' := by simp }
   map_id' := by intros; simp only [MonoidHom.mk_coe, coe_id]; ext1; rfl
   map_comp' := by intros; simp only [coe_comp]; ext1; rfl
-#align abelianize abelianize
+#align abelianize GroupCat.abelianize
 -/
 
-#print abelianizeAdj /-
+#print GroupCat.abelianizeAdj /-
 /-- The abelianization-forgetful adjuction from `Group` to `CommGroup`.-/
-def abelianizeAdj : abelianize ⊣ forget₂ CommGroupCat.{u} GroupCat.{u} :=
+def GroupCat.abelianizeAdj : GroupCat.abelianize ⊣ forget₂ CommGroupCat.{u} GroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun G A => Abelianization.lift.symm
       homEquiv_naturality_left_symm := fun G H A f g => by ext1; rfl }
-#align abelianize_adj abelianizeAdj
+#align abelianize_adj GroupCat.abelianizeAdj
 -/
 
 end Abelianization

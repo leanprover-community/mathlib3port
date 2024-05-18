@@ -281,7 +281,7 @@ def mapProjectivePresentation (adj : F ⊣ G) [G.PreservesEpimorphisms] (X : C)
     (Y : ProjectivePresentation X) : ProjectivePresentation (F.obj X)
     where
   p := F.obj Y.p
-  Projective := adj.map_projective _ Y.Projective
+  Projective := MonCat.adj.map_projective _ Y.Projective
   f := F.map Y.f
   Epi := by
     haveI : PreservesColimitsOfSize.{0, 0} F := adj.left_adjoint_preserves_colimits <;>
