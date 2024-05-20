@@ -5,7 +5,7 @@ Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
 import Algebra.Group.Even
 import Algebra.CharZero.Lemmas
-import Algebra.GroupWithZero.Bitwise
+import Algebra.GroupWithZero.Power
 import Algebra.Order.Field.Basic
 
 #align_import algebra.order.field.power from "leanprover-community/mathlib"@"acb3d204d4ee883eb686f45d486a2a6811a01329"
@@ -154,11 +154,9 @@ variable [LinearOrderedField α] {a b c d : α} {n : ℤ}
 /-! ### Lemmas about powers to numerals. -/
 
 
-#print zpow_bit0_nonneg /-
 theorem zpow_bit0_nonneg (a : α) (n : ℤ) : 0 ≤ a ^ bit0 n :=
   (hMul_self_nonneg _).trans_eq <| (zpow_bit0 _ _).symm
 #align zpow_bit0_nonneg zpow_bit0_nonneg
--/
 
 #print zpow_two_nonneg /-
 theorem zpow_two_nonneg (a : α) : 0 ≤ a ^ (2 : ℤ) :=
@@ -172,11 +170,9 @@ theorem zpow_neg_two_nonneg (a : α) : 0 ≤ a ^ (-2 : ℤ) :=
 #align zpow_neg_two_nonneg zpow_neg_two_nonneg
 -/
 
-#print zpow_bit0_pos /-
 theorem zpow_bit0_pos (h : a ≠ 0) (n : ℤ) : 0 < a ^ bit0 n :=
   (zpow_bit0_nonneg a n).lt_of_ne (zpow_ne_zero _ h).symm
 #align zpow_bit0_pos zpow_bit0_pos
--/
 
 #print zpow_two_pos_of_ne_zero /-
 theorem zpow_two_pos_of_ne_zero (h : a ≠ 0) : 0 < a ^ (2 : ℤ) :=
@@ -184,42 +180,32 @@ theorem zpow_two_pos_of_ne_zero (h : a ≠ 0) : 0 < a ^ (2 : ℤ) :=
 #align zpow_two_pos_of_ne_zero zpow_two_pos_of_ne_zero
 -/
 
-#print zpow_bit0_pos_iff /-
 @[simp]
 theorem zpow_bit0_pos_iff (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a ≠ 0 :=
   ⟨by rintro h rfl; refine' (zero_zpow _ _).not_gt h; rwa [bit0_ne_zero], fun h =>
     zpow_bit0_pos h _⟩
 #align zpow_bit0_pos_iff zpow_bit0_pos_iff
--/
 
-#print zpow_bit1_neg_iff /-
 @[simp]
 theorem zpow_bit1_neg_iff : a ^ bit1 n < 0 ↔ a < 0 :=
   ⟨fun h => not_le.1 fun h' => not_le.2 h <| zpow_nonneg h' _, fun h => by
     rw [bit1, zpow_add_one₀ h.ne] <;> exact mul_neg_of_pos_of_neg (zpow_bit0_pos h.ne _) h⟩
 #align zpow_bit1_neg_iff zpow_bit1_neg_iff
--/
 
-#print zpow_bit1_nonneg_iff /-
 @[simp]
 theorem zpow_bit1_nonneg_iff : 0 ≤ a ^ bit1 n ↔ 0 ≤ a :=
   le_iff_le_iff_lt_iff_lt.2 zpow_bit1_neg_iff
 #align zpow_bit1_nonneg_iff zpow_bit1_nonneg_iff
--/
 
-#print zpow_bit1_nonpos_iff /-
 @[simp]
 theorem zpow_bit1_nonpos_iff : a ^ bit1 n ≤ 0 ↔ a ≤ 0 := by
   rw [le_iff_lt_or_eq, le_iff_lt_or_eq, zpow_bit1_neg_iff, zpow_eq_zero_iff (Int.bit1_ne_zero n)]
 #align zpow_bit1_nonpos_iff zpow_bit1_nonpos_iff
--/
 
-#print zpow_bit1_pos_iff /-
 @[simp]
 theorem zpow_bit1_pos_iff : 0 < a ^ bit1 n ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le zpow_bit1_nonpos_iff
 #align zpow_bit1_pos_iff zpow_bit1_pos_iff
--/
 
 #print Even.zpow_nonneg /-
 protected theorem Even.zpow_nonneg (hn : Even n) (a : α) : 0 ≤ a ^ n := by

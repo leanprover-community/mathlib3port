@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
 import Algebra.Field.Defs
-import Algebra.GroupWithZero.Bitwise
+import Algebra.GroupWithZero.Power
 import Algebra.Group.Even
 
 #align_import algebra.field.power from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
@@ -27,12 +27,10 @@ section DivisionRing
 
 variable [DivisionRing α] {n : ℤ}
 
-#print zpow_bit1_neg /-
 @[simp]
 theorem zpow_bit1_neg (a : α) (n : ℤ) : (-a) ^ bit1 n = -a ^ bit1 n := by
   rw [zpow_bit1', zpow_bit1', neg_mul_neg, neg_mul_eq_mul_neg]
 #align zpow_bit1_neg zpow_bit1_neg
--/
 
 #print Odd.neg_zpow /-
 theorem Odd.neg_zpow (h : Odd n) (a : α) : (-a) ^ n = -a ^ n := by obtain ⟨k, rfl⟩ := h.exists_bit1;

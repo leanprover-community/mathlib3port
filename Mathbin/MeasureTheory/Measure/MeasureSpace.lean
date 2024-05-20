@@ -4990,13 +4990,13 @@ theorem exists_pos_ball [PseudoMetricSpace α] (x : α) (hμ : μ ≠ 0) :
 #align measure_theory.exists_pos_ball MeasureTheory.exists_pos_ball
 -/
 
-#print MeasureTheory.null_of_locally_null /-
+#print MeasureTheory.measure_null_of_locally_null /-
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
-theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (s : Set α)
+theorem measure_null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (s : Set α)
     (hs : ∀ x ∈ s, ∃ u ∈ 𝓝[s] x, μ u = 0) : μ s = 0 :=
   μ.toOuterMeasure.null_of_locally_null s hs
-#align measure_theory.null_of_locally_null MeasureTheory.null_of_locally_null
+#align measure_theory.null_of_locally_null MeasureTheory.measure_null_of_locally_null
 -/
 
 #print MeasureTheory.exists_mem_forall_mem_nhdsWithin_pos_measure /-

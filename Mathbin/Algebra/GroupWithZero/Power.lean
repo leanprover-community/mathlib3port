@@ -182,14 +182,12 @@ theorem Commute.zpow_zpow_self₀ (a : G₀) (m n : ℤ) : Commute (a ^ m) (a ^ 
 #align commute.zpow_zpow_self₀ Commute.zpow_zpow_self₀
 -/
 
-#print zpow_bit1₀ /-
 theorem zpow_bit1₀ (a : G₀) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a :=
   by
   rw [← zpow_bit0, bit1, zpow_add', zpow_one]
   right; left
   apply bit1_ne_zero
 #align zpow_bit1₀ zpow_bit1₀
--/
 
 #print zpow_ne_zero /-
 theorem zpow_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z ≠ 0
@@ -204,11 +202,9 @@ theorem zpow_sub₀ {a : G₀} (ha : a ≠ 0) (z1 z2 : ℤ) : a ^ (z1 - z2) = a 
 #align zpow_sub₀ zpow_sub₀
 -/
 
-#print zpow_bit1' /-
 theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by
   rw [zpow_bit1₀, (Commute.refl a).mul_zpow]
 #align zpow_bit1' zpow_bit1'
--/
 
 #print eq_zero_of_zpow_eq_zero /-
 theorem eq_zero_of_zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=

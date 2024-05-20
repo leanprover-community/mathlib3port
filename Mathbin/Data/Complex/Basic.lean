@@ -878,17 +878,13 @@ noncomputable instance : Field ℂ :=
     mul_inv_cancel := @Complex.mul_inv_cancel
     inv_zero := Complex.inv_zero }
 
-#print Complex.I_zpow_bit0 /-
 @[simp]
-theorem I_zpow_bit0 (n : ℤ) : I ^ bit0 n = (-1) ^ n := by rw [zpow_bit0', I_mul_I]
-#align complex.I_zpow_bit0 Complex.I_zpow_bit0
--/
+theorem i_zpow_bit0 (n : ℤ) : I ^ bit0 n = (-1) ^ n := by rw [zpow_bit0', I_mul_I]
+#align complex.I_zpow_bit0 Complex.i_zpow_bit0
 
-#print Complex.I_zpow_bit1 /-
 @[simp]
-theorem I_zpow_bit1 (n : ℤ) : I ^ bit1 n = (-1) ^ n * I := by rw [zpow_bit1', I_mul_I]
-#align complex.I_zpow_bit1 Complex.I_zpow_bit1
--/
+theorem i_zpow_bit1 (n : ℤ) : I ^ bit1 n = (-1) ^ n * I := by rw [zpow_bit1', I_mul_I]
+#align complex.I_zpow_bit1 Complex.i_zpow_bit1
 
 #print Complex.div_re /-
 theorem div_re (z w : ℂ) : (z / w).re = z.re * w.re / normSq w + z.im * w.im / normSq w := by

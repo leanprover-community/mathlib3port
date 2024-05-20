@@ -271,13 +271,13 @@ section
 
 open ProjectiveSpectrum ProjectiveSpectrum.StructureSheaf Opens
 
-#print AlgebraicGeometry.res_apply /-
+#print AlgebraicGeometry.Proj.res_apply /-
 @[simp]
-theorem res_apply (U V : Opens (ProjectiveSpectrum.top 𝒜)) (i : V ⟶ U)
+theorem AlgebraicGeometry.Proj.res_apply (U V : Opens (ProjectiveSpectrum.top 𝒜)) (i : V ⟶ U)
     (s : (Proj.structureSheaf 𝒜).1.obj (op U)) (x : V) :
     ((Proj.structureSheaf 𝒜).1.map i.op s).1 x = (s.1 (i x) : _) :=
   rfl
-#align algebraic_geometry.res_apply AlgebraicGeometry.res_apply
+#align algebraic_geometry.res_apply AlgebraicGeometry.Proj.res_apply
 -/
 
 #print AlgebraicGeometry.Proj.toSheafedSpace /-
@@ -347,11 +347,11 @@ theorem stalkToFiberRingHom_germ (U : Opens (ProjectiveSpectrum.top 𝒜)) (x : 
 #align algebraic_geometry.stalk_to_fiber_ring_hom_germ AlgebraicGeometry.stalkToFiberRingHom_germ
 -/
 
-#print AlgebraicGeometry.HomogeneousLocalization.mem_basicOpen /-
-theorem HomogeneousLocalization.mem_basicOpen (x : ProjectiveSpectrum.top 𝒜) (f : at x) :
+#print AlgebraicGeometry.mem_basicOpen_den /-
+theorem AlgebraicGeometry.mem_basicOpen_den (x : ProjectiveSpectrum.top 𝒜) (f : at x) :
     x ∈ ProjectiveSpectrum.basicOpen 𝒜 f.den := by rw [ProjectiveSpectrum.mem_basicOpen];
   exact f.denom_mem
-#align algebraic_geometry.homogeneous_localization.mem_basic_open AlgebraicGeometry.HomogeneousLocalization.mem_basicOpen
+#align algebraic_geometry.homogeneous_localization.mem_basic_open AlgebraicGeometry.mem_basicOpen_den
 -/
 
 variable (𝒜)
@@ -376,7 +376,7 @@ stalk at `x` obtained by `section_in_basic_open`. This is the inverse of `stalk_
 def homogeneousLocalizationToStalk (x : ProjectiveSpectrum.top 𝒜) :
     (at x) → (Proj.structureSheaf 𝒜).Presheaf.stalk x := fun f =>
   (Proj.structureSheaf 𝒜).Presheaf.germ
-    (⟨x, HomogeneousLocalization.mem_basicOpen _ x f⟩ : ProjectiveSpectrum.basicOpen _ f.den)
+    (⟨x, AlgebraicGeometry.mem_basicOpen_den _ x f⟩ : ProjectiveSpectrum.basicOpen _ f.den)
     (sectionInBasicOpen _ x f)
 #align algebraic_geometry.homogeneous_localization_to_stalk AlgebraicGeometry.homogeneousLocalizationToStalk
 -/

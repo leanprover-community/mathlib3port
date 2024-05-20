@@ -195,7 +195,6 @@ theorem zpow_mul' (a : α) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by rw [mul
 #align mul_zsmul mul_zsmul
 -/
 
-#print zpow_bit0 /-
 @[to_additive bit0_zsmul]
 theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
   | (n : ℕ) => by simp only [zpow_natCast, ← Int.ofNat_bit0, pow_bit0]
@@ -204,22 +203,17 @@ theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
     norm_cast
 #align zpow_bit0 zpow_bit0
 #align bit0_zsmul bit0_zsmul
--/
 
-#print zpow_bit0' /-
 @[to_additive bit0_zsmul']
 theorem zpow_bit0' (a : α) (n : ℤ) : a ^ bit0 n = (a * a) ^ n :=
   (zpow_bit0 a n).trans ((Commute.refl a).mul_zpow n).symm
 #align zpow_bit0' zpow_bit0'
 #align bit0_zsmul' bit0_zsmul'
--/
 
-#print zpow_bit0_neg /-
 @[simp]
 theorem zpow_bit0_neg [HasDistribNeg α] (x : α) (n : ℤ) : (-x) ^ bit0 n = x ^ bit0 n := by
   rw [zpow_bit0', zpow_bit0', neg_mul_neg]
 #align zpow_bit0_neg zpow_bit0_neg
--/
 
 end DivisionMonoid
 
@@ -308,13 +302,11 @@ theorem zpow_mul_comm (a : G) (i j : ℤ) : a ^ i * a ^ j = a ^ j * a ^ i :=
 #align zsmul_add_comm zsmul_add_comm
 -/
 
-#print zpow_bit1 /-
 @[to_additive bit1_zsmul]
 theorem zpow_bit1 (a : G) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a := by
   rw [bit1, zpow_add, zpow_bit0, zpow_one]
 #align zpow_bit1 zpow_bit1
 #align bit1_zsmul bit1_zsmul
--/
 
 #print zpow_induction_left /-
 /-- To show a property of all powers of `g` it suffices to show it is closed under multiplication

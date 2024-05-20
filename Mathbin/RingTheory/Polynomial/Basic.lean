@@ -188,42 +188,42 @@ theorem eval_eq_sum_degreeLTEquiv {n : ℕ} {p : R[X]} (hp : p ∈ degreeLT R n)
 #align polynomial.eval_eq_sum_degree_lt_equiv Polynomial.eval_eq_sum_degreeLTEquiv
 -/
 
-#print Polynomial.frange /-
+#print Polynomial.coeffs /-
 /-- The finset of nonzero coefficients of a polynomial. -/
-def frange (p : R[X]) : Finset R :=
+def coeffs (p : R[X]) : Finset R :=
   Finset.image (fun n => p.coeff n) p.support
-#align polynomial.frange Polynomial.frange
+#align polynomial.frange Polynomial.coeffs
 -/
 
-#print Polynomial.frange_zero /-
-theorem frange_zero : frange (0 : R[X]) = ∅ :=
+#print Polynomial.coeffs_zero /-
+theorem coeffs_zero : coeffs (0 : R[X]) = ∅ :=
   rfl
-#align polynomial.frange_zero Polynomial.frange_zero
+#align polynomial.frange_zero Polynomial.coeffs_zero
 -/
 
-#print Polynomial.mem_frange_iff /-
-theorem mem_frange_iff {p : R[X]} {c : R} : c ∈ p.frange ↔ ∃ n ∈ p.support, c = p.coeff n := by
+#print Polynomial.mem_coeffs_iff /-
+theorem mem_coeffs_iff {p : R[X]} {c : R} : c ∈ p.frange ↔ ∃ n ∈ p.support, c = p.coeff n := by
   simp [frange, eq_comm]
-#align polynomial.mem_frange_iff Polynomial.mem_frange_iff
+#align polynomial.mem_frange_iff Polynomial.mem_coeffs_iff
 -/
 
-#print Polynomial.frange_one /-
-theorem frange_one : frange (1 : R[X]) ⊆ {1} :=
+#print Polynomial.coeffs_one /-
+theorem coeffs_one : coeffs (1 : R[X]) ⊆ {1} :=
   by
   simp [frange, Finset.image_subset_iff]
   simp only [← C_1, coeff_C]
   intro n hn
   simp only [exists_prop, ite_eq_right_iff, Classical.not_forall] at hn
   simp [hn]
-#align polynomial.frange_one Polynomial.frange_one
+#align polynomial.frange_one Polynomial.coeffs_one
 -/
 
-#print Polynomial.coeff_mem_frange /-
-theorem coeff_mem_frange (p : R[X]) (n : ℕ) (h : p.coeff n ≠ 0) : p.coeff n ∈ p.frange :=
+#print Polynomial.coeff_mem_coeffs /-
+theorem coeff_mem_coeffs (p : R[X]) (n : ℕ) (h : p.coeff n ≠ 0) : p.coeff n ∈ p.frange :=
   by
   simp only [frange, exists_prop, mem_support_iff, Finset.mem_image, Ne.def]
   exact ⟨n, h, rfl⟩
-#align polynomial.coeff_mem_frange Polynomial.coeff_mem_frange
+#align polynomial.coeff_mem_frange Polynomial.coeff_mem_coeffs
 -/
 
 #print Polynomial.geom_sum_X_comp_X_add_one_eq_sum /-
@@ -295,7 +295,7 @@ def restriction (p : R[X]) : Polynomial (Subring.closure (↑p.frange : Set R)) 
     monomial i
       (⟨p.coeff i,
           if H : p.coeff i = 0 then H.symm ▸ (Subring.closure _).zero_mem
-          else Subring.subset_closure (p.coeff_mem_frange _ H)⟩ :
+          else Subring.subset_closure (p.coeff_mem_coeffs _ H)⟩ :
         Subring.closure (↑p.frange : Set R))
 #align polynomial.restriction Polynomial.restriction
 -/
@@ -397,7 +397,7 @@ return the corresponding polynomial whose coefficients are in `T`. -/
 def toSubring (hp : (↑p.frange : Set R) ⊆ T) : T[X] :=
   ∑ i in p.support,
     monomial i
-      (⟨p.coeff i, if H : p.coeff i = 0 then H.symm ▸ T.zero_mem else hp (p.coeff_mem_frange _ H)⟩ :
+      (⟨p.coeff i, if H : p.coeff i = 0 then H.symm ▸ T.zero_mem else hp (p.coeff_mem_coeffs _ H)⟩ :
         T)
 #align polynomial.to_subring Polynomial.toSubring
 -/
@@ -465,7 +465,7 @@ theorem toSubring_zero : toSubring (0 : R[X]) T (by simp [frange_zero]) = 0 := b
 @[simp]
 theorem toSubring_one :
     toSubring (1 : R[X]) T
-        (Set.Subset.trans frange_one <| Finset.singleton_subset_set_iff.2 T.one_mem) =
+        (Set.Subset.trans coeffs_one <| Finset.singleton_subset_set_iff.2 T.one_mem) =
       1 :=
   ext fun i => Subtype.eq <| by rw [coeff_to_subring', coeff_one, coeff_one] <;> split_ifs <;> rfl
 #align polynomial.to_subring_one Polynomial.toSubring_one
@@ -500,16 +500,16 @@ theorem coeff_ofSubring (p : T[X]) (n : ℕ) : coeff (ofSubring T p) n = (coeff 
 #align polynomial.coeff_of_subring Polynomial.coeff_ofSubring
 -/
 
-#print Polynomial.frange_ofSubring /-
+#print Polynomial.coeffs_ofSubring /-
 @[simp]
-theorem frange_ofSubring {p : T[X]} : (↑(p.ofSubring T).frange : Set R) ⊆ T :=
+theorem coeffs_ofSubring {p : T[X]} : (↑(p.ofSubring T).frange : Set R) ⊆ T :=
   by
   intro i hi
   simp only [frange, Set.mem_image, mem_support_iff, Ne.def, Finset.mem_coe, Finset.coe_image] at hi
   rcases hi with ⟨n, hn, h'n⟩
   rw [← h'n, coeff_of_subring]
   exact Subtype.mem (coeff p n : T)
-#align polynomial.frange_of_subring Polynomial.frange_ofSubring
+#align polynomial.frange_of_subring Polynomial.coeffs_ofSubring
 -/
 
 end Ring

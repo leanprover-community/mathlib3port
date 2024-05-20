@@ -6,7 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 import Data.Rat.Order
 import Data.Rat.Lemmas
 import Data.Int.CharZero
-import Algebra.GroupWithZero.Bitwise
+import Algebra.GroupWithZero.Power
 import Algebra.Field.Opposite
 import Algebra.Order.Field.Basic
 
