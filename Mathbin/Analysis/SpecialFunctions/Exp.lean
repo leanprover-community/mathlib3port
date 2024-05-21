@@ -170,29 +170,29 @@ theorem Filter.Tendsto.rexp {l : Filter α} {f : α → ℝ} {z : ℝ} (hf : Ten
 
 variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {x : α}
 
-#print ContinuousWithinAt.exp /-
-theorem ContinuousWithinAt.exp (h : ContinuousWithinAt f s x) :
+#print ContinuousWithinAt.rexp /-
+theorem ContinuousWithinAt.rexp (h : ContinuousWithinAt f s x) :
     ContinuousWithinAt (fun y => exp (f y)) s x :=
   h.exp
-#align continuous_within_at.exp ContinuousWithinAt.exp
+#align continuous_within_at.exp ContinuousWithinAt.rexp
 -/
 
-#print ContinuousAt.exp /-
-theorem ContinuousAt.exp (h : ContinuousAt f x) : ContinuousAt (fun y => exp (f y)) x :=
+#print ContinuousAt.rexp /-
+theorem ContinuousAt.rexp (h : ContinuousAt f x) : ContinuousAt (fun y => exp (f y)) x :=
   h.exp
-#align continuous_at.exp ContinuousAt.exp
+#align continuous_at.exp ContinuousAt.rexp
 -/
 
-#print ContinuousOn.exp /-
-theorem ContinuousOn.exp (h : ContinuousOn f s) : ContinuousOn (fun y => exp (f y)) s := fun x hx =>
-  (h x hx).exp
-#align continuous_on.exp ContinuousOn.exp
+#print ContinuousOn.rexp /-
+theorem ContinuousOn.rexp (h : ContinuousOn f s) : ContinuousOn (fun y => exp (f y)) s :=
+  fun x hx => (h x hx).exp
+#align continuous_on.exp ContinuousOn.rexp
 -/
 
-#print Continuous.exp /-
-theorem Continuous.exp (h : Continuous f) : Continuous fun y => exp (f y) :=
+#print Continuous.rexp /-
+theorem Continuous.rexp (h : Continuous f) : Continuous fun y => exp (f y) :=
   continuous_iff_continuousAt.2 fun x => h.ContinuousAt.exp
-#align continuous.exp Continuous.exp
+#align continuous.exp Continuous.rexp
 -/
 
 end RealContinuousExpComp

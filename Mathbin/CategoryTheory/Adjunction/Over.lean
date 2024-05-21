@@ -33,32 +33,33 @@ open Category Limits Comonad
 
 variable {C : Type u} [Category.{v} C] (X : C)
 
-#print CategoryTheory.star /-
+#print CategoryTheory.Over.star /-
 /--
 The functor from `C` to `over X` which sends `Y : C` to `π₁ : X ⨯ Y ⟶ X`, sometimes denoted `X*`.
 -/
 @[simps obj_left obj_hom mapLeft]
-def star [HasBinaryProducts C] : C ⥤ Over X :=
+def CategoryTheory.Over.star [HasBinaryProducts C] : C ⥤ Over X :=
   cofree _ ⋙ coalgebraToOver X
-#align category_theory.star CategoryTheory.star
+#align category_theory.star CategoryTheory.Over.star
 -/
 
-#print CategoryTheory.forgetAdjStar /-
+#print CategoryTheory.Over.forgetAdjStar /-
 /-- The functor `over.forget X : over X ⥤ C` has a right adjoint given by `star X`.
 
 Note that the binary products assumption is necessary: the existence of a right adjoint to
 `over.forget X` is equivalent to the existence of each binary product `X ⨯ -`.
 -/
-def forgetAdjStar [HasBinaryProducts C] : Over.forget X ⊣ star X :=
+def CategoryTheory.Over.forgetAdjStar [HasBinaryProducts C] :
+    Over.forget X ⊣ CategoryTheory.Over.star X :=
   (coalgebraEquivOver X).symm.toAdjunction.comp (adj _)
-#align category_theory.forget_adj_star CategoryTheory.forgetAdjStar
+#align category_theory.forget_adj_star CategoryTheory.Over.forgetAdjStar
 -/
 
 /-- Note that the binary products assumption is necessary: the existence of a right adjoint to
 `over.forget X` is equivalent to the existence of each binary product `X ⨯ -`.
 -/
 instance [HasBinaryProducts C] : CategoryTheory.Functor.IsLeftAdjoint (Over.forget X) :=
-  ⟨_, forgetAdjStar X⟩
+  ⟨_, CategoryTheory.Over.forgetAdjStar X⟩
 
 end CategoryTheory
 

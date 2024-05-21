@@ -459,45 +459,51 @@ instance decidableEqEmbeddingFintype [DecidableEq β] [Fintype α] : DecidableEq
 #align fintype.decidable_eq_embedding_fintype Fintype.decidableEqEmbeddingFintype
 -/
 
-#print Fintype.decidableEqOneHomFintype /-
+#print FunLike.toDecidableEq /-
 @[to_additive]
-instance decidableEqOneHomFintype [DecidableEq β] [Fintype α] [One α] [One β] :
-    DecidableEq (OneHom α β) := fun a b =>
-  decidable_of_iff ((a : α → β) = b) (Injective.eq_iff OneHom.coe_inj)
-#align fintype.decidable_eq_one_hom_fintype Fintype.decidableEqOneHomFintype
-#align fintype.decidable_eq_zero_hom_fintype Fintype.decidableEqZeroHomFintype
+instance toDecidableEq [DecidableEq β] [Fintype α] [One α] [One β] : DecidableEq (OneHom α β) :=
+  fun a b => decidable_of_iff ((a : α → β) = b) (Injective.eq_iff OneHom.coe_inj)
+#align fintype.decidable_eq_one_hom_fintype FunLike.toDecidableEq
+#align fintype.decidable_eq_one_hom_fintype FunLike.toDecidableEq
 -/
 
-#print Fintype.decidableEqMulHomFintype /-
+/- warning: fintype.decidable_eq_mul_hom_fintype clashes with fintype.decidable_eq_one_hom_fintype -> FunLike.toDecidableEq
+Case conversion may be inaccurate. Consider using '#align fintype.decidable_eq_mul_hom_fintype FunLike.toDecidableEqₓ'. -/
+#print FunLike.toDecidableEq /-
 @[to_additive]
-instance decidableEqMulHomFintype [DecidableEq β] [Fintype α] [Mul α] [Mul β] :
-    DecidableEq (α →ₙ* β) := fun a b =>
-  decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MulHom.coe_inj)
-#align fintype.decidable_eq_mul_hom_fintype Fintype.decidableEqMulHomFintype
-#align fintype.decidable_eq_add_hom_fintype Fintype.decidableEqAddHomFintype
+instance toDecidableEq [DecidableEq β] [Fintype α] [Mul α] [Mul β] : DecidableEq (α →ₙ* β) :=
+  fun a b => decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MulHom.coe_inj)
+#align fintype.decidable_eq_mul_hom_fintype FunLike.toDecidableEq
+#align fintype.decidable_eq_one_hom_fintype FunLike.toDecidableEq
 -/
 
-#print Fintype.decidableEqMonoidHomFintype /-
+/- warning: fintype.decidable_eq_monoid_hom_fintype clashes with fintype.decidable_eq_one_hom_fintype -> FunLike.toDecidableEq
+Case conversion may be inaccurate. Consider using '#align fintype.decidable_eq_monoid_hom_fintype FunLike.toDecidableEqₓ'. -/
+#print FunLike.toDecidableEq /-
 @[to_additive]
-instance decidableEqMonoidHomFintype [DecidableEq β] [Fintype α] [MulOneClass α] [MulOneClass β] :
+instance toDecidableEq [DecidableEq β] [Fintype α] [MulOneClass α] [MulOneClass β] :
     DecidableEq (α →* β) := fun a b =>
   decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MonoidHom.coe_inj)
-#align fintype.decidable_eq_monoid_hom_fintype Fintype.decidableEqMonoidHomFintype
-#align fintype.decidable_eq_add_monoid_hom_fintype Fintype.decidableEqAddMonoidHomFintype
+#align fintype.decidable_eq_monoid_hom_fintype FunLike.toDecidableEq
+#align fintype.decidable_eq_one_hom_fintype FunLike.toDecidableEq
 -/
 
-#print Fintype.decidableEqMonoidWithZeroHomFintype /-
-instance decidableEqMonoidWithZeroHomFintype [DecidableEq β] [Fintype α] [MulZeroOneClass α]
-    [MulZeroOneClass β] : DecidableEq (α →*₀ β) := fun a b =>
+/- warning: fintype.decidable_eq_monoid_with_zero_hom_fintype clashes with fintype.decidable_eq_one_hom_fintype -> FunLike.toDecidableEq
+Case conversion may be inaccurate. Consider using '#align fintype.decidable_eq_monoid_with_zero_hom_fintype FunLike.toDecidableEqₓ'. -/
+#print FunLike.toDecidableEq /-
+instance toDecidableEq [DecidableEq β] [Fintype α] [MulZeroOneClass α] [MulZeroOneClass β] :
+    DecidableEq (α →*₀ β) := fun a b =>
   decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MonoidWithZeroHom.coe_inj)
-#align fintype.decidable_eq_monoid_with_zero_hom_fintype Fintype.decidableEqMonoidWithZeroHomFintype
+#align fintype.decidable_eq_monoid_with_zero_hom_fintype FunLike.toDecidableEq
 -/
 
-#print Fintype.decidableEqRingHomFintype /-
-instance decidableEqRingHomFintype [DecidableEq β] [Fintype α] [Semiring α] [Semiring β] :
+/- warning: fintype.decidable_eq_ring_hom_fintype clashes with fintype.decidable_eq_one_hom_fintype -> FunLike.toDecidableEq
+Case conversion may be inaccurate. Consider using '#align fintype.decidable_eq_ring_hom_fintype FunLike.toDecidableEqₓ'. -/
+#print FunLike.toDecidableEq /-
+instance toDecidableEq [DecidableEq β] [Fintype α] [Semiring α] [Semiring β] :
     DecidableEq (α →+* β) := fun a b =>
   decidable_of_iff ((a : α → β) = b) (Injective.eq_iff RingHom.coe_inj)
-#align fintype.decidable_eq_ring_hom_fintype Fintype.decidableEqRingHomFintype
+#align fintype.decidable_eq_ring_hom_fintype FunLike.toDecidableEq
 -/
 
 end BundledHoms
