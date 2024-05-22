@@ -93,8 +93,8 @@ import Algebra.BigOperators.Finprod
 import Algebra.BigOperators.Finsupp
 import Algebra.BigOperators.Fin
 import Algebra.BigOperators.Intervals
-import Algebra.BigOperators.Multiset.Basic
-import Algebra.BigOperators.Multiset.Lemmas
+import Algebra.BigOperators.Group.Multiset
+import Algebra.BigOperators.Ring.Multiset
 import Algebra.BigOperators.NatAntidiagonal
 import Tactic.NormNum.BigOperators
 import Algebra.BigOperators.Option
@@ -220,7 +220,7 @@ import Algebra.GeomSum
 import Algebra.GradedMonoid
 import Algebra.GradedMulAction
 import Algebra.GroupPower.Basic
-import Algebra.GroupPower.Identities
+import Algebra.Ring.Identities
 import Algebra.GroupPower.Lemmas
 import Algebra.GroupPower.Order
 import Algebra.GroupPower.Ring
@@ -245,7 +245,7 @@ import Algebra.Group.Defs
 import Algebra.Group.Ext
 import Algebra.Group.InjSurj
 import Algebra.Group.Opposite
-import Algebra.Group.OrderSynonym
+import Algebra.Order.Group.Synonym
 import Algebra.Group.Pi.Lemmas
 import Algebra.Group.Prod
 import Algebra.Group.Semiconj.Defs
@@ -460,7 +460,7 @@ import Algebra.Ring.Fin
 import Algebra.Ring.Idempotents
 import Algebra.Ring.InjSurj
 import Algebra.Ring.Opposite
-import Algebra.Ring.OrderSynonym
+import Algebra.Order.Ring.Synonym
 import Algebra.Ring.Pi
 import Algebra.Ring.Prod
 import Algebra.Ring.Regular
@@ -1603,7 +1603,7 @@ import Data.PFunctor.Univariate.Basic
 import Data.PFun
 import Algebra.Group.Pi.Basic
 import Data.Pi.Interval
-import Data.Pi.Lex
+import Order.PiLex
 import Data.PNat.Basic
 import Data.PNat.Defs
 import Data.PNat.Factors
@@ -1832,7 +1832,7 @@ import FieldTheory.Normal
 import FieldTheory.PerfectClosure
 import FieldTheory.PolynomialGaloisGroup
 import FieldTheory.PrimitiveElement
-import FieldTheory.RatFunc
+import FieldTheory.RatFunc.Defs
 import RingTheory.Polynomial.SeparableDegree
 import FieldTheory.Separable
 import FieldTheory.SplittingField.Construction

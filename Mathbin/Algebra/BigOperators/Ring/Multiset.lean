@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Bhavik Mehta, Eric Wieser
 -/
 import Data.List.BigOperators.Lemmas
-import Algebra.BigOperators.Multiset.Basic
+import Algebra.BigOperators.Group.Multiset
 
 #align_import algebra.big_operators.multiset.lemmas from "leanprover-community/mathlib"@"f2f413b9d4be3a02840d0663dace76e8fe3da053"
 

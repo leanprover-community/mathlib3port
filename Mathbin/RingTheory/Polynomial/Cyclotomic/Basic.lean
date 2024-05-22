@@ -9,7 +9,7 @@ import RingTheory.RootsOfUnity.Complex
 import Algebra.Polynomial.Lifts
 import Algebra.Polynomial.Splits
 import Data.ZMod.Algebra
-import FieldTheory.RatFunc
+import FieldTheory.RatFunc.Defs
 import FieldTheory.Separable
 import NumberTheory.ArithmeticFunction
 import RingTheory.RootsOfUnity.Basic

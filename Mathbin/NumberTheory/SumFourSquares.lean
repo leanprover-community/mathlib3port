@@ -3,7 +3,7 @@ Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Algebra.GroupPower.Identities
+import Algebra.Ring.Identities
 import Data.ZMod.Basic
 import FieldTheory.Finite.Basic
 import Data.Int.Parity

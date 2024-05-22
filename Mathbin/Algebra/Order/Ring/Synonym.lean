@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Yaël Dillies
 -/
 import Algebra.Ring.Defs
-import Algebra.Group.OrderSynonym
+import Algebra.Order.Group.Synonym
 
 #align_import algebra.ring.order_synonym from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 
