@@ -52,7 +52,7 @@ attribute [local ext] TensorProduct.ext
 expression of the fact that `L` acts by linear endomorphisms. It simplifies the proofs in
 `lie_ring_module` below. -/
 def hasBracketAux (x : L) : Module.End R (M ⊗[R] N) :=
-  (toEndomorphism R L M x).rTensor N + (toEndomorphism R L N x).lTensor M
+  (toEnd R L M x).rTensor N + (toEnd R L N x).lTensor M
 #align tensor_product.lie_module.has_bracket_aux TensorProduct.LieModule.hasBracketAux
 -/
 
@@ -224,7 +224,7 @@ variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 /-- The action of the Lie algebra on one of its modules, regarded as a morphism of Lie modules. -/
 def toModuleHom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
   TensorProduct.LieModule.liftLie R L L M M
-    { (toEndomorphism R L M : L →ₗ[R] M →ₗ[R] M) with
+    { (toEnd R L M : L →ₗ[R] M →ₗ[R] M) with
       map_lie' := fun x m => by ext n; simp [LieRing.of_associative_ring_bracket] }
 #align lie_module.to_module_hom LieModule.toModuleHom
 -/

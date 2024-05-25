@@ -763,7 +763,7 @@ instance : SecondCountableTopology GHSpace :=
     the fact that `N p = N q`, this constructs `Ψ` between `s p` and `s q`, and then
     composing with the canonical inclusion we get `Φ`. -/
   have Npq : N p = N q := (Sigma.mk.inj_iff.1 hpq).1
-  let Ψ : s p → s q := fun x => (E q).symm (Fin.castIso Npq ((E p) x))
+  let Ψ : s p → s q := fun x => (E q).symm (Fin.castOrderIso Npq ((E p) x))
   let Φ : s p → q.rep := fun x => Ψ x
   -- Use the almost isometry `Φ` to show that `p.rep` and `q.rep`
   -- are within controlled Gromov-Hausdorff distance.
@@ -789,7 +789,7 @@ instance : SecondCountableTopology GHSpace :=
       let z := (E p).symm ⟨i, hip⟩
       use z
       have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
-      have C2 : Fin.castIso Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl
+      have C2 : Fin.castOrderIso Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl
       have C3 : (E q).symm ⟨i, hi⟩ = ⟨y, ys⟩ := by rw [ihi_eq]; exact (E q).symm_apply_apply ⟨y, ys⟩
       have : Φ z = y := by simp only [Φ, Ψ]; rw [C1, C2, C3]; rfl
       rw [this]
@@ -910,7 +910,7 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
   -- It remains to show that if `F p = F q`, then `p` and `q` are `ε`-close
   rintro ⟨p, pt⟩ ⟨q, qt⟩ hpq
   have Npq : N p = N q := Fin.ext_iff.1 (Sigma.mk.inj_iff.1 hpq).1
-  let Ψ : s p → s q := fun x => (E q).symm (Fin.castIso Npq ((E p) x))
+  let Ψ : s p → s q := fun x => (E q).symm (Fin.castOrderIso Npq ((E p) x))
   let Φ : s p → q.rep := fun x => Ψ x
   have main : GH_dist p.rep q.rep ≤ ε + ε / 2 + ε :=
     by
@@ -937,7 +937,7 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       let z := (E p).symm ⟨i, hip⟩
       use z
       have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
-      have C2 : Fin.castIso Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl
+      have C2 : Fin.castOrderIso Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl
       have C3 : (E q).symm ⟨i, hi⟩ = ⟨y, ys⟩ := by rw [ihi_eq]; exact (E q).symm_apply_apply ⟨y, ys⟩
       have : Φ z = y := by simp only [Φ, Ψ]; rw [C1, C2, C3]; rfl
       rw [this]

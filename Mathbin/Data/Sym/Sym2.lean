@@ -735,15 +735,24 @@ def relBool [DecidableEq α] (x y : α × α) : Bool :=
   if x.1 = y.1 then x.2 = y.2 else if x.1 = y.2 then x.2 = y.1 else false
 #align sym2.rel_bool Sym2.relBool
 
-theorem relBool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ Rel α x y :=
-  by
-  cases' x with x₁ x₂; cases' y with y₁ y₂
-  dsimp [rel_bool]; split_ifs <;> simp only [false_iff_iff, Bool.coeSort_false, Bool.of_decide_iff]
-  rotate_left 2; · contrapose! h; cases h <;> cc
-  all_goals
-    subst x₁; constructor <;> intro h1
-    · subst h1 <;> apply Sym2.Rel.swap
-    · cases h1 <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  relBool_spec
+  [ DecidableEq α ] ( x y : α × α ) : ↥ relBool x y ↔ Rel α x y
+  :=
+    by
+      cases' x with x₁ x₂
+        ;
+        cases' y with y₁ y₂
+        dsimp [ rel_bool ]
+        ;
+        split_ifs <;> simp only [ false_iff_iff , Bool.coeSort_false , Bool.of_decide_iff ]
+        rotate_left 2
+        ;
+        · contrapose! h ; cases h <;> cc
+        all_goals
+          subst x₁ ; constructor <;> intro h1 · subst h1 <;> apply Sym2.Rel.swap · cases h1 <;> cc
 #align sym2.rel_bool_spec Sym2.relBool_spec
 
 /-- Given `[decidable_eq α]` and `[fintype α]`, the following instance gives `fintype (sym2 α)`.

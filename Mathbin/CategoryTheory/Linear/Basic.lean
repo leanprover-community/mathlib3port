@@ -5,7 +5,7 @@ Authors: Scott Morrison
 -/
 import CategoryTheory.Preadditive.Basic
 import Algebra.Module.LinearMap.Basic
-import Algebra.Invertible.Defs
+import Algebra.Group.Invertible.Defs
 import Algebra.Algebra.Defs
 
 #align_import category_theory.linear.basic from "leanprover-community/mathlib"@"3dec44d0b621a174c56e994da4aae15ba60110a2"

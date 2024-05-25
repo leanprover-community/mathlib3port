@@ -125,7 +125,7 @@ def OrderIso.finTwoArrowIso (α : Type _) [Preorder α] : (Fin 2 → α) ≃o α
 #print finCongr /-
 /-- The 'identity' equivalence between `fin n` and `fin m` when `n = m`. -/
 def finCongr {n m : ℕ} (h : n = m) : Fin n ≃ Fin m :=
-  (Fin.castIso h).toEquiv
+  (Fin.castOrderIso h).toEquiv
 #align fin_congr finCongr
 -/
 
@@ -446,7 +446,7 @@ def Equiv.piFinSucc (n : ℕ) (β : Type u) : (Fin (n + 1) → β) ≃ β × (Fi
 /-- Equivalence between `fin m ⊕ fin n` and `fin (m + n)` -/
 def finSumFinEquiv : Sum (Fin m) (Fin n) ≃ Fin (m + n)
     where
-  toFun := Sum.elim (Fin.castAddEmb n) (Fin.natAddEmb m)
+  toFun := Sum.elim (Fin.castAddOrderEmb n) (Fin.natAddOrderEmb m)
   invFun i := @Fin.addCases m n (fun _ => Sum (Fin m) (Fin n)) Sum.inl Sum.inr i
   left_inv x := by cases' x with y y <;> dsimp <;> simp
   right_inv x := by refine' Fin.addCases (fun i => _) (fun i => _) x <;> simp
@@ -456,7 +456,7 @@ def finSumFinEquiv : Sum (Fin m) (Fin n) ≃ Fin (m + n)
 #print finSumFinEquiv_apply_left /-
 @[simp]
 theorem finSumFinEquiv_apply_left (i : Fin m) :
-    (finSumFinEquiv (Sum.inl i) : Fin (m + n)) = Fin.castAddEmb n i :=
+    (finSumFinEquiv (Sum.inl i) : Fin (m + n)) = Fin.castAddOrderEmb n i :=
   rfl
 #align fin_sum_fin_equiv_apply_left finSumFinEquiv_apply_left
 -/
@@ -464,7 +464,7 @@ theorem finSumFinEquiv_apply_left (i : Fin m) :
 #print finSumFinEquiv_apply_right /-
 @[simp]
 theorem finSumFinEquiv_apply_right (i : Fin n) :
-    (finSumFinEquiv (Sum.inr i) : Fin (m + n)) = Fin.natAddEmb m i :=
+    (finSumFinEquiv (Sum.inr i) : Fin (m + n)) = Fin.natAddOrderEmb m i :=
   rfl
 #align fin_sum_fin_equiv_apply_right finSumFinEquiv_apply_right
 -/
@@ -472,7 +472,7 @@ theorem finSumFinEquiv_apply_right (i : Fin n) :
 #print finSumFinEquiv_symm_apply_castAdd /-
 @[simp]
 theorem finSumFinEquiv_symm_apply_castAdd (x : Fin m) :
-    finSumFinEquiv.symm (Fin.castAddEmb n x) = Sum.inl x :=
+    finSumFinEquiv.symm (Fin.castAddOrderEmb n x) = Sum.inl x :=
   finSumFinEquiv.symm_apply_apply (Sum.inl x)
 #align fin_sum_fin_equiv_symm_apply_cast_add finSumFinEquiv_symm_apply_castAdd
 -/
@@ -480,7 +480,7 @@ theorem finSumFinEquiv_symm_apply_castAdd (x : Fin m) :
 #print finSumFinEquiv_symm_apply_natAdd /-
 @[simp]
 theorem finSumFinEquiv_symm_apply_natAdd (x : Fin n) :
-    finSumFinEquiv.symm (Fin.natAddEmb m x) = Sum.inr x :=
+    finSumFinEquiv.symm (Fin.natAddOrderEmb m x) = Sum.inr x :=
   finSumFinEquiv.symm_apply_apply (Sum.inr x)
 #align fin_sum_fin_equiv_symm_apply_nat_add finSumFinEquiv_symm_apply_natAdd
 -/
@@ -502,14 +502,14 @@ def finAddFlip : Fin (m + n) ≃ Fin (n + m) :=
 #print finAddFlip_apply_castAdd /-
 @[simp]
 theorem finAddFlip_apply_castAdd (k : Fin m) (n : ℕ) :
-    finAddFlip (Fin.castAddEmb n k) = Fin.natAddEmb n k := by simp [finAddFlip]
+    finAddFlip (Fin.castAddOrderEmb n k) = Fin.natAddOrderEmb n k := by simp [finAddFlip]
 #align fin_add_flip_apply_cast_add finAddFlip_apply_castAdd
 -/
 
 #print finAddFlip_apply_natAdd /-
 @[simp]
 theorem finAddFlip_apply_natAdd (k : Fin n) (m : ℕ) :
-    finAddFlip (Fin.natAddEmb m k) = Fin.castAddEmb m k := by simp [finAddFlip]
+    finAddFlip (Fin.natAddOrderEmb m k) = Fin.castAddOrderEmb m k := by simp [finAddFlip]
 #align fin_add_flip_apply_nat_add finAddFlip_apply_natAdd
 -/
 
@@ -710,7 +710,7 @@ values are retained. This is the `order_iso` version of `fin.cast_le`. -/
 @[simps apply symm_apply]
 def Fin.castLEOrderIso {n m : ℕ} (h : n ≤ m) : Fin n ≃o { i : Fin m // (i : ℕ) < n }
     where
-  toFun i := ⟨Fin.castLEEmb h i, by simp⟩
+  toFun i := ⟨Fin.castLEOrderEmb h i, by simp⟩
   invFun i := ⟨i, i.Prop⟩
   left_inv _ := by simp
   right_inv _ := by simp

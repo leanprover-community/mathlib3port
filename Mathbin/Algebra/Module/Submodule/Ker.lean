@@ -1954,14 +1954,16 @@ end LinearMap
 namespace IsLinearMap
 
 #print IsLinearMap.isLinearMap_add /-
-theorem isLinearMap_add [Semiring R] [AddCommMonoid M] [Module R M] :
-    IsLinearMap R fun x : M × M => x.1 + x.2 :=
-  by
-  apply IsLinearMap.mk
-  · intro x y
-    simp only [Prod.fst_add, Prod.snd_add]; cc
-  · intro x y
-    simp [smul_add]
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  isLinearMap_add
+  [ Semiring R ] [ AddCommMonoid M ] [ Module R M ] : IsLinearMap R fun x : M × M => x . 1 + x . 2
+  :=
+    by
+      apply IsLinearMap.mk
+        · intro x y simp only [ Prod.fst_add , Prod.snd_add ] ; cc
+        · intro x y simp [ smul_add ]
 #align is_linear_map.is_linear_map_add IsLinearMap.isLinearMap_add
 -/
 

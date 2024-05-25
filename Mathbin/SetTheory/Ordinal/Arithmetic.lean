@@ -938,40 +938,124 @@ theorem le_mul_right (a : Ordinal) {b : Ordinal} (hb : 0 < b) : a ≤ b * a := b
 #align ordinal.le_mul_right Ordinal.le_mul_right
 -/
 
-private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder β s] {c}
-    (h : IsLimit (type s)) (H : ∀ b' < type s, type r * b' ≤ c) (l : c < type r * type s) : False :=
-  by
-  suffices ∀ a b, Prod.Lex s r (b, a) (enum _ _ l) by cases' enum _ _ l with b a;
-    exact irrefl _ (this _ _)
-  intro a b
-  rw [← typein_lt_typein (Prod.Lex s r), typein_enum]
-  have := H _ (h.2 _ (typein_lt_type s b))
-  rw [mul_succ] at this
-  have := ((add_lt_add_iff_left _).2 (typein_lt_type _ a)).trans_le this
-  refine' (RelEmbedding.ofMonotone (fun a => _) fun a b => _).ordinal_type_le.trans_lt this
-  · rcases a with ⟨⟨b', a'⟩, h⟩
-    by_cases e : b = b'
-    · refine' Sum.inr ⟨a', _⟩
-      subst e; cases' h with _ _ _ _ h _ _ _ h
-      · exact (irrefl _ h).elim
-      · exact h
-    · refine' Sum.inl (⟨b', _⟩, a')
-      cases' h with _ _ _ _ h _ _ _ h
-      · exact h; · exact (e rfl).elim
-  · rcases a with ⟨⟨b₁, a₁⟩, h₁⟩
-    rcases b with ⟨⟨b₂, a₂⟩, h₂⟩
-    intro h; by_cases e₁ : b = b₁ <;> by_cases e₂ : b = b₂
-    · substs b₁ b₂
-      simpa only [subrel_val, Prod.lex_def, @irrefl _ s _ b, true_and_iff, false_or_iff,
-        eq_self_iff_true, dif_pos, Sum.lex_inr_inr] using h
-    · subst b₁
-      simp only [subrel_val, Prod.lex_def, e₂, Prod.lex_def, dif_pos, subrel_val, eq_self_iff_true,
-        or_false_iff, dif_neg, not_false_iff, Sum.lex_inr_inl, false_and_iff] at h ⊢
-      cases h₂ <;> [exact asymm h h₂_h; exact e₂ rfl]
-    · simp [e₂, dif_neg e₁, show b₂ ≠ b₁ by cc]
-    ·
-      simpa only [dif_neg e₁, dif_neg e₂, Prod.lex_def, subrel_val, Subtype.mk_eq_mk,
-        Sum.lex_inl_inl] using h
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+private
+  theorem
+    mul_le_of_limit_aux
+    { α β r s }
+        [ IsWellOrder α r ]
+        [ IsWellOrder β s ]
+        { c }
+        ( h : IsLimit type s )
+        ( H : ∀ b' < type s , type r * b' ≤ c )
+        ( l : c < type r * type s )
+      : False
+    :=
+      by
+        suffices
+            
+              ∀ a b , Prod.Lex s r ( b , a ) enum _ _ l
+              by cases' enum _ _ l with b a ; exact irrefl _ this _ _
+          intro a b
+          rw [ ← typein_lt_typein Prod.Lex s r , typein_enum ]
+          have  := H _ h . 2 _ typein_lt_type s b
+          rw [ mul_succ ] at this
+          have  := add_lt_add_iff_left _ . 2 typein_lt_type _ a . trans_le this
+          refine' RelEmbedding.ofMonotone fun a => _ fun a b => _ . ordinal_type_le . trans_lt this
+          ·
+            rcases a with ⟨ ⟨ b' , a' ⟩ , h ⟩
+              by_cases e : b = b'
+              ·
+                refine' Sum.inr ⟨ a' , _ ⟩
+                  subst e
+                  ;
+                  cases' h with _ _ _ _ h _ _ _ h
+                  · exact irrefl _ h . elim
+                  · exact h
+              ·
+                refine' Sum.inl ( ⟨ b' , _ ⟩ , a' )
+                  cases' h with _ _ _ _ h _ _ _ h
+                  · exact h
+                  ;
+                  · exact e rfl . elim
+          ·
+            rcases a with ⟨ ⟨ b₁ , a₁ ⟩ , h₁ ⟩
+              rcases b with ⟨ ⟨ b₂ , a₂ ⟩ , h₂ ⟩
+              intro h
+              ;
+              by_cases e₁ : b = b₁ <;> by_cases e₂ : b = b₂
+              ·
+                substs b₁ b₂
+                  simpa
+                    only
+                      [
+                        subrel_val
+                          ,
+                          Prod.lex_def
+                          ,
+                          @ irrefl _ s _ b
+                          ,
+                          true_and_iff
+                          ,
+                          false_or_iff
+                          ,
+                          eq_self_iff_true
+                          ,
+                          dif_pos
+                          ,
+                          Sum.lex_inr_inr
+                        ]
+                      using h
+              ·
+                subst b₁
+                  simp
+                    only
+                    [
+                      subrel_val
+                        ,
+                        Prod.lex_def
+                        ,
+                        e₂
+                        ,
+                        Prod.lex_def
+                        ,
+                        dif_pos
+                        ,
+                        subrel_val
+                        ,
+                        eq_self_iff_true
+                        ,
+                        or_false_iff
+                        ,
+                        dif_neg
+                        ,
+                        not_false_iff
+                        ,
+                        Sum.lex_inr_inl
+                        ,
+                        false_and_iff
+                      ]
+                    at h ⊢
+                  cases h₂ <;> [ exact asymm h h₂_h ; exact e₂ rfl ]
+              · simp [ e₂ , dif_neg e₁ , show b₂ ≠ b₁ by cc ]
+              ·
+                simpa
+                  only
+                    [
+                      dif_neg e₁
+                        ,
+                        dif_neg e₂
+                        ,
+                        Prod.lex_def
+                        ,
+                        subrel_val
+                        ,
+                        Subtype.mk_eq_mk
+                        ,
+                        Sum.lex_inl_inl
+                      ]
+                    using h
 
 #print Ordinal.mul_le_of_limit /-
 theorem mul_le_of_limit {a b c : Ordinal} (h : IsLimit b) : a * b ≤ c ↔ ∀ b' < b, a * b' ≤ c :=

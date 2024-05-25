@@ -838,13 +838,17 @@ theorem blockDiagonal'_map (M : ∀ i, Matrix (m' i) (n' i) α) (f : α → β) 
 -/
 
 #print Matrix.blockDiagonal'_transpose /-
-@[simp]
-theorem blockDiagonal'_transpose (M : ∀ i, Matrix (m' i) (n' i) α) :
-    (blockDiagonal' M)ᵀ = blockDiagonal' fun k => (M k)ᵀ :=
-  by
-  ext ⟨ii, ix⟩ ⟨ji, jx⟩
-  simp only [transpose_apply, block_diagonal'_apply]
-  split_ifs <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp ]
+  theorem
+    blockDiagonal'_transpose
+    ( M : ∀ i , Matrix m' i n' i α ) : blockDiagonal' M ᵀ = blockDiagonal' fun k => M k ᵀ
+    :=
+      by
+        ext ⟨ ii , ix ⟩ ⟨ ji , jx ⟩
+          simp only [ transpose_apply , block_diagonal'_apply ]
+          split_ifs <;> cc
 #align matrix.block_diagonal'_transpose Matrix.blockDiagonal'_transpose
 -/
 

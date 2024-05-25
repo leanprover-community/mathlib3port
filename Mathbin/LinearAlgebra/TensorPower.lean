@@ -125,13 +125,13 @@ variable (R M)
 #print TensorPower.cast /-
 /-- Cast between "equal" tensor powers. -/
 def cast {i j} (h : i = j) : (⨂[R]^i) M ≃ₗ[R] (⨂[R]^j) M :=
-  reindex R M (Fin.castIso h).toEquiv
+  reindex R M (Fin.castOrderIso h).toEquiv
 #align tensor_power.cast TensorPower.cast
 -/
 
 #print TensorPower.cast_tprod /-
 theorem cast_tprod {i j} (h : i = j) (a : Fin i → M) :
-    cast R M h (tprod R a) = tprod R (a ∘ Fin.castIso h.symm) :=
+    cast R M h (tprod R a) = tprod R (a ∘ Fin.castOrderIso h.symm) :=
   reindex_tprod _ _
 #align tensor_power.cast_tprod TensorPower.cast_tprod
 -/
@@ -139,7 +139,8 @@ theorem cast_tprod {i j} (h : i = j) (a : Fin i → M) :
 #print TensorPower.cast_refl /-
 @[simp]
 theorem cast_refl {i} (h : i = i) : cast R M h = LinearEquiv.refl _ _ :=
-  ((congr_arg fun f => reindex R M (RelIso.toEquiv f)) <| Fin.castIso_refl h).trans reindex_refl
+  ((congr_arg fun f => reindex R M (RelIso.toEquiv f)) <| Fin.castOrderIso_refl h).trans
+    reindex_refl
 #align tensor_power.cast_refl TensorPower.cast_refl
 -/
 
@@ -175,7 +176,7 @@ theorem gradedMonoid_eq_of_cast {a b : GradedMonoid fun n => ⨂[R] i : Fin n, M
   by
   refine' graded_monoid_eq_of_reindex_cast h _
   rw [cast] at h2
-  rw [← Fin.castIso_to_equiv, ← h2]
+  rw [← Fin.castOrderIso_toEquiv, ← h2]
 #align tensor_power.graded_monoid_eq_of_cast TensorPower.gradedMonoid_eq_of_cast
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 -/
 import Algebra.Group.Prod
-import GroupTheory.GroupAction.Defs
+import Algebra.Group.Action.Defs
 
 #align_import group_theory.group_action.prod from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

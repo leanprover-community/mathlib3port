@@ -4214,20 +4214,36 @@ theorem equivMapOfInjective_coe_mulEquiv (H : Subgroup G) (e : G ≃* G') :
 variable {C : Type _} [CommGroup C] {s t : Subgroup C} {x : C}
 
 #print Subgroup.mem_sup /-
-@[to_additive]
-theorem mem_sup : x ∈ s ⊔ t ↔ ∃ y ∈ s, ∃ z ∈ t, y * z = x :=
-  ⟨fun h => by
-    rw [← closure_eq s, ← closure_eq t, ← closure_union] at h
-    apply closure_induction h
-    · rintro y (h | h)
-      · exact ⟨y, h, 1, t.one_mem, by simp⟩
-      · exact ⟨1, s.one_mem, y, h, by simp⟩
-    · exact ⟨1, s.one_mem, 1, ⟨t.one_mem, mul_one 1⟩⟩
-    · rintro _ _ ⟨y₁, hy₁, z₁, hz₁, rfl⟩ ⟨y₂, hy₂, z₂, hz₂, rfl⟩
-      exact ⟨_, mul_mem hy₁ hy₂, _, mul_mem hz₁ hz₂, by simp [mul_assoc] <;> cc⟩
-    · rintro _ ⟨y, hy, z, hz, rfl⟩
-      exact ⟨_, inv_mem hy, _, inv_mem hz, mul_comm z y ▸ (mul_inv_rev z y).symm⟩, by
-    rintro ⟨y, hy, z, hz, rfl⟩ <;> exact mul_mem_sup hy hz⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ to_additive ]
+  theorem
+    mem_sup
+    : x ∈ s ⊔ t ↔ ∃ y ∈ s , ∃ z ∈ t , y * z = x
+    :=
+      ⟨
+        fun
+            h
+              =>
+              by
+                rw [ ← closure_eq s , ← closure_eq t , ← closure_union ] at h
+                  apply closure_induction h
+                  ·
+                    rintro y ( h | h )
+                      · exact ⟨ y , h , 1 , t.one_mem , by simp ⟩
+                      · exact ⟨ 1 , s.one_mem , y , h , by simp ⟩
+                  · exact ⟨ 1 , s.one_mem , 1 , ⟨ t.one_mem , mul_one 1 ⟩ ⟩
+                  ·
+                    rintro _ _ ⟨ y₁ , hy₁ , z₁ , hz₁ , rfl ⟩ ⟨ y₂ , hy₂ , z₂ , hz₂ , rfl ⟩
+                      exact
+                        ⟨ _ , mul_mem hy₁ hy₂ , _ , mul_mem hz₁ hz₂ , by simp [ mul_assoc ] <;> cc ⟩
+                  ·
+                    rintro _ ⟨ y , hy , z , hz , rfl ⟩
+                      exact
+                        ⟨ _ , inv_mem hy , _ , inv_mem hz , mul_comm z y ▸ mul_inv_rev z y . symm ⟩
+          ,
+          by rintro ⟨ y , hy , z , hz , rfl ⟩ <;> exact mul_mem_sup hy hz
+        ⟩
 #align subgroup.mem_sup Subgroup.mem_sup
 #align add_subgroup.mem_sup AddSubgroup.mem_sup
 -/

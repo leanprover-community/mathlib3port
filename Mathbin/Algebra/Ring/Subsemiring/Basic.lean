@@ -7,7 +7,7 @@ import Algebra.Module.Defs
 import Algebra.Ring.Equiv
 import Algebra.Ring.Prod
 import Algebra.Order.Ring.InjSurj
-import Algebra.GroupRingAction.Subobjects
+import Algebra.Ring.Action.Subobjects
 import Data.Set.Finite
 import GroupTheory.Submonoid.Centralizer
 import Algebra.Group.Submonoid.Membership

@@ -107,19 +107,23 @@ theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ Ico (0 
 -/
 
 #print strictConvexOn_zpow /-
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` except `0` and `1`. -/
-theorem strictConvexOn_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) :
-    StrictConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m :=
-  by
-  apply strictConvexOn_of_deriv2_pos' (convex_Ioi 0)
-  · exact (continuousOn_zpow₀ m).mono fun x hx => ne_of_gt hx
-  intro x hx
-  rw [iter_deriv_zpow]
-  refine' mul_pos _ (zpow_pos_of_pos hx _)
-  exact_mod_cast int_prod_range_pos (even_bit0 1) fun hm => _
-  norm_cast at hm
-  rw [← Finset.coe_Ico] at hm
-  fin_cases hm <;> cc
+  theorem
+    strictConvexOn_zpow
+    { m : ℤ } ( hm₀ : m ≠ 0 ) ( hm₁ : m ≠ 1 ) : StrictConvexOn ℝ Ioi 0 fun x : ℝ => x ^ m
+    :=
+      by
+        apply strictConvexOn_of_deriv2_pos' convex_Ioi 0
+          · exact continuousOn_zpow₀ m . mono fun x hx => ne_of_gt hx
+          intro x hx
+          rw [ iter_deriv_zpow ]
+          refine' mul_pos _ zpow_pos_of_pos hx _
+          exact_mod_cast int_prod_range_pos even_bit0 1 fun hm => _
+          norm_cast at hm
+          rw [ ← Finset.coe_Ico ] at hm
+          fin_cases hm <;> cc
 #align strict_convex_on_zpow strictConvexOn_zpow
 -/
 

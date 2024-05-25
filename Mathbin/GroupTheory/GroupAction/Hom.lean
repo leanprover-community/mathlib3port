@@ -3,7 +3,7 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Algebra.GroupRingAction.Basic
+import Algebra.Ring.Action.Basic
 import Algebra.Module.Defs
 
 #align_import algebra.hom.group_action from "leanprover-community/mathlib"@"e04043d6bf7264a3c84bc69711dc354958ca4516"

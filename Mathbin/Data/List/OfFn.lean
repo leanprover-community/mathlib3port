@@ -106,10 +106,10 @@ theorem array'_eq_ofFn {n} (a : Array' n α) : a.toList = ofFn a.read :=
 #print List.ofFn_congr /-
 @[congr]
 theorem ofFn_congr {m n : ℕ} (h : m = n) (f : Fin m → α) :
-    ofFn f = ofFn fun i : Fin n => f (Fin.castIso h.symm i) :=
+    ofFn f = ofFn fun i : Fin n => f (Fin.castOrderIso h.symm i) :=
   by
   subst h
-  simp_rw [Fin.castIso_refl, OrderIso.refl_apply]
+  simp_rw [Fin.castOrderIso_refl, OrderIso.refl_apply]
 #align list.of_fn_congr List.ofFn_congr
 -/
 
@@ -171,10 +171,11 @@ theorem last_ofFn_succ {n : ℕ} (f : Fin n.succ → α)
 /-- Note this matches the convention of `list.of_fn_succ'`, putting the `fin m` elements first. -/
 theorem ofFn_add {m n} (f : Fin (m + n) → α) :
     List.ofFn f =
-      (List.ofFn fun i => f (Fin.castAddEmb n i)) ++ List.ofFn fun j => f (Fin.natAddEmb m j) :=
+      (List.ofFn fun i => f (Fin.castAddOrderEmb n i)) ++
+        List.ofFn fun j => f (Fin.natAddOrderEmb m j) :=
   by
   induction' n with n IH
-  · rw [of_fn_zero, append_nil, Fin.castAdd_zero, Fin.castIso_refl]; rfl
+  · rw [of_fn_zero, append_nil, Fin.castAdd_zero, Fin.castOrderIso_refl]; rfl
   · rw [of_fn_succ', of_fn_succ', IH, append_concat]; rfl
 #align list.of_fn_add List.ofFn_add
 -/

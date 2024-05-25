@@ -148,14 +148,32 @@ This lemma is orphaned from `data.int.bitwise` as it also requires material from
 attribute [local simp] Int.zero_div
 
 #print Int.div2_bit /-
-@[simp]
-theorem div2_bit (b n) : div2 (bit b n) = n :=
-  by
-  rw [bit_val, div2_val, add_comm, Int.add_mul_ediv_left, (_ : (_ / 2 : ℤ) = 0), zero_add]
-  cases b
-  · simp
-  · show of_nat _ = _; rw [Nat.div_eq_of_lt] <;> simp
-  · cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp ]
+  theorem
+    div2_bit
+    ( b n ) : div2 bit b n = n
+    :=
+      by
+        rw
+            [
+              bit_val
+                ,
+                div2_val
+                ,
+                add_comm
+                ,
+                Int.add_mul_ediv_left
+                ,
+                ( _ : ( _ / 2 : ℤ ) = 0 )
+                ,
+                zero_add
+              ]
+          cases b
+          · simp
+          · show of_nat _ = _ ; rw [ Nat.div_eq_of_lt ] <;> simp
+          · cc
 #align int.div2_bit Int.div2_bit
 -/
 

@@ -8,7 +8,7 @@ import Algebra.Order.Monoid.Cancel.Defs
 import Algebra.Order.Monoid.Canonical.Defs
 import Algebra.Order.Monoid.NatCast
 import Algebra.Order.Monoid.WithZero.Defs
-import Algebra.Order.Ring.Lemmas
+import Algebra.Order.GroupWithZero.Unbundled
 import Algebra.Ring.Defs
 import Order.MinMax
 import Tactic.Nontriviality

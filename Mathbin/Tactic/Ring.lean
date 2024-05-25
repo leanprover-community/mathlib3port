@@ -228,30 +228,67 @@ unsafe def eval_horner :
       else (xadd' c ha x n b).refl_conv
 #align tactic.ring.eval_horner tactic.ring.eval_horner
 
-theorem const_add_horner {α} [CommSemiring α] (k a x n b b') (h : k + b = b') :
-    k + @horner α _ a x n b = horner a x n b' := by simp [h.symm, horner] <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  const_add_horner
+  { α } [ CommSemiring α ] ( k a x n b b' ) ( h : k + b = b' )
+    : k + @ horner α _ a x n b = horner a x n b'
+  := by simp [ h.symm , horner ] <;> cc
 #align tactic.ring.const_add_horner Tactic.Ring.const_add_horner
 
 theorem horner_add_const {α} [CommSemiring α] (a x n b k b') (h : b + k = b') :
     @horner α _ a x n b + k = horner a x n b' := by simp [h.symm, horner, add_assoc]
 #align tactic.ring.horner_add_const Tactic.Ring.horner_add_const
 
-theorem horner_add_horner_lt {α} [CommSemiring α] (a₁ x n₁ b₁ a₂ n₂ b₂ k a' b') (h₁ : n₁ + k = n₂)
-    (h₂ : (a₁ + horner a₂ x k 0 : α) = a') (h₃ : b₁ + b₂ = b') :
-    @horner α _ a₁ x n₁ b₁ + horner a₂ x n₂ b₂ = horner a' x n₁ b' := by
-  simp [h₂.symm, h₃.symm, h₁.symm, horner, pow_add, mul_add, mul_comm, mul_left_comm] <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  horner_add_horner_lt
+  { α }
+      [ CommSemiring α ]
+      ( a₁ x n₁ b₁ a₂ n₂ b₂ k a' b' )
+      ( h₁ : n₁ + k = n₂ )
+      ( h₂ : ( a₁ + horner a₂ x k 0 : α ) = a' )
+      ( h₃ : b₁ + b₂ = b' )
+    : @ horner α _ a₁ x n₁ b₁ + horner a₂ x n₂ b₂ = horner a' x n₁ b'
+  :=
+    by
+      simp [ h₂.symm , h₃.symm , h₁.symm , horner , pow_add , mul_add , mul_comm , mul_left_comm ]
+        <;>
+        cc
 #align tactic.ring.horner_add_horner_lt Tactic.Ring.horner_add_horner_lt
 
-theorem horner_add_horner_gt {α} [CommSemiring α] (a₁ x n₁ b₁ a₂ n₂ b₂ k a' b') (h₁ : n₂ + k = n₁)
-    (h₂ : (horner a₁ x k 0 + a₂ : α) = a') (h₃ : b₁ + b₂ = b') :
-    @horner α _ a₁ x n₁ b₁ + horner a₂ x n₂ b₂ = horner a' x n₂ b' := by
-  simp [h₂.symm, h₃.symm, h₁.symm, horner, pow_add, mul_add, mul_comm, mul_left_comm] <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  horner_add_horner_gt
+  { α }
+      [ CommSemiring α ]
+      ( a₁ x n₁ b₁ a₂ n₂ b₂ k a' b' )
+      ( h₁ : n₂ + k = n₁ )
+      ( h₂ : ( horner a₁ x k 0 + a₂ : α ) = a' )
+      ( h₃ : b₁ + b₂ = b' )
+    : @ horner α _ a₁ x n₁ b₁ + horner a₂ x n₂ b₂ = horner a' x n₂ b'
+  :=
+    by
+      simp [ h₂.symm , h₃.symm , h₁.symm , horner , pow_add , mul_add , mul_comm , mul_left_comm ]
+        <;>
+        cc
 #align tactic.ring.horner_add_horner_gt Tactic.Ring.horner_add_horner_gt
 
-theorem horner_add_horner_eq {α} [CommSemiring α] (a₁ x n b₁ a₂ b₂ a' b' t) (h₁ : a₁ + a₂ = a')
-    (h₂ : b₁ + b₂ = b') (h₃ : horner a' x n b' = t) :
-    @horner α _ a₁ x n b₁ + horner a₂ x n b₂ = t := by
-  simp [h₃.symm, h₂.symm, h₁.symm, horner, add_mul, mul_comm (x ^ n)] <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  horner_add_horner_eq
+  { α }
+      [ CommSemiring α ]
+      ( a₁ x n b₁ a₂ b₂ a' b' t )
+      ( h₁ : a₁ + a₂ = a' )
+      ( h₂ : b₁ + b₂ = b' )
+      ( h₃ : horner a' x n b' = t )
+    : @ horner α _ a₁ x n b₁ + horner a₂ x n b₂ = t
+  := by simp [ h₃.symm , h₂.symm , h₁.symm , horner , add_mul , mul_comm x ^ n ] <;> cc
 #align tactic.ring.horner_add_horner_eq Tactic.Ring.horner_add_horner_eq
 
 /-- Evaluate `a + b` where `a` and `b` are already in normal form. -/
@@ -327,8 +364,13 @@ unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × exp
                   (t, c `` horner_add_horner_eq [a₁, x₁.1, n₁.1, b₁, a₂, b₂, a', b', t, h₁, h₂, h₃])
 #align tactic.ring.eval_add tactic.ring.eval_add
 
-theorem horner_neg {α} [CommRing α] (a x n b a' b') (h₁ : -a = a') (h₂ : -b = b') :
-    -@horner α _ a x n b = horner a' x n b' := by simp [h₂.symm, h₁.symm, horner] <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  horner_neg
+  { α } [ CommRing α ] ( a x n b a' b' ) ( h₁ : - a = a' ) ( h₂ : - b = b' )
+    : - @ horner α _ a x n b = horner a' x n b'
+  := by simp [ h₂.symm , h₁.symm , horner ] <;> cc
 #align tactic.ring.horner_neg Tactic.Ring.horner_neg
 
 /-- Evaluate `-a` where `a` is already in normal form. -/

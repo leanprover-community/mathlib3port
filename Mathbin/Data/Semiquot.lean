@@ -47,12 +47,12 @@ def mk {a : α} {s : Set α} (h : a ∈ s) : Semiquot α :=
 -/
 
 #print Semiquot.ext_s /-
-theorem ext_s {q₁ q₂ : Semiquot α} : q₁ = q₂ ↔ q₁.s = q₂.s :=
-  by
-  refine' ⟨congr_arg _, fun h => _⟩
-  cases q₁
-  cases q₂
-  cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  ext_s
+  { q₁ q₂ : Semiquot α } : q₁ = q₂ ↔ q₁ . s = q₂ . s
+  := by refine' ⟨ congr_arg _ , fun h => _ ⟩ cases q₁ cases q₂ cc
 #align semiquot.ext_s Semiquot.ext_s
 -/
 
@@ -286,9 +286,13 @@ theorem eq_pure {q : Semiquot α} (p) : q = pure (get q p) :=
 -/
 
 #print Semiquot.pure_isPure /-
-@[simp]
-theorem pure_isPure (a : α) : IsPure (pure a)
-  | b, ab, c, ac => by rw [mem_pure] at ab ac; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp ]
+  theorem
+    pure_isPure
+    ( a : α ) : IsPure pure a
+    | b , ab , c , ac => by rw [ mem_pure ] at ab ac ; cc
 #align semiquot.pure_is_pure Semiquot.pure_isPure
 -/
 

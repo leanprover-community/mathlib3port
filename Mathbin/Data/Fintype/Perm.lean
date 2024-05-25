@@ -41,12 +41,19 @@ def permsOfList : List α → List (Perm α)
 -/
 
 #print length_permsOfList /-
-theorem length_permsOfList : ∀ l : List α, length (permsOfList l) = l.length !
-  | [] => rfl
-  | a :: l => by
-    rw [length_cons, Nat.factorial_succ]
-    simp [permsOfList, length_bind, length_permsOfList, Function.comp, Nat.succ_mul]
-    cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  length_permsOfList
+  : ∀ l : List α , length permsOfList l = l . length !
+  | [ ] => rfl
+    |
+      a :: l
+      =>
+      by
+        rw [ length_cons , Nat.factorial_succ ]
+          simp [ permsOfList , length_bind , length_permsOfList , Function.comp , Nat.succ_mul ]
+          cc
 #align length_perms_of_list length_permsOfList
 -/
 

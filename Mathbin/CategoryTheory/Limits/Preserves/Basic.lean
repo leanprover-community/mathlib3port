@@ -176,14 +176,22 @@ instance preservesColimitsOfShape_subsingleton (J : Type w) [Category.{w'} J] (F
 -/
 
 #print CategoryTheory.Limits.preserves_limits_subsingleton /-
-instance preserves_limits_subsingleton (F : C ⥤ D) :
-    Subsingleton (PreservesLimitsOfSize.{w', w} F) := by constructor; intros; cases a; cases b; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+instance
+  preserves_limits_subsingleton
+  ( F : C ⥤ D ) : Subsingleton PreservesLimitsOfSize .{ w' , w } F
+  := by constructor ; intros ; cases a ; cases b ; cc
 #align category_theory.limits.preserves_limits_subsingleton CategoryTheory.Limits.preserves_limits_subsingleton
 -/
 
 #print CategoryTheory.Limits.preserves_colimits_subsingleton /-
-instance preserves_colimits_subsingleton (F : C ⥤ D) :
-    Subsingleton (PreservesColimitsOfSize.{w', w} F) := by constructor; intros; cases a; cases b; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+instance
+  preserves_colimits_subsingleton
+  ( F : C ⥤ D ) : Subsingleton PreservesColimitsOfSize .{ w' , w } F
+  := by constructor ; intros ; cases a ; cases b ; cc
 #align category_theory.limits.preserves_colimits_subsingleton CategoryTheory.Limits.preserves_colimits_subsingleton
 -/
 
@@ -560,14 +568,22 @@ instance reflectsColimitsOfShape_subsingleton (J : Type w) [Category.{w'} J] (F 
 -/
 
 #print CategoryTheory.Limits.reflects_limits_subsingleton /-
-instance reflects_limits_subsingleton (F : C ⥤ D) : Subsingleton (ReflectsLimitsOfSize.{w', w} F) :=
-  by constructor; intros; cases a; cases b; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+instance
+  reflects_limits_subsingleton
+  ( F : C ⥤ D ) : Subsingleton ReflectsLimitsOfSize .{ w' , w } F
+  := by constructor ; intros ; cases a ; cases b ; cc
 #align category_theory.limits.reflects_limits_subsingleton CategoryTheory.Limits.reflects_limits_subsingleton
 -/
 
 #print CategoryTheory.Limits.reflects_colimits_subsingleton /-
-instance reflects_colimits_subsingleton (F : C ⥤ D) :
-    Subsingleton (ReflectsColimitsOfSize.{w', w} F) := by constructor; intros; cases a; cases b; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+instance
+  reflects_colimits_subsingleton
+  ( F : C ⥤ D ) : Subsingleton ReflectsColimitsOfSize .{ w' , w } F
+  := by constructor ; intros ; cases a ; cases b ; cc
 #align category_theory.limits.reflects_colimits_subsingleton CategoryTheory.Limits.reflects_colimits_subsingleton
 -/
 

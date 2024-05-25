@@ -6,7 +6,7 @@ Authors: Yakov Pechersky
 import Algebra.GroupPower.Order
 import Algebra.Order.Monoid.WithTop
 import Algebra.SMulWithZero
-import Algebra.Order.Monoid.MinMax
+import Algebra.Order.Monoid.Unbundled.MinMax
 
 #align_import algebra.tropical.basic from "leanprover-community/mathlib"@"00f4ab49e7d5139216e0b3daad15fffa504897ab"
 

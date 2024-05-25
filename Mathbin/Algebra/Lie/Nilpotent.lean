@@ -171,16 +171,16 @@ theorem trivial_iff_lower_central_eq_bot : IsTrivial L M ↔ lowerCentralSeries 
 #align lie_module.trivial_iff_lower_central_eq_bot LieModule.trivial_iff_lower_central_eq_bot
 -/
 
-#print LieModule.iterate_toEndomorphism_mem_lowerCentralSeries /-
-theorem iterate_toEndomorphism_mem_lowerCentralSeries (x : L) (m : M) (k : ℕ) :
-    (toEndomorphism R L M x^[k]) m ∈ lowerCentralSeries R L M k :=
+#print LieModule.iterate_toEnd_mem_lowerCentralSeries /-
+theorem iterate_toEnd_mem_lowerCentralSeries (x : L) (m : M) (k : ℕ) :
+    (toEnd R L M x^[k]) m ∈ lowerCentralSeries R L M k :=
   by
   induction' k with k ih
   · simp only [Function.iterate_zero]
   · simp only [lowerCentralSeries_succ, Function.comp_apply, Function.iterate_succ',
       to_endomorphism_apply_apply]
     exact LieSubmodule.lie_mem_lie _ _ (LieSubmodule.mem_top x) ih
-#align lie_module.iterate_to_endomorphism_mem_lower_central_series LieModule.iterate_toEndomorphism_mem_lowerCentralSeries
+#align lie_module.iterate_to_endomorphism_mem_lower_central_series LieModule.iterate_toEnd_mem_lowerCentralSeries
 -/
 
 variable {R L M}
@@ -250,16 +250,16 @@ instance (priority := 100) trivialIsNilpotent [IsTrivial L M] : IsNilpotent R L 
 #align lie_module.trivial_is_nilpotent LieModule.trivialIsNilpotent
 -/
 
-#print LieModule.exists_forall_pow_toEndomorphism_eq_zero /-
-theorem exists_forall_pow_toEndomorphism_eq_zero [hM : IsNilpotent R L M] :
-    ∃ k : ℕ, ∀ x : L, toEndomorphism R L M x ^ k = 0 :=
+#print LieModule.exists_forall_pow_toEnd_eq_zero /-
+theorem exists_forall_pow_toEnd_eq_zero [hM : IsNilpotent R L M] :
+    ∃ k : ℕ, ∀ x : L, toEnd R L M x ^ k = 0 :=
   by
   obtain ⟨k, hM⟩ := hM
   use k
   intro x; ext m
   rw [LinearMap.pow_apply, LinearMap.zero_apply, ← @LieSubmodule.mem_bot R L M, ← hM]
   exact iterate_to_endomorphism_mem_lower_central_series R L M x m k
-#align lie_module.nilpotent_endo_of_nilpotent_module LieModule.exists_forall_pow_toEndomorphism_eq_zero
+#align lie_module.nilpotent_endo_of_nilpotent_module LieModule.exists_forall_pow_toEnd_eq_zero
 -/
 
 /-- For a nilpotent Lie module, the weight space of the 0 weight is the whole module.
@@ -267,11 +267,11 @@ theorem exists_forall_pow_toEndomorphism_eq_zero [hM : IsNilpotent R L M] :
 This result will be used downstream to show that weight spaces are Lie submodules, at which time
 it will be possible to state it in the language of weight spaces. -/
 theorem iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L M] :
-    (⨅ x : L, (toEndomorphism R L M x).maximalGeneralizedEigenspace 0) = ⊤ :=
+    (⨅ x : L, (toEnd R L M x).maxGenEigenspace 0) = ⊤ :=
   by
   ext m
-  simp only [Module.End.mem_maximalGeneralizedEigenspace, Submodule.mem_top, sub_zero, iff_true_iff,
-    zero_smul, Submodule.mem_iInf]
+  simp only [Module.End.mem_maxGenEigenspace, Submodule.mem_top, sub_zero, iff_true_iff, zero_smul,
+    Submodule.mem_iInf]
   intro x
   obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
   use k; rw [hk]
@@ -390,11 +390,10 @@ theorem nontrivial_max_triv_of_isNilpotent [Nontrivial M] [IsNilpotent R L M] :
 #align lie_module.nontrivial_max_triv_of_is_nilpotent LieModule.nontrivial_max_triv_of_isNilpotent
 -/
 
-#print LieModule.coe_lcs_range_toEndomorphism_eq /-
+#print LieModule.coe_lcs_range_toEnd_eq /-
 @[simp]
-theorem coe_lcs_range_toEndomorphism_eq (k : ℕ) :
-    (lowerCentralSeries R (toEndomorphism R L M).range M k : Submodule R M) =
-      lowerCentralSeries R L M k :=
+theorem coe_lcs_range_toEnd_eq (k : ℕ) :
+    (lowerCentralSeries R (toEnd R L M).range M k : Submodule R M) = lowerCentralSeries R L M k :=
   by
   induction' k with k ih
   · simp
@@ -408,17 +407,16 @@ theorem coe_lcs_range_toEndomorphism_eq (k : ℕ) :
     · rintro ⟨x, hx, n, hn, rfl⟩
       exact
         ⟨⟨to_endomorphism R L M x, LieHom.mem_range_self _ x⟩, LieSubmodule.mem_top _, n, hn, rfl⟩
-#align lie_module.coe_lcs_range_to_endomorphism_eq LieModule.coe_lcs_range_toEndomorphism_eq
+#align lie_module.coe_lcs_range_to_endomorphism_eq LieModule.coe_lcs_range_toEnd_eq
 -/
 
-#print LieModule.isNilpotent_range_toEndomorphism_iff /-
+#print LieModule.isNilpotent_range_toEnd_iff /-
 @[simp]
-theorem isNilpotent_range_toEndomorphism_iff :
-    IsNilpotent R (toEndomorphism R L M).range M ↔ IsNilpotent R L M := by
+theorem isNilpotent_range_toEnd_iff : IsNilpotent R (toEnd R L M).range M ↔ IsNilpotent R L M := by
   constructor <;> rintro ⟨k, hk⟩ <;> use k <;>
       rw [← LieSubmodule.coe_toSubmodule_eq_iff] at hk ⊢ <;>
     simpa using hk
-#align lie_module.is_nilpotent_range_to_endomorphism_iff LieModule.isNilpotent_range_toEndomorphism_iff
+#align lie_module.is_nilpotent_range_to_endomorphism_iff LieModule.isNilpotent_range_toEnd_iff
 -/
 
 end LieModule
@@ -639,13 +637,13 @@ open LieAlgebra
 #print LieAlgebra.nilpotent_ad_of_nilpotent_algebra /-
 theorem LieAlgebra.nilpotent_ad_of_nilpotent_algebra [IsNilpotent R L] :
     ∃ k : ℕ, ∀ x : L, ad R L x ^ k = 0 :=
-  LieModule.exists_forall_pow_toEndomorphism_eq_zero R L L
+  LieModule.exists_forall_pow_toEnd_eq_zero R L L
 #align lie_algebra.nilpotent_ad_of_nilpotent_algebra LieAlgebra.nilpotent_ad_of_nilpotent_algebra
 -/
 
 /-- See also `lie_algebra.zero_root_space_eq_top_of_nilpotent`. -/
 theorem LieAlgebra.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L] :
-    (⨅ x : L, (ad R L x).maximalGeneralizedEigenspace 0) = ⊤ :=
+    (⨅ x : L, (ad R L x).maxGenEigenspace 0) = ⊤ :=
   LieModule.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent R L L
 #align lie_algebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent LieAlgebra.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent
 

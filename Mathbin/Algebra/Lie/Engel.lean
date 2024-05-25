@@ -97,7 +97,7 @@ theorem exists_smul_add_of_span_sup_eq_top (y : L) : ∃ t : R, ∃ z ∈ I, y =
 #print LieSubmodule.lie_top_eq_of_span_sup_eq_top /-
 theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
     (↑⁅(⊤ : LieIdeal R L), N⁆ : Submodule R M) =
-      (N : Submodule R M).map (toEndomorphism R L M x) ⊔ (↑⁅I, N⁆ : Submodule R M) :=
+      (N : Submodule R M).map (toEnd R L M x) ⊔ (↑⁅I, N⁆ : Submodule R M) :=
   by
   simp only [lie_ideal_oper_eq_linear_span', Submodule.sup_span, mem_top, exists_prop,
     exists_true_left, Submodule.map_coe, to_endomorphism_apply_apply]
@@ -114,8 +114,8 @@ theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
 -/
 
 #print LieSubmodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top /-
-theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ}
-    (hxn : toEndomorphism R L M x ^ n = 0) (hIM : lowerCentralSeries R L M i ≤ I.lcs M j) :
+theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ} (hxn : toEnd R L M x ^ n = 0)
+    (hIM : lowerCentralSeries R L M i ≤ I.lcs M j) :
     lowerCentralSeries R L M (i + n) ≤ I.lcs M (j + 1) :=
   by
   suffices
@@ -139,7 +139,7 @@ theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ}
 -/
 
 #print LieSubmodule.isNilpotentOfIsNilpotentSpanSupEqTop /-
-theorem isNilpotentOfIsNilpotentSpanSupEqTop (hnp : IsNilpotent <| toEndomorphism R L M x)
+theorem isNilpotentOfIsNilpotentSpanSupEqTop (hnp : IsNilpotent <| toEnd R L M x)
     (hIM : IsNilpotent R I M) : IsNilpotent R L M :=
   by
   obtain ⟨n, hn⟩ := hnp
@@ -270,7 +270,7 @@ theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
   suffices ⊤ ∈ s by
     rw [← is_nilpotent_of_top_iff]
     apply this M
-    simp [LieSubalgebra.toEndomorphism_eq, h]
+    simp [LieSubalgebra.toEnd_eq, h]
   have : ∀ K ∈ s, K ≠ ⊤ → ∃ K' ∈ s, K < K' :=
     by
     rintro K (hK₁ : LieAlgebra.IsEngelian R K) hK₂
@@ -305,7 +305,7 @@ theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
 #print LieModule.isNilpotent_iff_forall /-
 /-- Engel's theorem. -/
 theorem LieModule.isNilpotent_iff_forall :
-    LieModule.IsNilpotent R L M ↔ ∀ x, IsNilpotent <| toEndomorphism R L M x :=
+    LieModule.IsNilpotent R L M ↔ ∀ x, IsNilpotent <| toEnd R L M x :=
   ⟨by
     intro h
     obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M

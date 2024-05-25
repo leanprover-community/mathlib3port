@@ -400,12 +400,16 @@ section Single
 variable [DecidableEq α] [DecidableEq β] [DecidableEq γ]
 
 #print PEquiv.single /-
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
 /-- Create a `pequiv` which sends `a` to `b` and `b` to `a`, but is otherwise `none`. -/
-def single (a : α) (b : β) : α ≃. β
+  def
+    single
+    ( a : α ) ( b : β ) : α ≃. β
     where
-  toFun x := if x = a then some b else none
-  invFun x := if x = b then some a else none
-  inv _ _ := by simp <;> split_ifs <;> cc
+      toFun x := if x = a then some b else none
+        invFun x := if x = b then some a else none
+        inv _ _ := by simp <;> split_ifs <;> cc
 #align pequiv.single PEquiv.single
 -/
 
@@ -527,34 +531,61 @@ theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ (a : α) (b : β), b ∈ f a
 instance : OrderBot (α ≃. β) :=
   { PEquiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
 
-instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
-  {-- `split_ifs; finish` closes this goal from here
-    PEquiv.partialOrder with
-    inf := fun f g =>
-      { toFun := fun a => if f a = g a then f a else none
-        invFun := fun b => if f.symm b = g.symm b then f.symm b else none
-        inv := fun a b => by
-          have hf := @mem_iff_mem _ _ f a b
-          have hg := @mem_iff_mem _ _ g a b
-          split_ifs with h1 h2 h2 <;> try simp [hf]
-          · contrapose! h2
-            rw [h2]
-            rw [← h1, hf, h2] at hg
-            simp only [mem_def, true_iff_iff, eq_self_iff_true] at hg
-            rw [hg]
-          · contrapose! h1
-            rw [h1] at *
-            rw [← h2] at hg
-            simp only [mem_def, eq_self_iff_true, iff_true_iff] at hf hg
-            rw [hf, hg] }
-    inf_le_left := fun _ _ _ _ => by simp <;> split_ifs <;> cc
-    inf_le_right := fun _ _ _ _ => by simp <;> split_ifs <;> cc
-    le_inf := fun f g h fg gh a b => by
-      intro H
-      have hf := fg a b H
-      have hg := gh a b H
-      simp only [Option.mem_def, PEquiv.coe_mk_apply]
-      split_ifs with h1; · exact hf; · exact h1 (hf.trans hg.symm) }
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+instance
+  [ DecidableEq α ] [ DecidableEq β ] : SemilatticeInf α ≃. β
+  :=
+    {
+      PEquiv.partialOrder with
+      inf
+          :=
+          fun
+            f g
+              =>
+              {
+                toFun := fun a => if f a = g a then f a else none
+                  invFun := fun b => if f . symm b = g . symm b then f . symm b else none
+                  inv
+                    :=
+                    fun
+                      a b
+                        =>
+                        by
+                          have hf := @ mem_iff_mem _ _ f a b
+                            have hg := @ mem_iff_mem _ _ g a b
+                            split_ifs with h1 h2 h2 <;> try simp [ hf ]
+                            ·
+                              contrapose! h2
+                                rw [ h2 ]
+                                rw [ ← h1 , hf , h2 ] at hg
+                                simp only [ mem_def , true_iff_iff , eq_self_iff_true ] at hg
+                                rw [ hg ]
+                            ·
+                              contrapose! h1
+                                rw [ h1 ] at *
+                                rw [ ← h2 ] at hg
+                                simp only [ mem_def , eq_self_iff_true , iff_true_iff ] at hf hg
+                                rw [ hf , hg ]
+                }
+        inf_le_left := fun _ _ _ _ => by simp <;> split_ifs <;> cc
+        inf_le_right := fun _ _ _ _ => by simp <;> split_ifs <;> cc
+        le_inf
+          :=
+          fun
+            f g h fg gh a b
+              =>
+              by
+                intro H
+                  have hf := fg a b H
+                  have hg := gh a b H
+                  simp only [ Option.mem_def , PEquiv.coe_mk_apply ]
+                  split_ifs with h1
+                  ;
+                  · exact hf
+                  ;
+                  · exact h1 hf.trans hg.symm
+      }
 
 end Order
 

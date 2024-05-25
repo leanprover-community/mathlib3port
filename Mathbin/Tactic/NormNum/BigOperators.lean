@@ -417,9 +417,19 @@ theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : �
             pure ( eval_xxs . 1 , proof )
 #align tactic.norm_num.list.prove_sum tactic.norm_num.list.prove_sum
 
-@[to_additive]
-theorem List.prod_congr {α : Type _} [Monoid α] {xs xs' : List α} {z : α} (h₁ : xs = xs')
-    (h₂ : xs'.Prod = z) : xs.Prod = z := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ to_additive ]
+  theorem
+    List.prod_congr
+    { α : Type _ }
+        [ Monoid α ]
+        { xs xs' : List α }
+        { z : α }
+        ( h₁ : xs = xs' )
+        ( h₂ : xs' . Prod = z )
+      : xs . Prod = z
+    := by cc
 #align tactic.norm_num.list.prod_congr Tactic.NormNum.List.prod_congr
 #align tactic.norm_num.list.sum_congr Tactic.NormNum.List.sum_congr
 

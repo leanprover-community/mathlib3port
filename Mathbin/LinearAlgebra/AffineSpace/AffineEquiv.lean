@@ -5,7 +5,7 @@ Authors: Yury G. Kudryashov
 -/
 import LinearAlgebra.AffineSpace.AffineMap
 import LinearAlgebra.GeneralLinearGroup
-import Algebra.Invertible.Defs
+import Algebra.Group.Invertible.Defs
 
 #align_import linear_algebra.affine_space.affine_equiv from "leanprover-community/mathlib"@"97eab48559068f3d6313da387714ef25768fb730"
 

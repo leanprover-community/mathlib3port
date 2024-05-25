@@ -612,21 +612,37 @@ theorem prod_bij {s : Finset α} {t : Finset γ} {f : α → β} {g : γ → β}
 -/
 
 #print Finset.prod_bij' /-
-/-- Reorder a product.
-
-  The difference with `prod_bij` is that the bijection is specified with an inverse, rather than
-  as a surjective injection.
--/
-@[to_additive
-      "\n  Reorder a sum.\n\n  The difference with `sum_bij` is that the bijection is specified with an inverse, rather than\n  as a surjective injection.\n"]
-theorem prod_bij' {s : Finset α} {t : Finset γ} {f : α → β} {g : γ → β} (i : ∀ a ∈ s, γ)
-    (hi : ∀ a ha, i a ha ∈ t) (h : ∀ a ha, f a = g (i a ha)) (j : ∀ a ∈ t, α)
-    (hj : ∀ a ha, j a ha ∈ s) (left_inv : ∀ a ha, j (i a ha) (hi a ha) = a)
-    (right_inv : ∀ a ha, i (j a ha) (hj a ha) = a) : ∏ x in s, f x = ∏ x in t, g x :=
-  by
-  refine' prod_bij i hi h _ _
-  · intro a1 a2 h1 h2 eq; rw [← left_inv a1 h1, ← left_inv a2 h2]; cc
-  · intro b hb; use j b hb; use hj b hb; exact (right_inv b hb).symm
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+/--
+      Reorder a product.
+      
+        The difference with `prod_bij` is that the bijection is specified with an inverse, rather than
+        as a surjective injection.
+      -/
+    @[
+      to_additive
+        "\n  Reorder a sum.\n\n  The difference with `sum_bij` is that the bijection is specified with an inverse, rather than\n  as a surjective injection.\n"
+      ]
+  theorem
+    prod_bij'
+    { s : Finset α }
+        { t : Finset γ }
+        { f : α → β }
+        { g : γ → β }
+        ( i : ∀ a ∈ s , γ )
+        ( hi : ∀ a ha , i a ha ∈ t )
+        ( h : ∀ a ha , f a = g i a ha )
+        ( j : ∀ a ∈ t , α )
+        ( hj : ∀ a ha , j a ha ∈ s )
+        ( left_inv : ∀ a ha , j i a ha hi a ha = a )
+        ( right_inv : ∀ a ha , i j a ha hj a ha = a )
+      : ∏ x in s , f x = ∏ x in t , g x
+    :=
+      by
+        refine' prod_bij i hi h _ _
+          · intro a1 a2 h1 h2 eq ; rw [ ← left_inv a1 h1 , ← left_inv a2 h2 ] ; cc
+          · intro b hb ; use j b hb ; use hj b hb ; exact right_inv b hb . symm
 #align finset.prod_bij' Finset.prod_bij'
 #align finset.sum_bij' Finset.sum_bij'
 -/
@@ -907,13 +923,29 @@ theorem prod_eq_single_of_mem {s : Finset α} {f : α → β} (a : α) (h : a �
 -/
 
 #print Finset.prod_eq_single /-
-@[to_additive]
-theorem prod_eq_single {s : Finset α} {f : α → β} (a : α) (h₀ : ∀ b ∈ s, b ≠ a → f b = 1)
-    (h₁ : a ∉ s → f a = 1) : ∏ x in s, f x = f a :=
-  haveI := Classical.decEq α
-  by_cases (fun this : a ∈ s => prod_eq_single_of_mem a this h₀) fun this : a ∉ s =>
-    (prod_congr rfl fun b hb => h₀ b hb <| by rintro rfl <;> cc).trans <|
-      prod_const_one.trans (h₁ this).symm
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ to_additive ]
+  theorem
+    prod_eq_single
+    { s : Finset α }
+        { f : α → β }
+        ( a : α )
+        ( h₀ : ∀ b ∈ s , b ≠ a → f b = 1 )
+        ( h₁ : a ∉ s → f a = 1 )
+      : ∏ x in s , f x = f a
+    :=
+      haveI
+         := Classical.decEq α
+        by_cases
+          fun this : a ∈ s => prod_eq_single_of_mem a this h₀
+            fun
+              this
+                : a ∉ s
+                =>
+                prod_congr rfl fun b hb => h₀ b hb <| by rintro rfl <;> cc . trans
+                  <|
+                  prod_const_one.trans h₁ this . symm
 #align finset.prod_eq_single Finset.prod_eq_single
 #align finset.sum_eq_single Finset.sum_eq_single
 -/
@@ -1192,31 +1224,35 @@ theorem prod_ite_mem [DecidableEq α] (s t : Finset α) (f : α → β) :
 -/
 
 #print Finset.prod_dite_eq /-
-@[simp, to_additive]
-theorem prod_dite_eq [DecidableEq α] (s : Finset α) (a : α) (b : ∀ x : α, a = x → β) :
-    (∏ x in s, if h : a = x then b x h else 1) = ite (a ∈ s) (b a rfl) 1 :=
-  by
-  split_ifs with h
-  · rw [Finset.prod_eq_single a, dif_pos rfl]
-    · intros; rw [dif_neg]; cc
-    · cc
-  · rw [Finset.prod_eq_one]
-    intros; rw [dif_neg]; intro; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp , to_additive ]
+  theorem
+    prod_dite_eq
+    [ DecidableEq α ] ( s : Finset α ) ( a : α ) ( b : ∀ x : α , a = x → β )
+      : ∏ x in s , if h : a = x then b x h else 1 = ite a ∈ s b a rfl 1
+    :=
+      by
+        split_ifs with h
+          · rw [ Finset.prod_eq_single a , dif_pos rfl ] · intros ; rw [ dif_neg ] ; cc · cc
+          · rw [ Finset.prod_eq_one ] intros ; rw [ dif_neg ] ; intro ; cc
 #align finset.prod_dite_eq Finset.prod_dite_eq
 #align finset.sum_dite_eq Finset.sum_dite_eq
 -/
 
 #print Finset.prod_dite_eq' /-
-@[simp, to_additive]
-theorem prod_dite_eq' [DecidableEq α] (s : Finset α) (a : α) (b : ∀ x : α, x = a → β) :
-    (∏ x in s, if h : x = a then b x h else 1) = ite (a ∈ s) (b a rfl) 1 :=
-  by
-  split_ifs with h
-  · rw [Finset.prod_eq_single a, dif_pos rfl]
-    · intros; rw [dif_neg]; cc
-    · cc
-  · rw [Finset.prod_eq_one]
-    intros; rw [dif_neg]; intro; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp , to_additive ]
+  theorem
+    prod_dite_eq'
+    [ DecidableEq α ] ( s : Finset α ) ( a : α ) ( b : ∀ x : α , x = a → β )
+      : ∏ x in s , if h : x = a then b x h else 1 = ite a ∈ s b a rfl 1
+    :=
+      by
+        split_ifs with h
+          · rw [ Finset.prod_eq_single a , dif_pos rfl ] · intros ; rw [ dif_neg ] ; cc · cc
+          · rw [ Finset.prod_eq_one ] intros ; rw [ dif_neg ] ; intro ; cc
 #align finset.prod_dite_eq' Finset.prod_dite_eq'
 #align finset.sum_dite_eq' Finset.sum_dite_eq'
 -/

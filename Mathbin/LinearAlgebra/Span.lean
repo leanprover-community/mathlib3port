@@ -433,20 +433,37 @@ section
 variable {p p'}
 
 #print Submodule.mem_sup /-
-theorem mem_sup : x ∈ p ⊔ p' ↔ ∃ y ∈ p, ∃ z ∈ p', y + z = x :=
-  ⟨fun h => by
-    rw [← span_eq p, ← span_eq p', ← span_union] at h
-    apply span_induction h
-    · rintro y (h | h)
-      · exact ⟨y, h, 0, by simp, by simp⟩
-      · exact ⟨0, by simp, y, h, by simp⟩
-    · exact ⟨0, by simp, 0, by simp⟩
-    · rintro _ _ ⟨y₁, hy₁, z₁, hz₁, rfl⟩ ⟨y₂, hy₂, z₂, hz₂, rfl⟩
-      exact ⟨_, add_mem hy₁ hy₂, _, add_mem hz₁ hz₂, by simp [add_assoc] <;> cc⟩
-    · rintro a _ ⟨y, hy, z, hz, rfl⟩
-      exact ⟨_, smul_mem _ a hy, _, smul_mem _ a hz, by simp [smul_add]⟩, by
-    rintro ⟨y, hy, z, hz, rfl⟩ <;>
-      exact add_mem ((le_sup_left : p ≤ p ⊔ p') hy) ((le_sup_right : p' ≤ p ⊔ p') hz)⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  mem_sup
+  : x ∈ p ⊔ p' ↔ ∃ y ∈ p , ∃ z ∈ p' , y + z = x
+  :=
+    ⟨
+      fun
+          h
+            =>
+            by
+              rw [ ← span_eq p , ← span_eq p' , ← span_union ] at h
+                apply span_induction h
+                ·
+                  rintro y ( h | h )
+                    · exact ⟨ y , h , 0 , by simp , by simp ⟩
+                    · exact ⟨ 0 , by simp , y , h , by simp ⟩
+                · exact ⟨ 0 , by simp , 0 , by simp ⟩
+                ·
+                  rintro _ _ ⟨ y₁ , hy₁ , z₁ , hz₁ , rfl ⟩ ⟨ y₂ , hy₂ , z₂ , hz₂ , rfl ⟩
+                    exact
+                      ⟨ _ , add_mem hy₁ hy₂ , _ , add_mem hz₁ hz₂ , by simp [ add_assoc ] <;> cc ⟩
+                ·
+                  rintro a _ ⟨ y , hy , z , hz , rfl ⟩
+                    exact ⟨ _ , smul_mem _ a hy , _ , smul_mem _ a hz , by simp [ smul_add ] ⟩
+        ,
+        by
+          rintro ⟨ y , hy , z , hz , rfl ⟩
+            <;>
+            exact add_mem ( le_sup_left : p ≤ p ⊔ p' ) hy ( le_sup_right : p' ≤ p ⊔ p' ) hz
+      ⟩
 #align submodule.mem_sup Submodule.mem_sup
 -/
 

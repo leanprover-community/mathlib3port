@@ -5,7 +5,7 @@ Authors: Chris Hughes
 -/
 import GroupTheory.GroupAction.Basic
 import Algebra.Group.Subgroup.ZPowers
-import Algebra.GroupRingAction.Basic
+import Algebra.Ring.Action.Basic
 
 #align_import group_theory.group_action.conj_act from "leanprover-community/mathlib"@"4be589053caf347b899a494da75410deb55fb3ef"
 

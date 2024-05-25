@@ -195,7 +195,7 @@ namespace Fin
 /-- `fin.cycle_range i` is the cycle `(0 1 2 ... i)` leaving `(i+1 ... (n-1))` unchanged. -/
 def cycleRange {n : ℕ} (i : Fin n) : Perm (Fin n) :=
   (finRotate (i + 1)).extendDomain
-    (Equiv.ofLeftInverse' (Fin.castLEEmb (Nat.succ_le_of_lt i.is_lt)).toEmbedding coe
+    (Equiv.ofLeftInverse' (Fin.castLEOrderEmb (Nat.succ_le_of_lt i.is_lt)).toEmbedding coe
       (by intro x; ext; simp))
 #align fin.cycle_range Fin.cycleRange
 -/
@@ -218,7 +218,7 @@ theorem cycleRange_of_le {n : ℕ} {i j : Fin n.succ} (h : j ≤ i) :
   · simp
   have :
     j =
-      (Fin.castLEEmb (Nat.succ_le_of_lt i.is_lt)).toEmbedding
+      (Fin.castLEOrderEmb (Nat.succ_le_of_lt i.is_lt)).toEmbedding
         ⟨j, lt_of_le_of_lt h (Nat.lt_succ_self i)⟩ :=
     by simp
   ext

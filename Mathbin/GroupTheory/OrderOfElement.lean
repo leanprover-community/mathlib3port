@@ -820,27 +820,57 @@ variable [Monoid G] {n : ℕ}
 open scoped BigOperators
 
 #print sum_card_orderOf_eq_card_pow_eq_one /-
-@[to_additive sum_card_addOrderOf_eq_card_nsmul_eq_zero]
-theorem sum_card_orderOf_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : n ≠ 0) :
-    ∑ m in (Finset.range n.succ).filterₓ (· ∣ n),
-        (Finset.univ.filterₓ fun x : G => orderOf x = m).card =
-      (Finset.univ.filterₓ fun x : G => x ^ n = 1).card :=
-  calc
-    ∑ m in (Finset.range n.succ).filterₓ (· ∣ n),
-          (Finset.univ.filterₓ fun x : G => orderOf x = m).card =
-        _ :=
-      (Finset.card_biUnion (by intros; apply Finset.disjoint_filter.2; cc)).symm
-    _ = _ :=
-      congr_arg Finset.card
-        (Finset.ext
-          (by
-            intro x
-            suffices orderOf x ≤ n ∧ orderOf x ∣ n ↔ x ^ n = 1 by simpa [Nat.lt_succ_iff]
-            exact
-              ⟨fun h => by
-                let ⟨m, hm⟩ := h.2
-                rw [hm, pow_mul, pow_orderOf_eq_one, one_pow], fun h =>
-                ⟨orderOf_le_of_pow_eq_one hn.bot_lt h, orderOf_dvd_of_pow_eq_one h⟩⟩))
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ to_additive sum_card_addOrderOf_eq_card_nsmul_eq_zero ]
+  theorem
+    sum_card_orderOf_eq_card_pow_eq_one
+    [ Fintype G ] [ DecidableEq G ] ( hn : n ≠ 0 )
+      :
+        ∑
+            m
+            in
+            Finset.range n . succ . filterₓ ( · ∣ n )
+            ,
+            Finset.univ . filterₓ fun x : G => orderOf x = m . card
+          =
+          Finset.univ . filterₓ fun x : G => x ^ n = 1 . card
+    :=
+      calc
+        ∑
+                m
+                in
+                Finset.range n . succ . filterₓ ( · ∣ n )
+                ,
+                Finset.univ . filterₓ fun x : G => orderOf x = m . card
+              =
+              _
+            := Finset.card_biUnion by intros ; apply Finset.disjoint_filter . 2 ; cc . symm
+          _ = _
+            :=
+            congr_arg
+              Finset.card
+                Finset.ext
+                  by
+                    intro x
+                      suffices
+                         orderOf x ≤ n ∧ orderOf x ∣ n ↔ x ^ n = 1 by simpa [ Nat.lt_succ_iff ]
+                      exact
+                        ⟨
+                          fun
+                              h
+                                =>
+                                by
+                                  let ⟨ m , hm ⟩ := h . 2
+                                    rw [ hm , pow_mul , pow_orderOf_eq_one , one_pow ]
+                            ,
+                            fun
+                              h
+                                =>
+                                ⟨
+                                  orderOf_le_of_pow_eq_one hn.bot_lt h , orderOf_dvd_of_pow_eq_one h
+                                  ⟩
+                          ⟩
 #align sum_card_order_of_eq_card_pow_eq_one sum_card_orderOf_eq_card_pow_eq_one
 #align sum_card_add_order_of_eq_card_nsmul_eq_zero sum_card_addOrderOf_eq_card_nsmul_eq_zero
 -/
@@ -953,7 +983,7 @@ theorem finEquivPowers_symm_apply [Finite G] (x : G) (n : ℕ) {hn : ∃ m : ℕ
       "The equivalence between `submonoid.multiples` of two elements `a, b` of the same additive order,\n  mapping `i • a` to `i • b`."]
 noncomputable def powersEquivPowers [Finite G] (h : orderOf x = orderOf y) :
     (Submonoid.powers x : Set G) ≃ (Submonoid.powers y : Set G) :=
-  (finEquivPowers x).symm.trans ((Fin.castIso h).toEquiv.trans (finEquivPowers y))
+  (finEquivPowers x).symm.trans ((Fin.castOrderIso h).toEquiv.trans (finEquivPowers y))
 #align powers_equiv_powers powersEquivPowers
 #align multiples_equiv_multiples multiplesEquivMultiples
 -/
@@ -1104,7 +1134,7 @@ theorem finEquivZPowers_symm_apply [Finite G] (x : G) (n : ℕ) {hn : ∃ m : �
       "The equivalence between `subgroup.zmultiples` of two elements `a, b` of the same additive order,\n  mapping `i • a` to `i • b`."]
 noncomputable def zpowersEquivZPowers [Finite G] (h : orderOf x = orderOf y) :
     (Subgroup.zpowers x : Set G) ≃ (Subgroup.zpowers y : Set G) :=
-  (finEquivZPowers x).symm.trans ((Fin.castIso h).toEquiv.trans (finEquivZPowers y))
+  (finEquivZPowers x).symm.trans ((Fin.castOrderIso h).toEquiv.trans (finEquivZPowers y))
 #align zpowers_equiv_zpowers zpowersEquivZPowers
 #align zmultiples_equiv_zmultiples zmultiplesEquivZMultiples
 -/

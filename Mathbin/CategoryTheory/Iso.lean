@@ -73,13 +73,19 @@ variable {X Y Z : C}
 namespace Iso
 
 #print CategoryTheory.Iso.ext /-
-@[ext]
-theorem ext ⦃α β : X ≅ Y⦄ (w : α.Hom = β.Hom) : α = β :=
-  suffices α.inv = β.inv by cases α <;> cases β <;> cc
-  calc
-    α.inv = α.inv ≫ β.Hom ≫ β.inv := by rw [iso.hom_inv_id, category.comp_id]
-    _ = (α.inv ≫ α.Hom) ≫ β.inv := by rw [category.assoc, ← w]
-    _ = β.inv := by rw [iso.inv_hom_id, category.id_comp]
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ ext ]
+  theorem
+    ext
+    ⦃ α β : X ≅ Y ⦄ ( w : α . Hom = β . Hom ) : α = β
+    :=
+      suffices
+         α . inv = β . inv by cases α <;> cases β <;> cc
+        calc
+          α . inv = α . inv ≫ β . Hom ≫ β . inv := by rw [ iso.hom_inv_id , category.comp_id ]
+            _ = α . inv ≫ α . Hom ≫ β . inv := by rw [ category.assoc , ← w ]
+              _ = β . inv := by rw [ iso.inv_hom_id , category.id_comp ]
 #align category_theory.iso.ext CategoryTheory.Iso.ext
 -/
 

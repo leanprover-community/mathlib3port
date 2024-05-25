@@ -763,20 +763,20 @@ theorem fromEdgeSet_univ : fromEdgeSet (Set.univ : Set (Sym2 V)) = ⊤ := by ext
 #align simple_graph.from_edge_set_univ SimpleGraph.fromEdgeSet_univ
 -/
 
-#print SimpleGraph.fromEdgeSet_inf /-
+#print SimpleGraph.fromEdgeSet_inter /-
 @[simp]
-theorem fromEdgeSet_inf (s t : Set (Sym2 V)) :
+theorem fromEdgeSet_inter (s t : Set (Sym2 V)) :
     fromEdgeSet s ⊓ fromEdgeSet t = fromEdgeSet (s ∩ t) := by ext v w;
   simp only [from_edge_set_adj, Set.mem_inter_iff, Ne.def, inf_adj]; tauto
-#align simple_graph.from_edge_set_inf SimpleGraph.fromEdgeSet_inf
+#align simple_graph.from_edge_set_inf SimpleGraph.fromEdgeSet_inter
 -/
 
-#print SimpleGraph.fromEdgeSet_sup /-
+#print SimpleGraph.fromEdgeSet_union /-
 @[simp]
-theorem fromEdgeSet_sup (s t : Set (Sym2 V)) :
+theorem fromEdgeSet_union (s t : Set (Sym2 V)) :
     fromEdgeSet s ⊔ fromEdgeSet t = fromEdgeSet (s ∪ t) := by ext v w;
   simp [Set.mem_union, or_and_right]
-#align simple_graph.from_edge_set_sup SimpleGraph.fromEdgeSet_sup
+#align simple_graph.from_edge_set_sup SimpleGraph.fromEdgeSet_union
 -/
 
 #print SimpleGraph.fromEdgeSet_sdiff /-
@@ -1393,30 +1393,32 @@ theorem deleteEdges_adj (s : Set (Sym2 V)) (v w : V) :
 #align simple_graph.delete_edges_adj SimpleGraph.deleteEdges_adj
 -/
 
-#print SimpleGraph.sdiff_eq_deleteEdges /-
-theorem sdiff_eq_deleteEdges (G G' : SimpleGraph V) : G \ G' = G.deleteEdges G'.edgeSetEmbedding :=
-  by ext; simp
-#align simple_graph.sdiff_eq_delete_edges SimpleGraph.sdiff_eq_deleteEdges
--/
-
-#print SimpleGraph.deleteEdges_eq_sdiff_fromEdgeSet /-
-theorem deleteEdges_eq_sdiff_fromEdgeSet (s : Set (Sym2 V)) : G.deleteEdges s = G \ fromEdgeSet s :=
-  by ext; exact ⟨fun h => ⟨h.1, not_and_of_not_left _ h.2⟩, fun h => ⟨h.1, not_and'.mp h.2 h.Ne⟩⟩
-#align simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.deleteEdges_eq_sdiff_fromEdgeSet
--/
-
-#print SimpleGraph.deleteEdges_eq_self /-
-@[simp]
-theorem deleteEdges_eq_self {s : Set (Sym2 V)} :
-    G.deleteEdges s = G ↔ Disjoint G.edgeSetEmbedding s := by
-  rw [delete_edges_eq_sdiff_from_edge_set, sdiff_eq_left, disjoint_from_edge_set]
-#align simple_graph.delete_edges_eq SimpleGraph.deleteEdges_eq_self
--/
-
-#print SimpleGraph.compl_eq_deleteEdges /-
-theorem compl_eq_deleteEdges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.edgeSetEmbedding := by ext;
+/- warning: simple_graph.sdiff_eq_delete_edges clashes with simple_graph.delete_edges -> SimpleGraph.deleteEdges
+Case conversion may be inaccurate. Consider using '#align simple_graph.sdiff_eq_delete_edges SimpleGraph.deleteEdgesₓ'. -/
+#print SimpleGraph.deleteEdges /-
+theorem deleteEdges (G G' : SimpleGraph V) : G \ G' = G.deleteEdges G'.edgeSetEmbedding := by ext;
   simp
-#align simple_graph.compl_eq_delete_edges SimpleGraph.compl_eq_deleteEdges
+#align simple_graph.sdiff_eq_delete_edges SimpleGraph.deleteEdges
+-/
+
+/- warning: simple_graph.delete_edges_eq_sdiff_from_edge_set clashes with simple_graph.delete_edges -> SimpleGraph.deleteEdges
+Case conversion may be inaccurate. Consider using '#align simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.deleteEdgesₓ'. -/
+#print SimpleGraph.deleteEdges /-
+theorem deleteEdges (s : Set (Sym2 V)) : G.deleteEdges s = G \ fromEdgeSet s := by ext;
+  exact ⟨fun h => ⟨h.1, not_and_of_not_left _ h.2⟩, fun h => ⟨h.1, not_and'.mp h.2 h.Ne⟩⟩
+#align simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.deleteEdges
+-/
+
+@[simp]
+theorem deleteEdges_eq {s : Set (Sym2 V)} : G.deleteEdges s = G ↔ Disjoint G.edgeSetEmbedding s :=
+  by rw [delete_edges_eq_sdiff_from_edge_set, sdiff_eq_left, disjoint_from_edge_set]
+#align simple_graph.delete_edges_eq SimpleGraph.deleteEdges_eq
+
+/- warning: simple_graph.compl_eq_delete_edges clashes with simple_graph.delete_edges -> SimpleGraph.deleteEdges
+Case conversion may be inaccurate. Consider using '#align simple_graph.compl_eq_delete_edges SimpleGraph.deleteEdgesₓ'. -/
+#print SimpleGraph.deleteEdges /-
+theorem deleteEdges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.edgeSetEmbedding := by ext; simp
+#align simple_graph.compl_eq_delete_edges SimpleGraph.deleteEdges
 -/
 
 #print SimpleGraph.deleteEdges_deleteEdges /-
@@ -1426,16 +1428,16 @@ theorem deleteEdges_deleteEdges (s s' : Set (Sym2 V)) :
 #align simple_graph.delete_edges_delete_edges SimpleGraph.deleteEdges_deleteEdges
 -/
 
-#print SimpleGraph.deleteEdges_empty_eq /-
+#print SimpleGraph.deleteEdges_empty /-
 @[simp]
-theorem deleteEdges_empty_eq : G.deleteEdges ∅ = G := by ext; simp
-#align simple_graph.delete_edges_empty_eq SimpleGraph.deleteEdges_empty_eq
+theorem deleteEdges_empty : G.deleteEdges ∅ = G := by ext; simp
+#align simple_graph.delete_edges_empty_eq SimpleGraph.deleteEdges_empty
 -/
 
-#print SimpleGraph.deleteEdges_univ_eq /-
+#print SimpleGraph.deleteEdges_univ /-
 @[simp]
-theorem deleteEdges_univ_eq : G.deleteEdges Set.univ = ⊥ := by ext; simp
-#align simple_graph.delete_edges_univ_eq SimpleGraph.deleteEdges_univ_eq
+theorem deleteEdges_univ : G.deleteEdges Set.univ = ⊥ := by ext; simp
+#align simple_graph.delete_edges_univ_eq SimpleGraph.deleteEdges_univ
 -/
 
 #print SimpleGraph.deleteEdges_le /-
@@ -1444,13 +1446,13 @@ theorem deleteEdges_le (s : Set (Sym2 V)) : G.deleteEdges s ≤ G := by intro;
 #align simple_graph.delete_edges_le SimpleGraph.deleteEdges_le
 -/
 
-#print SimpleGraph.deleteEdges_le_of_le /-
-theorem deleteEdges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') :
-    G.deleteEdges s' ≤ G.deleteEdges s := fun v w =>
+#print SimpleGraph.deleteEdges_anti /-
+theorem deleteEdges_anti {s s' : Set (Sym2 V)} (h : s ⊆ s') : G.deleteEdges s' ≤ G.deleteEdges s :=
+  fun v w =>
   by
   simp (config := { contextual := true }) only [delete_edges_adj, and_imp, true_and_iff]
   exact fun ha hn hs => hn (h hs)
-#align simple_graph.delete_edges_le_of_le SimpleGraph.deleteEdges_le_of_le
+#align simple_graph.delete_edges_le_of_le SimpleGraph.deleteEdges_anti
 -/
 
 #print SimpleGraph.deleteEdges_eq_inter_edgeSet /-

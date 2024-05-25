@@ -391,20 +391,65 @@ theorem Monoid.CoprodI.Word.prod_rcons {i} (p : Monoid.CoprodI.Word.Pair M i) :
 -/
 
 #print Monoid.CoprodI.Word.rcons_inj /-
-theorem Monoid.CoprodI.Word.rcons_inj {i} :
-    Function.Injective
-      (Monoid.CoprodI.Word.rcons : Monoid.CoprodI.Word.Pair M i → Monoid.CoprodI.Word M) :=
-  by
-  rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he
-  by_cases hm : m = 1 <;> by_cases hm' : m' = 1
-  · simp only [rcons, dif_pos hm, dif_pos hm'] at he; cc
-  · exfalso; simp only [rcons, dif_pos hm, dif_neg hm'] at he; rw [he] at h; exact h rfl
-  · exfalso; simp only [rcons, dif_pos hm', dif_neg hm] at he; rw [← he] at h'; exact h' rfl
-  · have : m = m' ∧ w.to_list = w'.to_list := by
-      simpa only [rcons, dif_neg hm, dif_neg hm', true_and_iff, eq_self_iff_true, Subtype.mk_eq_mk,
-        heq_iff_eq, ← Subtype.ext_iff_val] using he
-    rcases this with ⟨rfl, h⟩
-    congr; exact word.ext _ _ h
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  Monoid.CoprodI.Word.rcons_inj
+  { i }
+    :
+      Function.Injective
+        ( Monoid.CoprodI.Word.rcons : Monoid.CoprodI.Word.Pair M i → Monoid.CoprodI.Word M )
+  :=
+    by
+      rintro ⟨ m , w , h ⟩ ⟨ m' , w' , h' ⟩ he
+        by_cases hm : m = 1 <;> by_cases hm' : m' = 1
+        · simp only [ rcons , dif_pos hm , dif_pos hm' ] at he ; cc
+        ·
+          exfalso
+            ;
+            simp only [ rcons , dif_pos hm , dif_neg hm' ] at he
+            ;
+            rw [ he ] at h
+            ;
+            exact h rfl
+        ·
+          exfalso
+            ;
+            simp only [ rcons , dif_pos hm' , dif_neg hm ] at he
+            ;
+            rw [ ← he ] at h'
+            ;
+            exact h' rfl
+        ·
+          have
+              
+                : m = m' ∧ w.to_list = w'.to_list
+                :=
+                by
+                  simpa
+                    only
+                      [
+                        rcons
+                          ,
+                          dif_neg hm
+                          ,
+                          dif_neg hm'
+                          ,
+                          true_and_iff
+                          ,
+                          eq_self_iff_true
+                          ,
+                          Subtype.mk_eq_mk
+                          ,
+                          heq_iff_eq
+                          ,
+                          ← Subtype.ext_iff_val
+                        ]
+                      using he
+            rcases this with ⟨ rfl , h ⟩
+            congr
+            ;
+            exact word.ext _ _ h
 #align free_product.word.rcons_inj Monoid.CoprodI.Word.rcons_inj
 -/
 

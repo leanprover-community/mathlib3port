@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 -/
 import Algebra.Order.Monoid.Cancel.Basic
-import GroupTheory.GroupAction.Defs
+import Algebra.Group.Action.Defs
 import Algebra.Group.Submonoid.Basic
 import Algebra.Group.Subsemigroup.Operations
 

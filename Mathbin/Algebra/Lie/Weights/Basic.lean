@@ -78,22 +78,22 @@ with eigenvalues `χ x`.
 
 See also `lie_module.weight_space`. -/
 def preWeightSpace (χ : L → R) : Submodule R M :=
-  ⨅ x : L, (toEndomorphism R L M x).maximalGeneralizedEigenspace (χ x)
+  ⨅ x : L, (toEnd R L M x).maxGenEigenspace (χ x)
 #align lie_module.pre_weight_space LieModule.preWeightSpace
 
 theorem mem_preWeightSpace (χ : L → R) (m : M) :
-    m ∈ preWeightSpace M χ ↔ ∀ x, ∃ k : ℕ, ((toEndomorphism R L M x - χ x • 1) ^ k) m = 0 := by
+    m ∈ preWeightSpace M χ ↔ ∀ x, ∃ k : ℕ, ((toEnd R L M x - χ x • 1) ^ k) m = 0 := by
   simp [pre_weight_space, -LinearMap.pow_apply]
 #align lie_module.mem_pre_weight_space LieModule.mem_preWeightSpace
 
 variable (R)
 
 theorem exists_preWeightSpace_zero_le_ker_of_isNoetherian [IsNoetherian R M] (x : L) :
-    ∃ k : ℕ, preWeightSpace M (0 : L → R) ≤ (toEndomorphism R L M x ^ k).ker :=
+    ∃ k : ℕ, preWeightSpace M (0 : L → R) ≤ (toEnd R L M x ^ k).ker :=
   by
-  use(to_endomorphism R L M x).maximalGeneralizedEigenspaceIndex 0
-  simp only [← Module.End.generalizedEigenspace_zero, pre_weight_space, Pi.zero_apply, iInf_le, ←
-    (to_endomorphism R L M x).maximalGeneralizedEigenspace_eq]
+  use(to_endomorphism R L M x).maxGenEigenspaceIndex 0
+  simp only [← Module.End.genEigenspace_zero, pre_weight_space, Pi.zero_apply, iInf_le, ←
+    (to_endomorphism R L M x).maxGenEigenspace_eq]
 #align lie_module.exists_pre_weight_space_zero_le_ker_of_is_noetherian LieModule.exists_preWeightSpace_zero_le_ker_of_isNoetherian
 
 variable {R} (L)
@@ -260,27 +260,27 @@ theorem isWeightZeroOfNilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsN
   rw [is_weight, LieHom.coe_zero, zero_weight_space_eq_top_of_nilpotent]; exact top_ne_bot
 #align lie_module.is_weight_zero_of_nilpotent LieModule.isWeightZeroOfNilpotent
 
-#print LieModule.isNilpotent_toEndomorphism_weightSpace_zero /-
+#print LieModule.isNilpotent_toEnd_weightSpace_zero /-
 /-- A (nilpotent) Lie algebra acts nilpotently on the zero weight space of a Noetherian Lie
 module. -/
-theorem isNilpotent_toEndomorphism_weightSpace_zero [LieAlgebra.IsNilpotent R L] [IsNoetherian R M]
-    (x : L) : IsNilpotent <| toEndomorphism R L (weightSpace M (0 : L → R)) x :=
+theorem isNilpotent_toEnd_weightSpace_zero [LieAlgebra.IsNilpotent R L] [IsNoetherian R M] (x : L) :
+    IsNilpotent <| toEnd R L (weightSpace M (0 : L → R)) x :=
   by
   obtain ⟨k, hk⟩ := exists_pre_weight_space_zero_le_ker_of_is_noetherian R M x
   use k
   ext ⟨m, hm⟩
   rw [LinearMap.zero_apply, LieSubmodule.coe_zero, Submodule.coe_eq_zero, ←
-    LieSubmodule.toEndomorphism_restrict_eq_toEndomorphism, LinearMap.pow_restrict, ←
-    SetLike.coe_eq_coe, LinearMap.restrict_apply, Submodule.coe_mk, Submodule.coe_zero]
+    LieSubmodule.toEnd_restrict_eq_toEnd, LinearMap.pow_restrict, ← SetLike.coe_eq_coe,
+    LinearMap.restrict_apply, Submodule.coe_mk, Submodule.coe_zero]
   exact hk hm
-#align lie_module.is_nilpotent_to_endomorphism_weight_space_zero LieModule.isNilpotent_toEndomorphism_weightSpace_zero
+#align lie_module.is_nilpotent_to_endomorphism_weight_space_zero LieModule.isNilpotent_toEnd_weightSpace_zero
 -/
 
 /-- By Engel's theorem, when the Lie algebra is Noetherian, the zero weight space of a Noetherian
 Lie module is nilpotent. -/
 instance [LieAlgebra.IsNilpotent R L] [IsNoetherian R L] [IsNoetherian R M] :
     IsNilpotent R L (weightSpace M (0 : L → R)) :=
-  isNilpotent_iff_forall.mpr <| isNilpotent_toEndomorphism_weightSpace_zero M
+  isNilpotent_iff_forall.mpr <| isNilpotent_toEnd_weightSpace_zero M
 
 end LieModule
 
@@ -460,7 +460,7 @@ theorem coe_zeroRootSubalgebra : (zeroRootSubalgebra R L H : Submodule R L) = ro
 
 #print LieAlgebra.mem_zeroRootSubalgebra /-
 theorem mem_zeroRootSubalgebra (x : L) :
-    x ∈ zeroRootSubalgebra R L H ↔ ∀ y : H, ∃ k : ℕ, (toEndomorphism R H L y ^ k) x = 0 := by
+    x ∈ zeroRootSubalgebra R L H ↔ ∀ y : H, ∃ k : ℕ, (toEnd R H L y ^ k) x = 0 := by
   simp only [zero_root_subalgebra, mem_weight_space, mem_pre_weight_space, Pi.zero_apply, sub_zero,
     SetLike.mem_coe, zero_smul, LieSubmodule.mem_coeSubmodule, Submodule.mem_carrier,
     LieSubalgebra.mem_mk_iff]

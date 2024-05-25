@@ -238,7 +238,7 @@ def toList (s : CompositionSeries X) : List X :=
 /-- Two `composition_series` are equal if they are the same length and
 have the same `i`th element for every `i` -/
 theorem ext_fun {s₁ s₂ : CompositionSeries X} (hl : s₁.length = s₂.length)
-    (h : ∀ i, s₁ i = s₂ (Fin.castIso (congr_arg Nat.succ hl) i)) : s₁ = s₂ :=
+    (h : ∀ i, s₁ i = s₂ (Fin.castOrderIso (congr_arg Nat.succ hl) i)) : s₁ = s₂ :=
   by
   cases s₁; cases s₂
   dsimp at *
@@ -267,7 +267,7 @@ theorem toList_injective : Function.Injective (@CompositionSeries.toList X _ _) 
   have h₁ : s₁.length = s₂.length :=
     Nat.succ_injective
       ((List.length_ofFn s₁).symm.trans <| (congr_arg List.length h).trans <| List.length_ofFn s₂)
-  have h₂ : ∀ i : Fin s₁.length.succ, s₁ i = s₂ (Fin.castIso (congr_arg Nat.succ h₁) i) :=
+  have h₂ : ∀ i : Fin s₁.length.succ, s₁ i = s₂ (Fin.castOrderIso (congr_arg Nat.succ h₁) i) :=
     by
     intro i
     rw [← List.nthLe_ofFn s₁ i, ← List.nthLe_ofFn s₂]
@@ -277,7 +277,7 @@ theorem toList_injective : Function.Injective (@CompositionSeries.toList X _ _) 
   dsimp at *
   subst h₁
   simp only [heq_iff_eq, eq_self_iff_true, true_and_iff]
-  simp only [Fin.castIso_refl] at h₂
+  simp only [Fin.castOrderIso_refl] at h₂
   exact funext h₂
 #align composition_series.to_list_injective CompositionSeries.toList_injective
 -/
@@ -557,7 +557,7 @@ variable {α : Type _} {m n : ℕ} (a : Fin m.succ → α) (b : Fin n.succ → �
 #print CompositionSeries.append_castAdd_aux /-
 theorem append_castAdd_aux (i : Fin m) :
     Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b
-        (Fin.castAddEmb n i).cast_succ =
+        (Fin.castAddOrderEmb n i).cast_succ =
       a i.cast_succ :=
   by cases i; simp [Matrix.vecAppend_eq_ite, *]
 #align composition_series.append_cast_add_aux CompositionSeries.append_castAdd_aux
@@ -565,7 +565,8 @@ theorem append_castAdd_aux (i : Fin m) :
 
 #print CompositionSeries.append_succ_castAdd_aux /-
 theorem append_succ_castAdd_aux (i : Fin m) (h : a (Fin.last _) = b 0) :
-    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b (Fin.castAddEmb n i).succ =
+    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b
+        (Fin.castAddOrderEmb n i).succ =
       a i.succ :=
   by
   cases' i with i hi
@@ -583,7 +584,8 @@ theorem append_succ_castAdd_aux (i : Fin m) (h : a (Fin.last _) = b 0) :
 
 #print CompositionSeries.append_natAdd_aux /-
 theorem append_natAdd_aux (i : Fin n) :
-    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b (Fin.natAddEmb m i).cast_succ =
+    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b
+        (Fin.natAddOrderEmb m i).cast_succ =
       b i.cast_succ :=
   by
   cases i
@@ -594,7 +596,7 @@ theorem append_natAdd_aux (i : Fin n) :
 
 #print CompositionSeries.append_succ_natAdd_aux /-
 theorem append_succ_natAdd_aux (i : Fin n) :
-    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b (Fin.natAddEmb m i).succ =
+    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b (Fin.natAddOrderEmb m i).succ =
       b i.succ :=
   by
   cases' i with i hi
@@ -634,7 +636,7 @@ theorem coe_append (s₁ s₂ : CompositionSeries X) (h) :
 #print CompositionSeries.append_castAdd /-
 @[simp]
 theorem append_castAdd {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bot) (i : Fin s₁.length) :
-    append s₁ s₂ h (Fin.castAddEmb s₂.length i).cast_succ = s₁ i.cast_succ := by
+    append s₁ s₂ h (Fin.castAddOrderEmb s₂.length i).cast_succ = s₁ i.cast_succ := by
   rw [coe_append, append_cast_add_aux _ _ i]
 #align composition_series.append_cast_add CompositionSeries.append_castAdd
 -/
@@ -642,7 +644,7 @@ theorem append_castAdd {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bo
 #print CompositionSeries.append_succ_castAdd /-
 @[simp]
 theorem append_succ_castAdd {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bot)
-    (i : Fin s₁.length) : append s₁ s₂ h (Fin.castAddEmb s₂.length i).succ = s₁ i.succ := by
+    (i : Fin s₁.length) : append s₁ s₂ h (Fin.castAddOrderEmb s₂.length i).succ = s₁ i.succ := by
   rw [coe_append, append_succ_cast_add_aux _ _ _ h]
 #align composition_series.append_succ_cast_add CompositionSeries.append_succ_castAdd
 -/
@@ -650,7 +652,7 @@ theorem append_succ_castAdd {s₁ s₂ : CompositionSeries X} (h : s₁.top = s�
 #print CompositionSeries.append_natAdd /-
 @[simp]
 theorem append_natAdd {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bot) (i : Fin s₂.length) :
-    append s₁ s₂ h (Fin.natAddEmb s₁.length i).cast_succ = s₂ i.cast_succ := by
+    append s₁ s₂ h (Fin.natAddOrderEmb s₁.length i).cast_succ = s₂ i.cast_succ := by
   rw [coe_append, append_nat_add_aux _ _ i]
 #align composition_series.append_nat_add CompositionSeries.append_natAdd
 -/
@@ -658,7 +660,7 @@ theorem append_natAdd {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bot
 #print CompositionSeries.append_succ_natAdd /-
 @[simp]
 theorem append_succ_natAdd {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bot) (i : Fin s₂.length) :
-    append s₁ s₂ h (Fin.natAddEmb s₁.length i).succ = s₂ i.succ := by
+    append s₁ s₂ h (Fin.natAddOrderEmb s₁.length i).succ = s₂ i.succ := by
   rw [coe_append, append_succ_nat_add_aux _ _ i]
 #align composition_series.append_succ_nat_add CompositionSeries.append_succ_natAdd
 -/

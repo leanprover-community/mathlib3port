@@ -118,21 +118,48 @@ theorem formPerm_apply_mem_of_mem (x : α) (l : List α) (h : x ∈ l) : formPer
 -/
 
 #print List.mem_of_formPerm_apply_mem /-
-theorem mem_of_formPerm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ l) : x ∈ l :=
-  by
-  cases' l with y l
-  · simpa
-  induction' l with z l IH generalizing x y
-  · simpa using h
-  · by_cases hx : (z :: l).formPerm x ∈ z :: l
-    · rw [List.formPerm_cons_cons, mul_apply, swap_apply_def] at h
-      split_ifs at h <;> simp [IH _ _ hx]
-    · replace hx :=
-        (Function.Injective.eq_iff (Equiv.injective _)).mp (List.formPerm_apply_of_not_mem _ _ hx)
-      simp only [List.formPerm_cons_cons, hx, Equiv.Perm.coe_mul, Function.comp_apply,
-        List.mem_cons, swap_apply_def, ite_eq_left_iff] at h
-      simp only [List.mem_cons]
-      obtain h | h | h := h <;> · split_ifs at h <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  mem_of_formPerm_apply_mem
+  ( x : α ) ( l : List α ) ( h : l . formPerm x ∈ l ) : x ∈ l
+  :=
+    by
+      cases' l with y l
+        · simpa
+        induction' l with z l IH generalizing x y
+        · simpa using h
+        ·
+          by_cases hx : z :: l . formPerm x ∈ z :: l
+            ·
+              rw [ List.formPerm_cons_cons , mul_apply , swap_apply_def ] at h
+                split_ifs at h <;> simp [ IH _ _ hx ]
+            ·
+              replace
+                  hx
+                    :=
+                    Function.Injective.eq_iff Equiv.injective _ . mp
+                      List.formPerm_apply_of_not_mem _ _ hx
+                simp
+                  only
+                  [
+                    List.formPerm_cons_cons
+                      ,
+                      hx
+                      ,
+                      Equiv.Perm.coe_mul
+                      ,
+                      Function.comp_apply
+                      ,
+                      List.mem_cons
+                      ,
+                      swap_apply_def
+                      ,
+                      ite_eq_left_iff
+                    ]
+                  at h
+                simp only [ List.mem_cons ]
+                obtain h | h | h := h <;> · split_ifs at h <;> cc
 #align list.mem_of_form_perm_apply_mem List.mem_of_formPerm_apply_mem
 -/
 

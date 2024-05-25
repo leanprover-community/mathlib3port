@@ -304,15 +304,36 @@ theorem bit1_succ : ∀ n : Num, n.bit1.succ = n.succ.bit0
 -/
 
 #print Num.ofNat'_succ /-
-theorem ofNat'_succ : ∀ {n}, ofNat' (n + 1) = ofNat' n + 1 :=
-  Nat.binaryRec (by simp <;> rfl) fun b n ih =>
-    by
-    cases b
-    · erw [of_nat'_bit tt n, of_nat'_bit]
-      simp only [← bit1_of_bit1, ← bit0_of_bit0, cond, _root_.bit1]
-    · erw [show n.bit tt + 1 = (n + 1).bit ff by simp [Nat.bit, _root_.bit1, _root_.bit0] <;> cc,
-        of_nat'_bit, of_nat'_bit, ih]
-      simp only [cond, add_one, bit1_succ]
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  ofNat'_succ
+  : ∀ { n } , ofNat' n + 1 = ofNat' n + 1
+  :=
+    Nat.binaryRec
+      by simp <;> rfl
+        fun
+          b n ih
+            =>
+            by
+              cases b
+                ·
+                  erw [ of_nat'_bit tt n , of_nat'_bit ]
+                    simp only [ ← bit1_of_bit1 , ← bit0_of_bit0 , cond , _root_.bit1 ]
+                ·
+                  erw
+                      [
+                        show
+                            n.bit tt + 1 = n + 1 . bit ff
+                            by simp [ Nat.bit , _root_.bit1 , _root_.bit0 ] <;> cc
+                          ,
+                          of_nat'_bit
+                          ,
+                          of_nat'_bit
+                          ,
+                          ih
+                        ]
+                    simp only [ cond , add_one , bit1_succ ]
 #align num.of_nat'_succ Num.ofNat'_succ
 -/
 

@@ -1021,48 +1021,78 @@ open DenseInducing
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print DenseInducing.extend_Z_bilin /-
-/-- Bourbaki GT III.6.5 Theorem I:
-ℤ-bilinear continuous maps from dense images into a complete Hausdorff group extend by continuity.
-Note: Bourbaki assumes that α and β are also complete Hausdorff, but this is not necessary. -/
-theorem extend_Z_bilin : Continuous (extend (de.Prod df) Φ) :=
-  by
-  refine' continuous_extend_of_cauchy _ _
-  rintro ⟨x₀, y₀⟩
-  constructor
-  · apply ne_bot.map
-    apply comap_ne_bot
-    intro U h
-    rcases mem_closure_iff_nhds.1 ((de.prod df).dense (x₀, y₀)) U h with ⟨x, x_in, ⟨z, z_x⟩⟩
-    exists z
-    cc
-  · suffices
-      map (fun p : (β × δ) × β × δ => Φ p.2 - Φ p.1)
-          (comap (fun p : (β × δ) × β × δ => ((e p.1.1, f p.1.2), (e p.2.1, f p.2.2)))
-            (𝓝 (x₀, y₀) ×ᶠ 𝓝 (x₀, y₀))) ≤
-        𝓝 0
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+/--
+    Bourbaki GT III.6.5 Theorem I:
+    ℤ-bilinear continuous maps from dense images into a complete Hausdorff group extend by continuity.
+    Note: Bourbaki assumes that α and β are also complete Hausdorff, but this is not necessary. -/
+  theorem
+    extend_Z_bilin
+    : Continuous extend de . Prod df Φ
+    :=
       by
-      rwa [uniformity_eq_comap_nhds_zero G, prod_map_map_eq, ← map_le_iff_le_comap, Filter.map_map,
-        prod_comap_comap_eq]
-    intro W' W'_nhd
-    have key := extend_Z_bilin_key de df hφ W'_nhd x₀ y₀
-    rcases key with ⟨U, U_nhd, V, V_nhd, h⟩
-    rw [mem_comap] at U_nhd
-    rcases U_nhd with ⟨U', U'_nhd, U'_sub⟩
-    rw [mem_comap] at V_nhd
-    rcases V_nhd with ⟨V', V'_nhd, V'_sub⟩
-    rw [mem_map, mem_comap, nhds_prod_eq]
-    exists (U' ×ˢ V') ×ˢ U' ×ˢ V'
-    rw [mem_prod_same_iff]
-    simp only [exists_prop]
-    constructor
-    · change U' ∈ 𝓝 x₀ at U'_nhd
-      change V' ∈ 𝓝 y₀ at V'_nhd
-      have := prod_mem_prod U'_nhd V'_nhd
-      tauto
-    · intro p h'
-      simp only [Set.mem_preimage, Set.prod_mk_mem_set_prod_eq] at h'
-      rcases p with ⟨⟨x, y⟩, ⟨x', y'⟩⟩
-      apply h <;> tauto
+        refine' continuous_extend_of_cauchy _ _
+          rintro ⟨ x₀ , y₀ ⟩
+          constructor
+          ·
+            apply ne_bot.map
+              apply comap_ne_bot
+              intro U h
+              rcases
+                mem_closure_iff_nhds . 1 de.prod df . dense ( x₀ , y₀ ) U h
+                with ⟨ x , x_in , ⟨ z , z_x ⟩ ⟩
+              exists z
+              cc
+          ·
+            suffices
+                
+                  map
+                      fun p : β × δ × β × δ => Φ p . 2 - Φ p . 1
+                        comap
+                          fun
+                              p
+                                : β × δ × β × δ
+                                =>
+                                ( ( e p . 1 . 1 , f p . 1 . 2 ) , ( e p . 2 . 1 , f p . 2 . 2 ) )
+                            𝓝 ( x₀ , y₀ ) ×ᶠ 𝓝 ( x₀ , y₀ )
+                    ≤
+                    𝓝 0
+                  by
+                    rwa
+                      [
+                        uniformity_eq_comap_nhds_zero G
+                          ,
+                          prod_map_map_eq
+                          ,
+                          ← map_le_iff_le_comap
+                          ,
+                          Filter.map_map
+                          ,
+                          prod_comap_comap_eq
+                        ]
+              intro W' W'_nhd
+              have key := extend_Z_bilin_key de df hφ W'_nhd x₀ y₀
+              rcases key with ⟨ U , U_nhd , V , V_nhd , h ⟩
+              rw [ mem_comap ] at U_nhd
+              rcases U_nhd with ⟨ U' , U'_nhd , U'_sub ⟩
+              rw [ mem_comap ] at V_nhd
+              rcases V_nhd with ⟨ V' , V'_nhd , V'_sub ⟩
+              rw [ mem_map , mem_comap , nhds_prod_eq ]
+              exists U' ×ˢ V' ×ˢ U' ×ˢ V'
+              rw [ mem_prod_same_iff ]
+              simp only [ exists_prop ]
+              constructor
+              ·
+                change U' ∈ 𝓝 x₀ at U'_nhd
+                  change V' ∈ 𝓝 y₀ at V'_nhd
+                  have  := prod_mem_prod U'_nhd V'_nhd
+                  tauto
+              ·
+                intro p h'
+                  simp only [ Set.mem_preimage , Set.prod_mk_mem_set_prod_eq ] at h'
+                  rcases p with ⟨ ⟨ x , y ⟩ , ⟨ x' , y' ⟩ ⟩
+                  apply h <;> tauto
 #align dense_inducing.extend_Z_bilin DenseInducing.extend_Z_bilin
 -/
 

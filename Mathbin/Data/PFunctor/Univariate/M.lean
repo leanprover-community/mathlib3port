@@ -26,13 +26,9 @@ open List hiding head?
 
 variable (F : PFunctor.{u})
 
-local prefix:0 "♯" =>
-  cast
-    (by
-      first
-      | simp [*]
-      | cc
-      | solve_by_elim)
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+local prefix : 0 "♯" => cast by first | simp [ * ] | cc | solve_by_elim
 
 namespace PFunctor
 

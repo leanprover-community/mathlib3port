@@ -91,8 +91,13 @@ instance (priority := 10) decidableEq_of_subsingleton {α} [Subsingleton α] : D
 -/
 
 #print eq_iff_true_of_subsingleton /-
-@[simp, nontriviality]
-theorem eq_iff_true_of_subsingleton {α : Sort _} [Subsingleton α] (x y : α) : x = y ↔ True := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp , nontriviality ]
+  theorem
+    eq_iff_true_of_subsingleton
+    { α : Sort _ } [ Subsingleton α ] ( x y : α ) : x = y ↔ True
+    := by cc
 #align eq_iff_true_of_subsingleton eq_iff_true_of_subsingleton
 -/
 

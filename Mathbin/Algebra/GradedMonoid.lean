@@ -6,7 +6,7 @@ Authors: Eric Wieser
 import Algebra.Group.InjSurj
 import Algebra.BigOperators.Group.List
 import Data.List.FinRange
-import GroupTheory.GroupAction.Defs
+import Algebra.Group.Action.Defs
 import Algebra.Group.Submonoid.Basic
 import Data.SetLike.Basic
 import Data.Sigma.Basic

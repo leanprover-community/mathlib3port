@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Data.Fintype.Card
-import GroupTheory.GroupAction.Defs
+import Algebra.Group.Action.Defs
 import GroupTheory.GroupAction.Group
 import Data.Setoid.Basic
 import Data.Set.Pointwise.SMul

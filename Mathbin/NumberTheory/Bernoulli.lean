@@ -317,28 +317,114 @@ def bernoulliPowerSeries :=
 -/
 
 #print bernoulliPowerSeries_mul_exp_sub_one /-
-theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X :=
-  by
-  ext n
-  -- constant coefficient is a special case
-  cases n;
-  · simp
-  simp only [bernoulliPowerSeries, coeff_mul, coeff_X, sum_antidiagonal_succ', one_div, coeff_mk,
-    coeff_one, coeff_exp, LinearMap.map_sub, factorial, if_pos, cast_succ, cast_one, cast_mul,
-    sub_zero, RingHom.map_one, add_eq_zero_iff, if_false, _root_.inv_one, zero_add, one_ne_zero,
-    MulZeroClass.mul_zero, and_false_iff, sub_self, ← RingHom.map_mul, ← map_sum]
-  cases n; · simp
-  rw [if_neg n.succ_succ_ne_one]
-  have hfact : ∀ m, (m ! : ℚ) ≠ 0 := fun m => by exact_mod_cast factorial_ne_zero m
-  have hite2 : ite (n.succ = 0) 1 0 = (0 : ℚ) := if_neg n.succ_ne_zero
-  rw [← map_zero (algebraMap ℚ A), ← zero_div (n.succ ! : ℚ), ← hite2, ← bernoulli_spec', sum_div]
-  refine' congr_arg (algebraMap ℚ A) (sum_congr rfl fun x h => eq_div_of_mul_eq (hfact n.succ) _)
-  rw [mem_antidiagonal] at h
-  have hj : (x.2 + 1 : ℚ) ≠ 0 := by exact_mod_cast succ_ne_zero _
-  field_simp [← h, mul_ne_zero hj (hfact x.2), hfact x.1, mul_comm _ (bernoulli x.1), mul_assoc,
-    add_choose, cast_div_char_zero (factorial_mul_factorial_dvd_factorial_add _ _),
-    Nat.factorial_ne_zero, hj]
-  cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  bernoulliPowerSeries_mul_exp_sub_one
+  : bernoulliPowerSeries A * exp A - 1 = X
+  :=
+    by
+      ext n
+        cases n
+        ;
+        · simp
+        simp
+          only
+          [
+            bernoulliPowerSeries
+              ,
+              coeff_mul
+              ,
+              coeff_X
+              ,
+              sum_antidiagonal_succ'
+              ,
+              one_div
+              ,
+              coeff_mk
+              ,
+              coeff_one
+              ,
+              coeff_exp
+              ,
+              LinearMap.map_sub
+              ,
+              factorial
+              ,
+              if_pos
+              ,
+              cast_succ
+              ,
+              cast_one
+              ,
+              cast_mul
+              ,
+              sub_zero
+              ,
+              RingHom.map_one
+              ,
+              add_eq_zero_iff
+              ,
+              if_false
+              ,
+              _root_.inv_one
+              ,
+              zero_add
+              ,
+              one_ne_zero
+              ,
+              MulZeroClass.mul_zero
+              ,
+              and_false_iff
+              ,
+              sub_self
+              ,
+              ← RingHom.map_mul
+              ,
+              ← map_sum
+            ]
+        cases n
+        ;
+        · simp
+        rw [ if_neg n.succ_succ_ne_one ]
+        have hfact : ∀ m , ( m ! : ℚ ) ≠ 0 := fun m => by exact_mod_cast factorial_ne_zero m
+        have hite2 : ite n.succ = 0 1 0 = ( 0 : ℚ ) := if_neg n.succ_ne_zero
+        rw
+          [
+            ← map_zero algebraMap ℚ A
+              ,
+              ← zero_div ( n.succ ! : ℚ )
+              ,
+              ← hite2
+              ,
+              ← bernoulli_spec'
+              ,
+              sum_div
+            ]
+        refine' congr_arg algebraMap ℚ A sum_congr rfl fun x h => eq_div_of_mul_eq hfact n.succ _
+        rw [ mem_antidiagonal ] at h
+        have hj : ( x . 2 + 1 : ℚ ) ≠ 0 := by exact_mod_cast succ_ne_zero _
+        field_simp
+          [
+            ← h
+              ,
+              mul_ne_zero hj hfact x . 2
+              ,
+              hfact x . 1
+              ,
+              mul_comm _ bernoulli x . 1
+              ,
+              mul_assoc
+              ,
+              add_choose
+              ,
+              cast_div_char_zero factorial_mul_factorial_dvd_factorial_add _ _
+              ,
+              Nat.factorial_ne_zero
+              ,
+              hj
+            ]
+        cc
 #align bernoulli_power_series_mul_exp_sub_one bernoulliPowerSeries_mul_exp_sub_one
 -/
 

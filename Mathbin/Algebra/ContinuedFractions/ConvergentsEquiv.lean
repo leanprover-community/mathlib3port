@@ -372,66 +372,104 @@ theorem succ_nth_convergent_eq_squashGCF_nth_convergent [Field K]
 end Squash
 
 #print GeneralizedContinuedFraction.convergents_eq_convergents' /-
-/-- Shows that the recurrence relation (`convergents`) and direct evaluation (`convergents'`) of the
-gcf coincide at position `n` if the sequence of fractions contains strictly positive values only.
-Requiring positivity of all values is just one possible condition to obtain this result.
-For example, the dual - sequences with strictly negative values only - would also work.
-
-In practice, one most commonly deals with (regular) continued fractions, which satisfy the
-positivity criterion required here. The analogous result for them
-(see `continued_fractions.convergents_eq_convergents`) hence follows directly from this theorem.
--/
-theorem convergents_eq_convergents' [LinearOrderedField K]
-    (s_pos : ∀ {gp : Pair K} {m : ℕ}, m < n → g.s.get? m = some gp → 0 < gp.a ∧ 0 < gp.b) :
-    g.convergents n = g.convergents' n :=
-  by
-  induction' n with n IH generalizing g
-  case zero => simp
-  case succ =>
-    let g' := squash_gcf g n
-    -- first replace the rhs with the squashed computation
-    suffices g.convergents (n + 1) = g'.convergents' n by
-      rwa [succ_nth_convergent'_eq_squash_gcf_nth_convergent']
-    cases' Decidable.em (terminated_at g n) with terminated_at_n not_terminated_at_n
-    · have g'_eq_g : g' = g := squash_gcf_eq_self_of_terminated terminated_at_n
-      rw [convergents_stable_of_terminated n.le_succ terminated_at_n, g'_eq_g, IH _]
-      intro _ _ m_lt_n s_mth_eq; exact s_pos (Nat.lt.step m_lt_n) s_mth_eq
-    · suffices g.convergents (n + 1) = g'.convergents n
-        by
-        -- invoke the IH for the squashed gcf
-        rwa [← IH]
-        intro gp' m m_lt_n s_mth_eq'
-        -- case distinction on m + 1 = n or m + 1 < n
-        cases' m_lt_n with n succ_m_lt_n
-        · -- the difficult case at the squashed position: we first obtain the values from
-          -- the sequence
-          obtain ⟨gp_succ_m, s_succ_mth_eq⟩ : ∃ gp_succ_m, g.s.nth (m + 1) = some gp_succ_m;
-          exact option.ne_none_iff_exists'.mp not_terminated_at_n
-          obtain ⟨gp_m, mth_s_eq⟩ : ∃ gp_m, g.s.nth m = some gp_m;
-          exact g.s.ge_stable m.le_succ s_succ_mth_eq
-          -- we then plug them into the recurrence
-          suffices 0 < gp_m.a ∧ 0 < gp_m.b + gp_succ_m.a / gp_succ_m.b
-            by
-            have ot : g'.s.nth m = some ⟨gp_m.a, gp_m.b + gp_succ_m.a / gp_succ_m.b⟩ :=
-              squash_seq_nth_of_not_terminated mth_s_eq s_succ_mth_eq
-            have : gp' = ⟨gp_m.a, gp_m.b + gp_succ_m.a / gp_succ_m.b⟩ := by cc
-            rwa [this]
-          refine' ⟨(s_pos (Nat.lt.step m_lt_n) mth_s_eq).left, _⟩
-          refine' add_pos (s_pos (Nat.lt.step m_lt_n) mth_s_eq).right _
-          have : 0 < gp_succ_m.a ∧ 0 < gp_succ_m.b := s_pos (lt_add_one <| m + 1) s_succ_mth_eq
-          exact div_pos this.left this.right
-        · -- the easy case: before the squashed position, nothing changes
-          refine' s_pos (Nat.lt.step <| Nat.lt.step succ_m_lt_n) _
-          exact Eq.trans (squash_gcf_nth_of_lt succ_m_lt_n).symm s_mth_eq'
-      -- now the result follows from the fact that the convergents coincide at the squashed position
-      -- as established in `succ_nth_convergent_eq_squash_gcf_nth_convergent`.
-      have : ∀ ⦃b⦄, g.partial_denominators.nth n = some b → b ≠ 0 :=
-        by
-        intro b nth_part_denom_eq
-        obtain ⟨gp, s_nth_eq, ⟨refl⟩⟩ : ∃ gp, g.s.nth n = some gp ∧ gp.b = b;
-        exact exists_s_b_of_part_denom nth_part_denom_eq
-        exact (ne_of_lt (s_pos (lt_add_one n) s_nth_eq).right).symm
-      exact succ_nth_convergent_eq_squash_gcf_nth_convergent this
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+/--
+    Shows that the recurrence relation (`convergents`) and direct evaluation (`convergents'`) of the
+    gcf coincide at position `n` if the sequence of fractions contains strictly positive values only.
+    Requiring positivity of all values is just one possible condition to obtain this result.
+    For example, the dual - sequences with strictly negative values only - would also work.
+    
+    In practice, one most commonly deals with (regular) continued fractions, which satisfy the
+    positivity criterion required here. The analogous result for them
+    (see `continued_fractions.convergents_eq_convergents`) hence follows directly from this theorem.
+    -/
+  theorem
+    convergents_eq_convergents'
+    [ LinearOrderedField K ]
+        (
+          s_pos
+          : ∀ { gp : Pair K } { m : ℕ } , m < n → g . s . get? m = some gp → 0 < gp . a ∧ 0 < gp . b
+          )
+      : g . convergents n = g . convergents' n
+    :=
+      by
+        induction' n with n IH generalizing g
+          case zero => simp
+          case
+            succ
+            =>
+            let g' := squash_gcf g n
+              suffices
+                
+                  g.convergents n + 1 = g'.convergents' n
+                  by rwa [ succ_nth_convergent'_eq_squash_gcf_nth_convergent' ]
+              cases' Decidable.em terminated_at g n with terminated_at_n not_terminated_at_n
+              ·
+                have g'_eq_g : g' = g := squash_gcf_eq_self_of_terminated terminated_at_n
+                  rw [ convergents_stable_of_terminated n.le_succ terminated_at_n , g'_eq_g , IH _ ]
+                  intro _ _ m_lt_n s_mth_eq
+                  ;
+                  exact s_pos Nat.lt.step m_lt_n s_mth_eq
+              ·
+                suffices
+                    
+                      g.convergents n + 1 = g'.convergents n
+                      by
+                        rwa [ ← IH ]
+                          intro gp' m m_lt_n s_mth_eq'
+                          cases' m_lt_n with n succ_m_lt_n
+                          ·
+                            obtain
+                                ⟨ gp_succ_m , s_succ_mth_eq ⟩
+                                : ∃ gp_succ_m , g.s.nth m + 1 = some gp_succ_m
+                              ;
+                              exact option.ne_none_iff_exists'.mp not_terminated_at_n
+                              obtain ⟨ gp_m , mth_s_eq ⟩ : ∃ gp_m , g.s.nth m = some gp_m
+                              ;
+                              exact g.s.ge_stable m.le_succ s_succ_mth_eq
+                              suffices
+                                
+                                  0 < gp_m.a ∧ 0 < gp_m.b + gp_succ_m.a / gp_succ_m.b
+                                  by
+                                    have
+                                        ot
+                                          :
+                                            g'.s.nth m
+                                              =
+                                              some ⟨ gp_m.a , gp_m.b + gp_succ_m.a / gp_succ_m.b ⟩
+                                          :=
+                                          squash_seq_nth_of_not_terminated mth_s_eq s_succ_mth_eq
+                                      have
+                                        
+                                          : gp' = ⟨ gp_m.a , gp_m.b + gp_succ_m.a / gp_succ_m.b ⟩
+                                          :=
+                                          by cc
+                                      rwa [ this ]
+                              refine' ⟨ s_pos Nat.lt.step m_lt_n mth_s_eq . left , _ ⟩
+                              refine' add_pos s_pos Nat.lt.step m_lt_n mth_s_eq . right _
+                              have
+                                
+                                  : 0 < gp_succ_m.a ∧ 0 < gp_succ_m.b
+                                  :=
+                                  s_pos lt_add_one <| m + 1 s_succ_mth_eq
+                              exact div_pos this.left this.right
+                          ·
+                            refine' s_pos Nat.lt.step <| Nat.lt.step succ_m_lt_n _
+                              exact Eq.trans squash_gcf_nth_of_lt succ_m_lt_n . symm s_mth_eq'
+                  have
+                    
+                      : ∀ ⦃ b ⦄ , g.partial_denominators.nth n = some b → b ≠ 0
+                      :=
+                      by
+                        intro b nth_part_denom_eq
+                          obtain
+                            ⟨ gp , s_nth_eq , ⟨ refl ⟩ ⟩
+                            : ∃ gp , g.s.nth n = some gp ∧ gp . b = b
+                          ;
+                          exact exists_s_b_of_part_denom nth_part_denom_eq
+                          exact ne_of_lt s_pos lt_add_one n s_nth_eq . right . symm
+                  exact succ_nth_convergent_eq_squash_gcf_nth_convergent this
 #align generalized_continued_fraction.convergents_eq_convergents' GeneralizedContinuedFraction.convergents_eq_convergents'
 -/
 

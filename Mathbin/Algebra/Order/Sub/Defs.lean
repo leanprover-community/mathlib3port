@@ -3,9 +3,9 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Algebra.CovariantAndContravariant
+import Algebra.Order.Monoid.Unbundled.Defs
 import Algebra.Group.Basic
-import Algebra.Order.Monoid.Lemmas
+import Algebra.Order.Monoid.Unbundled.Basic
 import Order.Lattice
 
 #align_import algebra.order.sub.defs from "leanprover-community/mathlib"@"de29c328903507bb7aff506af9135f4bdaf1849c"

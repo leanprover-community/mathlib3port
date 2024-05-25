@@ -368,10 +368,15 @@ theorem add_product (s t : Multiset α) (u : Multiset β) : (s + t) ×ˢ u = s �
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Multiset.product_add /-
-@[simp]
-theorem product_add (s : Multiset α) : ∀ t u : Multiset β, s ×ˢ (t + u) = s ×ˢ t + s ×ˢ u :=
-  Multiset.induction_on s (fun t u => rfl) fun a s IH t u => by
-    rw [cons_product, IH] <;> simp <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp ]
+  theorem
+    product_add
+    ( s : Multiset α ) : ∀ t u : Multiset β , s ×ˢ t + u = s ×ˢ t + s ×ˢ u
+    :=
+      Multiset.induction_on
+        s fun t u => rfl fun a s IH t u => by rw [ cons_product , IH ] <;> simp <;> cc
 #align multiset.product_add Multiset.product_add
 -/
 
@@ -444,10 +449,15 @@ theorem add_sigma (s t : Multiset α) (u : ∀ a, Multiset (σ a)) :
 -/
 
 #print Multiset.sigma_add /-
-@[simp]
-theorem sigma_add :
-    ∀ t u : ∀ a, Multiset (σ a), (s.Sigma fun a => t a + u a) = s.Sigma t + s.Sigma u :=
-  Multiset.induction_on s (fun t u => rfl) fun a s IH t u => by rw [cons_sigma, IH] <;> simp <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp ]
+  theorem
+    sigma_add
+    : ∀ t u : ∀ a , Multiset σ a , s . Sigma fun a => t a + u a = s . Sigma t + s . Sigma u
+    :=
+      Multiset.induction_on
+        s fun t u => rfl fun a s IH t u => by rw [ cons_sigma , IH ] <;> simp <;> cc
 #align multiset.sigma_add Multiset.sigma_add
 -/
 

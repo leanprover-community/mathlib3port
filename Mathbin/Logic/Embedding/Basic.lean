@@ -232,15 +232,29 @@ protected def ofIsEmpty {α β} [IsEmpty α] : α ↪ β :=
 -/
 
 #print Function.Embedding.setValue /-
-/-- Change the value of an embedding `f` at one point. If the prescribed image
-is already occupied by some `f a'`, then swap the values at these two points. -/
-def setValue {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = a)]
-    [∀ a', Decidable (f a' = b)] : α ↪ β :=
-  ⟨fun a' => if a' = a then b else if f a' = b then f a else f a',
-    by
-    intro x y h
-    dsimp at h
-    split_ifs at h <;> try subst b <;> try simp only [f.injective.eq_iff] at * <;> cc⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+/--
+    Change the value of an embedding `f` at one point. If the prescribed image
+    is already occupied by some `f a'`, then swap the values at these two points. -/
+  def
+    setValue
+    { α β }
+        ( f : α ↪ β )
+        ( a : α )
+        ( b : β )
+        [ ∀ a' , Decidable a' = a ]
+        [ ∀ a' , Decidable f a' = b ]
+      : α ↪ β
+    :=
+      ⟨
+        fun a' => if a' = a then b else if f a' = b then f a else f a'
+          ,
+          by
+            intro x y h
+              dsimp at h
+              split_ifs at h <;> try subst b <;> try simp only [ f.injective.eq_iff ] at * <;> cc
+        ⟩
 #align function.embedding.set_value Function.Embedding.setValue
 -/
 

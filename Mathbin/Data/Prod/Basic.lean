@@ -123,9 +123,10 @@ theorem map_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε
 variable {a a₁ a₂ : α} {b b₁ b₂ : β}
 
 #print Prod.mk.inj_iff /-
-@[simp]
-theorem mk.inj_iff : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
-  ⟨Prod.mk.inj, by cc⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp ]
+  theorem mk.inj_iff : ( a₁ , b₁ ) = ( a₂ , b₂ ) ↔ a₁ = a₂ ∧ b₁ = b₂ := ⟨ Prod.mk.inj , by cc ⟩
 #align prod.mk.inj_iff Prod.mk.inj_iff
 -/
 

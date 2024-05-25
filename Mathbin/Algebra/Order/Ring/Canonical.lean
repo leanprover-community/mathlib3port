@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 -/
 import Algebra.Order.Ring.Defs
 import Algebra.Order.Sub.Canonical
-import GroupTheory.GroupAction.Defs
+import Algebra.Group.Action.Defs
 
 #align_import algebra.order.ring.canonical from "leanprover-community/mathlib"@"824f9ae93a4f5174d2ea948e2d75843dd83447bb"
 

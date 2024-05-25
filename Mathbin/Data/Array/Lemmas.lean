@@ -156,20 +156,41 @@ section Nth
 
 variable {n : ℕ} {α : Type u} {a : Array' n α}
 
-theorem to_list_nthLe_aux (i : ℕ) (ih : i < n) :
-    ∀ (j) {jh t h'},
-      (∀ k tl, j + k = i → List.nthLe t k tl = a.read ⟨i, ih⟩) →
-        (a.revIterateAux (fun _ => (· :: ·)) j jh t).nthLe i h' = a.read ⟨i, ih⟩
-  | 0, _, _, _, al => al i _ <| zero_add _
-  | j + 1, jh, t, h', al =>
-    to_list_nth_le_aux j fun k tl hjk =>
-      show List.nthLe (a.read ⟨j, jh⟩ :: t) k tl = a.read ⟨i, ih⟩ from
-        match k, hjk, tl with
-        | 0, e, tl =>
-          match i, e, ih with
-          | _, rfl, _ => rfl
-        | k' + 1, _, tl => by
-          simp [List.nthLe] <;> exact al _ _ (by simp [add_comm, add_assoc, *] <;> cc)
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  to_list_nthLe_aux
+  ( i : ℕ ) ( ih : i < n )
+    :
+      ∀
+        ( j ) { jh t h' }
+        ,
+        ∀ k tl , j + k = i → List.nthLe t k tl = a . read ⟨ i , ih ⟩
+          →
+          a . revIterateAux fun _ => ( · :: · ) j jh t . nthLe i h' = a . read ⟨ i , ih ⟩
+  | 0 , _ , _ , _ , al => al i _ <| zero_add _
+    |
+      j + 1 , jh , t , h' , al
+      =>
+      to_list_nth_le_aux
+        j
+          fun
+            k tl hjk
+              =>
+              show
+                List.nthLe a . read ⟨ j , jh ⟩ :: t k tl = a . read ⟨ i , ih ⟩
+                from
+                  match
+                    k , hjk , tl
+                    with
+                    | 0 , e , tl => match i , e , ih with | _ , rfl , _ => rfl
+                      |
+                        k' + 1 , _ , tl
+                        =>
+                        by
+                          simp [ List.nthLe ]
+                            <;>
+                            exact al _ _ by simp [ add_comm , add_assoc , * ] <;> cc
 #align array.to_list_nth_le_aux Array'.to_list_nthLe_aux
 
 theorem toList_nthLe (i : ℕ) (h h') : List.nthLe a.toList i h' = a.read ⟨i, h⟩ :=
@@ -281,7 +302,7 @@ theorem read_pushBack_left (i : Fin n) : (a.pushBack v).read i.cast_succ = a.rea
   by
   cases' i with i hi
   have : ¬i = n := ne_of_lt hi
-  simp [push_back, this, Fin.castSuccEmb, Fin.castAddEmb, Fin.castLEEmb, Fin.castLT, read,
+  simp [push_back, this, Fin.castSuccEmb, Fin.castAddOrderEmb, Fin.castLEOrderEmb, Fin.castLT, read,
     DArray.read]
 #align array.read_push_back_left Array'.read_pushBack_left
 
@@ -290,7 +311,7 @@ theorem read_pushBack_right : (a.pushBack v).read (Fin.last _) = v :=
   by
   cases' hn : Fin.last n with k hk
   have : k = n := by simpa [Fin.eq_iff_veq] using hn.symm
-  simp [push_back, this, Fin.castSuccEmb, Fin.castAddEmb, Fin.castLEEmb, Fin.castLT, read,
+  simp [push_back, this, Fin.castSuccEmb, Fin.castAddOrderEmb, Fin.castLEOrderEmb, Fin.castLT, read,
     DArray.read]
 #align array.read_push_back_right Array'.read_pushBack_right
 

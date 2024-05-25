@@ -6,7 +6,7 @@ Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 import Data.Fintype.Parity
 import LinearAlgebra.Matrix.SpecialLinearGroup
 import Analysis.Complex.Basic
-import GroupTheory.GroupAction.Defs
+import Algebra.Group.Action.Defs
 import LinearAlgebra.Matrix.GeneralLinearGroup
 import Tactic.LinearCombination
 

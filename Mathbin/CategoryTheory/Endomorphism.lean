@@ -6,7 +6,7 @@ Authors: Yury Kudryashov, Scott Morrison, Simon Hudon
 import Algebra.Group.Equiv.Basic
 import CategoryTheory.Groupoid
 import CategoryTheory.Opposites
-import GroupTheory.GroupAction.Defs
+import Algebra.Group.Action.Defs
 
 #align_import category_theory.endomorphism from "leanprover-community/mathlib"@"e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b"
 

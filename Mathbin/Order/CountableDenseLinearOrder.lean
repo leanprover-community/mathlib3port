@@ -96,38 +96,81 @@ instance : Preorder (PartialIso α β) :=
 variable {α β}
 
 #print Order.PartialIso.exists_across /-
-/-- For each `a`, we can find a `b` in the codomain, such that `a`'s relation to
-the domain of `f` is `b`'s relation to the image of `f`.
-
-Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`.
--/
-theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β]
-    (f : PartialIso α β) (a : α) : ∃ b : β, ∀ p ∈ f.val, cmp (Prod.fst p) a = cmp (Prod.snd p) b :=
-  by
-  by_cases h : ∃ b, (a, b) ∈ f.val
-  · cases' h with b hb; exact ⟨b, fun p hp => f.prop _ hp _ hb⟩
-  have :
-    ∀ x ∈ (f.val.filter fun p : α × β => p.fst < a).image Prod.snd,
-      ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).image Prod.snd, x < y :=
-    by
-    intro x hx y hy
-    rw [Finset.mem_image] at hx hy
-    rcases hx with ⟨p, hp1, rfl⟩
-    rcases hy with ⟨q, hq1, rfl⟩
-    rw [Finset.mem_filter] at hp1 hq1
-    rw [← lt_iff_lt_of_cmp_eq_cmp (f.prop _ hp1.1 _ hq1.1)]
-    exact lt_trans hp1.right hq1.right
-  cases' exists_between_finsets _ _ this with b hb
-  use b
-  rintro ⟨p1, p2⟩ hp
-  have : p1 ≠ a := fun he => h ⟨p2, he ▸ hp⟩
-  cases' lt_or_gt_of_ne this with hl hr
-  · have : p1 < a ∧ p2 < b :=
-      ⟨hl, hb.1 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
-    rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this; cc
-  · have : a < p1 ∧ b < p2 :=
-      ⟨hr, hb.2 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
-    rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+/--
+    For each `a`, we can find a `b` in the codomain, such that `a`'s relation to
+    the domain of `f` is `b`'s relation to the image of `f`.
+    
+    Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`.
+    -/
+  theorem
+    exists_across
+    [ DenselyOrdered β ]
+        [ NoMinOrder β ]
+        [ NoMaxOrder β ]
+        [ Nonempty β ]
+        ( f : PartialIso α β )
+        ( a : α )
+      : ∃ b : β , ∀ p ∈ f . val , cmp Prod.fst p a = cmp Prod.snd p b
+    :=
+      by
+        by_cases h : ∃ b , ( a , b ) ∈ f.val
+          · cases' h with b hb ; exact ⟨ b , fun p hp => f.prop _ hp _ hb ⟩
+          have
+            
+              :
+                ∀
+                  x
+                  ∈ f.val.filter fun p : α × β => p . fst < a . image Prod.snd
+                  ,
+                  ∀ y ∈ f.val.filter fun p : α × β => a < p . fst . image Prod.snd , x < y
+              :=
+              by
+                intro x hx y hy
+                  rw [ Finset.mem_image ] at hx hy
+                  rcases hx with ⟨ p , hp1 , rfl ⟩
+                  rcases hy with ⟨ q , hq1 , rfl ⟩
+                  rw [ Finset.mem_filter ] at hp1 hq1
+                  rw [ ← lt_iff_lt_of_cmp_eq_cmp f.prop _ hp1 . 1 _ hq1 . 1 ]
+                  exact lt_trans hp1.right hq1.right
+          cases' exists_between_finsets _ _ this with b hb
+          use b
+          rintro ⟨ p1 , p2 ⟩ hp
+          have  : p1 ≠ a := fun he => h ⟨ p2 , he ▸ hp ⟩
+          cases' lt_or_gt_of_ne this with hl hr
+          ·
+            have
+                
+                  : p1 < a ∧ p2 < b
+                  :=
+                  ⟨
+                    hl
+                      ,
+                      hb . 1
+                        _
+                          finset.mem_image.mpr
+                            ⟨ ( p1 , p2 ) , finset.mem_filter.mpr ⟨ hp , hl ⟩ , rfl ⟩
+                    ⟩
+              rw [ ← cmp_eq_lt_iff , ← cmp_eq_lt_iff ] at this
+              ;
+              cc
+          ·
+            have
+                
+                  : a < p1 ∧ b < p2
+                  :=
+                  ⟨
+                    hr
+                      ,
+                      hb . 2
+                        _
+                          finset.mem_image.mpr
+                            ⟨ ( p1 , p2 ) , finset.mem_filter.mpr ⟨ hp , hr ⟩ , rfl ⟩
+                    ⟩
+              rw [ ← cmp_eq_gt_iff , ← cmp_eq_gt_iff ] at this
+              ;
+              cc
 #align order.partial_iso.exists_across Order.PartialIso.exists_across
 -/
 

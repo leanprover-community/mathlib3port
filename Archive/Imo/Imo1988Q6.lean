@@ -270,58 +270,70 @@ theorem imo1988_q6 {a b : ℕ} (h : a * b + 1 ∣ a ^ 2 + b ^ 2) :
     simp
 #align imo1988_q6 imo1988_q6
 
-/-
-The following example illustrates the use of constant descent Vieta jumping
-in the presence of a non-trivial base case.
--/
-example {a b : ℕ} (h : a * b ∣ a ^ 2 + b ^ 2 + 1) : 3 * a * b = a ^ 2 + b ^ 2 + 1 :=
-  by
-  rcases h with ⟨k, hk⟩
-  suffices k = 3 by simp_all; ring
-  simp only [sq] at hk
-  apply
-      constant_descent_vieta_jumping a b hk (fun x => k * x) (fun x => x * x + 1) fun x y =>
-        x ≤ 1 <;>
-    clear hk a b
-  · -- We will now show that the fibers of the solution set are described by a quadratic equation.
-    intro x y; dsimp only
-    rw [← Int.natCast_inj, ← sub_eq_zero]
-    apply eq_iff_eq_cancel_right.2
-    simp; ring
-  ·-- Show that the solution set is symmetric in a and b.
-    cc
-  ·-- Show that the claim is true if b = 0.
-    simp
-  · -- Show that the claim is true if a = b.
-    intro x hx
-    have x_sq_dvd : x * x ∣ x * x * k := dvd_mul_right (x * x) k
-    rw [← hx] at x_sq_dvd
-    obtain ⟨y, hy⟩ : x * x ∣ 1 := by simpa only [Nat.dvd_add_self_left, add_assoc] using x_sq_dvd
-    obtain ⟨rfl, rfl⟩ : x = 1 ∧ y = 1 := by simpa [mul_eq_one] using hy.symm
-    simpa using hx.symm
-  · -- Show the descent step.
-    intro x y x_lt_y hx h_base h z h_root hV₁ hV₀
-    constructor
-    · have zy_pos : z * y ≥ 0 := by rw [hV₀]; exact_mod_cast Nat.zero_le _
-      apply nonneg_of_mul_nonneg_left zy_pos
-      linarith
-    · contrapose! hV₀ with x_lt_z
-      apply ne_of_gt
-      push_neg at h_base
-      calc
-        z * y > x * y := by apply mul_lt_mul_of_pos_right <;> linarith
-        _ ≥ x * (x + 1) := by apply mul_le_mul <;> linarith
-        _ > x * x + 1 := by
-          rw [mul_add, mul_one]
-          apply add_lt_add_left
-          assumption_mod_cast
-  · -- Show the base case.
-    intro x y h h_base
-    obtain rfl | rfl : x = 0 ∨ x = 1 := by rwa [Nat.le_add_one_iff, le_zero_iff] at h_base
-    · simpa using h
-    · simp only [mul_one, one_mul, add_comm, zero_add] at h
-      have y_dvd : y ∣ y * k := dvd_mul_right y k
-      rw [← h, ← add_assoc, Nat.dvd_add_left (dvd_mul_left y y)] at y_dvd
-      obtain rfl | rfl := (Nat.dvd_prime Nat.prime_two).mp y_dvd <;> apply mul_left_cancel₀
-      exacts [one_ne_zero, h.symm, two_ne_zero, h.symm]
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+example
+  { a b : ℕ } ( h : a * b ∣ a ^ 2 + b ^ 2 + 1 ) : 3 * a * b = a ^ 2 + b ^ 2 + 1
+  :=
+    by
+      rcases h with ⟨ k , hk ⟩
+        suffices  k = 3 by simp_all ; ring
+        simp only [ sq ] at hk
+        apply
+            constant_descent_vieta_jumping a b hk fun x => k * x fun x => x * x + 1 fun x y => x ≤ 1
+          <;>
+          clear hk a b
+        ·
+          intro x y
+            ;
+            dsimp only
+            rw [ ← Int.natCast_inj , ← sub_eq_zero ]
+            apply eq_iff_eq_cancel_right . 2
+            simp
+            ;
+            ring
+        · cc
+        · simp
+        ·
+          intro x hx
+            have x_sq_dvd : x * x ∣ x * x * k := dvd_mul_right x * x k
+            rw [ ← hx ] at x_sq_dvd
+            obtain
+              ⟨ y , hy ⟩
+              : x * x ∣ 1
+              := by simpa only [ Nat.dvd_add_self_left , add_assoc ] using x_sq_dvd
+            obtain ⟨ rfl , rfl ⟩ : x = 1 ∧ y = 1 := by simpa [ mul_eq_one ] using hy.symm
+            simpa using hx.symm
+        ·
+          intro x y x_lt_y hx h_base h z h_root hV₁ hV₀
+            constructor
+            ·
+              have zy_pos : z * y ≥ 0 := by rw [ hV₀ ] ; exact_mod_cast Nat.zero_le _
+                apply nonneg_of_mul_nonneg_left zy_pos
+                linarith
+            ·
+              contrapose! hV₀ with x_lt_z
+                apply ne_of_gt
+                push_neg at h_base
+                calc
+                  z * y > x * y := by apply mul_lt_mul_of_pos_right <;> linarith
+                    _ ≥ x * x + 1 := by apply mul_le_mul <;> linarith
+                      _ > x * x + 1
+                        :=
+                        by rw [ mul_add , mul_one ] apply add_lt_add_left assumption_mod_cast
+        ·
+          intro x y h h_base
+            obtain
+              rfl | rfl
+              : x = 0 ∨ x = 1
+              := by rwa [ Nat.le_add_one_iff , le_zero_iff ] at h_base
+            · simpa using h
+            ·
+              simp only [ mul_one , one_mul , add_comm , zero_add ] at h
+                have y_dvd : y ∣ y * k := dvd_mul_right y k
+                rw [ ← h , ← add_assoc , Nat.dvd_add_left dvd_mul_left y y ] at y_dvd
+                obtain rfl | rfl := Nat.dvd_prime Nat.prime_two . mp y_dvd
+                  <;>
+                  apply mul_left_cancel₀
+                exacts [ one_ne_zero , h.symm , two_ne_zero , h.symm ]
 

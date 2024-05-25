@@ -526,9 +526,12 @@ section Lattice
 variable [DecidableEq α]
 
 #print Finset.card_union_add_card_inter /-
-theorem card_union_add_card_inter (s t : Finset α) :
-    (s ∪ t).card + (s ∩ t).card = s.card + t.card :=
-  Finset.induction_on t (by simp) fun a r har => by by_cases a ∈ s <;> simp [*] <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  card_union_add_card_inter
+  ( s t : Finset α ) : s ∪ t . card + s ∩ t . card = s . card + t . card
+  := Finset.induction_on t by simp fun a r har => by by_cases a ∈ s <;> simp [ * ] <;> cc
 #align finset.card_union_add_card_inter Finset.card_union_add_card_inter
 -/
 

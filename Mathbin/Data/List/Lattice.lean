@@ -6,7 +6,7 @@ Scott Morrison
 -/
 import Data.List.Count
 import Data.List.Infix
-import Algebra.Order.Monoid.MinMax
+import Algebra.Order.Monoid.Unbundled.MinMax
 
 #align_import data.list.lattice from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

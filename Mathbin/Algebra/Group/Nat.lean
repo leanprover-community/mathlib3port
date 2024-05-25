@@ -962,13 +962,23 @@ theorem mul_mod (a b n : ℕ) : a * b % n = a % n * (b % n) % n := by
 -/
 
 #print Nat.mul_dvd_of_dvd_div /-
-theorem mul_dvd_of_dvd_div {a b c : ℕ} (hab : c ∣ b) (h : a ∣ b / c) : c * a ∣ b :=
-  have h1 : ∃ d, b / c = a * d := h
-  have h2 : ∃ e, b = c * e := hab
-  let ⟨d, hd⟩ := h1
-  let ⟨e, he⟩ := h2
-  have h3 : b = a * d * c := Nat.eq_mul_of_div_eq_left hab hd
-  show ∃ d, b = c * a * d from ⟨d, by cc⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  mul_dvd_of_dvd_div
+  { a b c : ℕ } ( hab : c ∣ b ) ( h : a ∣ b / c ) : c * a ∣ b
+  :=
+    have
+      h1 : ∃ d , b / c = a * d := h
+      have
+        h2 : ∃ e , b = c * e := hab
+        let
+          ⟨ d , hd ⟩ := h1
+          let
+            ⟨ e , he ⟩ := h2
+            have
+              h3 : b = a * d * c := Nat.eq_mul_of_div_eq_left hab hd
+              show ∃ d , b = c * a * d from ⟨ d , by cc ⟩
 #align nat.mul_dvd_of_dvd_div Nat.mul_dvd_of_dvd_div
 -/
 

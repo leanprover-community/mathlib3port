@@ -6,7 +6,7 @@ Authors: Leonardo de Moura, Mario Carneiro
 import Data.Nat.Defs
 import Data.Set.Lattice
 import Algebra.Group.Prod
-import Algebra.Order.Monoid.MinMax
+import Algebra.Order.Monoid.Unbundled.MinMax
 
 #align_import data.nat.pairing from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

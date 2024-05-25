@@ -1227,11 +1227,24 @@ theorem neg_apply (m : ∀ i, M₁ i) : (-f) m = -f m :=
 #align multilinear_map.neg_apply MultilinearMap.neg_apply
 -/
 
-instance : Sub (MultilinearMap R M₁ M₂) :=
-  ⟨fun f g =>
-    ⟨fun m => f m - g m, fun _ m i x y => by
-      simp only [MultilinearMap.map_add, sub_eq_add_neg, neg_add]; cc, fun _ m i c x => by
-      simp only [MultilinearMap.map_smul, smul_sub]⟩⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+instance
+  : Sub MultilinearMap R M₁ M₂
+  :=
+    ⟨
+      fun
+        f g
+          =>
+          ⟨
+            fun m => f m - g m
+              ,
+              fun
+                _ m i x y => by simp only [ MultilinearMap.map_add , sub_eq_add_neg , neg_add ] ; cc
+              ,
+              fun _ m i c x => by simp only [ MultilinearMap.map_smul , smul_sub ]
+            ⟩
+      ⟩
 
 #print MultilinearMap.sub_apply /-
 @[simp]

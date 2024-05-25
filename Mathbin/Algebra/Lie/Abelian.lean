@@ -130,7 +130,7 @@ namespace LieModule
 #print LieModule.ker /-
 /-- The kernel of the action of a Lie algebra `L` on a Lie module `M` as a Lie ideal in `L`. -/
 protected def ker : LieIdeal R L :=
-  (toEndomorphism R L M).ker
+  (toEnd R L M).ker
 #align lie_module.ker LieModule.ker
 -/
 

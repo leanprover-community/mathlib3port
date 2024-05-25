@@ -290,13 +290,17 @@ theorem IsSwap.of_subtype_isSwap {p : α → Prop} [DecidablePred p] {f : Perm (
 -/
 
 #print Equiv.Perm.ne_and_ne_of_swap_mul_apply_ne_self /-
-theorem ne_and_ne_of_swap_mul_apply_ne_self {f : Perm α} {x y : α} (hy : (swap x (f x) * f) y ≠ y) :
-    f y ≠ y ∧ y ≠ x :=
-  by
-  simp only [swap_apply_def, mul_apply, f.injective.eq_iff] at *
-  by_cases h : f y = x
-  · constructor <;> intro <;> simp_all only [if_true, eq_self_iff_true, not_true, Ne.def]
-  · split_ifs at hy <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  ne_and_ne_of_swap_mul_apply_ne_self
+  { f : Perm α } { x y : α } ( hy : swap x f x * f y ≠ y ) : f y ≠ y ∧ y ≠ x
+  :=
+    by
+      simp only [ swap_apply_def , mul_apply , f.injective.eq_iff ] at *
+        by_cases h : f y = x
+        · constructor <;> intro <;> simp_all only [ if_true , eq_self_iff_true , not_true , Ne.def ]
+        · split_ifs at hy <;> cc
 #align equiv.perm.ne_and_ne_of_swap_mul_apply_ne_self Equiv.Perm.ne_and_ne_of_swap_mul_apply_ne_self
 -/
 
@@ -531,13 +535,18 @@ theorem support_zpow_le (σ : Perm α) (n : ℤ) : (σ ^ n).support ≤ σ.suppo
 -/
 
 #print Equiv.Perm.support_swap /-
-@[simp]
-theorem support_swap {x y : α} (h : x ≠ y) : support (swap x y) = {x, y} :=
-  by
-  ext z
-  by_cases hx : z = x
-  any_goals simpa [hx] using h.symm
-  by_cases hy : z = y <;> · simp [swap_apply_of_ne_of_ne, hx, hy] <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp ]
+  theorem
+    support_swap
+    { x y : α } ( h : x ≠ y ) : support swap x y = { x , y }
+    :=
+      by
+        ext z
+          by_cases hx : z = x
+          any_goals simpa [ hx ] using h.symm
+          by_cases hy : z = y <;> · simp [ swap_apply_of_ne_of_ne , hx , hy ] <;> cc
 #align equiv.perm.support_swap Equiv.Perm.support_swap
 -/
 
@@ -606,13 +615,17 @@ theorem support_swap_mul_eq (f : Perm α) (x : α) (h : f (f x) ≠ x) :
 -/
 
 #print Equiv.Perm.mem_support_swap_mul_imp_mem_support_ne /-
-theorem mem_support_swap_mul_imp_mem_support_ne {x y : α} (hy : y ∈ support (swap x (f x) * f)) :
-    y ∈ support f ∧ y ≠ x :=
-  by
-  simp only [mem_support, swap_apply_def, mul_apply, f.injective.eq_iff] at *
-  by_cases h : f y = x
-  · constructor <;> intro <;> simp_all only [if_true, eq_self_iff_true, not_true, Ne.def]
-  · split_ifs at hy <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  mem_support_swap_mul_imp_mem_support_ne
+  { x y : α } ( hy : y ∈ support swap x f x * f ) : y ∈ support f ∧ y ≠ x
+  :=
+    by
+      simp only [ mem_support , swap_apply_def , mul_apply , f.injective.eq_iff ] at *
+        by_cases h : f y = x
+        · constructor <;> intro <;> simp_all only [ if_true , eq_self_iff_true , not_true , Ne.def ]
+        · split_ifs at hy <;> cc
 #align equiv.perm.mem_support_swap_mul_imp_mem_support_ne Equiv.Perm.mem_support_swap_mul_imp_mem_support_ne
 -/
 

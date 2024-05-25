@@ -659,23 +659,42 @@ theorem add_mod_eq_ite :
 -/
 
 #print Nat.div_mul_div_comm /-
-theorem div_mul_div_comm (hmn : n ∣ m) (hkl : l ∣ k) : m / n * (k / l) = m * k / (n * l) :=
-  have exi1 : ∃ x, m = n * x := hmn
-  have exi2 : ∃ y, k = l * y := hkl
-  if hn : n = 0 then by simp [hn]
-  else
-    have : 0 < n := Nat.pos_of_ne_zero hn
-    if hl : l = 0 then by simp [hl]
-    else by
-      have : 0 < l := Nat.pos_of_ne_zero hl
-      cases' exi1 with x hx
-      cases' exi2 with y hy
-      rw [hx, hy, Nat.mul_div_cancel_left, Nat.mul_div_cancel_left]
-      symm
-      apply Nat.div_eq_of_eq_mul_left
-      apply mul_pos
-      repeat' assumption
-      cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  div_mul_div_comm
+  ( hmn : n ∣ m ) ( hkl : l ∣ k ) : m / n * k / l = m * k / n * l
+  :=
+    have
+      exi1 : ∃ x , m = n * x := hmn
+      have
+        exi2 : ∃ y , k = l * y := hkl
+        if
+          hn
+          :
+          n = 0
+          then
+          by simp [ hn ]
+          else
+          have
+             : 0 < n := Nat.pos_of_ne_zero hn
+            if
+              hl
+              :
+              l = 0
+              then
+              by simp [ hl ]
+              else
+              by
+                have  : 0 < l := Nat.pos_of_ne_zero hl
+                  cases' exi1 with x hx
+                  cases' exi2 with y hy
+                  rw [ hx , hy , Nat.mul_div_cancel_left , Nat.mul_div_cancel_left ]
+                  symm
+                  apply Nat.div_eq_of_eq_mul_left
+                  apply mul_pos
+                  repeat' assumption
+                  cc
 #align nat.div_mul_div_comm Nat.div_mul_div_comm
 -/
 

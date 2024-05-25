@@ -251,11 +251,9 @@ theorem Even.tsub [CanonicallyLinearOrderedAddCommMonoid α] [Sub α] [OrderedSu
 #align even.tsub Even.tsub
 -/
 
-#print even_iff_exists_bit0 /-
 theorem even_iff_exists_bit0 [Add α] {a : α} : Even a ↔ ∃ b, a = bit0 b :=
   Iff.rfl
 #align even_iff_exists_bit0 even_iff_exists_bit0
--/
 
 alias ⟨Even.exists_bit0, _⟩ := even_iff_exists_bit0
 #align even.exists_bit0 Even.exists_bit0

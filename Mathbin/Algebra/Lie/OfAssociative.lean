@@ -257,12 +257,12 @@ variable [CommRing R] [LieRing L] [LieAlgebra R L] [AddCommGroup M] [Module R M]
 
 variable [LieRingModule L M] [LieModule R L M]
 
-#print LieModule.toEndomorphism /-
+#print LieModule.toEnd /-
 /-- A Lie module yields a Lie algebra morphism into the linear endomorphisms of the module.
 
 See also `lie_module.to_module_hom`. -/
 @[simps]
-def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.End R M
+def LieModule.toEnd : L →ₗ⁅R⁆ Module.End R M
     where
   toFun x :=
     { toFun := fun m => ⁅x, m⁆
@@ -271,13 +271,13 @@ def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.End R M
   map_add' x y := by ext m; apply add_lie
   map_smul' t x := by ext m; apply smul_lie
   map_lie' x y := by ext m; apply lie_lie
-#align lie_module.to_endomorphism LieModule.toEndomorphism
+#align lie_module.to_endomorphism LieModule.toEnd
 -/
 
 #print LieAlgebra.ad /-
 /-- The adjoint action of a Lie algebra on itself. -/
 def LieAlgebra.ad : L →ₗ⁅R⁆ Module.End R L :=
-  LieModule.toEndomorphism R L L
+  LieModule.toEnd R L L
 #align lie_algebra.ad LieAlgebra.ad
 -/
 
@@ -288,26 +288,26 @@ theorem LieAlgebra.ad_apply (x y : L) : LieAlgebra.ad R L x y = ⁅x, y⁆ :=
 #align lie_algebra.ad_apply LieAlgebra.ad_apply
 -/
 
-#print LieModule.toEndomorphism_module_end /-
+#print LieModule.toEnd_module_end /-
 @[simp]
-theorem LieModule.toEndomorphism_module_end :
-    LieModule.toEndomorphism R (Module.End R M) M = LieHom.id := by ext g m; simp [lie_eq_smul]
-#align lie_module.to_endomorphism_module_End LieModule.toEndomorphism_module_end
+theorem LieModule.toEnd_module_end : LieModule.toEnd R (Module.End R M) M = LieHom.id := by ext g m;
+  simp [lie_eq_smul]
+#align lie_module.to_endomorphism_module_End LieModule.toEnd_module_end
 -/
 
-#print LieSubalgebra.toEndomorphism_eq /-
-theorem LieSubalgebra.toEndomorphism_eq (K : LieSubalgebra R L) {x : K} :
-    LieModule.toEndomorphism R K M x = LieModule.toEndomorphism R L M x :=
+#print LieSubalgebra.toEnd_eq /-
+theorem LieSubalgebra.toEnd_eq (K : LieSubalgebra R L) {x : K} :
+    LieModule.toEnd R K M x = LieModule.toEnd R L M x :=
   rfl
-#align lie_subalgebra.to_endomorphism_eq LieSubalgebra.toEndomorphism_eq
+#align lie_subalgebra.to_endomorphism_eq LieSubalgebra.toEnd_eq
 -/
 
-#print LieSubalgebra.toEndomorphism_mk /-
+#print LieSubalgebra.toEnd_mk /-
 @[simp]
-theorem LieSubalgebra.toEndomorphism_mk (K : LieSubalgebra R L) {x : L} (hx : x ∈ K) :
-    LieModule.toEndomorphism R K M ⟨x, hx⟩ = LieModule.toEndomorphism R L M x :=
+theorem LieSubalgebra.toEnd_mk (K : LieSubalgebra R L) {x : L} (hx : x ∈ K) :
+    LieModule.toEnd R K M ⟨x, hx⟩ = LieModule.toEnd R L M x :=
   rfl
-#align lie_subalgebra.to_endomorphism_mk LieSubalgebra.toEndomorphism_mk
+#align lie_subalgebra.to_endomorphism_mk LieSubalgebra.toEnd_mk
 -/
 
 variable {R L M}
@@ -318,30 +318,28 @@ open LieModule
 
 variable {N : LieSubmodule R L M} {x : L}
 
-#print LieSubmodule.coe_map_toEndomorphism_le /-
-theorem coe_map_toEndomorphism_le :
-    (N : Submodule R M).map (LieModule.toEndomorphism R L M x) ≤ N :=
+#print LieSubmodule.coe_map_toEnd_le /-
+theorem coe_map_toEnd_le : (N : Submodule R M).map (LieModule.toEnd R L M x) ≤ N :=
   by
   rintro n ⟨m, hm, rfl⟩
   exact N.lie_mem hm
-#align lie_submodule.coe_map_to_endomorphism_le LieSubmodule.coe_map_toEndomorphism_le
+#align lie_submodule.coe_map_to_endomorphism_le LieSubmodule.coe_map_toEnd_le
 -/
 
 variable (N x)
 
-#print LieSubmodule.toEndomorphism_comp_subtype_mem /-
-theorem toEndomorphism_comp_subtype_mem (m : M) (hm : m ∈ (N : Submodule R M)) :
-    (toEndomorphism R L M x).comp (N : Submodule R M).Subtype ⟨m, hm⟩ ∈ (N : Submodule R M) := by
+#print LieSubmodule.toEnd_comp_subtype_mem /-
+theorem toEnd_comp_subtype_mem (m : M) (hm : m ∈ (N : Submodule R M)) :
+    (toEnd R L M x).comp (N : Submodule R M).Subtype ⟨m, hm⟩ ∈ (N : Submodule R M) := by
   simpa using N.lie_mem hm
-#align lie_submodule.to_endomorphism_comp_subtype_mem LieSubmodule.toEndomorphism_comp_subtype_mem
+#align lie_submodule.to_endomorphism_comp_subtype_mem LieSubmodule.toEnd_comp_subtype_mem
 -/
 
-#print LieSubmodule.toEndomorphism_restrict_eq_toEndomorphism /-
+#print LieSubmodule.toEnd_restrict_eq_toEnd /-
 @[simp]
-theorem toEndomorphism_restrict_eq_toEndomorphism (h := N.toEndomorphism_comp_subtype_mem x) :
-    (toEndomorphism R L M x).restrict h = toEndomorphism R L N x := by ext;
-  simp [LinearMap.restrict_apply]
-#align lie_submodule.to_endomorphism_restrict_eq_to_endomorphism LieSubmodule.toEndomorphism_restrict_eq_toEndomorphism
+theorem toEnd_restrict_eq_toEnd (h := N.toEnd_comp_subtype_mem x) :
+    (toEnd R L M x).restrict h = toEnd R L N x := by ext; simp [LinearMap.restrict_apply]
+#align lie_submodule.to_endomorphism_restrict_eq_to_endomorphism LieSubmodule.toEnd_restrict_eq_toEnd
 -/
 
 end LieSubmodule

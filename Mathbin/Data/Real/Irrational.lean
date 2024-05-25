@@ -677,7 +677,7 @@ theorem irrational_int_add_iff : Irrational (m + x) ↔ Irrational x :=
 #print irrational_nat_add_iff /-
 @[simp]
 theorem irrational_nat_add_iff : Irrational (n + x) ↔ Irrational x :=
-  ⟨of_nat_add n, fun h => h.natAddEmb n⟩
+  ⟨of_nat_add n, fun h => h.natAddOrderEmb n⟩
 #align irrational_nat_add_iff irrational_nat_add_iff
 -/
 
@@ -698,7 +698,7 @@ theorem irrational_add_int_iff : Irrational (x + m) ↔ Irrational x :=
 #print irrational_add_nat_iff /-
 @[simp]
 theorem irrational_add_nat_iff : Irrational (x + n) ↔ Irrational x :=
-  ⟨of_add_nat n, fun h => h.addNatEmb n⟩
+  ⟨of_add_nat n, fun h => h.addNatOrderEmb n⟩
 #align irrational_add_nat_iff irrational_add_nat_iff
 -/
 

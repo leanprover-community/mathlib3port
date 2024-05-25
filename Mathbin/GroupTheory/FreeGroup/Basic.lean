@@ -774,12 +774,18 @@ theorem Red.exact : mk L₁ = mk L₂ ↔ Join Red L₁ L₂ :=
 -/
 
 #print FreeGroup.of_injective /-
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
 /-- The canonical map from the type to the free group is an injection. -/
-@[to_additive "The canonical map from the type to the additive free group is an injection."]
-theorem of_injective : Function.Injective (@of α) := fun _ _ H =>
-  by
-  let ⟨L₁, hx, hy⟩ := Red.exact.1 H
-  simp [red.singleton_iff] at hx hy <;> cc
+    @[ to_additive "The canonical map from the type to the additive free group is an injection." ]
+  theorem
+    of_injective
+    : Function.Injective @ of α
+    :=
+      fun
+        _ _ H
+          =>
+          by let ⟨ L₁ , hx , hy ⟩ := Red.exact . 1 H simp [ red.singleton_iff ] at hx hy <;> cc
 #align free_group.of_injective FreeGroup.of_injective
 #align free_add_group.of_injective FreeAddGroup.of_injective
 -/
@@ -1340,28 +1346,38 @@ theorem reduce.red : Red L (reduce L) :=
 -/
 
 #print FreeGroup.reduce.not /-
-@[to_additive]
-theorem reduce.not {p : Prop} :
-    ∀ {L₁ L₂ L₃ : List (α × Bool)} {x b}, reduce L₁ = L₂ ++ (x, b) :: (x, not b) :: L₃ → p
-  | [], L2, L3, _, _ => fun h => by cases L2 <;> injections
-  | (x, b) :: L1, L2, L3, x', b' => by
-    dsimp
-    cases r : reduce L1
-    · dsimp; intro h
-      have := congr_arg List.length h
-      simp [-add_comm] at this
-      exact absurd this (by decide)
-    cases' hd with y c
-    dsimp only
-    split_ifs with h <;> intro H
-    · rw [H] at r
-      exact @reduce.not L1 ((y, c) :: L2) L3 x' b' r
-    rcases L2 with (_ | ⟨a, L2⟩)
-    · injections; subst_vars
-      simp at h; cc
-    · refine' @reduce.not L1 L2 L3 x' b' _
-      injection H with _ H
-      rw [r, H]; rfl
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ to_additive ]
+  theorem
+    reduce.not
+    { p : Prop }
+      :
+        ∀
+          { L₁ L₂ L₃ : List α × Bool } { x b }
+          ,
+          reduce L₁ = L₂ ++ ( x , b ) :: ( x , not b ) :: L₃ → p
+    | [ ] , L2 , L3 , _ , _ => fun h => by cases L2 <;> injections
+      |
+        ( x , b ) :: L1 , L2 , L3 , x' , b'
+        =>
+        by
+          dsimp
+            cases r : reduce L1
+            ·
+              dsimp
+                ;
+                intro h
+                have  := congr_arg List.length h
+                simp [ - add_comm ] at this
+                exact absurd this by decide
+            cases' hd with y c
+            dsimp only
+            split_ifs with h <;> intro H
+            · rw [ H ] at r exact @ reduce.not L1 ( y , c ) :: L2 L3 x' b' r
+            rcases L2 with ( _ | ⟨ a , L2 ⟩ )
+            · injections ; subst_vars simp at h ; cc
+            · refine' @ reduce.not L1 L2 L3 x' b' _ injection H with _ H rw [ r , H ] ; rfl
 #align free_group.reduce.not FreeGroup.reduce.not
 #align free_add_group.reduce.not FreeAddGroup.reduce.not
 -/

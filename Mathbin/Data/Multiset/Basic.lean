@@ -204,20 +204,34 @@ section Rec
 variable {C : Multiset α → Sort _}
 
 #print Multiset.rec /-
-/-- Dependent recursor on multisets.
-TODO: should be @[recursor 6], but then the definition of `multiset.pi` fails with a stack
-overflow in `whnf`.
--/
-protected def rec (C_0 : C 0) (C_cons : ∀ a m, C m → C (a ::ₘ m))
-    (C_cons_heq :
-      ∀ a a' m b, HEq (C_cons a (a' ::ₘ m) (C_cons a' m b)) (C_cons a' (a ::ₘ m) (C_cons a m b)))
-    (m : Multiset α) : C m :=
-  Quotient.hrecOn m (@List.rec α (fun l => C ⟦l⟧) C_0 fun a l b => C_cons a ⟦l⟧ b) fun l l' h =>
-    h.rec_heq
-      (fun a l l' b b' hl => by
-        have : ⟦l⟧ = ⟦l'⟧ := Quot.sound hl
-        cc)
-      fun a a' l => C_cons_heq a a' ⟦l⟧
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+/--
+      Dependent recursor on multisets.
+      TODO: should be @[recursor 6], but then the definition of `multiset.pi` fails with a stack
+      overflow in `whnf`.
+      -/
+    protected
+  def
+    rec
+    ( C_0 : C 0 )
+        ( C_cons : ∀ a m , C m → C a ::ₘ m )
+        (
+          C_cons_heq
+          : ∀ a a' m b , HEq C_cons a a' ::ₘ m C_cons a' m b C_cons a' a ::ₘ m C_cons a m b
+          )
+        ( m : Multiset α )
+      : C m
+    :=
+      Quotient.hrecOn
+        m
+          @ List.rec α fun l => C ⟦ l ⟧ C_0 fun a l b => C_cons a ⟦ l ⟧ b
+          fun
+            l l' h
+              =>
+              h . rec_heq
+                fun a l l' b b' hl => by have  : ⟦ l ⟧ = ⟦ l' ⟧ := Quot.sound hl cc
+                  fun a a' l => C_cons_heq a a' ⟦ l ⟧
 #align multiset.rec Multiset.rec
 -/
 

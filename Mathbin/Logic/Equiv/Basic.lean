@@ -1770,19 +1770,29 @@ def swapCore (a b r : α) : α :=
 -/
 
 #print Equiv.swapCore_self /-
-theorem swapCore_self (r a : α) : swapCore a a r = r := by unfold swap_core; split_ifs <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem swapCore_self ( r a : α ) : swapCore a a r = r := by unfold swap_core ; split_ifs <;> cc
 #align equiv.swap_core_self Equiv.swapCore_self
 -/
 
 #print Equiv.swapCore_swapCore /-
-theorem swapCore_swapCore (r a b : α) : swapCore a b (swapCore a b r) = r := by unfold swap_core;
-  split_ifs <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  swapCore_swapCore
+  ( r a b : α ) : swapCore a b swapCore a b r = r
+  := by unfold swap_core ; split_ifs <;> cc
 #align equiv.swap_core_swap_core Equiv.swapCore_swapCore
 -/
 
 #print Equiv.swapCore_comm /-
-theorem swapCore_comm (r a b : α) : swapCore a b r = swapCore b a r := by unfold swap_core;
-  split_ifs <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  swapCore_comm
+  ( r a b : α ) : swapCore a b r = swapCore b a r
+  := by unfold swap_core ; split_ifs <;> cc
 #align equiv.swap_core_comm Equiv.swapCore_comm
 -/
 

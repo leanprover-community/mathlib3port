@@ -543,16 +543,22 @@ unsafe def pow_orig {et et'} (ps : ex et) (qs : ex et') : ring_exp_m expr :=
   mk_pow [ps.orig, qs.orig]
 #align tactic.ring_exp.pow_orig tactic.ring_exp.pow_orig
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
 /-- Congruence lemma for constructing `ex.sum`. -/
-theorem sum_congr {p p' ps ps' : α} : p = p' → ps = ps' → p + ps = p' + ps' := by cc
+  theorem sum_congr { p p' ps ps' : α } : p = p' → ps = ps' → p + ps = p' + ps' := by cc
 #align tactic.ring_exp.sum_congr Tactic.RingExp.sum_congr
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
 /-- Congruence lemma for constructing `ex.prod`. -/
-theorem prod_congr {p p' ps ps' : α} : p = p' → ps = ps' → p * ps = p' * ps' := by cc
+  theorem prod_congr { p p' ps ps' : α } : p = p' → ps = ps' → p * ps = p' * ps' := by cc
 #align tactic.ring_exp.prod_congr Tactic.RingExp.prod_congr
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
 /-- Congruence lemma for constructing `ex.exp`. -/
-theorem exp_congr {p p' : α} {ps ps' : ℕ} : p = p' → ps = ps' → p ^ ps = p' ^ ps' := by cc
+  theorem exp_congr { p p' : α } { ps ps' : ℕ } : p = p' → ps = ps' → p ^ ps = p' ^ ps' := by cc
 #align tactic.ring_exp.exp_congr Tactic.RingExp.exp_congr
 
 /-- Constructs `ex.zero` with the correct arguments. -/
@@ -831,26 +837,46 @@ theorem add_pf_sum_z {ps ps' qs : α} : ps = ps' → qs = 0 → ps + qs = ps' :=
     _ = ps' := add_zero _
 #align tactic.ring_exp.add_pf_sum_z Tactic.RingExp.add_pf_sum_z
 
-theorem add_pf_sum_overlap {pps p ps qqs q qs pq pqs : α} :
-    pps = p + ps → qqs = q + qs → p + q = pq → ps + qs = pqs → pps + qqs = pq + pqs := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  add_pf_sum_overlap
+  { pps p ps qqs q qs pq pqs : α }
+    : pps = p + ps → qqs = q + qs → p + q = pq → ps + qs = pqs → pps + qqs = pq + pqs
+  := by cc
 #align tactic.ring_exp.add_pf_sum_overlap Tactic.RingExp.add_pf_sum_overlap
 
-theorem add_pf_sum_overlap_zero {pps p ps qqs q qs pqs : α} :
-    pps = p + ps → qqs = q + qs → p + q = 0 → ps + qs = pqs → pps + qqs = pqs :=
-  fun pps_pf qqs_pf pq_pf pqs_pf =>
-  calc
-    pps + qqs = p + ps + (q + qs) := by rw [pps_pf, qqs_pf]
-    _ = p + q + (ps + qs) := by cc
-    _ = 0 + pqs := by rw [pq_pf, pqs_pf]
-    _ = pqs := zero_add _
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  add_pf_sum_overlap_zero
+  { pps p ps qqs q qs pqs : α }
+    : pps = p + ps → qqs = q + qs → p + q = 0 → ps + qs = pqs → pps + qqs = pqs
+  :=
+    fun
+      pps_pf qqs_pf pq_pf pqs_pf
+        =>
+        calc
+          pps + qqs = p + ps + q + qs := by rw [ pps_pf , qqs_pf ]
+            _ = p + q + ps + qs := by cc
+              _ = 0 + pqs := by rw [ pq_pf , pqs_pf ]
+              _ = pqs := zero_add _
 #align tactic.ring_exp.add_pf_sum_overlap_zero Tactic.RingExp.add_pf_sum_overlap_zero
 
-theorem add_pf_sum_lt {pps p ps qqs pqs : α} :
-    pps = p + ps → ps + qqs = pqs → pps + qqs = p + pqs := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  add_pf_sum_lt
+  { pps p ps qqs pqs : α } : pps = p + ps → ps + qqs = pqs → pps + qqs = p + pqs
+  := by cc
 #align tactic.ring_exp.add_pf_sum_lt Tactic.RingExp.add_pf_sum_lt
 
-theorem add_pf_sum_gt {pps qqs q qs pqs : α} :
-    qqs = q + qs → pps + qs = pqs → pps + qqs = q + pqs := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  add_pf_sum_gt
+  { pps qqs q qs pqs : α } : qqs = q + qs → pps + qs = pqs → pps + qqs = q + pqs
+  := by cc
 #align tactic.ring_exp.add_pf_sum_gt Tactic.RingExp.add_pf_sum_gt
 
 /-- Add two expressions.
@@ -903,16 +929,28 @@ end Addition
 
 section Multiplication
 
-theorem hMul_pf_c_c {ps ps' qs qs' pq : α} : ps = ps' → qs = qs' → ps' * qs' = pq → ps * qs = pq :=
-  by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  hMul_pf_c_c
+  { ps ps' qs qs' pq : α } : ps = ps' → qs = qs' → ps' * qs' = pq → ps * qs = pq
+  := by cc
 #align tactic.ring_exp.mul_pf_c_c Tactic.RingExp.hMul_pf_c_c
 
-theorem hMul_pf_c_prod {ps qqs q qs pqs : α} : qqs = q * qs → ps * qs = pqs → ps * qqs = q * pqs :=
-  by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  hMul_pf_c_prod
+  { ps qqs q qs pqs : α } : qqs = q * qs → ps * qs = pqs → ps * qqs = q * pqs
+  := by cc
 #align tactic.ring_exp.mul_pf_c_prod Tactic.RingExp.hMul_pf_c_prod
 
-theorem hMul_pf_prod_c {pps p ps qs pqs : α} : pps = p * ps → ps * qs = pqs → pps * qs = p * pqs :=
-  by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  hMul_pf_prod_c
+  { pps p ps qs pqs : α } : pps = p * ps → ps * qs = pqs → pps * qs = p * pqs
+  := by cc
 #align tactic.ring_exp.mul_pf_prod_c Tactic.RingExp.hMul_pf_prod_c
 
 theorem hMul_pp_pf_overlap {pps p_b ps qqs qs psqs : α} {p_e q_e : ℕ} :
@@ -921,12 +959,20 @@ theorem hMul_pp_pf_overlap {pps p_b ps qqs qs psqs : α} {p_e q_e : ℕ} :
   fun ps_pf qs_pf psqs_pf => by simp [symm psqs_pf, pow_add, ps_pf, qs_pf] <;> ac_rfl
 #align tactic.ring_exp.mul_pp_pf_overlap Tactic.RingExp.hMul_pp_pf_overlap
 
-theorem hMul_pp_pf_prod_lt {pps p ps qqs pqs : α} :
-    pps = p * ps → ps * qqs = pqs → pps * qqs = p * pqs := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  hMul_pp_pf_prod_lt
+  { pps p ps qqs pqs : α } : pps = p * ps → ps * qqs = pqs → pps * qqs = p * pqs
+  := by cc
 #align tactic.ring_exp.mul_pp_pf_prod_lt Tactic.RingExp.hMul_pp_pf_prod_lt
 
-theorem hMul_pp_pf_prod_gt {pps qqs q qs pqs : α} :
-    qqs = q * qs → pps * qs = pqs → pps * qqs = q * pqs := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  hMul_pp_pf_prod_gt
+  { pps qqs q qs pqs : α } : qqs = q * qs → pps * qs = pqs → pps * qqs = q * pqs
+  := by cc
 #align tactic.ring_exp.mul_pp_pf_prod_gt Tactic.RingExp.hMul_pp_pf_prod_gt
 
 /-- Multiply two expressions.
@@ -1101,12 +1147,20 @@ theorem pow_pp_pf_one {ps : α} {qs : ℕ} : ps = 1 → ps ^ qs = 1 := fun ps_pf
   rw [ps_pf, one_pow]
 #align tactic.ring_exp.pow_pp_pf_one Tactic.RingExp.pow_pp_pf_one
 
-theorem pow_pf_c_c {ps ps' pq : α} {qs qs' : ℕ} :
-    ps = ps' → qs = qs' → ps' ^ qs' = pq → ps ^ qs = pq := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  pow_pf_c_c
+  { ps ps' pq : α } { qs qs' : ℕ } : ps = ps' → qs = qs' → ps' ^ qs' = pq → ps ^ qs = pq
+  := by cc
 #align tactic.ring_exp.pow_pf_c_c Tactic.RingExp.pow_pf_c_c
 
-theorem pow_pp_pf_c {ps ps' pqs : α} {qs qs' : ℕ} :
-    ps = ps' → qs = qs' → ps' ^ qs' = pqs → ps ^ qs = pqs * 1 := by simp <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  pow_pp_pf_c
+  { ps ps' pqs : α } { qs qs' : ℕ } : ps = ps' → qs = qs' → ps' ^ qs' = pqs → ps ^ qs = pqs * 1
+  := by simp <;> cc
 #align tactic.ring_exp.pow_pp_pf_c Tactic.RingExp.pow_pp_pf_c
 
 theorem pow_pp_pf_prod {pps p ps pqs psqs : α} {qs : ℕ} :
@@ -1183,7 +1237,12 @@ theorem pow_p_pf_singleton {pps p pqs : α} {qs : ℕ} : pps = p + 0 → p ^ qs 
   fun pps_pf pqs_pf => by rw [pps_pf, add_zero, pqs_pf]
 #align tactic.ring_exp.pow_p_pf_singleton Tactic.RingExp.pow_p_pf_singleton
 
-theorem pow_p_pf_cons {ps ps' : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps ^ qs = ps' ^ qs' := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  pow_p_pf_cons
+  { ps ps' : α } { qs qs' : ℕ } : ps = ps' → qs = qs' → ps ^ qs = ps' ^ qs'
+  := by cc
 #align tactic.ring_exp.pow_p_pf_cons Tactic.RingExp.pow_p_pf_cons
 
 /-- Exponentiate two expressions.
@@ -1399,8 +1458,13 @@ unsafe def negate (ps : ex Sum) : ring_exp_m (ex Sum) := do
       pure <| ps' ps'_o pf
 #align tactic.ring_exp.negate tactic.ring_exp.negate
 
-theorem inverse_pf {α} [DivisionRing α] {ps ps_u ps_p e' e'' : α} :
-    ps = ps_u → ps_u = ps_p → ps_p⁻¹ = e' → e' = e'' → ps⁻¹ = e'' := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  inverse_pf
+  { α } [ DivisionRing α ] { ps ps_u ps_p e' e'' : α }
+    : ps = ps_u → ps_u = ps_p → ps_p ⁻¹ = e' → e' = e'' → ps ⁻¹ = e''
+  := by cc
 #align tactic.ring_exp.inverse_pf Tactic.RingExp.inverse_pf
 
 /-- Invert an expression by simplifying, applying `has_inv.inv` and treating the result as an atom.

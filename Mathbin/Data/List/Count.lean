@@ -371,10 +371,17 @@ theorem replicate_count_eq_of_count_eq_length {a : α} {l : List α} (h : count 
 -/
 
 #print List.count_filter /-
-@[simp]
-theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) :
-    count a (filter p l) = count a l := by
-  simp only [count, countp_filter, show (fun b => a = b ∧ p b) = Eq a by ext b; constructor <;> cc]
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp ]
+  theorem
+    count_filter
+    { p } [ DecidablePred p ] { a } { l : List α } ( h : p a ) : count a filter p l = count a l
+    :=
+      by
+        simp
+          only
+          [ count , countp_filter , show fun b => a = b ∧ p b = Eq a by ext b ; constructor <;> cc ]
 #align list.count_filter List.count_filter
 -/
 

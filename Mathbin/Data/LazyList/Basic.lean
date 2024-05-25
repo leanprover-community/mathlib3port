@@ -31,11 +31,16 @@ def mk {α} (x : α) : Thunk α := fun _ => x
 #align thunk.mk Thunk.mk
 -/
 
-instance {α : Type u} [DecidableEq α] : DecidableEq (Thunk α)
-  | a, b =>
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+instance
+  { α : Type u } [ DecidableEq α ] : DecidableEq Thunk α
+  |
+    a , b
+    =>
     by
-    have : a = b ↔ a () = b () := ⟨by cc, by intro <;> ext x <;> cases x <;> assumption⟩
-    rw [this] <;> infer_instance
+      have  : a = b ↔ a ( ) = b ( ) := ⟨ by cc , by intro <;> ext x <;> cases x <;> assumption ⟩
+        rw [ this ] <;> infer_instance
 
 end Thunk
 
@@ -56,18 +61,28 @@ def listEquivLazyList (α : Type _) : List α ≃ LazyList α
 #align lazy_list.list_equiv_lazy_list LazyList.listEquivLazyList
 -/
 
-instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
-  | nil, nil => isTrue rfl
-  | cons x xs, cons y ys =>
-    if h : x = y then
-      match DecidableEq (xs ()) (ys ()) with
-      | is_false h2 => isFalse (by intro <;> cc)
-      | is_true h2 =>
-        have : xs = ys := by ext u <;> cases u <;> assumption
-        isTrue (by cc)
-    else isFalse (by intro <;> cc)
-  | nil, cons _ _ => isFalse (by cc)
-  | cons _ _, nil => isFalse (by cc)
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+instance
+  { α : Type u } [ DecidableEq α ] : DecidableEq LazyList α
+  | nil , nil => isTrue rfl
+    |
+      cons x xs , cons y ys
+      =>
+      if
+        h
+        :
+        x = y
+        then
+        match
+          DecidableEq xs ( ) ys ( )
+          with
+          | is_false h2 => isFalse by intro <;> cc
+            | is_true h2 => have  : xs = ys := by ext u <;> cases u <;> assumption isTrue by cc
+        else
+        isFalse by intro <;> cc
+    | nil , cons _ _ => isFalse by cc
+    | cons _ _ , nil => isFalse by cc
 
 #print LazyList.traverse /-
 /-- Traversal of lazy lists using an applicative effect. -/

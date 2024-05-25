@@ -291,7 +291,7 @@ noncomputable def finBasis [FiniteDimensional K V] : Basis (Fin (finrank K V)) K
 /-- An `n`-dimensional vector space has a basis indexed by `fin n`. -/
 noncomputable def finBasisOfFinrankEq [FiniteDimensional K V] {n : ℕ} (hn : finrank K V = n) :
     Basis (Fin n) K V :=
-  (finBasis K V).reindex (Fin.castIso hn).toEquiv
+  (finBasis K V).reindex (Fin.castOrderIso hn).toEquiv
 #align finite_dimensional.fin_basis_of_finrank_eq FiniteDimensional.finBasisOfFinrankEq
 -/
 

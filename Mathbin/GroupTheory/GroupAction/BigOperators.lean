@@ -6,7 +6,7 @@ Authors: Yury Kudryashov
 import Algebra.BigOperators.Basic
 import Data.Finset.Basic
 import Data.Multiset.Basic
-import GroupTheory.GroupAction.Defs
+import Algebra.Group.Action.Defs
 
 #align_import group_theory.group_action.big_operators from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

@@ -97,10 +97,17 @@ theorem fold_cons'_left (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s
 -/
 
 #print Multiset.fold_add /-
-theorem fold_add (b₁ b₂ : α) (s₁ s₂ : Multiset α) :
-    (s₁ + s₂).fold op (b₁ * b₂) = s₁.fold op b₁ * s₂.fold op b₂ :=
-  Multiset.induction_on s₂ (by rw [add_zero, fold_zero, ← fold_cons'_right, ← fold_cons_right op])
-    (by simp (config := { contextual := true }) <;> cc)
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  fold_add
+  ( b₁ b₂ : α ) ( s₁ s₂ : Multiset α )
+    : s₁ + s₂ . fold op b₁ * b₂ = s₁ . fold op b₁ * s₂ . fold op b₂
+  :=
+    Multiset.induction_on
+      s₂
+        by rw [ add_zero , fold_zero , ← fold_cons'_right , ← fold_cons_right op ]
+        by simp ( config := { contextual := true } ) <;> cc
 #align multiset.fold_add Multiset.fold_add
 -/
 
@@ -121,9 +128,13 @@ theorem fold_singleton (b a : α) : ({a} : Multiset α).fold op b = a * b :=
 -/
 
 #print Multiset.fold_distrib /-
-theorem fold_distrib {f g : β → α} (u₁ u₂ : α) (s : Multiset β) :
-    (s.map fun x => f x * g x).fold op (u₁ * u₂) = (s.map f).fold op u₁ * (s.map g).fold op u₂ :=
-  Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) <;> cc)
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  fold_distrib
+  { f g : β → α } ( u₁ u₂ : α ) ( s : Multiset β )
+    : s . map fun x => f x * g x . fold op u₁ * u₂ = s . map f . fold op u₁ * s . map g . fold op u₂
+  := Multiset.induction_on s by simp by simp ( config := { contextual := true } ) <;> cc
 #align multiset.fold_distrib Multiset.fold_distrib
 -/
 

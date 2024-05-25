@@ -611,25 +611,35 @@ theorem mem_assert_iff {p : Prop} {f : p → Part α} {a} : a ∈ assert p f ↔
 -/
 
 #print Part.assert_pos /-
-theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h :=
-  by
-  dsimp [assert]
-  cases h' : f h
-  simp only [h', h, true_and_iff, iff_self_iff, exists_prop_of_true, eq_iff_iff]
-  apply Function.hfunext
-  · simp only [h, h', exists_prop_of_true]
-  · cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  assert_pos
+  { p : Prop } { f : p → Part α } ( h : p ) : assert p f = f h
+  :=
+    by
+      dsimp [ assert ]
+        cases h' : f h
+        simp only [ h' , h , true_and_iff , iff_self_iff , exists_prop_of_true , eq_iff_iff ]
+        apply Function.hfunext
+        · simp only [ h , h' , exists_prop_of_true ]
+        · cc
 #align part.assert_pos Part.assert_pos
 -/
 
 #print Part.assert_neg /-
-theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none :=
-  by
-  dsimp [assert, none]; congr
-  · simp only [h, not_false_iff, exists_prop_of_false]
-  · apply Function.hfunext
-    · simp only [h, not_false_iff, exists_prop_of_false]
-    cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  assert_neg
+  { p : Prop } { f : p → Part α } ( h : ¬ p ) : assert p f = none
+  :=
+    by
+      dsimp [ assert , none ]
+        ;
+        congr
+        · simp only [ h , not_false_iff , exists_prop_of_false ]
+        · apply Function.hfunext · simp only [ h , not_false_iff , exists_prop_of_false ] cc
 #align part.assert_neg Part.assert_neg
 -/
 

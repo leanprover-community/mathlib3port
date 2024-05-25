@@ -3,7 +3,7 @@ Copyright (c) 2020 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Algebra.Invertible.Defs
+import Algebra.Group.Invertible.Defs
 import Data.Matrix.Basis
 import Data.Matrix.DMatrix
 import Algebra.Lie.Abelian

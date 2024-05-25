@@ -273,8 +273,12 @@ def homOfElement {X : Type u} (x : X) : PUnit ⟶ X := fun _ => x
 -/
 
 #print CategoryTheory.homOfElement_eq_iff /-
-theorem homOfElement_eq_iff {X : Type u} (x y : X) : homOfElement x = homOfElement y ↔ x = y :=
-  ⟨fun H => congr_fun H PUnit.unit, by cc⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  homOfElement_eq_iff
+  { X : Type u } ( x y : X ) : homOfElement x = homOfElement y ↔ x = y
+  := ⟨ fun H => congr_fun H PUnit.unit , by cc ⟩
 #align category_theory.hom_of_element_eq_iff CategoryTheory.homOfElement_eq_iff
 -/
 

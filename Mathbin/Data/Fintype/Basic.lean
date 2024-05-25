@@ -787,9 +787,13 @@ def toFinset (s : Set α) [Fintype s] : Finset α :=
 -/
 
 #print Set.toFinset_congr /-
-@[congr]
-theorem toFinset_congr {s t : Set α} [Fintype s] [Fintype t] (h : s = t) :
-    toFinset s = toFinset t := by cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ congr ]
+  theorem
+    toFinset_congr
+    { s t : Set α } [ Fintype s ] [ Fintype t ] ( h : s = t ) : toFinset s = toFinset t
+    := by cc
 #align set.to_finset_congr Set.toFinset_congr
 -/
 

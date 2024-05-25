@@ -235,22 +235,22 @@ notation:50 ζ₁ " ≃[" t "] " ζ₂:50 => StateEq t ζ₁ ζ₂
 protected theorem StateEq.refl (t : Register) (ζ : State) : ζ ≃[t] ζ := by simp [state_eq]
 #align arithcc.state_eq.refl Arithcc.StateEq.refl
 
-@[symm]
-protected theorem StateEq.symm {t : Register} (ζ₁ ζ₂ : State) : ζ₁ ≃[t] ζ₂ → ζ₂ ≃[t] ζ₁ :=
-  by
-  simp [state_eq]; intros
-  constructor <;> try cc
-  symm
-  assumption
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ symm ] protected
+  theorem
+    StateEq.symm
+    { t : Register } ( ζ₁ ζ₂ : State ) : ζ₁ ≃[ t ] ζ₂ → ζ₂ ≃[ t ] ζ₁
+    := by simp [ state_eq ] ; intros constructor <;> try cc symm assumption
 #align arithcc.state_eq.symm Arithcc.StateEq.symm
 
-@[trans]
-protected theorem StateEq.trans {t : Register} (ζ₁ ζ₂ ζ₃ : State) :
-    ζ₁ ≃[t] ζ₂ → ζ₂ ≃[t] ζ₃ → ζ₁ ≃[t] ζ₃ :=
-  by
-  simp [state_eq]; intros
-  constructor <;> try cc
-  trans ζ₂ <;> assumption
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ trans ] protected
+  theorem
+    StateEq.trans
+    { t : Register } ( ζ₁ ζ₂ ζ₃ : State ) : ζ₁ ≃[ t ] ζ₂ → ζ₂ ≃[ t ] ζ₃ → ζ₁ ≃[ t ] ζ₃
+    := by simp [ state_eq ] ; intros constructor <;> try cc trans ζ₂ <;> assumption
 #align arithcc.state_eq.trans Arithcc.StateEq.trans
 
 /-- Transitivity of chaining `≃[t]` and `≃[t]/ac`. -/
@@ -262,119 +262,150 @@ protected theorem StateEqStateEqRs.trans (t : Register) (ζ₁ ζ₂ ζ₃ : Sta
   trans ζ₂ <;> assumption
 #align arithcc.state_eq_state_eq_rs.trans Arithcc.StateEqStateEqRs.trans
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
 /-- Writing the same value to register `t` gives `≃[t + 1]` from `≃[t]`. -/
-theorem stateEq_implies_write_eq {t : Register} {ζ₁ ζ₂ : State} (h : ζ₁ ≃[t] ζ₂) (v : Word) :
-    write t v ζ₁ ≃[t + 1] write t v ζ₂ :=
-  by
-  simp [state_eq, state_eq_rs] at *
-  constructor <;> try cc
-  intro _ hr
-  have hr : r ≤ t := register.le_of_lt_succ hr
-  cases' lt_or_eq_of_le hr with hr hr
-  · cases' h with _ h
-    specialize h r hr
-    cc
-  · cc
+  theorem
+    stateEq_implies_write_eq
+    { t : Register } { ζ₁ ζ₂ : State } ( h : ζ₁ ≃[ t ] ζ₂ ) ( v : Word )
+      : write t v ζ₁ ≃[ t + 1 ] write t v ζ₂
+    :=
+      by
+        simp [ state_eq , state_eq_rs ] at *
+          constructor <;> try cc
+          intro _ hr
+          have hr : r ≤ t := register.le_of_lt_succ hr
+          cases' lt_or_eq_of_le hr with hr hr
+          · cases' h with _ h specialize h r hr cc
+          · cc
 #align arithcc.state_eq_implies_write_eq Arithcc.stateEq_implies_write_eq
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
 /-- Writing the same value to any register preserves `≃[t]/ac`. -/
-theorem stateEqRs_implies_write_eq_rs {t : Register} {ζ₁ ζ₂ : State} (h : ζ₁ ≃[t]/ac ζ₂)
-    (r : Register) (v : Word) : write r v ζ₁ ≃[t]/ac write r v ζ₂ :=
-  by
-  simp [state_eq_rs] at *
-  intro r' hr'
-  specialize h r' hr'
-  cc
+  theorem
+    stateEqRs_implies_write_eq_rs
+    { t : Register } { ζ₁ ζ₂ : State } ( h : ζ₁ ≃[ t ]/ac ζ₂ ) ( r : Register ) ( v : Word )
+      : write r v ζ₁ ≃[ t ]/ac write r v ζ₂
+    := by simp [ state_eq_rs ] at * intro r' hr' specialize h r' hr' cc
 #align arithcc.state_eq_rs_implies_write_eq_rs Arithcc.stateEqRs_implies_write_eq_rs
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
 /-- `≃[t + 1]` with writing to register `t` implies `≃[t]`. -/
-theorem write_eq_implies_stateEq {t : Register} {v : Word} {ζ₁ ζ₂ : State}
-    (h : ζ₁ ≃[t + 1] write t v ζ₂) : ζ₁ ≃[t] ζ₂ :=
-  by
-  simp [state_eq, state_eq_rs] at *
-  constructor <;> try cc
-  intro r hr
-  cases' h with _ h
-  specialize h r (lt_trans hr (register.lt_succ_self _))
-  rwa [if_neg (ne_of_lt hr)] at h
+  theorem
+    write_eq_implies_stateEq
+    { t : Register } { v : Word } { ζ₁ ζ₂ : State } ( h : ζ₁ ≃[ t + 1 ] write t v ζ₂ )
+      : ζ₁ ≃[ t ] ζ₂
+    :=
+      by
+        simp [ state_eq , state_eq_rs ] at *
+          constructor <;> try cc
+          intro r hr
+          cases' h with _ h
+          specialize h r lt_trans hr register.lt_succ_self _
+          rwa [ if_neg ne_of_lt hr ] at h
 #align arithcc.write_eq_implies_state_eq Arithcc.write_eq_implies_stateEq
 
-/-- The main **compiler correctness theorem**.
-
-Unlike Theorem 1 in the paper, both `map` and the assumption on `t` are explicit.
--/
-theorem compiler_correctness :
-    ∀ (map : Identifier → Register) (e : Expr) (ξ : Identifier → Word) (η : State) (t : Register),
-      (∀ x, read (loc x map) η = ξ x) →
-        (∀ x, loc x map < t) → outcome (compile map e t) η ≃[t] { η with ac := value e ξ } :=
-  by
-  intro _ _ _ _ _ hmap ht
-  revert η t
-  induction e <;> intros
-  -- 5.I
-  case const => simp [state_eq, step]
-  -- 5.II
-  case var => finish [hmap, state_eq, step]
-  -- 5.III
-  case sum =>
-    simp
-    generalize dν₁ : value e_s₁ ξ = ν₁ at e_ih_s₁ ⊢
-    generalize dν₂ : value e_s₂ ξ = ν₂ at e_ih_s₂ ⊢
-    generalize dν : ν₁ + ν₂ = ν
-    generalize dζ₁ : outcome (compile _ e_s₁ t) η = ζ₁
-    generalize dζ₂ : step (instruction.sto t) ζ₁ = ζ₂
-    generalize dζ₃ : outcome (compile _ e_s₂ (t + 1)) ζ₂ = ζ₃
-    generalize dζ₄ : step (instruction.add t) ζ₃ = ζ₄
-    have hζ₁ : ζ₁ ≃[t] { η with ac := ν₁ }
-    calc
-      ζ₁ = outcome (compile map e_s₁ t) η := by cc
-      _ ≃[t] { η with ac := ν₁ } := by apply e_ih_s₁ <;> assumption
-    have hζ₁_ν₁ : ζ₁.ac = ν₁ := by finish [state_eq]
-    have hζ₂ : ζ₂ ≃[t + 1]/ac write t ν₁ η
-    calc
-      ζ₂ = step (instruction.sto t) ζ₁ := by cc
-      _ = write t ζ₁.ac ζ₁ := by simp [step]
-      _ = write t ν₁ ζ₁ := by cc
-      _ ≃[t + 1] write t ν₁ { η with ac := ν₁ } := by apply state_eq_implies_write_eq hζ₁
-      _ ≃[t + 1]/ac write t ν₁ η :=
-        by
-        apply state_eq_rs_implies_write_eq_rs
-        simp [state_eq_rs]
-    have hζ₂_ν₂ : read t ζ₂ = ν₁ := by
-      simp [state_eq_rs] at hζ₂ ⊢
-      specialize hζ₂ t (register.lt_succ_self _)
-      cc
-    have ht' : ∀ x, loc x map < t + 1 := by
-      intros
-      apply lt_trans (ht _) (register.lt_succ_self _)
-    have hmap' : ∀ x, read (loc x map) ζ₂ = ξ x :=
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+/--
+    The main **compiler correctness theorem**.
+    
+    Unlike Theorem 1 in the paper, both `map` and the assumption on `t` are explicit.
+    -/
+  theorem
+    compiler_correctness
+    :
+      ∀
+        ( map : Identifier → Register )
+          ( e : Expr )
+          ( ξ : Identifier → Word )
+          ( η : State )
+          ( t : Register )
+        ,
+        ∀ x , read loc x map η = ξ x
+          →
+          ∀ x , loc x map < t → outcome compile map e t η ≃[ t ] { η with ac := value e ξ }
+    :=
       by
-      intros
-      calc
-        read (loc x map) ζ₂ = read (loc x map) (write t ν₁ η) := hζ₂ _ (ht' _)
-        _ = read (loc x map) η := by simp only [loc] at ht; simp [(ht _).Ne]
-        _ = ξ x := hmap x
-    have hζ₃ : ζ₃ ≃[t + 1] { write t ν₁ η with ac := ν₂ }
-    calc
-      ζ₃ = outcome (compile map e_s₂ (t + 1)) ζ₂ := by cc
-      _ ≃[t + 1] { ζ₂ with ac := ν₂ } := by apply e_ih_s₂ <;> assumption
-      _ ≃[t + 1] { write t ν₁ η with ac := ν₂ } := by simp [state_eq]; apply hζ₂
-    have hζ₃_ν₂ : ζ₃.ac = ν₂ := by finish [state_eq]
-    have hζ₃_ν₁ : read t ζ₃ = ν₁ :=
-      by
-      simp [state_eq, state_eq_rs] at hζ₃ ⊢
-      cases' hζ₃ with _ hζ₃
-      specialize hζ₃ t (register.lt_succ_self _)
-      cc
-    have hζ₄ : ζ₄ ≃[t + 1] { write t ν₁ η with ac := ν }
-    calc
-      ζ₄ = step (instruction.add t) ζ₃ := by cc
-      _ = { ζ₃ with ac := read t ζ₃ + ζ₃.ac } := by simp [step]
-      _ = { ζ₃ with ac := ν } := by cc
-      _ ≃[t + 1] { { write t ν₁ η with ac := ν₂ } with ac := ν } := by simp [state_eq] at hζ₃ ⊢;
-        cases hζ₃; assumption
-      _ ≃[t + 1] { write t ν₁ η with ac := ν } := by simp
-    apply write_eq_implies_state_eq <;> assumption
+        intro _ _ _ _ _ hmap ht
+          revert η t
+          induction e <;> intros
+          case const => simp [ state_eq , step ]
+          case var => finish [ hmap , state_eq , step ]
+          case
+            sum
+            =>
+            simp
+              generalize dν₁ : value e_s₁ ξ = ν₁ at e_ih_s₁ ⊢
+              generalize dν₂ : value e_s₂ ξ = ν₂ at e_ih_s₂ ⊢
+              generalize dν : ν₁ + ν₂ = ν
+              generalize dζ₁ : outcome compile _ e_s₁ t η = ζ₁
+              generalize dζ₂ : step instruction.sto t ζ₁ = ζ₂
+              generalize dζ₃ : outcome compile _ e_s₂ t + 1 ζ₂ = ζ₃
+              generalize dζ₄ : step instruction.add t ζ₃ = ζ₄
+              have hζ₁ : ζ₁ ≃[ t ] { η with ac := ν₁ }
+              calc
+                ζ₁ = outcome compile map e_s₁ t η := by cc
+                  _ ≃[ t ] { η with ac := ν₁ } := by apply e_ih_s₁ <;> assumption
+              have hζ₁_ν₁ : ζ₁.ac = ν₁ := by finish [ state_eq ]
+              have hζ₂ : ζ₂ ≃[ t + 1 ]/ac write t ν₁ η
+              calc
+                ζ₂ = step instruction.sto t ζ₁ := by cc
+                  _ = write t ζ₁.ac ζ₁ := by simp [ step ]
+                    _ = write t ν₁ ζ₁ := by cc
+                    _ ≃[ t + 1 ] write t ν₁ { η with ac := ν₁ }
+                      :=
+                      by apply state_eq_implies_write_eq hζ₁
+                    _ ≃[ t + 1 ]/ac write t ν₁ η
+                      :=
+                      by apply state_eq_rs_implies_write_eq_rs simp [ state_eq_rs ]
+              have
+                hζ₂_ν₂
+                  : read t ζ₂ = ν₁
+                  :=
+                  by simp [ state_eq_rs ] at hζ₂ ⊢ specialize hζ₂ t register.lt_succ_self _ cc
+              have
+                ht'
+                  : ∀ x , loc x map < t + 1
+                  :=
+                  by intros apply lt_trans ht _ register.lt_succ_self _
+              have
+                hmap'
+                  : ∀ x , read loc x map ζ₂ = ξ x
+                  :=
+                  by
+                    intros
+                      calc
+                        read loc x map ζ₂ = read loc x map write t ν₁ η := hζ₂ _ ht' _
+                          _ = read loc x map η := by simp only [ loc ] at ht ; simp [ ht _ . Ne ]
+                            _ = ξ x := hmap x
+              have hζ₃ : ζ₃ ≃[ t + 1 ] { write t ν₁ η with ac := ν₂ }
+              calc
+                ζ₃ = outcome compile map e_s₂ t + 1 ζ₂ := by cc
+                  _ ≃[ t + 1 ] { ζ₂ with ac := ν₂ } := by apply e_ih_s₂ <;> assumption
+                    _ ≃[ t + 1 ] { write t ν₁ η with ac := ν₂ } := by simp [ state_eq ] ; apply hζ₂
+              have hζ₃_ν₂ : ζ₃.ac = ν₂ := by finish [ state_eq ]
+              have
+                hζ₃_ν₁
+                  : read t ζ₃ = ν₁
+                  :=
+                  by
+                    simp [ state_eq , state_eq_rs ] at hζ₃ ⊢
+                      cases' hζ₃ with _ hζ₃
+                      specialize hζ₃ t register.lt_succ_self _
+                      cc
+              have hζ₄ : ζ₄ ≃[ t + 1 ] { write t ν₁ η with ac := ν }
+              calc
+                ζ₄ = step instruction.add t ζ₃ := by cc
+                  _ = { ζ₃ with ac := read t ζ₃ + ζ₃.ac } := by simp [ step ]
+                    _ = { ζ₃ with ac := ν } := by cc
+                    _ ≃[ t + 1 ] { { write t ν₁ η with ac := ν₂ } with ac := ν }
+                      :=
+                      by simp [ state_eq ] at hζ₃ ⊢ ; cases hζ₃ ; assumption
+                    _ ≃[ t + 1 ] { write t ν₁ η with ac := ν } := by simp
+              apply write_eq_implies_state_eq <;> assumption
 #align arithcc.compiler_correctness Arithcc.compiler_correctness
 
 end Correctness

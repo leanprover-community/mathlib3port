@@ -1146,9 +1146,15 @@ theorem range_inr : range (@Sum.inr α β) = {x | x.isRight} := by ext (_ | _) <
 -/
 
 #print Set.isCompl_range_inl_range_inr /-
-theorem isCompl_range_inl_range_inr : IsCompl (range <| @Sum.inl α β) (range Sum.inr) :=
-  IsCompl.of_le (by rintro y ⟨⟨x₁, rfl⟩, ⟨x₂, _⟩⟩; cc)
-    (by rintro (x | y) - <;> [left; right] <;> exact mem_range_self _)
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  isCompl_range_inl_range_inr
+  : IsCompl range <| @ Sum.inl α β range Sum.inr
+  :=
+    IsCompl.of_le
+      by rintro y ⟨ ⟨ x₁ , rfl ⟩ , ⟨ x₂ , _ ⟩ ⟩ ; cc
+        by rintro ( x | y ) - <;> [ left ; right ] <;> exact mem_range_self _
 #align set.is_compl_range_inl_range_inr Set.isCompl_range_inl_range_inr
 -/
 

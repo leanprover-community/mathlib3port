@@ -54,10 +54,10 @@ noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f
     Inhabited f.Eigenvalues :=
   ⟨⟨f.exists_eigenvalue.some, f.exists_eigenvalue.choose_spec⟩⟩
 
-#print Module.End.iSup_generalizedEigenspace_eq_top /-
+#print Module.End.iSup_genEigenspace_eq_top /-
 /-- The generalized eigenvectors span the entire vector space (Lemma 8.21 of [axler2015]). -/
-theorem iSup_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V] (f : End K V) :
-    (⨆ (μ : K) (k : ℕ), f.generalizedEigenspace μ k) = ⊤ :=
+theorem iSup_genEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V] (f : End K V) :
+    (⨆ (μ : K) (k : ℕ), f.genEigenspace μ k) = ⊤ :=
   by
   -- We prove the claim by strong induction on the dimension of the vector space.
   induction' h_dim : finrank K V using Nat.strong_induction_on with n ih generalizing V
@@ -119,7 +119,7 @@ theorem iSup_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V
     show (⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k) = ⊤
     · rw [← top_le_iff, ← Submodule.eq_top_of_disjoint ER ES h_dim_add h_disjoint]
       apply sup_le hER hES
-#align module.End.supr_generalized_eigenspace_eq_top Module.End.iSup_generalizedEigenspace_eq_top
+#align module.End.supr_generalized_eigenspace_eq_top Module.End.iSup_genEigenspace_eq_top
 -/
 
 end End

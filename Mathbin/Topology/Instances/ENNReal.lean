@@ -2054,16 +2054,22 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
 -/
 
 #print continuous_edist /-
-theorem continuous_edist : Continuous fun p : α × α => edist p.1 p.2 :=
-  by
-  apply continuous_of_le_add_edist 2 (by norm_num)
-  rintro ⟨x, y⟩ ⟨x', y'⟩
-  calc
-    edist x y ≤ edist x x' + edist x' y' + edist y' y := edist_triangle4 _ _ _ _
-    _ = edist x' y' + (edist x x' + edist y y') := by simp [edist_comm] <;> cc
-    _ ≤ edist x' y' + (edist (x, y) (x', y') + edist (x, y) (x', y')) :=
-      (add_le_add_left (add_le_add (le_max_left _ _) (le_max_right _ _)) _)
-    _ = edist x' y' + 2 * edist (x, y) (x', y') := by rw [← mul_two, mul_comm]
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  continuous_edist
+  : Continuous fun p : α × α => edist p . 1 p . 2
+  :=
+    by
+      apply continuous_of_le_add_edist 2 by norm_num
+        rintro ⟨ x , y ⟩ ⟨ x' , y' ⟩
+        calc
+          edist x y ≤ edist x x' + edist x' y' + edist y' y := edist_triangle4 _ _ _ _
+            _ = edist x' y' + edist x x' + edist y y' := by simp [ edist_comm ] <;> cc
+              _ ≤ edist x' y' + edist ( x , y ) ( x' , y' ) + edist ( x , y ) ( x' , y' )
+                :=
+                add_le_add_left add_le_add le_max_left _ _ le_max_right _ _ _
+              _ = edist x' y' + 2 * edist ( x , y ) ( x' , y' ) := by rw [ ← mul_two , mul_comm ]
 #align continuous_edist continuous_edist
 -/
 

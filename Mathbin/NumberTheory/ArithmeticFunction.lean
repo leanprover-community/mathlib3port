@@ -8,7 +8,7 @@ import Algebra.Module.BigOperators
 import NumberTheory.Divisors
 import Data.Nat.Squarefree
 import Data.Nat.GCD.BigOperators
-import Algebra.Invertible.Defs
+import Algebra.Group.Invertible.Defs
 import Data.Nat.Factorization.Basic
 
 #align_import number_theory.arithmetic_function from "leanprover-community/mathlib"@"61b5e2755ccb464b68d05a9acf891ae04992d09d"

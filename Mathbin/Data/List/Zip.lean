@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 -/
 import Algebra.BigOperators.Group.List
-import Algebra.Order.Monoid.MinMax
+import Algebra.Order.Monoid.Unbundled.MinMax
 
 #align_import data.list.zip from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 
@@ -496,13 +496,20 @@ theorem get?_zip_with_eq_some {α β γ} (f : α → β → γ) (l₁ : List α)
 -/
 
 #print List.get?_zip_eq_some /-
-theorem get?_zip_eq_some (l₁ : List α) (l₂ : List β) (z : α × β) (i : ℕ) :
-    (zip l₁ l₂).get? i = some z ↔ l₁.get? i = some z.1 ∧ l₂.get? i = some z.2 :=
-  by
-  cases z
-  rw [zip, nth_zip_with_eq_some]; constructor
-  · rintro ⟨x, y, h₀, h₁, h₂⟩; cc
-  · rintro ⟨h₀, h₁⟩; exact ⟨_, _, h₀, h₁, rfl⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  get?_zip_eq_some
+  ( l₁ : List α ) ( l₂ : List β ) ( z : α × β ) ( i : ℕ )
+    : zip l₁ l₂ . get? i = some z ↔ l₁ . get? i = some z . 1 ∧ l₂ . get? i = some z . 2
+  :=
+    by
+      cases z
+        rw [ zip , nth_zip_with_eq_some ]
+        ;
+        constructor
+        · rintro ⟨ x , y , h₀ , h₁ , h₂ ⟩ ; cc
+        · rintro ⟨ h₀ , h₁ ⟩ ; exact ⟨ _ , _ , h₀ , h₁ , rfl ⟩
 #align list.nth_zip_eq_some List.get?_zip_eq_some
 -/
 

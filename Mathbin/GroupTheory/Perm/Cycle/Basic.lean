@@ -453,9 +453,29 @@ end Finite
 variable [DecidableEq α]
 
 #print Equiv.Perm.isCycle_swap /-
-theorem isCycle_swap (hxy : x ≠ y) : IsCycle (swap x y) :=
-  ⟨y, by rwa [swap_apply_right], fun a (ha : ite (a = x) y (ite (a = y) x a) ≠ a) =>
-    if hya : y = a then ⟨0, hya⟩ else ⟨1, by rw [zpow_one, swap_apply_def]; split_ifs at * <;> cc⟩⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  isCycle_swap
+  ( hxy : x ≠ y ) : IsCycle swap x y
+  :=
+    ⟨
+      y
+        ,
+        by rwa [ swap_apply_right ]
+        ,
+        fun
+          a ( ha : ite a = x y ite a = y x a ≠ a )
+            =>
+            if
+              hya
+              :
+              y = a
+              then
+              ⟨ 0 , hya ⟩
+              else
+              ⟨ 1 , by rw [ zpow_one , swap_apply_def ] ; split_ifs at * <;> cc ⟩
+      ⟩
 #align equiv.perm.is_cycle_swap Equiv.Perm.isCycle_swap
 -/
 
@@ -565,54 +585,198 @@ theorem isCycle_swap_mul_aux₁ {α : Type _} [DecidableEq α] :
 -/
 
 #print Equiv.Perm.isCycle_swap_mul_aux₂ /-
-theorem isCycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
-    ∀ (n : ℤ) {b x : α} {f : Perm α} (hb : (swap x (f x) * f) b ≠ b) (h : (f ^ n) (f x) = b),
-      ∃ i : ℤ, ((swap x (f x) * f) ^ i) (f x) = b
-  | (n : ℕ) => fun b x f => isCycle_swap_mul_aux₁ n
-  | -[n+1] => fun b x f hb h =>
-    if hfbx' : f x = b then ⟨0, hfbx'⟩
-    else
-      have : f b ≠ b ∧ b ≠ x := ne_and_ne_of_swap_mul_apply_ne_self hb
-      have hb : (swap x (f⁻¹ x) * f⁻¹) (f⁻¹ b) ≠ f⁻¹ b :=
-        by
-        rw [mul_apply, swap_apply_def]
-        split_ifs <;>
-            simp only [inv_eq_iff_eq, perm.mul_apply, zpow_negSucc, Ne.def,
-              perm.apply_inv_self] at * <;>
-          cc
-      let ⟨i, hi⟩ :=
-        isCycle_swap_mul_aux₁ n hb
-          (show (f⁻¹ ^ n) (f⁻¹ x) = f⁻¹ b by
-            rw [← zpow_natCast, ← h, ← mul_apply, ← mul_apply, ← mul_apply, zpow_negSucc, ← inv_pow,
-              pow_succ, mul_assoc, mul_assoc, inv_mul_self, mul_one, zpow_natCast, ← pow_succ, ←
-              pow_succ'])
-      have h : (swap x (f⁻¹ x) * f⁻¹) (f x) = f⁻¹ x := by
-        rw [mul_apply, inv_apply_self, swap_apply_left]
-      ⟨-i, by
-        rw [← add_sub_cancel_right i 1, neg_sub, sub_eq_add_neg, zpow_add, zpow_one, zpow_neg, ←
-          inv_zpow, mul_inv_rev, swap_inv, mul_swap_eq_swap_mul, inv_apply_self, swap_comm _ x,
-          zpow_add, zpow_one, mul_apply, mul_apply (_ ^ i), h, hi, mul_apply, apply_inv_self,
-          swap_apply_of_ne_of_ne this.2 (Ne.symm hfbx')]⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  isCycle_swap_mul_aux₂
+  { α : Type _ } [ DecidableEq α ]
+    :
+      ∀
+        ( n : ℤ ) { b x : α } { f : Perm α } ( hb : swap x f x * f b ≠ b ) ( h : f ^ n f x = b )
+        ,
+        ∃ i : ℤ , swap x f x * f ^ i f x = b
+  | ( n : ℕ ) => fun b x f => isCycle_swap_mul_aux₁ n
+    |
+      -[ n +1]
+      =>
+      fun
+        b x f hb h
+          =>
+          if
+            hfbx'
+            :
+            f x = b
+            then
+            ⟨ 0 , hfbx' ⟩
+            else
+            have
+               : f b ≠ b ∧ b ≠ x := ne_and_ne_of_swap_mul_apply_ne_self hb
+              have
+                hb
+                  : swap x f ⁻¹ x * f ⁻¹ f ⁻¹ b ≠ f ⁻¹ b
+                  :=
+                  by
+                    rw [ mul_apply , swap_apply_def ]
+                      split_ifs
+                          <;>
+                          simp
+                            only
+                            [
+                              inv_eq_iff_eq
+                                ,
+                                perm.mul_apply
+                                ,
+                                zpow_negSucc
+                                ,
+                                Ne.def
+                                ,
+                                perm.apply_inv_self
+                              ]
+                            at *
+                        <;>
+                        cc
+                let
+                  ⟨ i , hi ⟩
+                    :=
+                    isCycle_swap_mul_aux₁
+                      n
+                        hb
+                        show
+                          f ⁻¹ ^ n f ⁻¹ x = f ⁻¹ b
+                          by
+                            rw
+                              [
+                                ← zpow_natCast
+                                  ,
+                                  ← h
+                                  ,
+                                  ← mul_apply
+                                  ,
+                                  ← mul_apply
+                                  ,
+                                  ← mul_apply
+                                  ,
+                                  zpow_negSucc
+                                  ,
+                                  ← inv_pow
+                                  ,
+                                  pow_succ
+                                  ,
+                                  mul_assoc
+                                  ,
+                                  mul_assoc
+                                  ,
+                                  inv_mul_self
+                                  ,
+                                  mul_one
+                                  ,
+                                  zpow_natCast
+                                  ,
+                                  ← pow_succ
+                                  ,
+                                  ← pow_succ'
+                                ]
+                  have
+                    h
+                      : swap x f ⁻¹ x * f ⁻¹ f x = f ⁻¹ x
+                      :=
+                      by rw [ mul_apply , inv_apply_self , swap_apply_left ]
+                    ⟨
+                      - i
+                        ,
+                        by
+                          rw
+                            [
+                              ← add_sub_cancel_right i 1
+                                ,
+                                neg_sub
+                                ,
+                                sub_eq_add_neg
+                                ,
+                                zpow_add
+                                ,
+                                zpow_one
+                                ,
+                                zpow_neg
+                                ,
+                                ← inv_zpow
+                                ,
+                                mul_inv_rev
+                                ,
+                                swap_inv
+                                ,
+                                mul_swap_eq_swap_mul
+                                ,
+                                inv_apply_self
+                                ,
+                                swap_comm _ x
+                                ,
+                                zpow_add
+                                ,
+                                zpow_one
+                                ,
+                                mul_apply
+                                ,
+                                mul_apply _ ^ i
+                                ,
+                                h
+                                ,
+                                hi
+                                ,
+                                mul_apply
+                                ,
+                                apply_inv_self
+                                ,
+                                swap_apply_of_ne_of_ne this . 2 Ne.symm hfbx'
+                              ]
+                      ⟩
 #align equiv.perm.is_cycle_swap_mul_aux₂ Equiv.Perm.isCycle_swap_mul_aux₂
 -/
 
 #print Equiv.Perm.IsCycle.eq_swap_of_apply_apply_eq_self /-
-theorem IsCycle.eq_swap_of_apply_apply_eq_self {α : Type _} [DecidableEq α] {f : Perm α}
-    (hf : IsCycle f) {x : α} (hfx : f x ≠ x) (hffx : f (f x) = x) : f = swap x (f x) :=
-  Equiv.ext fun y =>
-    let ⟨z, hz⟩ := hf
-    let ⟨i, hi⟩ := hz.2 hfx
-    if hyx : y = x then by simp [hyx]
-    else
-      if hfyx : y = f x then by simp [hfyx, hffx]
-      else by
-        rw [swap_apply_of_ne_of_ne hyx hfyx]
-        refine' by_contradiction fun hy => _
-        cases' hz.2 hy with j hj
-        rw [← sub_add_cancel j i, zpow_add, mul_apply, hi] at hj
-        cases' zpow_apply_eq_of_apply_apply_eq_self hffx (j - i) with hji hji
-        · rw [← hj, hji] at hyx; cc
-        · rw [← hj, hji] at hfyx; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  IsCycle.eq_swap_of_apply_apply_eq_self
+  { α : Type _ }
+      [ DecidableEq α ]
+      { f : Perm α }
+      ( hf : IsCycle f )
+      { x : α }
+      ( hfx : f x ≠ x )
+      ( hffx : f f x = x )
+    : f = swap x f x
+  :=
+    Equiv.ext
+      fun
+        y
+          =>
+          let
+            ⟨ z , hz ⟩ := hf
+            let
+              ⟨ i , hi ⟩ := hz . 2 hfx
+              if
+                hyx
+                :
+                y = x
+                then
+                by simp [ hyx ]
+                else
+                if
+                  hfyx
+                  :
+                  y = f x
+                  then
+                  by simp [ hfyx , hffx ]
+                  else
+                  by
+                    rw [ swap_apply_of_ne_of_ne hyx hfyx ]
+                      refine' by_contradiction fun hy => _
+                      cases' hz . 2 hy with j hj
+                      rw [ ← sub_add_cancel j i , zpow_add , mul_apply , hi ] at hj
+                      cases' zpow_apply_eq_of_apply_apply_eq_self hffx j - i with hji hji
+                      · rw [ ← hj , hji ] at hyx ; cc
+                      · rw [ ← hj , hji ] at hfyx ; cc
 #align equiv.perm.is_cycle.eq_swap_of_apply_apply_eq_self Equiv.Perm.IsCycle.eq_swap_of_apply_apply_eq_self
 -/
 
@@ -1490,53 +1654,187 @@ variable [DecidableEq α]
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Equiv.Perm.cycleFactorsAux /-
-/-- Given a list `l : list α` and a permutation `f : perm α` whose nonfixed points are all in `l`,
-  recursively factors `f` into cycles. -/
-def cycleFactorsAux [Fintype α] :
-    ∀ (l : List α) (f : Perm α),
-      (∀ {x}, f x ≠ x → x ∈ l) →
-        { l : List (Perm α) // l.Prod = f ∧ (∀ g ∈ l, IsCycle g) ∧ l.Pairwise Disjoint }
-  | [], f, h =>
-    ⟨[],
-      by
-      simp only [imp_false, List.Pairwise.nil, List.not_mem_nil, forall_const, and_true_iff,
-        forall_prop_of_false, Classical.not_not, not_false_iff, List.prod_nil] at *
-      ext; simp [*]⟩
-  | x::l, f, h =>
-    if hx : f x = x then
-      cycle_factors_aux l f fun y hy => List.mem_of_ne_of_mem (fun h => hy (by rwa [h])) (h hy)
-    else
-      let ⟨m, hm₁, hm₂, hm₃⟩ :=
-        cycle_factors_aux l ((cycleOf f x)⁻¹ * f) fun y hy =>
-          List.mem_of_ne_of_mem
-            (fun h : y = x => by
-              rw [h, mul_apply, Ne.def, inv_eq_iff_eq, cycle_of_apply_self] at hy; exact hy rfl)
-            (h fun h : f y = y =>
-              by
-              rw [mul_apply, h, Ne.def, inv_eq_iff_eq, cycle_of_apply] at hy
-              split_ifs at hy <;> cc)
-      ⟨cycleOf f x::m, by rw [List.prod_cons, hm₁]; simp, fun g hg =>
-        ((List.mem_cons _ _ _).1 hg).elim (fun hg => hg.symm ▸ isCycle_cycleOf _ hx) (hm₂ g),
-        List.pairwise_cons.2
-          ⟨fun g hg y =>
-            Classical.or_iff_not_imp_left.2 fun hfy =>
-              have hxy : SameCycle f x y :=
-                Classical.not_not.1 (mt cycleOf_apply_of_not_sameCycle hfy)
-              have hgm : (g::m.eraseₓ g) ~ m :=
-                List.cons_perm_iff_perm_erase.2 ⟨hg, List.Perm.refl _⟩
-              have : ∀ h ∈ m.eraseₓ g, Disjoint g h :=
-                (List.pairwise_cons.1
-                    ((hgm.pairwise_iff fun a b (h : Disjoint a b) => h.symm).2 hm₃)).1
-              by_cases id fun hgy : g y ≠ y =>
-                (disjoint_prod_right _ this y).resolve_right <|
-                  by
-                  have hsc : SameCycle f⁻¹ x (f y) := by
-                    rwa [same_cycle_inv, same_cycle_apply_right]
-                  rw [disjoint_prod_perm hm₃ hgm.symm, List.prod_cons, ← eq_inv_mul_iff_mul_eq] at
-                    hm₁
-                  rwa [hm₁, mul_apply, mul_apply, cycle_of_inv, hsc.cycle_of_apply, inv_apply_self,
-                    inv_eq_iff_eq, eq_comm],
-            hm₃⟩⟩
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+/--
+    Given a list `l : list α` and a permutation `f : perm α` whose nonfixed points are all in `l`,
+      recursively factors `f` into cycles. -/
+  def
+    cycleFactorsAux
+    [ Fintype α ]
+      :
+        ∀
+          ( l : List α ) ( f : Perm α )
+          ,
+          ∀ { x } , f x ≠ x → x ∈ l
+            →
+            { l : List Perm α // l . Prod = f ∧ ∀ g ∈ l , IsCycle g ∧ l . Pairwise Disjoint }
+    |
+        [ ] , f , h
+        =>
+        ⟨
+          [ ]
+            ,
+            by
+              simp
+                  only
+                  [
+                    imp_false
+                      ,
+                      List.Pairwise.nil
+                      ,
+                      List.not_mem_nil
+                      ,
+                      forall_const
+                      ,
+                      and_true_iff
+                      ,
+                      forall_prop_of_false
+                      ,
+                      Classical.not_not
+                      ,
+                      not_false_iff
+                      ,
+                      List.prod_nil
+                    ]
+                  at *
+                ext
+                ;
+                simp [ * ]
+          ⟩
+      |
+        x :: l , f , h
+        =>
+        if
+          hx
+          :
+          f x = x
+          then
+          cycle_factors_aux l f fun y hy => List.mem_of_ne_of_mem fun h => hy by rwa [ h ] h hy
+          else
+          let
+            ⟨ m , hm₁ , hm₂ , hm₃ ⟩
+              :=
+              cycle_factors_aux
+                l
+                  cycleOf f x ⁻¹ * f
+                  fun
+                    y hy
+                      =>
+                      List.mem_of_ne_of_mem
+                        fun
+                            h
+                              : y = x
+                              =>
+                              by
+                                rw
+                                    [ h , mul_apply , Ne.def , inv_eq_iff_eq , cycle_of_apply_self ]
+                                    at hy
+                                  ;
+                                  exact hy rfl
+                          h
+                            fun
+                              h
+                                : f y = y
+                                =>
+                                by
+                                  rw
+                                      [ mul_apply , h , Ne.def , inv_eq_iff_eq , cycle_of_apply ]
+                                      at hy
+                                    split_ifs at hy <;> cc
+            ⟨
+              cycleOf f x :: m
+                ,
+                by rw [ List.prod_cons , hm₁ ] ; simp
+                ,
+                fun
+                  g hg
+                    =>
+                    List.mem_cons _ _ _ . 1 hg . elim
+                      fun hg => hg . symm ▸ isCycle_cycleOf _ hx hm₂ g
+                ,
+                List.pairwise_cons . 2
+                  ⟨
+                    fun
+                        g hg y
+                          =>
+                          Classical.or_iff_not_imp_left . 2
+                            fun
+                              hfy
+                                =>
+                                have
+                                  hxy
+                                    : SameCycle f x y
+                                    :=
+                                    Classical.not_not . 1 mt cycleOf_apply_of_not_sameCycle hfy
+                                  have
+                                    hgm
+                                      : g :: m . eraseₓ g ~ m
+                                      :=
+                                      List.cons_perm_iff_perm_erase . 2 ⟨ hg , List.Perm.refl _ ⟩
+                                    have
+                                      
+                                        : ∀ h ∈ m . eraseₓ g , Disjoint g h
+                                        :=
+                                        List.pairwise_cons . 1
+                                            hgm . pairwise_iff
+                                                  fun a b ( h : Disjoint a b ) => h . symm
+                                                .
+                                                2
+                                              hm₃
+                                          .
+                                          1
+                                      by_cases
+                                        id
+                                          fun
+                                            hgy
+                                              : g y ≠ y
+                                              =>
+                                              disjoint_prod_right _ this y . resolve_right
+                                                <|
+                                                by
+                                                  have
+                                                      hsc
+                                                        : SameCycle f ⁻¹ x f y
+                                                        :=
+                                                        by
+                                                          rwa
+                                                            [
+                                                              same_cycle_inv
+                                                                ,
+                                                                same_cycle_apply_right
+                                                              ]
+                                                    rw
+                                                      [
+                                                        disjoint_prod_perm hm₃ hgm.symm
+                                                          ,
+                                                          List.prod_cons
+                                                          ,
+                                                          ← eq_inv_mul_iff_mul_eq
+                                                        ]
+                                                      at hm₁
+                                                    rwa
+                                                      [
+                                                        hm₁
+                                                          ,
+                                                          mul_apply
+                                                          ,
+                                                          mul_apply
+                                                          ,
+                                                          cycle_of_inv
+                                                          ,
+                                                          hsc.cycle_of_apply
+                                                          ,
+                                                          inv_apply_self
+                                                          ,
+                                                          inv_eq_iff_eq
+                                                          ,
+                                                          eq_comm
+                                                        ]
+                      ,
+                      hm₃
+                    ⟩
+              ⟩
 #align equiv.perm.cycle_factors_aux Equiv.Perm.cycleFactorsAux
 -/
 

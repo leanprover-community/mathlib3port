@@ -322,18 +322,31 @@ theorem M.bisim₀ {α : TypeVec n} (R : P.M α → P.M α → Prop) (h₀ : Equ
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print MvPFunctor.M.bisim' /-
-theorem M.bisim' {α : TypeVec n} (R : P.M α → P.M α → Prop)
-    (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y)
-    (x y) (r : R x y) : x = y := by
-  have := M.bisim₀ P (EqvGen R) _ _
-  · solve_by_elim [EqvGen.rel]
-  · apply EqvGen.is_equivalence
-  · clear r x y; introv Hr
-    have : ∀ x y, R x y → EqvGen R x y := @EqvGen.rel _ R
-    induction Hr
-    · rw [← Quot.factor_mk_eq R (EqvGen R) this]
-      rwa [append_fun_comp_id, ← MvFunctor.map_map, ← MvFunctor.map_map, h]
-    all_goals cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  M.bisim'
+  { α : TypeVec n }
+      ( R : P . M α → P . M α → Prop )
+      ( h : ∀ x y , R x y → id ::: Quot.mk R <$$> M.dest _ x = id ::: Quot.mk R <$$> M.dest _ y )
+      ( x y )
+      ( r : R x y )
+    : x = y
+  :=
+    by
+      have  := M.bisim₀ P EqvGen R _ _
+        · solve_by_elim [ EqvGen.rel ]
+        · apply EqvGen.is_equivalence
+        ·
+          clear r x y
+            ;
+            introv Hr
+            have  : ∀ x y , R x y → EqvGen R x y := @ EqvGen.rel _ R
+            induction Hr
+            ·
+              rw [ ← Quot.factor_mk_eq R EqvGen R this ]
+                rwa [ append_fun_comp_id , ← MvFunctor.map_map , ← MvFunctor.map_map , h ]
+            all_goals cc
 #align mvpfunctor.M.bisim' MvPFunctor.M.bisim'
 -/
 

@@ -183,7 +183,7 @@ import Algebra.ContinuedFractions.ContinuantsRecurrence
 import Algebra.ContinuedFractions.ConvergentsEquiv
 import Algebra.ContinuedFractions.TerminatedStable
 import Algebra.ContinuedFractions.Translations
-import Algebra.CovariantAndContravariant
+import Algebra.Order.Monoid.Unbundled.Defs
 import Algebra.CubicDiscriminant
 import Algebra.DirectLimit
 import Algebra.DirectSum.Algebra
@@ -224,9 +224,9 @@ import Algebra.Ring.Identities
 import Algebra.GroupPower.Lemmas
 import Algebra.GroupPower.Order
 import Algebra.GroupPower.Ring
-import Algebra.GroupRingAction.Basic
-import Algebra.GroupRingAction.Invariant
-import Algebra.GroupRingAction.Subobjects
+import Algebra.Ring.Action.Basic
+import Algebra.Ring.Action.Invariant
+import Algebra.Ring.Action.Subobjects
 import Algebra.GroupWithZero.Basic
 import Algebra.GroupWithZero.Commute
 import Algebra.GroupWithZero.Defs
@@ -293,7 +293,7 @@ import Algebra.Algebra.NonUnitalHom
 import Algebra.Ring.Hom.Defs
 import Algebra.Group.Units.Hom
 import Algebra.Function.Indicator
-import Algebra.Invertible.Defs
+import Algebra.Group.Invertible.Defs
 import Algebra.IsPrimePow
 import Algebra.Jordan.Basic
 import Algebra.Lie.Abelian
@@ -396,8 +396,8 @@ import Algebra.Order.Monoid.Cancel.Basic
 import Algebra.Order.Monoid.Cancel.Defs
 import Algebra.Order.Monoid.Canonical.Defs
 import Algebra.Order.Monoid.Defs
-import Algebra.Order.Monoid.Lemmas
-import Algebra.Order.Monoid.MinMax
+import Algebra.Order.Monoid.Unbundled.Basic
+import Algebra.Order.Monoid.Unbundled.MinMax
 import Algebra.Order.Monoid.NatCast
 import Algebra.Order.Monoid.OrderDual
 import Algebra.Order.Monoid.Prod
@@ -421,7 +421,7 @@ import Algebra.Order.Ring.CharZero
 import Algebra.Order.Ring.Cone
 import Algebra.Order.Ring.Defs
 import Algebra.Order.Ring.InjSurj
-import Algebra.Order.Ring.Lemmas
+import Algebra.Order.GroupWithZero.Unbundled
 import Algebra.Order.Ring.WithTop
 import Algebra.Order.Module.OrderedSMul
 import Algebra.Order.Sub.Basic
@@ -1908,7 +1908,7 @@ import GroupTheory.CoprodI
 import GroupTheory.GroupAction.Basic
 import GroupTheory.GroupAction.BigOperators
 import GroupTheory.GroupAction.ConjAct
-import GroupTheory.GroupAction.Defs
+import Algebra.Group.Action.Defs
 import GroupTheory.GroupAction.Embedding
 import GroupTheory.GroupAction.FixingSubgroup
 import GroupTheory.GroupAction.Group

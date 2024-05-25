@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl, Damiano Testa,
 Yuyang Zhao
 -/
-import Algebra.CovariantAndContravariant
+import Algebra.Order.Monoid.Unbundled.Defs
 import Order.MinMax
 
 #align_import algebra.order.monoid.lemmas from "leanprover-community/mathlib"@"3ba15165bd6927679be7c22d6091a87337e3cd0c"

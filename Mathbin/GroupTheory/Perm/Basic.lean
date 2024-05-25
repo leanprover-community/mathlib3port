@@ -761,9 +761,12 @@ theorem mul_swap_eq_iff {i j : α} {σ : Perm α} : σ * swap i j = σ ↔ i = j
 -/
 
 #print Equiv.swap_mul_swap_mul_swap /-
-theorem swap_mul_swap_mul_swap {x y z : α} (hwz : x ≠ y) (hxz : x ≠ z) :
-    swap y z * swap x y * swap y z = swap z x :=
-  Equiv.ext fun n => by simp only [swap_apply_def, perm.mul_apply]; split_ifs <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  swap_mul_swap_mul_swap
+  { x y z : α } ( hwz : x ≠ y ) ( hxz : x ≠ z ) : swap y z * swap x y * swap y z = swap z x
+  := Equiv.ext fun n => by simp only [ swap_apply_def , perm.mul_apply ] ; split_ifs <;> cc
 #align equiv.swap_mul_swap_mul_swap Equiv.swap_mul_swap_mul_swap
 -/
 

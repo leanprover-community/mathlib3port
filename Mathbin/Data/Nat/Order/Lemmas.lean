@@ -111,9 +111,13 @@ protected theorem dvd_one {n : ℕ} : n ∣ 1 ↔ n = 1 :=
 -/
 
 #print Nat.not_two_dvd_bit1 /-
-@[simp]
-protected theorem not_two_dvd_bit1 (n : ℕ) : ¬2 ∣ bit1 n := by
-  rw [bit1, Nat.dvd_add_right two_dvd_bit0, Nat.dvd_one]; cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+@[ simp ] protected
+  theorem
+    not_two_dvd_bit1
+    ( n : ℕ ) : ¬ 2 ∣ bit1 n
+    := by rw [ bit1 , Nat.dvd_add_right two_dvd_bit0 , Nat.dvd_one ] ; cc
 #align nat.not_two_dvd_bit1 Nat.not_two_dvd_bit1
 -/
 

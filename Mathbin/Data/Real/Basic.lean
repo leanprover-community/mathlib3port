@@ -62,8 +62,12 @@ open CauSeq CauSeq.Completion
 variable {x y : ℝ}
 
 #print Real.ext_cauchy_iff /-
-theorem ext_cauchy_iff : ∀ {x y : Real}, x = y ↔ x.cauchy = y.cauchy
-  | ⟨a⟩, ⟨b⟩ => by constructor <;> cc
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Mathlib.Tactic.CC._root_.Mathlib.Tactic.cc'
+theorem
+  ext_cauchy_iff
+  : ∀ { x y : Real } , x = y ↔ x . cauchy = y . cauchy
+  | ⟨ a ⟩ , ⟨ b ⟩ => by constructor <;> cc
 #align real.ext_cauchy_iff Real.ext_cauchy_iff
 -/
 
