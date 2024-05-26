@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Algebra.Order.Field.Defs
-import Data.Rat.Field
+import Algebra.Order.Field.Rat
 import Data.Int.Cast.Lemmas
 import Tactic.AssertExists
 

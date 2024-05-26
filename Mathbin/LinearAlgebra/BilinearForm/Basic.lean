@@ -1795,10 +1795,10 @@ theorem LinearMap.BilinForm.finrank_add_finrank_orthogonal {B : BilinForm K V} {
 #align bilin_form.finrank_add_finrank_orthogonal LinearMap.BilinForm.finrank_add_finrank_orthogonal
 -/
 
-#print LinearMap.BilinForm.restrict_nondegenerate_of_isCompl_orthogonal /-
+#print LinearMap.BilinForm.isCompl_orthogonal_of_restrict_nondegenerate /-
 /-- A subspace is complement to its orthogonal complement with respect to some
 reflexive bilinear form if that bilinear form restricted on to the subspace is nondegenerate. -/
-theorem LinearMap.BilinForm.restrict_nondegenerate_of_isCompl_orthogonal {B : BilinForm K V}
+theorem LinearMap.BilinForm.isCompl_orthogonal_of_restrict_nondegenerate {B : BilinForm K V}
     {W : Subspace K V} (b₁ : B.IsRefl) (b₂ : (B.restrict W).Nondegenerate) :
     IsCompl W (B.orthogonal W) :=
   by
@@ -1815,7 +1815,7 @@ theorem LinearMap.BilinForm.restrict_nondegenerate_of_isCompl_orthogonal {B : Bi
   rw [← finrank_bot K V, ← this, Submodule.finrank_sup_add_finrank_inf_eq,
     finrank_add_finrank_orthogonal b₁]
   exact le_self_add
-#align bilin_form.restrict_nondegenerate_of_is_compl_orthogonal LinearMap.BilinForm.restrict_nondegenerate_of_isCompl_orthogonal
+#align bilin_form.restrict_nondegenerate_of_is_compl_orthogonal LinearMap.BilinForm.isCompl_orthogonal_of_restrict_nondegenerate
 -/
 
 #print LinearMap.BilinForm.restrict_nondegenerate_iff_isCompl_orthogonal /-
@@ -1824,7 +1824,7 @@ form if and only if that bilinear form restricted on to the subspace is nondegen
 theorem LinearMap.BilinForm.restrict_nondegenerate_iff_isCompl_orthogonal {B : BilinForm K V}
     {W : Subspace K V} (b₁ : B.IsRefl) :
     (B.restrict W).Nondegenerate ↔ IsCompl W (B.orthogonal W) :=
-  ⟨fun b₂ => LinearMap.BilinForm.restrict_nondegenerate_of_isCompl_orthogonal b₁ b₂, fun h =>
+  ⟨fun b₂ => LinearMap.BilinForm.isCompl_orthogonal_of_restrict_nondegenerate b₁ b₂, fun h =>
     B.nondegenerateRestrictOfDisjointOrthogonal b₁ h.1⟩
 #align bilin_form.restrict_nondegenerate_iff_is_compl_orthogonal LinearMap.BilinForm.restrict_nondegenerate_iff_isCompl_orthogonal
 -/
