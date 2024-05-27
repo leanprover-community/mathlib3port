@@ -706,33 +706,25 @@ end Set
 
 namespace Prod
 
-#print Prod.isRefl_preimage_fst /-
 instance isRefl_preimage_fst {r : α → α → Prop} [h : IsRefl α r] :
     IsRefl (α × α) (Prod.fst ⁻¹'o r) :=
   ⟨fun a => refl_of r a.1⟩
 #align prod.is_refl_preimage_fst Prod.isRefl_preimage_fst
--/
 
-#print Prod.isRefl_preimage_snd /-
 instance isRefl_preimage_snd {r : α → α → Prop} [h : IsRefl α r] :
     IsRefl (α × α) (Prod.snd ⁻¹'o r) :=
   ⟨fun a => refl_of r a.2⟩
 #align prod.is_refl_preimage_snd Prod.isRefl_preimage_snd
--/
 
-#print Prod.isTrans_preimage_fst /-
 instance isTrans_preimage_fst {r : α → α → Prop} [h : IsTrans α r] :
     IsTrans (α × α) (Prod.fst ⁻¹'o r) :=
   ⟨fun _ _ _ => trans_of r⟩
 #align prod.is_trans_preimage_fst Prod.isTrans_preimage_fst
--/
 
-#print Prod.isTrans_preimage_snd /-
 instance isTrans_preimage_snd {r : α → α → Prop} [h : IsTrans α r] :
     IsTrans (α × α) (Prod.snd ⁻¹'o r) :=
   ⟨fun _ _ _ => trans_of r⟩
 #align prod.is_trans_preimage_snd Prod.isTrans_preimage_snd
--/
 
 end Prod
 
