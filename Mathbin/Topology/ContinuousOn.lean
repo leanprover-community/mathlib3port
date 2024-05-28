@@ -541,11 +541,11 @@ theorem tendsto_nhds_of_tendsto_nhdsWithin {f : β → α} {a : α} {s : Set α}
 #align tendsto_nhds_of_tendsto_nhds_within tendsto_nhds_of_tendsto_nhdsWithin
 -/
 
-#print principal_subtype /-
-theorem principal_subtype {α : Type _} (s : Set α) (t : Set { x // x ∈ s }) :
+#print Filter.principal_subtype /-
+theorem Filter.principal_subtype {α : Type _} (s : Set α) (t : Set { x // x ∈ s }) :
     𝓟 t = comap coe (𝓟 ((coe : s → α) '' t)) := by
   rw [comap_principal, Set.preimage_image_eq _ Subtype.coe_injective]
-#align principal_subtype principal_subtype
+#align principal_subtype Filter.principal_subtype
 -/
 
 #print nhdsWithin_neBot_of_mem /-
@@ -671,7 +671,7 @@ theorem eventually_nhdsWithin_of_eventually_nhds {α : Type _} [TopologicalSpace
 #print mem_nhdsWithin_subtype /-
 theorem mem_nhdsWithin_subtype {s : Set α} {a : { x // x ∈ s }} {t u : Set { x // x ∈ s }} :
     t ∈ 𝓝[u] a ↔ t ∈ comap (coe : s → α) (𝓝[coe '' u] a) := by
-  rw [nhdsWithin, nhds_subtype, principal_subtype, ← comap_inf, ← nhdsWithin]
+  rw [nhdsWithin, nhds_subtype, Filter.principal_subtype, ← comap_inf, ← nhdsWithin]
 #align mem_nhds_within_subtype mem_nhdsWithin_subtype
 -/
 
