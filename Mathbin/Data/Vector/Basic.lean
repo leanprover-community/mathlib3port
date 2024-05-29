@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Data.Vector
+import Data.Vector.Defs
 import Data.List.Nodup
 import Data.List.OfFn
 import Control.Applicative

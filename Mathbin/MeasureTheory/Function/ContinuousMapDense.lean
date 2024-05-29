@@ -363,10 +363,11 @@ namespace Lp
 
 variable (E)
 
-#print MeasureTheory.Lp.boundedContinuousFunction_dense /-
+#print MeasureTheory.Lp.boundedContinuousFunction_topologicalClosure /-
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
-theorem boundedContinuousFunction_dense [SecondCountableTopologyEither α E] [_i : Fact (1 ≤ p)]
-    (hp : p ≠ ∞) [μ.WeaklyRegular] : (boundedContinuousFunction E p μ).topologicalClosure = ⊤ :=
+theorem boundedContinuousFunction_topologicalClosure [SecondCountableTopologyEither α E]
+    [_i : Fact (1 ≤ p)] (hp : p ≠ ∞) [μ.WeaklyRegular] :
+    (boundedContinuousFunction E p μ).topologicalClosure = ⊤ :=
   by
   rw [AddSubgroup.eq_top_iff']
   intro f
@@ -383,7 +384,7 @@ theorem boundedContinuousFunction_dense [SecondCountableTopologyEither α E] [_i
   apply snorm_congr_ae
   filter_upwards [coe_fn_sub f (g_mem.to_Lp g), g_mem.coe_fn_to_Lp] with x hx h'x
   simp only [hx, Pi.sub_apply, sub_right_inj, h'x]
-#align measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.Lp.boundedContinuousFunction_dense
+#align measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.Lp.boundedContinuousFunction_topologicalClosure
 -/
 
 end Lp
@@ -406,7 +407,7 @@ theorem toLp_denseRange [μ.WeaklyRegular] [IsFiniteMeasure μ] :
   rw [denseRange_iff_closure_range]
   suffices (LinearMap.range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤
     by exact congr_arg coe this
-  simp [range_to_Lp p μ, MeasureTheory.Lp.boundedContinuousFunction_dense E hp]
+  simp [range_to_Lp p μ, MeasureTheory.Lp.boundedContinuousFunction_topologicalClosure E hp]
 #align bounded_continuous_function.to_Lp_dense_range BoundedContinuousFunction.toLp_denseRange
 -/
 
@@ -422,7 +423,7 @@ theorem toLp_denseRange [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure μ
   rw [denseRange_iff_closure_range]
   suffices (LinearMap.range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤
     by exact congr_arg coe this
-  simp [range_to_Lp p μ, MeasureTheory.Lp.boundedContinuousFunction_dense E hp]
+  simp [range_to_Lp p μ, MeasureTheory.Lp.boundedContinuousFunction_topologicalClosure E hp]
 #align continuous_map.to_Lp_dense_range ContinuousMap.toLp_denseRange
 -/
 

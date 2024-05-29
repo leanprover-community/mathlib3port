@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 -/
 import MeasureTheory.Constructions.BorelSpace.Basic
-import Algebra.Function.Indicator
-import Algebra.Function.Support
+import Algebra.Group.Indicator
+import Algebra.Group.Support
 
 #align_import measure_theory.function.simple_func from "leanprover-community/mathlib"@"4280f5f32e16755ec7985ce11e189b6cd6ff6735"
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
 import Algebra.Group.Invertible.Defs
-import Algebra.Function.Indicator
+import Algebra.Group.Indicator
 import Algebra.Module.BigOperators
 import Data.Fintype.BigOperators
 import LinearAlgebra.AffineSpace.AffineMap

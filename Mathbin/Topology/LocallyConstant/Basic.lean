@@ -6,7 +6,7 @@ Authors: Johan Commelin
 import Topology.SubsetProperties
 import Topology.Connected.Basic
 import Topology.ContinuousFunction.Basic
-import Algebra.Function.Indicator
+import Algebra.Group.Indicator
 import Tactic.Tfae
 import Tactic.FinCases
 

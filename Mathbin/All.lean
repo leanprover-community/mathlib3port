@@ -292,7 +292,7 @@ import Algebra.GroupPower.IterateHom
 import Algebra.Algebra.NonUnitalHom
 import Algebra.Ring.Hom.Defs
 import Algebra.Group.Units.Hom
-import Algebra.Function.Indicator
+import Algebra.Group.Indicator
 import Algebra.Group.Invertible.Defs
 import Algebra.IsPrimePow
 import Algebra.Jordan.Basic
@@ -482,7 +482,7 @@ import Algebra.Star.SelfAdjoint
 import Algebra.Star.StarAlgHom
 import Algebra.Star.Subalgebra
 import Algebra.Star.Unitary
-import Algebra.Function.Support
+import Algebra.Group.Support
 import Algebra.Symmetrized
 import Algebra.TrivSqZeroExt
 import Algebra.Tropical.Basic

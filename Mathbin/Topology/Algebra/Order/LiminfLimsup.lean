@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov, Yaël Dillies
 -/
 import Algebra.BigOperators.Intervals
 import Algebra.Order.BigOperators.Group.Finset
-import Algebra.Function.Indicator
+import Algebra.Group.Indicator
 import Order.LiminfLimsup
 import Order.Filter.Archimedean
 import Order.Filter.CountableInter
