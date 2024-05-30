@@ -5,7 +5,7 @@ Authors: Johannes Hölzl
 -/
 import Algebra.BigOperators.Basic
 import Algebra.Module.Defs
-import Data.Nat.Interval
+import Order.Interval.Finset.Nat
 import Mathbin.Tactic.Linarith.Default
 
 #align_import algebra.big_operators.intervals from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"

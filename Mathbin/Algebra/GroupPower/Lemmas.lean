@@ -626,11 +626,11 @@ theorem Nat.cast_pow [Semiring R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m :=
 #align nat.cast_pow Nat.cast_pow
 -/
 
-#print Int.coe_nat_pow /-
+#print Int.natCast_pow /-
 @[simp, norm_cast]
-theorem Int.coe_nat_pow (n m : ℕ) : ((n ^ m : ℕ) : ℤ) = n ^ m := by
+theorem Int.natCast_pow (n m : ℕ) : ((n ^ m : ℕ) : ℤ) = n ^ m := by
   induction' m with m ih <;> [exact Int.ofNat_one; rw [pow_succ, pow_succ, Int.ofNat_mul, ih]]
-#align int.coe_nat_pow Int.coe_nat_pow
+#align int.coe_nat_pow Int.natCast_pow
 -/
 
 #print Int.natAbs_pow /-
@@ -1192,26 +1192,26 @@ section
 
 variable [Semiring R] {a x y : R}
 
-#print SemiconjBy.cast_nat_mul_right /-
+#print SemiconjBy.natCast_mul_right /-
 @[simp]
-theorem cast_nat_mul_right (h : SemiconjBy a x y) (n : ℕ) : SemiconjBy a ((n : R) * x) (n * y) :=
+theorem natCast_mul_right (h : SemiconjBy a x y) (n : ℕ) : SemiconjBy a ((n : R) * x) (n * y) :=
   SemiconjBy.mul_right (Nat.commute_cast _ _) h
-#align semiconj_by.cast_nat_mul_right SemiconjBy.cast_nat_mul_right
+#align semiconj_by.cast_nat_mul_right SemiconjBy.natCast_mul_right
 -/
 
-#print SemiconjBy.cast_nat_mul_left /-
+#print SemiconjBy.natCast_mul_left /-
 @[simp]
-theorem cast_nat_mul_left (h : SemiconjBy a x y) (n : ℕ) : SemiconjBy ((n : R) * a) x y :=
+theorem natCast_mul_left (h : SemiconjBy a x y) (n : ℕ) : SemiconjBy ((n : R) * a) x y :=
   SemiconjBy.mul_left (Nat.cast_commute _ _) h
-#align semiconj_by.cast_nat_mul_left SemiconjBy.cast_nat_mul_left
+#align semiconj_by.cast_nat_mul_left SemiconjBy.natCast_mul_left
 -/
 
-#print SemiconjBy.cast_nat_mul_cast_nat_mul /-
+#print SemiconjBy.natCast_mul_natCast_mul /-
 @[simp]
-theorem cast_nat_mul_cast_nat_mul (h : SemiconjBy a x y) (m n : ℕ) :
+theorem natCast_mul_natCast_mul (h : SemiconjBy a x y) (m n : ℕ) :
     SemiconjBy ((m : R) * a) (n * x) (n * y) :=
-  (h.cast_nat_mul_left m).cast_nat_mul_right n
-#align semiconj_by.cast_nat_mul_cast_nat_mul SemiconjBy.cast_nat_mul_cast_nat_mul
+  (h.natCast_mul_left m).natCast_mul_right n
+#align semiconj_by.cast_nat_mul_cast_nat_mul SemiconjBy.natCast_mul_natCast_mul
 -/
 
 end
@@ -1230,26 +1230,26 @@ theorem units_zpow_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) :
 
 variable {a b x y x' y' : R}
 
-#print SemiconjBy.cast_int_mul_right /-
+#print SemiconjBy.intCast_mul_right /-
 @[simp]
-theorem cast_int_mul_right (h : SemiconjBy a x y) (m : ℤ) : SemiconjBy a ((m : ℤ) * x) (m * y) :=
+theorem intCast_mul_right (h : SemiconjBy a x y) (m : ℤ) : SemiconjBy a ((m : ℤ) * x) (m * y) :=
   SemiconjBy.mul_right (Int.commute_cast _ _) h
-#align semiconj_by.cast_int_mul_right SemiconjBy.cast_int_mul_right
+#align semiconj_by.cast_int_mul_right SemiconjBy.intCast_mul_right
 -/
 
-#print SemiconjBy.cast_int_mul_left /-
+#print SemiconjBy.intCast_mul_left /-
 @[simp]
-theorem cast_int_mul_left (h : SemiconjBy a x y) (m : ℤ) : SemiconjBy ((m : R) * a) x y :=
+theorem intCast_mul_left (h : SemiconjBy a x y) (m : ℤ) : SemiconjBy ((m : R) * a) x y :=
   SemiconjBy.mul_left (Int.cast_commute _ _) h
-#align semiconj_by.cast_int_mul_left SemiconjBy.cast_int_mul_left
+#align semiconj_by.cast_int_mul_left SemiconjBy.intCast_mul_left
 -/
 
-#print SemiconjBy.cast_int_mul_cast_int_mul /-
+#print SemiconjBy.intCast_mul_intCast_mul /-
 @[simp]
-theorem cast_int_mul_cast_int_mul (h : SemiconjBy a x y) (m n : ℤ) :
+theorem intCast_mul_intCast_mul (h : SemiconjBy a x y) (m n : ℤ) :
     SemiconjBy ((m : R) * a) (n * x) (n * y) :=
-  (h.cast_int_mul_left m).cast_int_mul_right n
-#align semiconj_by.cast_int_mul_cast_int_mul SemiconjBy.cast_int_mul_cast_int_mul
+  (h.intCast_mul_left m).intCast_mul_right n
+#align semiconj_by.cast_int_mul_cast_int_mul SemiconjBy.intCast_mul_intCast_mul
 -/
 
 end SemiconjBy
@@ -1260,48 +1260,48 @@ section
 
 variable [Semiring R] {a b : R}
 
-#print Commute.cast_nat_mul_right /-
+#print Commute.natCast_mul_right /-
 @[simp]
-theorem cast_nat_mul_right (h : Commute a b) (n : ℕ) : Commute a ((n : R) * b) :=
-  h.cast_nat_mul_right n
-#align commute.cast_nat_mul_right Commute.cast_nat_mul_right
+theorem natCast_mul_right (h : Commute a b) (n : ℕ) : Commute a ((n : R) * b) :=
+  h.natCast_mul_right n
+#align commute.cast_nat_mul_right Commute.natCast_mul_right
 -/
 
-#print Commute.cast_nat_mul_left /-
+#print Commute.natCast_mul_left /-
 @[simp]
-theorem cast_nat_mul_left (h : Commute a b) (n : ℕ) : Commute ((n : R) * a) b :=
-  h.cast_nat_mul_left n
-#align commute.cast_nat_mul_left Commute.cast_nat_mul_left
+theorem natCast_mul_left (h : Commute a b) (n : ℕ) : Commute ((n : R) * a) b :=
+  h.natCast_mul_left n
+#align commute.cast_nat_mul_left Commute.natCast_mul_left
 -/
 
-#print Commute.cast_nat_mul_cast_nat_mul /-
+#print Commute.natCast_mul_natCast_mul /-
 @[simp]
-theorem cast_nat_mul_cast_nat_mul (h : Commute a b) (m n : ℕ) : Commute (m * a : R) (n * b : R) :=
-  h.cast_nat_mul_cast_nat_mul m n
-#align commute.cast_nat_mul_cast_nat_mul Commute.cast_nat_mul_cast_nat_mul
+theorem natCast_mul_natCast_mul (h : Commute a b) (m n : ℕ) : Commute (m * a : R) (n * b : R) :=
+  h.natCast_mul_natCast_mul m n
+#align commute.cast_nat_mul_cast_nat_mul Commute.natCast_mul_natCast_mul
 -/
 
 variable (a) (m n : ℕ)
 
-#print Commute.self_cast_nat_mul /-
+#print Commute.self_natCast_mul /-
 @[simp]
-theorem self_cast_nat_mul : Commute a (n * a : R) :=
-  (Commute.refl a).cast_nat_mul_right n
-#align commute.self_cast_nat_mul Commute.self_cast_nat_mul
+theorem self_natCast_mul : Commute a (n * a : R) :=
+  (Commute.refl a).natCast_mul_right n
+#align commute.self_cast_nat_mul Commute.self_natCast_mul
 -/
 
-#print Commute.cast_nat_mul_self /-
+#print Commute.natCast_mul_self /-
 @[simp]
-theorem cast_nat_mul_self : Commute ((n : R) * a) a :=
-  (Commute.refl a).cast_nat_mul_left n
-#align commute.cast_nat_mul_self Commute.cast_nat_mul_self
+theorem natCast_mul_self : Commute ((n : R) * a) a :=
+  (Commute.refl a).natCast_mul_left n
+#align commute.cast_nat_mul_self Commute.natCast_mul_self
 -/
 
-#print Commute.self_cast_nat_mul_cast_nat_mul /-
+#print Commute.self_natCast_mul_natCast_mul /-
 @[simp]
-theorem self_cast_nat_mul_cast_nat_mul : Commute (m * a : R) (n * a : R) :=
-  (Commute.refl a).cast_nat_mul_cast_nat_mul m n
-#align commute.self_cast_nat_mul_cast_nat_mul Commute.self_cast_nat_mul_cast_nat_mul
+theorem self_natCast_mul_natCast_mul : Commute (m * a : R) (n * a : R) :=
+  (Commute.refl a).natCast_mul_natCast_mul m n
+#align commute.self_cast_nat_mul_cast_nat_mul Commute.self_natCast_mul_natCast_mul
 -/
 
 end
@@ -1326,60 +1326,60 @@ theorem units_zpow_left {u : Mˣ} {a : M} (h : Commute (↑u) a) (m : ℤ) : Com
 
 variable {a b : R}
 
-#print Commute.cast_int_mul_right /-
+#print Commute.intCast_mul_right /-
 @[simp]
-theorem cast_int_mul_right (h : Commute a b) (m : ℤ) : Commute a (m * b : R) :=
-  h.cast_int_mul_right m
-#align commute.cast_int_mul_right Commute.cast_int_mul_right
+theorem intCast_mul_right (h : Commute a b) (m : ℤ) : Commute a (m * b : R) :=
+  h.intCast_mul_right m
+#align commute.cast_int_mul_right Commute.intCast_mul_right
 -/
 
-#print Commute.cast_int_mul_left /-
+#print Commute.intCast_mul_left /-
 @[simp]
-theorem cast_int_mul_left (h : Commute a b) (m : ℤ) : Commute ((m : R) * a) b :=
-  h.cast_int_mul_left m
-#align commute.cast_int_mul_left Commute.cast_int_mul_left
+theorem intCast_mul_left (h : Commute a b) (m : ℤ) : Commute ((m : R) * a) b :=
+  h.intCast_mul_left m
+#align commute.cast_int_mul_left Commute.intCast_mul_left
 -/
 
-#print Commute.cast_int_mul_cast_int_mul /-
-theorem cast_int_mul_cast_int_mul (h : Commute a b) (m n : ℤ) : Commute (m * a : R) (n * b : R) :=
-  h.cast_int_mul_cast_int_mul m n
-#align commute.cast_int_mul_cast_int_mul Commute.cast_int_mul_cast_int_mul
+#print Commute.intCast_mul_intCast_mul /-
+theorem intCast_mul_intCast_mul (h : Commute a b) (m n : ℤ) : Commute (m * a : R) (n * b : R) :=
+  h.intCast_mul_intCast_mul m n
+#align commute.cast_int_mul_cast_int_mul Commute.intCast_mul_intCast_mul
 -/
 
 variable (a) (m n : ℤ)
 
-#print Commute.cast_int_left /-
+#print Commute.intCast_left /-
 @[simp]
-theorem cast_int_left : Commute (m : R) a :=
+theorem intCast_left : Commute (m : R) a :=
   Int.cast_commute _ _
-#align commute.cast_int_left Commute.cast_int_left
+#align commute.cast_int_left Commute.intCast_left
 -/
 
-#print Commute.cast_int_right /-
+#print Commute.intCast_right /-
 @[simp]
-theorem cast_int_right : Commute a m :=
+theorem intCast_right : Commute a m :=
   Int.commute_cast _ _
-#align commute.cast_int_right Commute.cast_int_right
+#align commute.cast_int_right Commute.intCast_right
 -/
 
-#print Commute.self_cast_int_mul /-
+#print Commute.self_intCast_mul /-
 @[simp]
-theorem self_cast_int_mul : Commute a (n * a : R) :=
-  (Commute.refl a).cast_int_mul_right n
-#align commute.self_cast_int_mul Commute.self_cast_int_mul
+theorem self_intCast_mul : Commute a (n * a : R) :=
+  (Commute.refl a).intCast_mul_right n
+#align commute.self_cast_int_mul Commute.self_intCast_mul
 -/
 
-#print Commute.cast_int_mul_self /-
+#print Commute.intCast_mul_self /-
 @[simp]
-theorem cast_int_mul_self : Commute ((n : R) * a) a :=
-  (Commute.refl a).cast_int_mul_left n
-#align commute.cast_int_mul_self Commute.cast_int_mul_self
+theorem intCast_mul_self : Commute ((n : R) * a) a :=
+  (Commute.refl a).intCast_mul_left n
+#align commute.cast_int_mul_self Commute.intCast_mul_self
 -/
 
-#print Commute.self_cast_int_mul_cast_int_mul /-
-theorem self_cast_int_mul_cast_int_mul : Commute (m * a : R) (n * a : R) :=
-  (Commute.refl a).cast_int_mul_cast_int_mul m n
-#align commute.self_cast_int_mul_cast_int_mul Commute.self_cast_int_mul_cast_int_mul
+#print Commute.self_intCast_mul_intCast_mul /-
+theorem self_intCast_mul_intCast_mul : Commute (m * a : R) (n * a : R) :=
+  (Commute.refl a).intCast_mul_intCast_mul m n
+#align commute.self_cast_int_mul_cast_int_mul Commute.self_intCast_mul_intCast_mul
 -/
 
 end Commute

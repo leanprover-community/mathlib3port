@@ -194,10 +194,10 @@ end Nat
 
 namespace Int
 
-#print Int.coe_nat_gcd /-
-protected theorem coe_nat_gcd (m n : ℕ) : Int.gcd ↑m ↑n = Nat.gcd m n :=
+#print Int.gcd_natCast_natCast /-
+protected theorem gcd_natCast_natCast (m n : ℕ) : Int.gcd ↑m ↑n = Nat.gcd m n :=
   rfl
-#align int.coe_nat_gcd Int.coe_nat_gcd
+#align int.coe_nat_gcd Int.gcd_natCast_natCast
 -/
 
 #print Int.gcdA /-
@@ -685,7 +685,7 @@ theorem nat_gcd_helper_dvd_right (x y a : ℕ) (h : y * a = x) : Nat.gcd x y = y
 theorem nat_gcd_helper_2 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * v = y)
     (hx : x * a = tx) (hy : y * b = ty) (h : ty + d = tx) : Nat.gcd x y = d :=
   by
-  rw [← Int.coe_nat_gcd];
+  rw [← Int.gcd_natCast_natCast];
   apply
     @int_gcd_helper' _ _ _ a (-b) (Int.natCast_dvd_natCast.2 ⟨_, hu.symm⟩)
       (Int.natCast_dvd_natCast.2 ⟨_, hv.symm⟩)
@@ -733,7 +733,7 @@ theorem nat_not_coprime_helper (d x y u v : ℕ) (hu : d * u = x) (hv : d * v = 
 
 #print Tactic.NormNum.int_gcd_helper /-
 theorem int_gcd_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (ny : ℤ) = y)
-    (h : Nat.gcd nx ny = d) : Int.gcd x y = d := by rwa [← hx, ← hy, Int.coe_nat_gcd]
+    (h : Nat.gcd nx ny = d) : Int.gcd x y = d := by rwa [← hx, ← hy, Int.gcd_natCast_natCast]
 #align tactic.norm_num.int_gcd_helper Tactic.NormNum.int_gcd_helper
 -/
 

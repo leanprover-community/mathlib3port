@@ -274,10 +274,10 @@ open ProdAdicCompletions.IsFiniteAdele
 
 variable (R K)
 
-#print DedekindDomain.finiteAdeleRing /-
+#print DedekindDomain.FiniteAdeleRing /-
 /-- The finite adèle ring of `R` is the restricted product over all maximal ideals `v` of `R`
 of `adic_completion` with respect to `adic_completion_integers`. -/
-noncomputable def finiteAdeleRing : Subring (K_hat R K)
+noncomputable def FiniteAdeleRing : Subring (K_hat R K)
     where
   carrier := {x : K_hat R K | x.IsFiniteAdele}
   hMul_mem' _ _ hx hy := mul hx hy
@@ -285,17 +285,15 @@ noncomputable def finiteAdeleRing : Subring (K_hat R K)
   add_mem' _ _ hx hy := add hx hy
   zero_mem' := zero
   neg_mem' _ hx := neg hx
-#align dedekind_domain.finite_adele_ring DedekindDomain.finiteAdeleRing
+#align dedekind_domain.finite_adele_ring DedekindDomain.FiniteAdeleRing
 -/
 
 variable {R K}
 
-#print DedekindDomain.mem_finiteAdeleRing_iff /-
 @[simp]
-theorem mem_finiteAdeleRing_iff (x : K_hat R K) : x ∈ finiteAdeleRing R K ↔ x.IsFiniteAdele :=
+theorem mem_finiteAdeleRing_iff (x : K_hat R K) : x ∈ FiniteAdeleRing R K ↔ x.IsFiniteAdele :=
   Iff.rfl
 #align dedekind_domain.mem_finite_adele_ring_iff DedekindDomain.mem_finiteAdeleRing_iff
--/
 
 end DedekindDomain
 

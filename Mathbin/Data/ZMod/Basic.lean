@@ -654,9 +654,9 @@ theorem cast_sub_one {R : Type _} [Ring R] {n : ℕ} (k : ZMod n) :
 #align zmod.cast_sub_one ZMod.cast_sub_one
 -/
 
-#print ZMod.nat_coe_zmod_eq_iff /-
-theorem nat_coe_zmod_eq_iff (p : ℕ) (n : ℕ) (z : ZMod p) [NeZero p] :
-    ↑n = z ↔ ∃ k, n = z.val + p * k := by
+#print ZMod.natCast_eq_iff /-
+theorem natCast_eq_iff (p : ℕ) (n : ℕ) (z : ZMod p) [NeZero p] : ↑n = z ↔ ∃ k, n = z.val + p * k :=
+  by
   constructor
   · rintro rfl
     refine' ⟨n / p, _⟩
@@ -664,12 +664,12 @@ theorem nat_coe_zmod_eq_iff (p : ℕ) (n : ℕ) (z : ZMod p) [NeZero p] :
   · rintro ⟨k, rfl⟩
     rw [Nat.cast_add, nat_cast_zmod_val, Nat.cast_mul, nat_cast_self, MulZeroClass.zero_mul,
       add_zero]
-#align zmod.nat_coe_zmod_eq_iff ZMod.nat_coe_zmod_eq_iff
+#align zmod.nat_coe_zmod_eq_iff ZMod.natCast_eq_iff
 -/
 
-#print ZMod.int_coe_zmod_eq_iff /-
-theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : ZMod p) [NeZero p] :
-    ↑n = z ↔ ∃ k, n = z.val + p * k := by
+#print ZMod.intCast_eq_iff /-
+theorem intCast_eq_iff (p : ℕ) (n : ℤ) (z : ZMod p) [NeZero p] : ↑n = z ↔ ∃ k, n = z.val + p * k :=
+  by
   constructor
   · rintro rfl
     refine' ⟨n / p, _⟩
@@ -677,7 +677,7 @@ theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : ZMod p) [NeZero p] :
   · rintro ⟨k, rfl⟩
     rw [Int.cast_add, Int.cast_mul, Int.cast_natCast, Int.cast_natCast, nat_cast_val,
       ZMod.natCast_self, MulZeroClass.zero_mul, add_zero, cast_id]
-#align zmod.int_coe_zmod_eq_iff ZMod.int_coe_zmod_eq_iff
+#align zmod.int_coe_zmod_eq_iff ZMod.intCast_eq_iff
 -/
 
 #print ZMod.intCast_mod /-

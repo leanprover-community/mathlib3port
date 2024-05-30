@@ -5,7 +5,7 @@ Authors: Mario Carneiro, Yaël Dillies, Patrick Stevens
 -/
 import Algebra.Order.Field.Basic
 import Algebra.Order.Ring.CharZero
-import Data.Nat.Cast.Commute
+import Data.Nat.Cast.Basic
 
 #align_import data.nat.cast.field from "leanprover-community/mathlib"@"acee671f47b8e7972a1eb6f4eed74b4b3abce829"
 

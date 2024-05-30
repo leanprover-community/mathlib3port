@@ -46,7 +46,7 @@ theorem p_lemma (p : ℕ) (hpp : Nat.Prime p) (hp_mod_4_eq_1 : p ≡ 1 [MOD 4]) 
   let n := Int.natAbs m
   have hnat₁ : p ∣ n ^ 2 + 1 := by
     refine' int.coe_nat_dvd.mp _
-    simp only [Int.natAbs_sq, Int.coe_nat_pow, Int.ofNat_succ, int.coe_nat_dvd.mp]
+    simp only [Int.natAbs_sq, Int.natCast_pow, Int.ofNat_succ, int.coe_nat_dvd.mp]
     refine' (ZMod.intCast_zmod_eq_zero_iff_dvd (m ^ 2 + 1) p).mp _
     simp only [Int.cast_pow, Int.cast_add, Int.cast_one, ZMod.coe_valMinAbs]
     rw [pow_two, ← hy]; exact add_left_neg 1

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys
 -/
 import Data.Real.Basic
-import Data.Nat.Interval
+import Order.Interval.Finset.Nat
 import Algebra.Order.Rearrangement
 import Algebra.BigOperators.Ring
 

@@ -497,7 +497,7 @@ theorem measurableSet_eq_fun_of_countable {m : MeasurableSpace α} {E} [Measurab
 theorem ae_eq_trim_of_measurable {α E} {m m0 : MeasurableSpace α} {μ : Measure α}
     [MeasurableSpace E] [AddGroup E] [MeasurableSingletonClass E] [MeasurableSub₂ E] (hm : m ≤ m0)
     {f g : α → E} (hf : measurable[m] f) (hg : measurable[m] g) (hfg : f =ᵐ[μ] g) :
-    f =ᶠ[@Measure.ae α m (μ.trim hm)] g :=
+    f =ᶠ[@MeasureTheory.ae α m (μ.trim hm)] g :=
   by
   rwa [Filter.EventuallyEq, ae_iff, trim_measurable_set_eq hm _]
   exact @MeasurableSet.compl α _ m (@measurableSet_eq_fun α m E _ _ _ _ _ _ hf hg)

@@ -107,13 +107,13 @@ theorem covBy_add_one (z : ℤ) : z ⋖ z + 1 :=
 
 end Int
 
-#print Nat.cast_int_covBy_iff /-
+#print Int.natCast_covBy /-
 @[simp, norm_cast]
-theorem Nat.cast_int_covBy_iff {a b : ℕ} : (a : ℤ) ⋖ b ↔ a ⋖ b := by
+theorem Int.natCast_covBy {a b : ℕ} : (a : ℤ) ⋖ b ↔ a ⋖ b := by
   rw [Nat.covBy_iff_succ_eq, Int.covBy_iff_succ_eq]; exact Int.natCast_inj
-#align nat.cast_int_covby_iff Nat.cast_int_covBy_iff
+#align nat.cast_int_covby_iff Int.natCast_covBy
 -/
 
-alias ⟨_, CovBy.cast_int⟩ := Nat.cast_int_covBy_iff
-#align covby.cast_int CovBy.cast_int
+alias ⟨_, CovBy.intCast⟩ := Int.natCast_covBy
+#align covby.cast_int CovBy.intCast
 

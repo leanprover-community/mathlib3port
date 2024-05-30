@@ -496,7 +496,7 @@ theorem isPrimitiveClassified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) (h
   have hw2 : w = (m ^ 2 - n ^ 2) / (m ^ 2 + n ^ 2) := by rw [ht4.2, hq2];
     field_simp [hm2n2, Rat.den_nz q, -Rat.num_div_den]
   have hm2n20 : (m : ℚ) ^ 2 + (n : ℚ) ^ 2 ≠ 0 := by norm_cast;
-    simpa only [Int.coe_nat_pow] using ne_of_gt hm2n2
+    simpa only [Int.natCast_pow] using ne_of_gt hm2n2
   have hv2 : v = 2 * m * n / (m ^ 2 + n ^ 2) :=
     by
     apply Eq.symm; apply (div_eq_iff hm2n20).mpr; rw [ht4.1]; field_simp [hQ q]

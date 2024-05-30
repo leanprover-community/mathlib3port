@@ -87,25 +87,23 @@ theorem hasTrivialRadical_iff_no_abelian_ideals :
 #align lie_algebra.is_semisimple_iff_no_abelian_ideals LieAlgebra.hasTrivialRadical_iff_no_abelian_ideals
 -/
 
-#print LieAlgebra.center_eq_bot_of_hasTrivialRadical /-
+#print LieAlgebra.HasTrivialRadical.center_eq_bot /-
 @[simp]
-theorem center_eq_bot_of_hasTrivialRadical [h : HasTrivialRadical R L] : center R L = ⊥ := by
-  rw [is_semisimple_iff_no_abelian_ideals] at h; apply h; infer_instance
-#align lie_algebra.center_eq_bot_of_semisimple LieAlgebra.center_eq_bot_of_hasTrivialRadical
+theorem LieAlgebra.HasTrivialRadical.center_eq_bot [h : HasTrivialRadical R L] : center R L = ⊥ :=
+  by rw [is_semisimple_iff_no_abelian_ideals] at h; apply h; infer_instance
+#align lie_algebra.center_eq_bot_of_semisimple LieAlgebra.HasTrivialRadical.center_eq_bot
 -/
 
-#print LieAlgebra.hasTrivialRadicalOfIsSimple /-
 /-- A simple Lie algebra is semisimple. -/
-instance (priority := 100) hasTrivialRadicalOfIsSimple [h : IsSimple R L] : HasTrivialRadical R L :=
-  by
+instance (priority := 100) hasTrivialRadical_of_isSimple [h : IsSimple R L] :
+    HasTrivialRadical R L := by
   rw [is_semisimple_iff_no_abelian_ideals]
   intro I hI
   obtain @⟨⟨h₁⟩, h₂⟩ := id h
   by_contra contra
   rw [h₁ I contra, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquiv] at hI
   exact h₂ hI
-#align lie_algebra.is_semisimple_of_is_simple LieAlgebra.hasTrivialRadicalOfIsSimple
--/
+#align lie_algebra.is_semisimple_of_is_simple LieAlgebra.hasTrivialRadical_of_isSimple
 
 #print LieAlgebra.subsingleton_of_hasTrivialRadical_lie_abelian /-
 /-- A semisimple Abelian Lie algebra is trivial. -/

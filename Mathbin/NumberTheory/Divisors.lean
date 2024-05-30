@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
 import Algebra.Order.BigOperators.Group.Finset
-import Data.Nat.Interval
+import Order.Interval.Finset.Nat
 import Data.Nat.Factors
 
 #align_import number_theory.divisors from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"

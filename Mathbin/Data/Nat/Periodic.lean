@@ -5,7 +5,7 @@ Authors: Bolton Bailey
 -/
 import Algebra.Periodic
 import Data.Nat.Count
-import Data.Nat.Interval
+import Order.Interval.Finset.Nat
 
 #align_import data.nat.periodic from "leanprover-community/mathlib"@"1ead22342e1a078bd44744ace999f85756555d35"
 

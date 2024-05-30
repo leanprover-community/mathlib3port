@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 -/
 import Algebra.BigOperators.Basic
-import Data.Nat.Interval
+import Order.Interval.Finset.Nat
 import Order.Antichain
 
 #align_import data.finset.slice from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"

@@ -267,8 +267,8 @@ section CommRing
 
 variable {R : Type _} [CommRing R]
 
-#print Finset.prod_range_cast_nat_sub /-
-theorem prod_range_cast_nat_sub (n k : ℕ) :
+#print Finset.prod_range_natCast_sub /-
+theorem prod_range_natCast_sub (n k : ℕ) :
     ∏ i in range k, (n - i : R) = (∏ i in range k, (n - i) : ℕ) :=
   by
   rw [prod_nat_cast]
@@ -276,7 +276,7 @@ theorem prod_range_cast_nat_sub (n k : ℕ) :
   · exact prod_congr rfl fun i hi => (Nat.cast_sub <| (mem_range.1 hi).le.trans hkn).symm
   · rw [← mem_range] at hnk
     rw [prod_eq_zero hnk, prod_eq_zero hnk] <;> simp
-#align finset.prod_range_cast_nat_sub Finset.prod_range_cast_nat_sub
+#align finset.prod_range_cast_nat_sub Finset.prod_range_natCast_sub
 -/
 
 end CommRing

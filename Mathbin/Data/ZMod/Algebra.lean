@@ -40,7 +40,7 @@ def algebra' (h : m ∣ n) : Algebra (ZMod n) R :=
         rcases ZMod.intCast_surjective a with ⟨k, rfl⟩
         show ZMod.castHom h R k * r = r * ZMod.castHom h R k
         rw [map_intCast]
-        exact Commute.cast_int_left r k
+        exact Commute.intCast_left r k
     smul_def' := fun a r => rfl }
 #align zmod.algebra' ZMod.algebra'
 -/

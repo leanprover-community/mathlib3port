@@ -66,7 +66,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
       lt_of_mul_lt_mul_left
         (calc
           p * k.natAbs = a.valMinAbs.natAbs ^ 2 + b.valMinAbs.natAbs ^ 2 + 1 := by
-            rw [← Int.natCast_inj, Int.ofNat_add, Int.ofNat_add, Int.coe_nat_pow, Int.coe_nat_pow,
+            rw [← Int.natCast_inj, Int.ofNat_add, Int.ofNat_add, Int.natCast_pow, Int.natCast_pow,
               Int.natAbs_sq, Int.natAbs_sq, Int.ofNat_one, hk, Int.ofNat_mul,
               Int.natAbs_of_nonneg hk0]
           _ ≤ (p / 2) ^ 2 + (p / 2) ^ 2 + 1 :=

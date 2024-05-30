@@ -7,7 +7,7 @@ import Algebra.BigOperators.Basic
 import Algebra.Order.BigOperators.Group.Finset
 import Data.Fintype.BigOperators
 import Data.Finset.Sort
-import Data.Fin.Interval
+import Order.Interval.Finset.Fin
 import Mathbin.Tactic.Linarith.Default
 import Tactic.ByContra
 

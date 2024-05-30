@@ -6,7 +6,7 @@ Authors: Eric Wieser
 import Order.Interval.Finset.Basic
 import Data.DFinsupp.Interval
 import Data.DFinsupp.Multiset
-import Data.Nat.Interval
+import Order.Interval.Finset.Nat
 
 #align_import data.multiset.interval from "leanprover-community/mathlib"@"1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29"
 

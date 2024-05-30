@@ -99,13 +99,13 @@ theorem T_two : T R 2 = 2 * X ^ 2 - 1 := by simp only [T, sub_left_inj, sq, mul_
 #align polynomial.chebyshev.T_two Polynomial.Chebyshev.T_two
 -/
 
-#print Polynomial.Chebyshev.T_of_two_le /-
-theorem T_of_two_le (n : ℕ) (h : 2 ≤ n) : T R n = 2 * X * T R (n - 1) - T R (n - 2) :=
+#print Polynomial.Chebyshev.T_eq /-
+theorem T_eq (n : ℕ) (h : 2 ≤ n) : T R n = 2 * X * T R (n - 1) - T R (n - 2) :=
   by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_comm]
   exact T_add_two R n
-#align polynomial.chebyshev.T_of_two_le Polynomial.Chebyshev.T_of_two_le
+#align polynomial.chebyshev.T_of_two_le Polynomial.Chebyshev.T_eq
 -/
 
 #print Polynomial.Chebyshev.U /-
@@ -131,24 +131,22 @@ theorem U_one : U R 1 = 2 * X :=
 #align polynomial.chebyshev.U_one Polynomial.Chebyshev.U_one
 -/
 
-#print Polynomial.Chebyshev.U_add_two /-
 @[simp]
-theorem U_add_two (n : ℕ) : U R (n + 2) = 2 * X * U R (n + 1) - U R n := by rw [U]
-#align polynomial.chebyshev.U_add_two Polynomial.Chebyshev.U_add_two
--/
+theorem u_add_two (n : ℕ) : U R (n + 2) = 2 * X * U R (n + 1) - U R n := by rw [U]
+#align polynomial.chebyshev.U_add_two Polynomial.Chebyshev.u_add_two
 
 #print Polynomial.Chebyshev.U_two /-
 theorem U_two : U R 2 = 4 * X ^ 2 - 1 := by simp only [U]; ring
 #align polynomial.chebyshev.U_two Polynomial.Chebyshev.U_two
 -/
 
-#print Polynomial.Chebyshev.U_of_two_le /-
-theorem U_of_two_le (n : ℕ) (h : 2 ≤ n) : U R n = 2 * X * U R (n - 1) - U R (n - 2) :=
+#print Polynomial.Chebyshev.U_eq /-
+theorem U_eq (n : ℕ) (h : 2 ≤ n) : U R n = 2 * X * U R (n - 1) - U R (n - 2) :=
   by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_comm]
   exact U_add_two R n
-#align polynomial.chebyshev.U_of_two_le Polynomial.Chebyshev.U_of_two_le
+#align polynomial.chebyshev.U_of_two_le Polynomial.Chebyshev.U_eq
 -/
 
 #print Polynomial.Chebyshev.U_eq_X_mul_U_add_T /-

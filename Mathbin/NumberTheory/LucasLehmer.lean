@@ -153,18 +153,18 @@ theorem sZMod_eq_s (p' : ℕ) (i : ℕ) : sZMod (p' + 2) i = (s i : ZMod (2 ^ (p
 #align lucas_lehmer.s_zmod_eq_s LucasLehmer.sZMod_eq_s
 -/
 
-#print LucasLehmer.Int.coe_nat_pow_pred /-
+#print LucasLehmer.Int.natCast_pow_pred /-
 -- These next two don't make good `norm_cast` lemmas.
-theorem Int.coe_nat_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ) = (b ^ p - 1 : ℤ) :=
+theorem Int.natCast_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ) = (b ^ p - 1 : ℤ) :=
   by
   have : 1 ≤ b ^ p := Nat.one_le_pow p b w
   norm_cast
-#align lucas_lehmer.int.coe_nat_pow_pred LucasLehmer.Int.coe_nat_pow_pred
+#align lucas_lehmer.int.coe_nat_pow_pred LucasLehmer.Int.natCast_pow_pred
 -/
 
 #print LucasLehmer.Int.coe_nat_two_pow_pred /-
 theorem Int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p - 1 : ℤ) :=
-  Int.coe_nat_pow_pred 2 p (by decide)
+  Int.natCast_pow_pred 2 p (by decide)
 #align lucas_lehmer.int.coe_nat_two_pow_pred LucasLehmer.Int.coe_nat_two_pow_pred
 -/
 
@@ -361,32 +361,32 @@ instance : CommRing (X q) :=
 instance [Fact (1 < (q : ℕ))] : Nontrivial (X q) :=
   ⟨⟨0, 1, fun h => by injection h with h1 _; exact zero_ne_one h1⟩⟩
 
-#print LucasLehmer.X.nat_coe_fst /-
+#print LucasLehmer.X.fst_natCast /-
 @[simp]
-theorem nat_coe_fst (n : ℕ) : (n : X q).fst = (n : ZMod q) :=
+theorem fst_natCast (n : ℕ) : (n : X q).fst = (n : ZMod q) :=
   rfl
-#align lucas_lehmer.X.nat_coe_fst LucasLehmer.X.nat_coe_fst
+#align lucas_lehmer.X.nat_coe_fst LucasLehmer.X.fst_natCast
 -/
 
-#print LucasLehmer.X.nat_coe_snd /-
+#print LucasLehmer.X.snd_natCast /-
 @[simp]
-theorem nat_coe_snd (n : ℕ) : (n : X q).snd = (0 : ZMod q) :=
+theorem snd_natCast (n : ℕ) : (n : X q).snd = (0 : ZMod q) :=
   rfl
-#align lucas_lehmer.X.nat_coe_snd LucasLehmer.X.nat_coe_snd
+#align lucas_lehmer.X.nat_coe_snd LucasLehmer.X.snd_natCast
 -/
 
-#print LucasLehmer.X.int_coe_fst /-
+#print LucasLehmer.X.fst_intCast /-
 @[simp]
-theorem int_coe_fst (n : ℤ) : (n : X q).fst = (n : ZMod q) :=
+theorem fst_intCast (n : ℤ) : (n : X q).fst = (n : ZMod q) :=
   rfl
-#align lucas_lehmer.X.int_coe_fst LucasLehmer.X.int_coe_fst
+#align lucas_lehmer.X.int_coe_fst LucasLehmer.X.fst_intCast
 -/
 
-#print LucasLehmer.X.int_coe_snd /-
+#print LucasLehmer.X.snd_intCast /-
 @[simp]
-theorem int_coe_snd (n : ℤ) : (n : X q).snd = (0 : ZMod q) :=
+theorem snd_intCast (n : ℤ) : (n : X q).snd = (0 : ZMod q) :=
   rfl
-#align lucas_lehmer.X.int_coe_snd LucasLehmer.X.int_coe_snd
+#align lucas_lehmer.X.int_coe_snd LucasLehmer.X.snd_intCast
 -/
 
 #print LucasLehmer.X.coe_mul /-

@@ -411,11 +411,9 @@ protected theorem coe_int_sub (m n : ℤ) : (↑(m - n) : ℤ√d) = ↑m - ↑n
 #align zsqrtd.coe_int_sub Zsqrtd.coe_int_sub
 -/
 
-#print Zsqrtd.coe_int_mul /-
-protected theorem coe_int_mul (m n : ℤ) : (↑(m * n) : ℤ√d) = ↑m * ↑n :=
+protected theorem coe_int_hMul (m n : ℤ) : (↑(m * n) : ℤ√d) = ↑m * ↑n :=
   (Int.castRingHom _).map_hMul _ _
-#align zsqrtd.coe_int_mul Zsqrtd.coe_int_mul
--/
+#align zsqrtd.coe_int_mul Zsqrtd.coe_int_hMul
 
 #print Zsqrtd.coe_int_inj /-
 protected theorem coe_int_inj {m n : ℤ} (h : (↑m : ℤ√d) = ↑n) : m = n := by
@@ -423,8 +421,8 @@ protected theorem coe_int_inj {m n : ℤ} (h : (↑m : ℤ√d) = ↑n) : m = n 
 #align zsqrtd.coe_int_inj Zsqrtd.coe_int_inj
 -/
 
-#print Zsqrtd.coe_int_dvd_iff /-
-theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im :=
+#print Zsqrtd.intCast_dvd /-
+theorem intCast_dvd (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im :=
   by
   constructor
   · rintro ⟨x, rfl⟩
@@ -434,12 +432,12 @@ theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ 
     use⟨r, i⟩
     rw [smul_val, ext]
     exact ⟨hr, hi⟩
-#align zsqrtd.coe_int_dvd_iff Zsqrtd.coe_int_dvd_iff
+#align zsqrtd.coe_int_dvd_iff Zsqrtd.intCast_dvd
 -/
 
-#print Zsqrtd.coe_int_dvd_coe_int /-
+#print Zsqrtd.intCast_dvd_intCast /-
 @[simp, norm_cast]
-theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b :=
+theorem intCast_dvd_intCast (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b :=
   by
   rw [coe_int_dvd_iff]
   constructor
@@ -447,7 +445,7 @@ theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b :=
     rwa [coe_int_re] at hre
   · rw [coe_int_re, coe_int_im]
     exact fun hc => ⟨hc, dvd_zero a⟩
-#align zsqrtd.coe_int_dvd_coe_int Zsqrtd.coe_int_dvd_coe_int
+#align zsqrtd.coe_int_dvd_coe_int Zsqrtd.intCast_dvd_intCast
 -/
 
 #print Zsqrtd.eq_of_smul_eq_smul_left /-

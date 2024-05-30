@@ -445,25 +445,25 @@ theorem measure_inter_null_of_null_left {S : Set α} (T : Set α) (h : μ S = 0)
 /-! ### The almost everywhere filter -/
 
 
-#print MeasureTheory.Measure.ae /-
+#print MeasureTheory.ae /-
 /-- The “almost everywhere” filter of co-null sets. -/
-def Measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α
+def MeasureTheory.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α
     where
   sets := {s | μ (sᶜ) = 0}
   univ_sets := by simp
   inter_sets s t hs ht := by
     simp only [compl_inter, mem_set_of_eq] <;> exact measure_union_null hs ht
   sets_of_superset s t hs hst := measure_mono_null (Set.compl_subset_compl.2 hst) hs
-#align measure_theory.measure.ae MeasureTheory.Measure.ae
+#align measure_theory.measure.ae MeasureTheory.ae
 -/
 
-notation3"∀ᵐ "(...)" ∂"μ", "r:(scoped P => Filter.Eventually P Measure.ae μ) => r
+notation3"∀ᵐ "(...)" ∂"μ", "r:(scoped P => Filter.Eventually P MeasureTheory.ae μ) => r
 
-notation3"∃ᵐ "(...)" ∂"μ", "r:(scoped P => Filter.Frequently P Measure.ae μ) => r
+notation3"∃ᵐ "(...)" ∂"μ", "r:(scoped P => Filter.Frequently P MeasureTheory.ae μ) => r
 
-notation:50 f " =ᵐ[" μ:50 "] " g:50 => f =ᶠ[Measure.ae μ] g
+notation:50 f " =ᵐ[" μ:50 "] " g:50 => f =ᶠ[MeasureTheory.ae μ] g
 
-notation:50 f " ≤ᵐ[" μ:50 "] " g:50 => f ≤ᶠ[Measure.ae μ] g
+notation:50 f " ≤ᵐ[" μ:50 "] " g:50 => f ≤ᶠ[MeasureTheory.ae μ] g
 
 #print MeasureTheory.mem_ae_iff /-
 theorem mem_ae_iff {s : Set α} : s ∈ μ.ae ↔ μ (sᶜ) = 0 :=
@@ -813,10 +813,10 @@ add_decl_doc volume
 section MeasureSpace
 
 notation3"∀ᵐ "(...)", "r:(scoped P =>
-  Filter.Eventually P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
+  Filter.Eventually P MeasureTheory.ae MeasureTheory.MeasureSpace.volume) => r
 
 notation3"∃ᵐ "(...)", "r:(scoped P =>
-  Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
+  Filter.Frequently P MeasureTheory.ae MeasureTheory.MeasureSpace.volume) => r
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:338:4: warning: unsupported (TODO): `[tacs] -/
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/

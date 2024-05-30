@@ -112,18 +112,18 @@ theorem coe_zsmul (z : ℤ) (x : ℝ) : ↑(z • x : ℝ) = (z • ↑x : Angle
 #align real.angle.coe_zsmul Real.Angle.coe_zsmul
 -/
 
-#print Real.Angle.coe_nat_mul_eq_nsmul /-
+#print Real.Angle.natCast_mul_eq_nsmul /-
 @[simp, norm_cast]
-theorem coe_nat_mul_eq_nsmul (x : ℝ) (n : ℕ) : ↑((n : ℝ) * x) = n • (↑x : Angle) := by
+theorem natCast_mul_eq_nsmul (x : ℝ) (n : ℕ) : ↑((n : ℝ) * x) = n • (↑x : Angle) := by
   simpa only [nsmul_eq_mul] using coe_hom.map_nsmul x n
-#align real.angle.coe_nat_mul_eq_nsmul Real.Angle.coe_nat_mul_eq_nsmul
+#align real.angle.coe_nat_mul_eq_nsmul Real.Angle.natCast_mul_eq_nsmul
 -/
 
-#print Real.Angle.coe_int_mul_eq_zsmul /-
+#print Real.Angle.intCast_mul_eq_zsmul /-
 @[simp, norm_cast]
-theorem coe_int_mul_eq_zsmul (x : ℝ) (n : ℤ) : ↑((n : ℝ) * x : ℝ) = n • (↑x : Angle) := by
+theorem intCast_mul_eq_zsmul (x : ℝ) (n : ℤ) : ↑((n : ℝ) * x : ℝ) = n • (↑x : Angle) := by
   simpa only [zsmul_eq_mul] using coe_hom.map_zsmul x n
-#align real.angle.coe_int_mul_eq_zsmul Real.Angle.coe_int_mul_eq_zsmul
+#align real.angle.coe_int_mul_eq_zsmul Real.Angle.intCast_mul_eq_zsmul
 -/
 
 #print Real.Angle.angle_eq_iff_two_pi_dvd_sub /-

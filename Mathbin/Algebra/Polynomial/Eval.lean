@@ -1633,10 +1633,10 @@ theorem sub_comp : (p - q).comp r = p.comp r - q.comp r :=
 #align polynomial.sub_comp Polynomial.sub_comp
 -/
 
-#print Polynomial.cast_int_comp /-
+#print Polynomial.intCast_comp /-
 @[simp]
-theorem cast_int_comp (i : ℤ) : comp (i : R[X]) p = i := by cases i <;> simp
-#align polynomial.cast_int_comp Polynomial.cast_int_comp
+theorem intCast_comp (i : ℤ) : comp (i : R[X]) p = i := by cases i <;> simp
+#align polynomial.cast_int_comp Polynomial.intCast_comp
 -/
 
 end Ring

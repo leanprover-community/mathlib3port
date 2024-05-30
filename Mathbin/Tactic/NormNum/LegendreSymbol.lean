@@ -176,7 +176,7 @@ theorem Mathlib.Meta.NormNum.jacobiSymNat.double_even (a b : ℕ) (r : ℤ)
     Mathlib.Meta.NormNum.jacobiSymNat (bit0 (bit0 a)) (bit1 b) = r :=
   by
   have : ((2 : ℕ) : ℤ).gcd (bit1 b : ℕ) = 1 := by
-    rw [Int.coe_nat_gcd, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul b, Nat.succ_eq_add_one,
+    rw [Int.gcd_natCast_natCast, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul b, Nat.succ_eq_add_one,
       Nat.gcd_mul_left_add_right, Nat.gcd_one_right]
   rwa [bit0_eq_two_mul a, bit0_eq_two_mul (2 * a), ← mul_assoc, ← pow_two, jacobi_sym_nat,
     Nat.cast_mul, Nat.cast_pow, jacobiSym.mul_left, jacobiSym.sq_one' this, one_mul]

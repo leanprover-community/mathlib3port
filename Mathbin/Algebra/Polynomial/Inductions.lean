@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Damiano Testa, Jens Wagemaker
 -/
 import Algebra.MonoidAlgebra.Division
-import Data.Nat.Interval
+import Order.Interval.Finset.Nat
 import Algebra.Polynomial.Degree.Definitions
 import Algebra.Polynomial.Induction
 

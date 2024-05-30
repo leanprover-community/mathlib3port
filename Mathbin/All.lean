@@ -1132,7 +1132,7 @@ import CategoryTheory.Sites.Sheaf
 import CategoryTheory.Sites.Sieves
 import CategoryTheory.Sites.Spaces
 import CategoryTheory.Sites.Subsheaf
-import CategoryTheory.Sites.Surjective
+import CategoryTheory.Sites.LocallySurjective
 import CategoryTheory.Sites.Types
 import CategoryTheory.Sites.Whiskering
 import CategoryTheory.Skeletal
@@ -1381,7 +1381,7 @@ import Data.Fintype.Units
 import Data.Fintype.Vector
 import Data.Fin.Basic
 import Data.Fin.Fin2
-import Data.Fin.Interval
+import Order.Interval.Finset.Fin
 import Data.Fin.SuccPred
 import Data.Fin.Tuple.Basic
 import Data.Fin.Tuple.BubbleSortInduction
@@ -1527,7 +1527,7 @@ import Algebra.MvPolynomial.Degrees
 import Algebra.Group.Nat
 import Data.Nat.Bits
 import Data.Nat.Bitwise
-import Data.Nat.Cast.Commute
+import Data.Nat.Cast.Basic
 import Data.Nat.Cast.Defs
 import Data.Nat.Cast.Field
 import Data.Nat.Cast.Prod
@@ -1556,7 +1556,7 @@ import Data.Nat.Fib.Basic
 import Data.Nat.GCD.Basic
 import Data.Nat.GCD.BigOperators
 import Data.Nat.Hyperoperation
-import Data.Nat.Interval
+import Order.Interval.Finset.Nat
 import Data.Nat.Lattice
 import Data.Nat.Log
 import Data.Nat.ModEq

@@ -237,8 +237,6 @@ end Finite
 
 namespace PartENat
 
-/- warning: part_enat.card_eq_coe_nat_card clashes with part_enat.card_of_finite -> PartENat.card_eq_coe_nat_card
-Case conversion may be inaccurate. Consider using '#align part_enat.card_eq_coe_nat_card PartENat.card_eq_coe_nat_cardₓ'. -/
 #print PartENat.card_eq_coe_nat_card /-
 theorem card_eq_coe_nat_card (α : Type _) [Finite α] : card α = Nat.card α :=
   by

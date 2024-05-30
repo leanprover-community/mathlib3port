@@ -5,7 +5,7 @@ Authors: Sam van Gool, Jake Levinson
 -/
 import Topology.Sheaves.Presheaf
 import Topology.Sheaves.Stalks
-import CategoryTheory.Sites.Surjective
+import CategoryTheory.Sites.LocallySurjective
 
 #align_import topology.sheaves.locally_surjective from "leanprover-community/mathlib"@"cff8231f04dfa33fd8f2f45792eebd862ef30cad"
 

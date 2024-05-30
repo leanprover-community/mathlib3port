@@ -153,13 +153,13 @@ theorem eval₂_algebraMap_X {R A : Type _} [CommSemiring R] [Semiring A] [Algeb
 #align polynomial.eval₂_algebra_map_X Polynomial.eval₂_algebraMap_X
 -/
 
-#print Polynomial.ringHom_eval₂_cast_int_ringHom /-
+#print Polynomial.ringHom_eval₂_intCastRingHom /-
 -- these used to be about `algebra_map ℤ R`, but now the simp-normal form is `int.cast_ring_hom R`.
 @[simp]
-theorem ringHom_eval₂_cast_int_ringHom {R S : Type _} [Ring R] [Ring S] (p : ℤ[X]) (f : R →+* S)
+theorem ringHom_eval₂_intCastRingHom {R S : Type _} [Ring R] [Ring S] (p : ℤ[X]) (f : R →+* S)
     (r : R) : f (eval₂ (Int.castRingHom R) r p) = eval₂ (Int.castRingHom S) (f r) p :=
   algHom_eval₂_algebraMap p f.toIntAlgHom r
-#align polynomial.ring_hom_eval₂_cast_int_ring_hom Polynomial.ringHom_eval₂_cast_int_ringHom
+#align polynomial.ring_hom_eval₂_cast_int_ring_hom Polynomial.ringHom_eval₂_intCastRingHom
 -/
 
 #print Polynomial.eval₂_intCastRingHom_X /-

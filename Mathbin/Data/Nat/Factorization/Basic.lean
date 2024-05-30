@@ -7,7 +7,7 @@ import Algebra.BigOperators.Finsupp
 import Data.Finsupp.Multiset
 import Data.Nat.PrimeFin
 import NumberTheory.Padics.PadicVal
-import Data.Nat.Interval
+import Order.Interval.Finset.Nat
 import Tactic.IntervalCases
 
 #align_import data.nat.factorization.basic from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"

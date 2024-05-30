@@ -221,9 +221,9 @@ theorem natCast_inj {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
 #align int.coe_nat_inj' Int.natCast_inj
 -/
 
-#print Int.coe_nat_strictMono /-
-theorem coe_nat_strictMono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.ofNat_lt.2
-#align int.coe_nat_strict_mono Int.coe_nat_strictMono
+#print Int.natCast_strictMono /-
+theorem natCast_strictMono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.ofNat_lt.2
+#align int.coe_nat_strict_mono Int.natCast_strictMono
 -/
 
 #print Int.natCast_nonneg /-
