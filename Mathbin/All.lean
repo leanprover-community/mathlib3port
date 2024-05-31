@@ -1659,7 +1659,7 @@ import Data.QPF.Multivariate.Constructions.Quot
 import Data.QPF.Multivariate.Constructions.Sigma
 import Data.QPF.Univariate.Basic
 import Data.Quot
-import Algebra.Order.Field.Rat
+import Algebra.Field.Rat
 import Data.Rat.BigOperators
 import Data.Rat.Cast.Defs
 import Data.Rat.Defs

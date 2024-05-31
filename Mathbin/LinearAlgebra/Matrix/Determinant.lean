@@ -835,7 +835,8 @@ theorem det_fromBlocks_zero₁₂ (A : Matrix m m R) (C : Matrix n m R) (D : Mat
 #print Matrix.det_succ_column_zero /-
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along column 0. -/
 theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) :
-    det A = ∑ i : Fin n.succ, (-1) ^ (i : ℕ) * A i 0 * det (A.submatrix i.succAboveEmb Fin.succ) :=
+    det A =
+      ∑ i : Fin n.succ, (-1) ^ (i : ℕ) * A i 0 * det (A.submatrix i.succAboveOrderEmb Fin.succ) :=
   by
   rw [Matrix.det_apply, Finset.univ_perm_fin_succ, ← Finset.univ_product_univ]
   simp only [Finset.sum_map, Equiv.toEmbedding_apply, Finset.sum_product, Matrix.submatrix]
@@ -859,14 +860,15 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) 
     (-1 * σ.sign : ℤ) • ∏ i', A (equiv.perm.decompose_fin.symm (Fin.succ i, σ) i') i' =
         (-1 * σ.sign : ℤ) •
           (A (Fin.succ i) 0 *
-            ∏ i', A ((Fin.succ i).succAboveEmb (Fin.cycleRange i (σ i'))) i'.succ) :=
+            ∏ i', A ((Fin.succ i).succAboveOrderEmb (Fin.cycleRange i (σ i'))) i'.succ) :=
       by
       simp only [Fin.prod_univ_succ, Fin.succAbove_cycleRange,
         Equiv.Perm.decomposeFin_symm_apply_zero, Equiv.Perm.decomposeFin_symm_apply_succ]
     _ =
         -1 *
           (A (Fin.succ i) 0 *
-            (σ.sign : ℤ) • ∏ i', A ((Fin.succ i).succAboveEmb (Fin.cycleRange i (σ i'))) i'.succ) :=
+            (σ.sign : ℤ) •
+              ∏ i', A ((Fin.succ i).succAboveOrderEmb (Fin.cycleRange i (σ i'))) i'.succ) :=
       by
       simp only [mul_assoc, mul_comm, _root_.neg_mul, one_mul, zsmul_eq_mul, neg_inj, neg_smul,
         Fin.succAbove_cycleRange]
@@ -876,7 +878,8 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) 
 #print Matrix.det_succ_row_zero /-
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along row 0. -/
 theorem det_succ_row_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) :
-    det A = ∑ j : Fin n.succ, (-1) ^ (j : ℕ) * A 0 j * det (A.submatrix Fin.succ j.succAboveEmb) :=
+    det A =
+      ∑ j : Fin n.succ, (-1) ^ (j : ℕ) * A 0 j * det (A.submatrix Fin.succ j.succAboveOrderEmb) :=
   by
   rw [← det_transpose A, det_succ_column_zero]
   refine' Finset.sum_congr rfl fun i _ => _
@@ -890,7 +893,7 @@ theorem det_succ_row_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) :
 theorem det_succ_row {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (i : Fin n.succ) :
     det A =
       ∑ j : Fin n.succ,
-        (-1) ^ (i + j : ℕ) * A i j * det (A.submatrix i.succAboveEmb j.succAboveEmb) :=
+        (-1) ^ (i + j : ℕ) * A i j * det (A.submatrix i.succAboveOrderEmb j.succAboveOrderEmb) :=
   by
   simp_rw [pow_add, mul_assoc, ← mul_sum]
   have : det A = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by
@@ -914,7 +917,7 @@ theorem det_succ_row {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (i : Fin
 theorem det_succ_column {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (j : Fin n.succ) :
     det A =
       ∑ i : Fin n.succ,
-        (-1) ^ (i + j : ℕ) * A i j * det (A.submatrix i.succAboveEmb j.succAboveEmb) :=
+        (-1) ^ (i + j : ℕ) * A i j * det (A.submatrix i.succAboveOrderEmb j.succAboveOrderEmb) :=
   by
   rw [← det_transpose, det_succ_row _ j]
   refine' Finset.sum_congr rfl fun i _ => _

@@ -346,7 +346,7 @@ group cohomology. -/
 theorem diagonalHomEquiv_symm_partialProd_succ (f : (Fin n → G) → A) (g : Fin (n + 1) → G)
     (a : Fin (n + 1)) :
     ((diagonalHomEquiv n A).symm f).hom
-        (Finsupp.single (Fin.partialProd g ∘ a.succ.succAboveEmb) 1) =
+        (Finsupp.single (Fin.partialProd g ∘ a.succ.succAboveOrderEmb) 1) =
       f (Fin.contractNth a (· * ·) g) :=
   by
   simp only [diagonal_hom_equiv_symm_apply, Function.comp_apply, Fin.succ_succAbove_zero,
@@ -488,7 +488,7 @@ variable (k G) [Monoid G]
 def d (G : Type u) (n : ℕ) : ((Fin (n + 1) → G) →₀ k) →ₗ[k] (Fin n → G) →₀ k :=
   Finsupp.lift ((Fin n → G) →₀ k) k (Fin (n + 1) → G) fun g =>
     (@Finset.univ (Fin (n + 1)) _).Sum fun p =>
-      Finsupp.single (g ∘ p.succAboveEmb) ((-1 : k) ^ (p : ℕ))
+      Finsupp.single (g ∘ p.succAboveOrderEmb) ((-1 : k) ^ (p : ℕ))
 #align group_cohomology.resolution.d groupCohomology.resolution.d
 -/
 
@@ -499,7 +499,7 @@ variable {k G}
 theorem d_of {G : Type u} {n : ℕ} (c : Fin (n + 1) → G) :
     d k G n (Finsupp.single c 1) =
       Finset.univ.Sum fun p : Fin (n + 1) =>
-        Finsupp.single (c ∘ p.succAboveEmb) ((-1 : k) ^ (p : ℕ)) :=
+        Finsupp.single (c ∘ p.succAboveOrderEmb) ((-1 : k) ^ (p : ℕ)) :=
   by simp [d]
 #align group_cohomology.resolution.d_of groupCohomology.resolution.d_of
 -/

@@ -2886,7 +2886,8 @@ theorem sphere_pi (x : ∀ b, π b) {r : ℝ} (h : 0 < r ∨ Nonempty β) :
 #print Fin.nndist_insertNth_insertNth /-
 @[simp]
 theorem Fin.nndist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
-    [∀ i, PseudoMetricSpace (α i)] (i : Fin (n + 1)) (x y : α i) (f g : ∀ j, α (i.succAboveEmb j)) :
+    [∀ i, PseudoMetricSpace (α i)] (i : Fin (n + 1)) (x y : α i)
+    (f g : ∀ j, α (i.succAboveOrderEmb j)) :
     nndist (i.insertNth x f) (i.insertNth y g) = max (nndist x y) (nndist f g) :=
   eq_of_forall_ge_iff fun c => by simp [nndist_pi_le_iff, i.forall_iff_succ_above]
 #align fin.nndist_insert_nth_insert_nth Fin.nndist_insertNth_insertNth
@@ -2895,7 +2896,8 @@ theorem Fin.nndist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
 #print Fin.dist_insertNth_insertNth /-
 @[simp]
 theorem Fin.dist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
-    [∀ i, PseudoMetricSpace (α i)] (i : Fin (n + 1)) (x y : α i) (f g : ∀ j, α (i.succAboveEmb j)) :
+    [∀ i, PseudoMetricSpace (α i)] (i : Fin (n + 1)) (x y : α i)
+    (f g : ∀ j, α (i.succAboveOrderEmb j)) :
     dist (i.insertNth x f) (i.insertNth y g) = max (dist x y) (dist f g) := by
   simp only [dist_nndist, Fin.nndist_insertNth_insertNth, NNReal.coe_max]
 #align fin.dist_insert_nth_insert_nth Fin.dist_insertNth_insertNth

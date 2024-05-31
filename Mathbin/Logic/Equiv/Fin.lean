@@ -164,7 +164,7 @@ mapping both `i.cast_succ` and `i.succ` to `i`. -/
 def finSuccEquiv' {n : ℕ} (i : Fin (n + 1)) : Fin (n + 1) ≃ Option (Fin n)
     where
   toFun := i.insertNth none some
-  invFun x := x.casesOn' i (Fin.succAboveEmb i)
+  invFun x := x.casesOn' i (Fin.succAboveOrderEmb i)
   left_inv x := Fin.succAboveCases i (by simp) (fun j => by simp) x
   right_inv x := by cases x <;> dsimp <;> simp
 #align fin_succ_equiv' finSuccEquiv'
@@ -180,7 +180,7 @@ theorem finSuccEquiv'_at {n : ℕ} (i : Fin (n + 1)) : (finSuccEquiv' i) i = non
 #print finSuccEquiv'_succAbove /-
 @[simp]
 theorem finSuccEquiv'_succAbove {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
-    finSuccEquiv' i (i.succAboveEmb j) = some j :=
+    finSuccEquiv' i (i.succAboveOrderEmb j) = some j :=
   @Fin.insertNth_apply_succAbove n (fun _ => Option (Fin n)) i _ _ _
 #align fin_succ_equiv'_succ_above finSuccEquiv'_succAbove
 -/
@@ -209,7 +209,7 @@ theorem finSuccEquiv'_symm_none {n : ℕ} (i : Fin (n + 1)) : (finSuccEquiv' i).
 #print finSuccEquiv'_symm_some /-
 @[simp]
 theorem finSuccEquiv'_symm_some {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
-    (finSuccEquiv' i).symm (some j) = i.succAboveEmb j :=
+    (finSuccEquiv' i).symm (some j) = i.succAboveOrderEmb j :=
   rfl
 #align fin_succ_equiv'_symm_some finSuccEquiv'_symm_some
 -/
@@ -332,13 +332,13 @@ theorem finSuccEquiv'_ne_last_apply {i j : Fin (n + 1)} (hi : i ≠ Fin.last n) 
 /-- `succ_above` as an order isomorphism between `fin n` and `{x : fin (n + 1) // x ≠ p}`. -/
 def finSuccAboveEquiv (p : Fin (n + 1)) : Fin n ≃o { x : Fin (n + 1) // x ≠ p } :=
   { Equiv.optionSubtype p ⟨(finSuccEquiv' p).symm, rfl⟩ with
-    map_rel_iff' := fun _ _ => p.succAboveEmb.map_rel_iff' }
+    map_rel_iff' := fun _ _ => p.succAboveOrderEmb.map_rel_iff' }
 #align fin_succ_above_equiv finSuccAboveEquiv
 -/
 
 #print finSuccAboveEquiv_apply /-
 theorem finSuccAboveEquiv_apply (p : Fin (n + 1)) (i : Fin n) :
-    finSuccAboveEquiv p i = ⟨p.succAboveEmb i, p.succAbove_ne i⟩ :=
+    finSuccAboveEquiv p i = ⟨p.succAboveOrderEmb i, p.succAbove_ne i⟩ :=
   rfl
 #align fin_succ_above_equiv_apply finSuccAboveEquiv_apply
 -/
@@ -414,9 +414,9 @@ theorem finSuccEquivLast_symm_none {n : ℕ} : finSuccEquivLast.symm none = Fin.
 /-- Equivalence between `Π j : fin (n + 1), α j` and `α i × Π j : fin n, α (fin.succ_above i j)`. -/
 @[simps (config := { fullyApplied := false })]
 def Equiv.piFinSuccAbove {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (n + 1)) :
-    (∀ j, α j) ≃ α i × ∀ j, α (i.succAboveEmb j)
+    (∀ j, α j) ≃ α i × ∀ j, α (i.succAboveOrderEmb j)
     where
-  toFun f := (f i, fun j => f (i.succAboveEmb j))
+  toFun f := (f i, fun j => f (i.succAboveOrderEmb j))
   invFun f := i.insertNth f.1 f.2
   left_inv f := by simp [Fin.insertNth_eq_iff]
   right_inv f := by simp
@@ -427,7 +427,7 @@ def Equiv.piFinSuccAbove {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (n + 1
 /-- Order isomorphism between `Π j : fin (n + 1), α j` and
 `α i × Π j : fin n, α (fin.succ_above i j)`. -/
 def OrderIso.piFinSuccAboveIso {n : ℕ} (α : Fin (n + 1) → Type u) [∀ i, LE (α i)]
-    (i : Fin (n + 1)) : (∀ j, α j) ≃o α i × ∀ j, α (i.succAboveEmb j)
+    (i : Fin (n + 1)) : (∀ j, α j) ≃o α i × ∀ j, α (i.succAboveOrderEmb j)
     where
   toEquiv := Equiv.piFinSuccAbove α i
   map_rel_iff' f g := i.forall_iff_succAbove.symm

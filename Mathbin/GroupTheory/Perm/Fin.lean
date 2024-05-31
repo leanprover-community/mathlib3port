@@ -321,7 +321,7 @@ theorem sign_cycleRange {n : ℕ} (i : Fin n) : Perm.sign (cycleRange i) = (-1) 
 #print Fin.succAbove_cycleRange /-
 @[simp]
 theorem succAbove_cycleRange {n : ℕ} (i j : Fin n) :
-    i.succ.succAboveEmb (i.cycleRange j) = swap 0 i.succ j.succ :=
+    i.succ.succAboveOrderEmb (i.cycleRange j) = swap 0 i.succ j.succ :=
   by
   cases n
   · rcases j with ⟨_, ⟨⟩⟩
@@ -346,7 +346,7 @@ theorem succAbove_cycleRange {n : ℕ} (i j : Fin n) :
 #print Fin.cycleRange_succAbove /-
 @[simp]
 theorem cycleRange_succAbove {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
-    i.cycleRange (i.succAboveEmb j) = j.succ :=
+    i.cycleRange (i.succAboveOrderEmb j) = j.succ :=
   by
   cases' lt_or_ge j.cast_succ i with h h
   · rw [Fin.succAbove_of_castSucc_lt _ _ h, Fin.cycleRange_of_lt h, Fin.coeSucc_eq_succ]
@@ -364,7 +364,7 @@ theorem cycleRange_symm_zero {n : ℕ} (i : Fin (n + 1)) : i.cycleRange.symm 0 =
 #print Fin.cycleRange_symm_succ /-
 @[simp]
 theorem cycleRange_symm_succ {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
-    i.cycleRange.symm j.succ = i.succAboveEmb j :=
+    i.cycleRange.symm j.succ = i.succAboveOrderEmb j :=
   i.cycleRange.Injective (by simp)
 #align fin.cycle_range_symm_succ Fin.cycleRange_symm_succ
 -/

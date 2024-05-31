@@ -257,7 +257,7 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂ (I : Box (
 
 variable (a b : ℝⁿ⁺¹)
 
-local notation "face " i => Set.Icc (a ∘ Fin.succAboveEmb i) (b ∘ Fin.succAboveEmb i)
+local notation "face " i => Set.Icc (a ∘ Fin.succAboveOrderEmb i) (b ∘ Fin.succAboveOrderEmb i)
 
 local notation "front_face " i:2000 => Fin.insertNth i (b i)
 
@@ -340,9 +340,9 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_of_equiv {F : Typ
     (hDF : ∀ x, DF x = ∑ i, f' i x (eL.symm <| e i)) (Hi : IntegrableOn DF (Icc a b)) :
     ∫ x in Icc a b, DF x =
       ∑ i : Fin (n + 1),
-        ((∫ x in Icc (eL a ∘ i.succAboveEmb) (eL b ∘ i.succAboveEmb),
+        ((∫ x in Icc (eL a ∘ i.succAboveOrderEmb) (eL b ∘ i.succAboveOrderEmb),
             f i (eL.symm <| i.insertNth (eL b i) x)) -
-          ∫ x in Icc (eL a ∘ i.succAboveEmb) (eL b ∘ i.succAboveEmb),
+          ∫ x in Icc (eL a ∘ i.succAboveOrderEmb) (eL b ∘ i.succAboveOrderEmb),
             f i (eL.symm <| i.insertNth (eL a i) x)) :=
   have he_emb : MeasurableEmbedding eL := eL.toHomeomorph.toMeasurableEquiv.MeasurableEmbedding
   have hIcc : eL ⁻¹' Icc (eL a) (eL b) = Icc a b := by ext1 x;
@@ -356,9 +356,9 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_of_equiv {F : Typ
       simp only [hIcc, eL.symm_apply_apply]
     _ =
         ∑ i : Fin (n + 1),
-          ((∫ x in Icc (eL a ∘ i.succAboveEmb) (eL b ∘ i.succAboveEmb),
+          ((∫ x in Icc (eL a ∘ i.succAboveOrderEmb) (eL b ∘ i.succAboveOrderEmb),
               f i (eL.symm <| i.insertNth (eL b i) x)) -
-            ∫ x in Icc (eL a ∘ i.succAboveEmb) (eL b ∘ i.succAboveEmb),
+            ∫ x in Icc (eL a ∘ i.succAboveOrderEmb) (eL b ∘ i.succAboveOrderEmb),
               f i (eL.symm <| i.insertNth (eL a i) x)) :=
       by
       convert
@@ -416,9 +416,9 @@ theorem integral_eq_of_hasDerivWithinAt_off_countable_of_le (f f' : ℝ → E) {
       simp only [intervalIntegral.integral_of_le hle, set_integral_congr_set_ae Ioc_ae_eq_Icc]
     _ =
         ∑ i : Fin 1,
-          ((∫ x in Icc (e a ∘ i.succAboveEmb) (e b ∘ i.succAboveEmb),
+          ((∫ x in Icc (e a ∘ i.succAboveOrderEmb) (e b ∘ i.succAboveOrderEmb),
               f (e.symm <| i.insertNth (e b i) x)) -
-            ∫ x in Icc (e a ∘ i.succAboveEmb) (e b ∘ i.succAboveEmb),
+            ∫ x in Icc (e a ∘ i.succAboveOrderEmb) (e b ∘ i.succAboveOrderEmb),
               f (e.symm <| i.insertNth (e a i) x)) :=
       by
       simp only [← interior_Icc] at Hd
@@ -485,9 +485,9 @@ theorem integral_divergence_prod_Icc_of_hasFDerivWithinAt_off_countable_of_le (f
   calc
     ∫ x in Icc a b, f' x (1, 0) + g' x (0, 1) =
         ∑ i : Fin 2,
-          ((∫ x in Icc (e a ∘ i.succAboveEmb) (e b ∘ i.succAboveEmb),
+          ((∫ x in Icc (e a ∘ i.succAboveOrderEmb) (e b ∘ i.succAboveOrderEmb),
               ![f, g] i (e.symm <| i.insertNth (e b i) x)) -
-            ∫ x in Icc (e a ∘ i.succAboveEmb) (e b ∘ i.succAboveEmb),
+            ∫ x in Icc (e a ∘ i.succAboveOrderEmb) (e b ∘ i.succAboveOrderEmb),
               ![f, g] i (e.symm <| i.insertNth (e a i) x)) :=
       by
       refine'

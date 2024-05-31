@@ -859,7 +859,7 @@ theorem measurePreserving_piFinSuccAbove {n : ℕ} {α : Fin (n + 1) → Type u}
     {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)]
     (i : Fin (n + 1)) :
     MeasurePreserving (MeasurableEquiv.piFinSuccAbove α i) (Measure.pi μ)
-      ((μ i).Prod <| Measure.pi fun j => μ (i.succAboveEmb j)) :=
+      ((μ i).Prod <| Measure.pi fun j => μ (i.succAboveOrderEmb j)) :=
   by
   set e := (MeasurableEquiv.piFinSuccAbove α i).symm
   refine' measure_preserving.symm e _

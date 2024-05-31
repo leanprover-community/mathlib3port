@@ -481,14 +481,15 @@ theorem not_disjoint_coe_iff_nonempty_inter :
 `I.lower ∘ fin.succ_above i` and `I.upper ∘ fin.succ_above i`. -/
 @[simps (config := { simpRhs := true })]
 def face {n} (I : Box (Fin (n + 1))) (i : Fin (n + 1)) : Box (Fin n) :=
-  ⟨I.lower ∘ Fin.succAboveEmb i, I.upper ∘ Fin.succAboveEmb i, fun j => I.lower_lt_upper _⟩
+  ⟨I.lower ∘ Fin.succAboveOrderEmb i, I.upper ∘ Fin.succAboveOrderEmb i, fun j =>
+    I.lower_lt_upper _⟩
 #align box_integral.box.face BoxIntegral.Box.face
 -/
 
 #print BoxIntegral.Box.face_mk /-
 @[simp]
 theorem face_mk {n} (l u : Fin (n + 1) → ℝ) (h : ∀ i, l i < u i) (i : Fin (n + 1)) :
-    face ⟨l, u, h⟩ i = ⟨l ∘ Fin.succAboveEmb i, u ∘ Fin.succAboveEmb i, fun j => h _⟩ :=
+    face ⟨l, u, h⟩ i = ⟨l ∘ Fin.succAboveOrderEmb i, u ∘ Fin.succAboveOrderEmb i, fun j => h _⟩ :=
   rfl
 #align box_integral.box.face_mk BoxIntegral.Box.face_mk
 -/

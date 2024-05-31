@@ -210,7 +210,7 @@ theorem carrier_ne_top : carrier 𝒜 x ≠ ⊤ :=
   classical
   contrapose! eq_top
   obtain ⟨c, N, acd, eq1⟩ := mem_carrier.clear_denominator _ x ((Ideal.eq_top_iff_one _).mp eq_top)
-  rw [Algebra.smul_def, HomogeneousLocalization.one_val, mul_one] at eq1
+  rw [Algebra.smul_def, HomogeneousLocalization.val_one, mul_one] at eq1
   change Localization.mk (f ^ N) 1 = mk (∑ _, _) 1 at eq1
   simp only [mk_eq_mk', IsLocalization.eq] at eq1
   rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
@@ -236,7 +236,7 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f :=
     simp only [mem_carrier_iff] at hx12 ⊢
     let J := span (⇑(algebraMap A (away f)) '' x.val.as_homogeneous_ideal)
     suffices h : ∀ x y : Localization.Away f, x * y ∈ J → x ∈ J ∨ y ∈ J
-    · rw [HomogeneousLocalization.mul_val] at hx12; exact h x1.val x2.val hx12
+    · rw [HomogeneousLocalization.val_mul] at hx12; exact h x1.val x2.val hx12
     clear x1 x2 hx12
     intro x1 x2 hx12
     induction' x1 using Localization.induction_on with data_x1
@@ -290,7 +290,7 @@ theorem preimage_basicOpen (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : 
     rw [ProjectiveSpectrum.mem_coe_basicOpen]
     intro a_mem_y
     apply hy
-    rw [to_fun, mem_carrier_iff, HomogeneousLocalization.val_mk'', Subtype.coe_mk]
+    rw [to_fun, mem_carrier_iff, HomogeneousLocalization.val_mk, Subtype.coe_mk]
     dsimp; rcases b_mem2 with ⟨k, hk⟩
     simp only [show (mk a ⟨b, ⟨k, hk⟩⟩ : away f) = mk 1 ⟨f ^ k, ⟨_, rfl⟩⟩ * mk a 1 by
         rw [mk_mul, one_mul, mul_one]; congr; rw [hk]]
@@ -501,7 +501,7 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
   dsimp only [Subtype.coe_mk]; rw [map_sum, mk_sum]
   apply Finset.sum_congr rfl fun j hj => _
   change _ = HomogeneousLocalization.val _
-  rw [HomogeneousLocalization.smul_val]
+  rw [HomogeneousLocalization.val_smul]
   split_ifs with h2 h1
   · exact ((Finset.mem_range.1 hj).not_le h2).elim
   all_goals simp only [mul_val, zero_val, val_mk', Subtype.coe_mk, mk_mul, ← smul_mk]; congr 2

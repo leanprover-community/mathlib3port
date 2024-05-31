@@ -668,10 +668,11 @@ theorem eraseIdx_insertNth {v : Vector α n} {i : Fin (n + 1)} : eraseIdx i (ins
 #print Vector.eraseIdx_insertNth' /-
 theorem eraseIdx_insertNth' {v : Vector α (n + 1)} :
     ∀ {i : Fin (n + 1)} {j : Fin (n + 2)},
-      eraseIdx (j.succAboveEmb i) (insertNth a j v) = insertNth a (i.predAbove j) (eraseIdx i v)
+      eraseIdx (j.succAboveOrderEmb i) (insertNth a j v) =
+        insertNth a (i.predAbove j) (eraseIdx i v)
   | ⟨i, hi⟩, ⟨j, hj⟩ =>
     by
-    dsimp [insert_nth, remove_nth, Fin.succAboveEmb, Fin.predAbove]
+    dsimp [insert_nth, remove_nth, Fin.succAboveOrderEmb, Fin.predAbove]
     simp only [Subtype.mk_eq_mk]
     split_ifs
     · convert (List.insertNth_eraseIdx_of_ge i (j - 1) _ _ _).symm

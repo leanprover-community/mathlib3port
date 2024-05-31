@@ -477,7 +477,7 @@ theorem submatrix_cons_row (A : Matrix m' n' α) (i : m') (row : Fin m → m') (
 @[simp]
 theorem submatrix_updateRow_succAbove (A : Matrix (Fin m.succ) n' α) (v : n' → α) (f : o' → n')
     (i : Fin m.succ) :
-    (A.updateRow i v).submatrix i.succAboveEmb f = A.submatrix i.succAboveEmb f :=
+    (A.updateRow i v).submatrix i.succAboveOrderEmb f = A.submatrix i.succAboveOrderEmb f :=
   ext fun r s => (congr_fun (updateRow_ne (Fin.succAbove_ne i r) : _ = A _) (f s) : _)
 #align matrix.submatrix_update_row_succ_above Matrix.submatrix_updateRow_succAbove
 -/
@@ -487,7 +487,7 @@ theorem submatrix_updateRow_succAbove (A : Matrix (Fin m.succ) n' α) (v : n' �
 @[simp]
 theorem submatrix_updateColumn_succAbove (A : Matrix m' (Fin n.succ) α) (v : m' → α) (f : o' → m')
     (i : Fin n.succ) :
-    (A.updateColumn i v).submatrix f i.succAboveEmb = A.submatrix f i.succAboveEmb :=
+    (A.updateColumn i v).submatrix f i.succAboveOrderEmb = A.submatrix f i.succAboveOrderEmb :=
   ext fun r s => updateColumn_ne (Fin.succAbove_ne i s)
 #align matrix.submatrix_update_column_succ_above Matrix.submatrix_updateColumn_succAbove
 -/

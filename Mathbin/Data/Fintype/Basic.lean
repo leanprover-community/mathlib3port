@@ -1040,8 +1040,8 @@ theorem Fin.univ_def (n : ℕ) : (univ : Finset (Fin n)) = ⟨List.finRange n, L
 
 #print Fin.image_succAbove_univ /-
 @[simp]
-theorem Fin.image_succAbove_univ {n : ℕ} (i : Fin (n + 1)) : univ.image i.succAboveEmb = {i}ᶜ := by
-  ext m; simp
+theorem Fin.image_succAbove_univ {n : ℕ} (i : Fin (n + 1)) :
+    univ.image i.succAboveOrderEmb = {i}ᶜ := by ext m; simp
 #align fin.image_succ_above_univ Fin.image_succAbove_univ
 -/
 
@@ -1085,7 +1085,7 @@ theorem Fin.univ_castSuccEmb (n : ℕ) :
 around a specified pivot `p : fin (n + 1)` into the `univ` -/
 theorem Fin.univ_succAbove (n : ℕ) (p : Fin (n + 1)) :
     (univ : Finset (Fin (n + 1))) =
-      cons p (univ.map <| (Fin.succAboveEmb p).toEmbedding) (by simp) :=
+      cons p (univ.map <| (Fin.succAboveOrderEmb p).toEmbedding) (by simp) :=
   by simp [map_eq_image]
 #align fin.univ_succ_above Fin.univ_succAbove
 -/

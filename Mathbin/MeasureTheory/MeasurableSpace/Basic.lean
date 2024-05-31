@@ -1943,7 +1943,7 @@ def finTwoArrow : (Fin 2 → α) ≃ᵐ α × α :=
 `α i × Π j : fin n, α (fin.succ_above i j)`. -/
 @[simps (config := { fullyApplied := false })]
 def piFinSuccAbove {n : ℕ} (α : Fin (n + 1) → Type _) [∀ i, MeasurableSpace (α i)]
-    (i : Fin (n + 1)) : (∀ j, α j) ≃ᵐ α i × ∀ j, α (i.succAboveEmb j)
+    (i : Fin (n + 1)) : (∀ j, α j) ≃ᵐ α i × ∀ j, α (i.succAboveOrderEmb j)
     where
   toEquiv := piFinSuccAbove α i
   measurable_to_fun :=

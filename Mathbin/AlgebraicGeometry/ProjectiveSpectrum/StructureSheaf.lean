@@ -110,22 +110,22 @@ variable {𝒜}
 
 open Submodule SetLike.GradedMonoid HomogeneousLocalization
 
-#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.zeroMem' /-
-theorem zeroMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) :
+#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.zero_mem' /-
+theorem zero_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) :
     (isLocallyFraction 𝒜).pred (0 : ∀ x : unop U, at x.1) := fun x =>
   ⟨unop U, x.2, 𝟙 (unop U), ⟨0, ⟨0, zero_mem _⟩, ⟨1, one_mem⟩, fun y => ⟨_, rfl⟩⟩⟩
-#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.zero_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.zeroMem'
+#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.zero_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.zero_mem'
 -/
 
-#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.oneMem' /-
-theorem oneMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) :
+#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.one_mem' /-
+theorem one_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) :
     (isLocallyFraction 𝒜).pred (1 : ∀ x : unop U, at x.1) := fun x =>
   ⟨unop U, x.2, 𝟙 (unop U), ⟨0, ⟨1, one_mem⟩, ⟨1, one_mem⟩, fun y => ⟨_, rfl⟩⟩⟩
-#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.one_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.oneMem'
+#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.one_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.one_mem'
 -/
 
-#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.addMem' /-
-theorem addMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x : unop U, at x.1)
+#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.add_mem' /-
+theorem add_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x : unop U, at x.1)
     (ha : (isLocallyFraction 𝒜).pred a) (hb : (isLocallyFraction 𝒜).pred b) :
     (isLocallyFraction 𝒜).pred (a + b) := fun x =>
   by
@@ -146,11 +146,11 @@ theorem addMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x :
     dsimp only at hy1 hy2
     erw [hy1, hy2]
     simpa only [val_mk', add_mk, ← Subtype.val_eq_coe, add_comm, mul_comm sa sb]
-#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.add_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.addMem'
+#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.add_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.add_mem'
 -/
 
-#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.negMem' /-
-theorem negMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a : ∀ x : unop U, at x.1)
+#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.neg_mem' /-
+theorem neg_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a : ∀ x : unop U, at x.1)
     (ha : (isLocallyFraction 𝒜).pred a) : (isLocallyFraction 𝒜).pred (-a) := fun x =>
   by
   rcases ha x with ⟨V, m, i, j, ⟨r, r_mem⟩, ⟨s, s_mem⟩, w⟩
@@ -158,11 +158,11 @@ theorem negMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a : ∀ x : u
   refine' ⟨V, m, i, j, ⟨-r, Submodule.neg_mem _ r_mem⟩, ⟨s, s_mem⟩, fun y => ⟨nin y, _⟩⟩
   simp only [ext_iff_val, val_mk', ← Subtype.val_eq_coe] at hy
   simp only [Pi.neg_apply, ext_iff_val, neg_val, hy, val_mk', ← Subtype.val_eq_coe, neg_mk]
-#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.neg_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.negMem'
+#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.neg_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.neg_mem'
 -/
 
-#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.mulMem' /-
-theorem mulMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x : unop U, at x.1)
+#print AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.mul_mem' /-
+theorem mul_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x : unop U, at x.1)
     (ha : (isLocallyFraction 𝒜).pred a) (hb : (isLocallyFraction 𝒜).pred b) :
     (isLocallyFraction 𝒜).pred (a * b) := fun x =>
   by
@@ -181,7 +181,7 @@ theorem mulMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x :
     rw [ext_iff_val] at hy1 hy2 ⊢
     erw [mul_val, hy1, hy2]
     simpa only [val_mk', mk_mul, ← Subtype.val_eq_coe]
-#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.mul_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.mulMem'
+#align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.mul_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.mul_mem'
 -/
 
 end SectionSubring
@@ -198,11 +198,11 @@ variable {𝒜}
 def sectionsSubring (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) : Subring (∀ x : unop U, at x.1)
     where
   carrier := {f | (isLocallyFraction 𝒜).pred f}
-  zero_mem' := zeroMem' U
-  one_mem' := oneMem' U
-  add_mem' := addMem' U
-  neg_mem' := negMem' U
-  hMul_mem' := mulMem' U
+  zero_mem' := zero_mem' U
+  one_mem' := one_mem' U
+  add_mem' := add_mem' U
+  neg_mem' := neg_mem' U
+  hMul_mem' := mul_mem' U
 #align algebraic_geometry.projective_spectrum.structure_sheaf.sections_subring AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.sectionsSubring
 -/
 
@@ -465,8 +465,7 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
           erw [stalk_to_fiber_ring_hom_germ 𝒜 (ProjectiveSpectrum.basicOpen 𝒜 f.denom) ⟨x, _⟩
               (section_in_basic_open _ x f)]
           simp only [section_in_basic_open, Subtype.ext_iff_val,
-            HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk'',
-            f.eq_num_div_denom]
+            HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk, f.eq_num_div_denom]
           rfl⟩⟩
 #align algebraic_geometry.Proj.stalk_iso' AlgebraicGeometry.Proj.stalkIso'
 -/

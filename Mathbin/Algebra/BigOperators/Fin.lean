@@ -82,7 +82,7 @@ is the product of `f x`, for some `x : fin (n + 1)` times the remaining product 
 @[to_additive
       "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of `f x`,\nfor some `x : fin (n + 1)` plus the remaining product"]
 theorem prod_univ_succAbove [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) (x : Fin (n + 1)) :
-    ∏ i, f i = f x * ∏ i : Fin n, f (x.succAboveEmb i) := by
+    ∏ i, f i = f x * ∏ i : Fin n, f (x.succAboveOrderEmb i) := by
   rw [univ_succ_above, prod_cons, Finset.prod_map, RelEmbedding.coe_toEmbedding]
 #align fin.prod_univ_succ_above Fin.prod_univ_succAbove
 #align fin.sum_univ_succ_above Fin.sum_univ_succAbove
@@ -332,7 +332,8 @@ Useful for defining group cohomology. -/
       "Let `(g₀, g₁, ..., gₙ)` be a tuple of elements in `Gⁿ⁺¹`.\nThen if `k < j`, this says `-(g₀ + g₁ + ... + gₖ₋₁) + (g₀ + g₁ + ... + gₖ) = gₖ`.\nIf `k = j`, it says `-(g₀ + g₁ + ... + gₖ₋₁) + (g₀ + g₁ + ... + gₖ₊₁) = gₖ + gₖ₊₁`.\nIf `k > j`, it says `-(g₀ + g₁ + ... + gₖ) + (g₀ + g₁ + ... + gₖ₊₁) = gₖ₊₁.`\nUseful for defining group cohomology."]
 theorem inv_partialProd_mul_eq_contractNth {G : Type _} [Group G] (g : Fin (n + 1) → G)
     (j : Fin (n + 1)) (k : Fin n) :
-    (partialProd g (j.succ.succAboveEmb k.cast_succ))⁻¹ * partialProd g (j.succAboveEmb k).succ =
+    (partialProd g (j.succ.succAboveOrderEmb k.cast_succ))⁻¹ *
+        partialProd g (j.succAboveOrderEmb k).succ =
       j.contractNth Mul.mul g k :=
   by
   rcases lt_trichotomy (k : ℕ) j with (h | h | h)

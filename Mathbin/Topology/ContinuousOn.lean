@@ -804,7 +804,7 @@ theorem continuousOn_pi {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSp
 #print ContinuousWithinAt.fin_insertNth /-
 theorem ContinuousWithinAt.fin_insertNth {n} {π : Fin (n + 1) → Type _}
     [∀ i, TopologicalSpace (π i)] (i : Fin (n + 1)) {f : α → π i} {a : α} {s : Set α}
-    (hf : ContinuousWithinAt f s a) {g : α → ∀ j : Fin n, π (i.succAboveEmb j)}
+    (hf : ContinuousWithinAt f s a) {g : α → ∀ j : Fin n, π (i.succAboveOrderEmb j)}
     (hg : ContinuousWithinAt g s a) : ContinuousWithinAt (fun a => i.insertNth (f a) (g a)) s a :=
   hf.fin_insertNth i hg
 #align continuous_within_at.fin_insert_nth ContinuousWithinAt.fin_insertNth
@@ -813,7 +813,7 @@ theorem ContinuousWithinAt.fin_insertNth {n} {π : Fin (n + 1) → Type _}
 #print ContinuousOn.fin_insertNth /-
 theorem ContinuousOn.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, TopologicalSpace (π i)]
     (i : Fin (n + 1)) {f : α → π i} {s : Set α} (hf : ContinuousOn f s)
-    {g : α → ∀ j : Fin n, π (i.succAboveEmb j)} (hg : ContinuousOn g s) :
+    {g : α → ∀ j : Fin n, π (i.succAboveOrderEmb j)} (hg : ContinuousOn g s) :
     ContinuousOn (fun a => i.insertNth (f a) (g a)) s := fun a ha =>
   (hf a ha).fin_insertNth i (hg a ha)
 #align continuous_on.fin_insert_nth ContinuousOn.fin_insertNth
