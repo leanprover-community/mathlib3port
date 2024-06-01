@@ -1680,10 +1680,10 @@ theorem LinearMap.BilinForm.Nondegenerate.ker_eq_bot {B : BilinForm R₂ M₂} (
 #align bilin_form.nondegenerate.ker_eq_bot LinearMap.BilinForm.Nondegenerate.ker_eq_bot
 -/
 
-#print LinearMap.BilinForm.nondegenerateRestrictOfDisjointOrthogonal /-
+#print LinearMap.BilinForm.nondegenerate_restrict_of_disjoint_orthogonal /-
 /-- The restriction of a reflexive bilinear form `B` onto a submodule `W` is
 nondegenerate if `disjoint W (B.orthogonal W)`. -/
-theorem LinearMap.BilinForm.nondegenerateRestrictOfDisjointOrthogonal (B : BilinForm R₁ M₁)
+theorem LinearMap.BilinForm.nondegenerate_restrict_of_disjoint_orthogonal (B : BilinForm R₁ M₁)
     (b : B.IsRefl) {W : Submodule R₁ M₁} (hW : Disjoint W (B.orthogonal W)) :
     (B.restrict W).Nondegenerate := by
   rintro ⟨x, hx⟩ b₁
@@ -1692,7 +1692,7 @@ theorem LinearMap.BilinForm.nondegenerateRestrictOfDisjointOrthogonal (B : Bilin
   specialize b₁ ⟨y, hy⟩
   rw [restrict_apply, Submodule.coe_mk, Submodule.coe_mk] at b₁
   exact is_ortho_def.mpr (b x y b₁)
-#align bilin_form.nondegenerate_restrict_of_disjoint_orthogonal LinearMap.BilinForm.nondegenerateRestrictOfDisjointOrthogonal
+#align bilin_form.nondegenerate_restrict_of_disjoint_orthogonal LinearMap.BilinForm.nondegenerate_restrict_of_disjoint_orthogonal
 -/
 
 #print LinearMap.BilinForm.iIsOrtho.not_isOrtho_basis_self_of_nondegenerate /-
@@ -1825,7 +1825,7 @@ theorem LinearMap.BilinForm.restrict_nondegenerate_iff_isCompl_orthogonal {B : B
     {W : Subspace K V} (b₁ : B.IsRefl) :
     (B.restrict W).Nondegenerate ↔ IsCompl W (B.orthogonal W) :=
   ⟨fun b₂ => LinearMap.BilinForm.isCompl_orthogonal_of_restrict_nondegenerate b₁ b₂, fun h =>
-    B.nondegenerateRestrictOfDisjointOrthogonal b₁ h.1⟩
+    B.nondegenerate_restrict_of_disjoint_orthogonal b₁ h.1⟩
 #align bilin_form.restrict_nondegenerate_iff_is_compl_orthogonal LinearMap.BilinForm.restrict_nondegenerate_iff_isCompl_orthogonal
 -/
 
@@ -1895,10 +1895,10 @@ lemma below since the below lemma does not require `V` to be finite dimensional.
 on the whole space. -/
 
 
-#print LinearMap.BilinForm.restrictOrthogonalSpanSingletonNondegenerate /-
+#print LinearMap.BilinForm.restrict_nondegenerate_orthogonal_spanSingleton /-
 /-- The restriction of a reflexive, non-degenerate bilinear form on the orthogonal complement of
 the span of a singleton is also non-degenerate. -/
-theorem LinearMap.BilinForm.restrictOrthogonalSpanSingletonNondegenerate (B : BilinForm K V)
+theorem LinearMap.BilinForm.restrict_nondegenerate_orthogonal_spanSingleton (B : BilinForm K V)
     (b₁ : B.Nondegenerate) (b₂ : B.IsRefl) {x : V} (hx : ¬B.IsOrtho x x) :
     LinearMap.BilinForm.Nondegenerate <| B.restrict <| B.orthogonal (K ∙ x) :=
   by
@@ -1909,7 +1909,7 @@ theorem LinearMap.BilinForm.restrictOrthogonalSpanSingletonNondegenerate (B : Bi
   specialize hm ⟨z, hz⟩
   rw [restrict] at hm
   erw [add_right, show B m.1 y = 0 by rw [b₂] <;> exact m.2 y hy, hm, add_zero]
-#align bilin_form.restrict_orthogonal_span_singleton_nondegenerate LinearMap.BilinForm.restrictOrthogonalSpanSingletonNondegenerate
+#align bilin_form.restrict_orthogonal_span_singleton_nondegenerate LinearMap.BilinForm.restrict_nondegenerate_orthogonal_spanSingleton
 -/
 
 section LinearAdjoints

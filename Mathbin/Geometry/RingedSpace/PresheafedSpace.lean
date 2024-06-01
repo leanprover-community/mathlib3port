@@ -329,13 +329,13 @@ def sheafIsoOfIso (H : X ≅ Y) : Y.2 ≅ H.Hom.base _* X.2
 
 #print AlgebraicGeometry.PresheafedSpace.base_isIso_of_iso /-
 instance base_isIso_of_iso (f : X ⟶ Y) [IsIso f] : IsIso f.base :=
-  IsIso.of_iso ((forget _).mapIso (asIso f))
+  Iso.isIso_hom ((forget _).mapIso (asIso f))
 #align algebraic_geometry.PresheafedSpace.base_is_iso_of_iso AlgebraicGeometry.PresheafedSpace.base_isIso_of_iso
 -/
 
 #print AlgebraicGeometry.PresheafedSpace.c_isIso_of_iso /-
 instance c_isIso_of_iso (f : X ⟶ Y) [IsIso f] : IsIso f.c :=
-  IsIso.of_iso (sheafIsoOfIso (asIso f))
+  Iso.isIso_hom (sheafIsoOfIso (asIso f))
 #align algebraic_geometry.PresheafedSpace.c_is_iso_of_iso AlgebraicGeometry.PresheafedSpace.c_isIso_of_iso
 -/
 

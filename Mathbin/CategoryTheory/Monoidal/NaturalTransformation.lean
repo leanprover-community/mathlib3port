@@ -197,7 +197,7 @@ theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality)
 
 #print CategoryTheory.MonoidalNatIso.isIso_of_isIso_app /-
 instance isIso_of_isIso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIso α :=
-  ⟨(IsIso.of_iso
+  ⟨(Iso.isIso_hom
         (ofComponents (fun X => asIso (α.app X)) (fun X Y f => α.toNatTrans.naturality f) α.Unit
           α.tensor)).1⟩
 #align category_theory.monoidal_nat_iso.is_iso_of_is_iso_app CategoryTheory.MonoidalNatIso.isIso_of_isIso_app

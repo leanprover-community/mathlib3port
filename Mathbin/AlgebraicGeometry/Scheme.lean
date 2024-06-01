@@ -85,13 +85,11 @@ deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align algebraic_geometry.Scheme.forget_to_LocallyRingedSpace AlgebraicGeometry.Scheme.forgetToLocallyRingedSpace
 -/
 
-#print AlgebraicGeometry.Scheme.forgetToLocallyRingedSpace_preimage /-
 @[simp]
 theorem forgetToLocallyRingedSpace_preimage {X Y : Scheme} (f : X ⟶ Y) :
     Scheme.forgetToLocallyRingedSpace.preimage f = f :=
   rfl
 #align algebraic_geometry.Scheme.forget_to_LocallyRingedSpace_preimage AlgebraicGeometry.Scheme.forgetToLocallyRingedSpace_preimage
--/
 
 #print AlgebraicGeometry.Scheme.forgetToTop /-
 /-- The forgetful functor from `Scheme` to `Top`. -/

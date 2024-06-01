@@ -274,7 +274,7 @@ def whiskerLeftIso (f : a ⟶ b) {g h : b ⟶ c} (η : g ≅ h) : f ≫ g ≅ f 
 
 #print CategoryTheory.Bicategory.whiskerLeft_isIso /-
 instance whiskerLeft_isIso (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h) [IsIso η] : IsIso (f ◁ η) :=
-  IsIso.of_iso (whiskerLeftIso f (asIso η))
+  Iso.isIso_hom (whiskerLeftIso f (asIso η))
 #align category_theory.bicategory.whisker_left_is_iso CategoryTheory.Bicategory.whiskerLeft_isIso
 -/
 
@@ -297,7 +297,7 @@ def whiskerRightIso {f g : a ⟶ b} (η : f ≅ g) (h : b ⟶ c) : f ≫ h ≅ g
 
 #print CategoryTheory.Bicategory.whiskerRight_isIso /-
 instance whiskerRight_isIso {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c) [IsIso η] : IsIso (η ▷ h) :=
-  IsIso.of_iso (whiskerRightIso (asIso η) h)
+  Iso.isIso_hom (whiskerRightIso (asIso η) h)
 #align category_theory.bicategory.whisker_right_is_iso CategoryTheory.Bicategory.whiskerRight_isIso
 -/
 

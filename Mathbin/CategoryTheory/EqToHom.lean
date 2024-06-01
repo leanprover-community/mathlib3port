@@ -161,7 +161,7 @@ theorem eqToHom_unop {X Y : Cᵒᵖ} (h : X = Y) : (eqToHom h).unop = eqToHom (c
 -/
 
 instance {X Y : C} (h : X = Y) : IsIso (eqToHom h) :=
-  IsIso.of_iso (eqToIso h)
+  Iso.isIso_hom (eqToIso h)
 
 #print CategoryTheory.inv_eqToHom /-
 @[simp]

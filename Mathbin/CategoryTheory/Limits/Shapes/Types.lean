@@ -91,7 +91,7 @@ noncomputable def terminalIso : ⊤_ Type u ≅ PUnit :=
 #print CategoryTheory.Limits.Types.isTerminalPunit /-
 /-- The terminal object in `Type u` is `punit`. -/
 noncomputable def isTerminalPunit : IsTerminal (PUnit : Type u) :=
-  terminalIsTerminal.of_iso terminalIso
+  terminalIsTerminal.isIso_hom terminalIso
 #align category_theory.limits.types.is_terminal_punit CategoryTheory.Limits.Types.isTerminalPunit
 -/
 
@@ -116,7 +116,7 @@ noncomputable def initialIso : ⊥_ Type u ≅ PEmpty :=
 #print CategoryTheory.Limits.Types.isInitialPunit /-
 /-- The initial object in `Type u` is `pempty`. -/
 noncomputable def isInitialPunit : IsInitial (PEmpty : Type u) :=
-  initialIsInitial.of_iso initialIso
+  initialIsInitial.isIso_hom initialIso
 #align category_theory.limits.types.is_initial_punit CategoryTheory.Limits.Types.isInitialPunit
 -/
 

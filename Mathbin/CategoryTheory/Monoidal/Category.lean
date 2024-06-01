@@ -234,7 +234,7 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C]
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalCategory.tensor_isIso /-
 instance tensor_isIso {W X Y Z : C} (f : W ⟶ X) [IsIso f] (g : Y ⟶ Z) [IsIso g] : IsIso (f ⊗ g) :=
-  IsIso.of_iso (asIso f ⊗ asIso g)
+  Iso.isIso_hom (asIso f ⊗ asIso g)
 #align category_theory.monoidal_category.tensor_is_iso CategoryTheory.MonoidalCategory.tensor_isIso
 -/
 

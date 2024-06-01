@@ -699,10 +699,12 @@ theorem natDegree_neg (p : R[X]) : natDegree (-p) = natDegree p := by simp [nat_
 #align polynomial.nat_degree_neg Polynomial.natDegree_neg
 -/
 
+#print Polynomial.natDegree_int_cast /-
 @[simp]
 theorem natDegree_int_cast (n : ℤ) : natDegree (n : R[X]) = 0 := by
   rw [← C_eq_int_cast, nat_degree_C]
 #align polynomial.nat_degree_int_cast Polynomial.natDegree_int_cast
+-/
 
 #print Polynomial.leadingCoeff_neg /-
 @[simp]

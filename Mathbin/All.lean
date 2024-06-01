@@ -313,7 +313,7 @@ import Algebra.Lie.NonUnitalNonAssocAlgebra
 import Algebra.Lie.Normalizer
 import Algebra.Lie.OfAssociative
 import Algebra.Lie.Quotient
-import Algebra.Lie.Semisimple
+import Algebra.Lie.Semisimple.Basic
 import Algebra.Lie.SkewAdjoint
 import Algebra.Lie.Solvable
 import Algebra.Lie.Subalgebra

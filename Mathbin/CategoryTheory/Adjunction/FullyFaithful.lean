@@ -127,45 +127,33 @@ noncomputable def CategoryTheory.Adjunction.whiskerLeftRUnitIsoOfIsIsoCounit [Is
 #align category_theory.whisker_left_R_unit_iso_of_is_iso_counit CategoryTheory.Adjunction.whiskerLeftRUnitIsoOfIsIsoCounit
 -/
 
-#print CategoryTheory.Adjunction.L_full_of_unit_isIso /-
 /-- If the unit is an isomorphism, then the left adjoint is full-/
-noncomputable def CategoryTheory.Adjunction.L_full_of_unit_isIso [IsIso h.Unit] :
-    CategoryTheory.Functor.Full L
+noncomputable def L_full_of_unit_isIso [IsIso h.Unit] : CategoryTheory.Functor.Full L
     where preimage X Y f := h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
-#align category_theory.L_full_of_unit_is_iso CategoryTheory.Adjunction.L_full_of_unit_isIso
--/
+#align category_theory.L_full_of_unit_is_iso CategoryTheory.L_full_of_unit_isIso
 
-#print CategoryTheory.Adjunction.L_faithful_of_unit_isIso /-
 /-- If the unit is an isomorphism, then the left adjoint is faithful-/
-theorem CategoryTheory.Adjunction.L_faithful_of_unit_isIso [IsIso h.Unit] :
-    CategoryTheory.Functor.Faithful L :=
+theorem L_faithful_of_unit_isIso [IsIso h.Unit] : CategoryTheory.Functor.Faithful L :=
   {
     map_injective' := fun X Y f g H =>
       by
       rw [← (h.hom_equiv X (L.obj Y)).apply_eq_iff_eq] at H
       simpa using H =≫ inv (h.unit.app Y) }
-#align category_theory.L_faithful_of_unit_is_iso CategoryTheory.Adjunction.L_faithful_of_unit_isIso
--/
+#align category_theory.L_faithful_of_unit_is_iso CategoryTheory.L_faithful_of_unit_isIso
 
-#print CategoryTheory.Adjunction.R_full_of_counit_isIso /-
 /-- If the counit is an isomorphism, then the right adjoint is full-/
-noncomputable def CategoryTheory.Adjunction.R_full_of_counit_isIso [IsIso h.counit] :
-    CategoryTheory.Functor.Full R
+noncomputable def R_full_of_counit_isIso [IsIso h.counit] : CategoryTheory.Functor.Full R
     where preimage X Y f := inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
-#align category_theory.R_full_of_counit_is_iso CategoryTheory.Adjunction.R_full_of_counit_isIso
--/
+#align category_theory.R_full_of_counit_is_iso CategoryTheory.R_full_of_counit_isIso
 
-#print CategoryTheory.Adjunction.R_faithful_of_counit_isIso /-
 /-- If the counit is an isomorphism, then the right adjoint is faithful-/
-theorem CategoryTheory.Adjunction.R_faithful_of_counit_isIso [IsIso h.counit] :
-    CategoryTheory.Functor.Faithful R :=
+theorem R_faithful_of_counit_isIso [IsIso h.counit] : CategoryTheory.Functor.Faithful R :=
   {
     map_injective' := fun X Y f g H =>
       by
       rw [← (h.hom_equiv (R.obj X) Y).symm.apply_eq_iff_eq] at H
       simpa using inv (h.counit.app X) ≫= H }
-#align category_theory.R_faithful_of_counit_is_iso CategoryTheory.Adjunction.R_faithful_of_counit_isIso
--/
+#align category_theory.R_faithful_of_counit_is_iso CategoryTheory.R_faithful_of_counit_isIso
 
 #print CategoryTheory.Adjunction.whiskerLeft_counit_iso_of_L_fully_faithful /-
 instance CategoryTheory.Adjunction.whiskerLeft_counit_iso_of_L_fully_faithful

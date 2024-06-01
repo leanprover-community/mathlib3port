@@ -177,7 +177,6 @@ theorem isIso_of_fully_faithful (f : X ⟶ Y) [IsIso (F.map f)] : IsIso f :=
 #align category_theory.is_iso_of_fully_faithful CategoryTheory.isIso_of_fully_faithful
 -/
 
-#print CategoryTheory.equivOfFullyFaithful /-
 /-- If `F` is fully faithful, we have an equivalence of hom-sets `X ⟶ Y` and `F X ⟶ F Y`. -/
 @[simps]
 def equivOfFullyFaithful {X Y} : (X ⟶ Y) ≃ (F.obj X ⟶ F.obj Y)
@@ -187,9 +186,7 @@ def equivOfFullyFaithful {X Y} : (X ⟶ Y) ≃ (F.obj X ⟶ F.obj Y)
   left_inv f := by simp
   right_inv f := by simp
 #align category_theory.equiv_of_fully_faithful CategoryTheory.equivOfFullyFaithful
--/
 
-#print CategoryTheory.isoEquivOfFullyFaithful /-
 /-- If `F` is fully faithful, we have an equivalence of iso-sets `X ≅ Y` and `F X ≅ F Y`. -/
 @[simps]
 def isoEquivOfFullyFaithful {X Y} : (X ≅ Y) ≃ (F.obj X ≅ F.obj Y)
@@ -199,7 +196,6 @@ def isoEquivOfFullyFaithful {X Y} : (X ≅ Y) ≃ (F.obj X ≅ F.obj Y)
   left_inv f := by simp
   right_inv f := by ext; simp
 #align category_theory.iso_equiv_of_fully_faithful CategoryTheory.isoEquivOfFullyFaithful
--/
 
 end
 
@@ -208,7 +204,6 @@ section
 variable {E : Type _} [Category E] {F G : C ⥤ D} (H : D ⥤ E) [CategoryTheory.Functor.Full H]
   [CategoryTheory.Functor.Faithful H]
 
-#print CategoryTheory.natTransOfCompFullyFaithful /-
 /-- We can construct a natural transformation between functors by constructing a
 natural transformation between those functors composed with a fully faithful functor. -/
 @[simps]
@@ -217,9 +212,7 @@ def natTransOfCompFullyFaithful (α : F ⋙ H ⟶ G ⋙ H) : F ⟶ G
   app X := (equivOfFullyFaithful H).symm (α.app X)
   naturality' X Y f := by dsimp; apply H.map_injective; simpa using α.naturality f
 #align category_theory.nat_trans_of_comp_fully_faithful CategoryTheory.natTransOfCompFullyFaithful
--/
 
-#print CategoryTheory.natIsoOfCompFullyFaithful /-
 /-- We can construct a natural isomorphism between functors by constructing a natural isomorphism
 between those functors composed with a fully faithful functor. -/
 @[simps]
@@ -227,23 +220,17 @@ def natIsoOfCompFullyFaithful (i : F ⋙ H ≅ G ⋙ H) : F ≅ G :=
   NatIso.ofComponents (fun X => (isoEquivOfFullyFaithful H).symm (i.app X)) fun X Y f => by dsimp;
     apply H.map_injective; simpa using i.hom.naturality f
 #align category_theory.nat_iso_of_comp_fully_faithful CategoryTheory.natIsoOfCompFullyFaithful
--/
 
-#print CategoryTheory.natIsoOfCompFullyFaithful_hom /-
 theorem natIsoOfCompFullyFaithful_hom (i : F ⋙ H ≅ G ⋙ H) :
     (natIsoOfCompFullyFaithful H i).Hom = natTransOfCompFullyFaithful H i.Hom := by ext;
   simp [nat_iso_of_comp_fully_faithful]
 #align category_theory.nat_iso_of_comp_fully_faithful_hom CategoryTheory.natIsoOfCompFullyFaithful_hom
--/
 
-#print CategoryTheory.natIsoOfCompFullyFaithful_inv /-
 theorem natIsoOfCompFullyFaithful_inv (i : F ⋙ H ≅ G ⋙ H) :
     (natIsoOfCompFullyFaithful H i).inv = natTransOfCompFullyFaithful H i.inv := by ext;
   simp [← preimage_comp]; dsimp; simp
 #align category_theory.nat_iso_of_comp_fully_faithful_inv CategoryTheory.natIsoOfCompFullyFaithful_inv
--/
 
-#print CategoryTheory.NatTrans.equivOfCompFullyFaithful /-
 /-- Horizontal composition with a fully faithful functor induces a bijection on
 natural transformations. -/
 @[simps]
@@ -254,9 +241,7 @@ def NatTrans.equivOfCompFullyFaithful : (F ⟶ G) ≃ (F ⋙ H ⟶ G ⋙ H)
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.nat_trans.equiv_of_comp_fully_faithful CategoryTheory.NatTrans.equivOfCompFullyFaithful
--/
 
-#print CategoryTheory.NatIso.equivOfCompFullyFaithful /-
 /-- Horizontal composition with a fully faithful functor induces a bijection on
 natural isomorphisms. -/
 @[simps]
@@ -267,7 +252,6 @@ def NatIso.equivOfCompFullyFaithful : (F ≅ G) ≃ (F ⋙ H ≅ G ⋙ H)
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.nat_iso.equiv_of_comp_fully_faithful CategoryTheory.NatIso.equivOfCompFullyFaithful
--/
 
 end
 

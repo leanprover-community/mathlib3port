@@ -955,7 +955,7 @@ def prod.mapIso {W X Y Z : C} [HasBinaryProduct W X] [HasBinaryProduct Y Z] (f :
 #print CategoryTheory.Limits.isIso_prod /-
 instance isIso_prod {W X Y Z : C} [HasBinaryProduct W X] [HasBinaryProduct Y Z] (f : W ⟶ Y)
     (g : X ⟶ Z) [IsIso f] [IsIso g] : IsIso (prod.map f g) :=
-  IsIso.of_iso (prod.mapIso (asIso f) (asIso g))
+  Iso.isIso_hom (prod.mapIso (asIso f) (asIso g))
 #align category_theory.limits.is_iso_prod CategoryTheory.Limits.isIso_prod
 -/
 
@@ -1109,7 +1109,7 @@ def coprod.mapIso {W X Y Z : C} [HasBinaryCoproduct W X] [HasBinaryCoproduct Y Z
 #print CategoryTheory.Limits.isIso_coprod /-
 instance isIso_coprod {W X Y Z : C} [HasBinaryCoproduct W X] [HasBinaryCoproduct Y Z] (f : W ⟶ Y)
     (g : X ⟶ Z) [IsIso f] [IsIso g] : IsIso (coprod.map f g) :=
-  IsIso.of_iso (coprod.mapIso (asIso f) (asIso g))
+  Iso.isIso_hom (coprod.mapIso (asIso f) (asIso g))
 #align category_theory.limits.is_iso_coprod CategoryTheory.Limits.isIso_coprod
 -/
 

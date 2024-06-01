@@ -815,37 +815,37 @@ section
 
 variable (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ shiftFunctor D i)
 
-#print CategoryTheory.hasShiftOfFullyFaithful_zero /-
+#print CategoryTheory.Functor.FullyFaithful.hasShift.zero /-
 /-- auxiliary definition for `has_shift_of_fully_faithful` -/
-def hasShiftOfFullyFaithful_zero : s 0 ≅ 𝟭 C :=
+def CategoryTheory.Functor.FullyFaithful.hasShift.zero : s 0 ≅ 𝟭 C :=
   natIsoOfCompFullyFaithful F
     (i 0 ≪≫
       isoWhiskerLeft F (shiftFunctorZero D A) ≪≫
         Functor.rightUnitor _ ≪≫ (Functor.leftUnitor _).symm)
-#align category_theory.has_shift_of_fully_faithful_zero CategoryTheory.hasShiftOfFullyFaithful_zero
+#align category_theory.has_shift_of_fully_faithful_zero CategoryTheory.Functor.FullyFaithful.hasShift.zero
 -/
 
-#print CategoryTheory.map_hasShiftOfFullyFaithful_zero_hom_app /-
+#print CategoryTheory.Functor.FullyFaithful.hasShift.map_zero_hom_app /-
 @[simp]
-theorem map_hasShiftOfFullyFaithful_zero_hom_app (X : C) :
-    F.map ((hasShiftOfFullyFaithful_zero F s i).Hom.app X) =
+theorem CategoryTheory.Functor.FullyFaithful.hasShift.map_zero_hom_app (X : C) :
+    F.map ((CategoryTheory.Functor.FullyFaithful.hasShift.zero F s i).Hom.app X) =
       (i 0).Hom.app X ≫ (shiftFunctorZero D A).Hom.app (F.obj X) :=
   by dsimp [has_shift_of_fully_faithful_zero]; simp
-#align category_theory.map_has_shift_of_fully_faithful_zero_hom_app CategoryTheory.map_hasShiftOfFullyFaithful_zero_hom_app
+#align category_theory.map_has_shift_of_fully_faithful_zero_hom_app CategoryTheory.Functor.FullyFaithful.hasShift.map_zero_hom_app
 -/
 
-#print CategoryTheory.map_hasShiftOfFullyFaithful_zero_inv_app /-
+#print CategoryTheory.Functor.FullyFaithful.hasShift.map_zero_inv_app /-
 @[simp]
-theorem map_hasShiftOfFullyFaithful_zero_inv_app (X : C) :
-    F.map ((hasShiftOfFullyFaithful_zero F s i).inv.app X) =
+theorem CategoryTheory.Functor.FullyFaithful.hasShift.map_zero_inv_app (X : C) :
+    F.map ((CategoryTheory.Functor.FullyFaithful.hasShift.zero F s i).inv.app X) =
       (shiftFunctorZero D A).inv.app (F.obj X) ≫ (i 0).inv.app X :=
   by dsimp [has_shift_of_fully_faithful_zero]; simp
-#align category_theory.map_has_shift_of_fully_faithful_zero_inv_app CategoryTheory.map_hasShiftOfFullyFaithful_zero_inv_app
+#align category_theory.map_has_shift_of_fully_faithful_zero_inv_app CategoryTheory.Functor.FullyFaithful.hasShift.map_zero_inv_app
 -/
 
-#print CategoryTheory.hasShiftOfFullyFaithful_add /-
+#print CategoryTheory.Functor.FullyFaithful.hasShift.add /-
 /-- auxiliary definition for `has_shift_of_fully_faithful` -/
-def hasShiftOfFullyFaithful_add (a b : A) : s (a + b) ≅ s a ⋙ s b :=
+def CategoryTheory.Functor.FullyFaithful.hasShift.add (a b : A) : s (a + b) ≅ s a ⋙ s b :=
   natIsoOfCompFullyFaithful F
     (i (a + b) ≪≫
       isoWhiskerLeft _ (shiftFunctorAdd D a b) ≪≫
@@ -853,38 +853,38 @@ def hasShiftOfFullyFaithful_add (a b : A) : s (a + b) ≅ s a ⋙ s b :=
           isoWhiskerRight (i a).symm _ ≪≫
             Functor.associator _ _ _ ≪≫
               isoWhiskerLeft _ (i b).symm ≪≫ (Functor.associator _ _ _).symm)
-#align category_theory.has_shift_of_fully_faithful_add CategoryTheory.hasShiftOfFullyFaithful_add
+#align category_theory.has_shift_of_fully_faithful_add CategoryTheory.Functor.FullyFaithful.hasShift.add
 -/
 
-#print CategoryTheory.map_hasShiftOfFullyFaithful_add_hom_app /-
+#print CategoryTheory.Functor.FullyFaithful.hasShift.map_add_hom_app /-
 @[simp]
-theorem map_hasShiftOfFullyFaithful_add_hom_app (a b : A) (X : C) :
-    F.map ((hasShiftOfFullyFaithful_add F s i a b).Hom.app X) =
+theorem CategoryTheory.Functor.FullyFaithful.hasShift.map_add_hom_app (a b : A) (X : C) :
+    F.map ((CategoryTheory.Functor.FullyFaithful.hasShift.add F s i a b).Hom.app X) =
       (i (a + b)).Hom.app X ≫
         (shiftFunctorAdd D a b).Hom.app (F.obj X) ≫
           (i a).inv.app X⟦b⟧' ≫ (i b).inv.app ((s a).obj X) :=
   by dsimp [has_shift_of_fully_faithful_add]; simp
-#align category_theory.map_has_shift_of_fully_faithful_add_hom_app CategoryTheory.map_hasShiftOfFullyFaithful_add_hom_app
+#align category_theory.map_has_shift_of_fully_faithful_add_hom_app CategoryTheory.Functor.FullyFaithful.hasShift.map_add_hom_app
 -/
 
-#print CategoryTheory.map_hasShiftOfFullyFaithful_add_inv_app /-
+#print CategoryTheory.Functor.FullyFaithful.hasShift.map_add_inv_app /-
 @[simp]
-theorem map_hasShiftOfFullyFaithful_add_inv_app (a b : A) (X : C) :
-    F.map ((hasShiftOfFullyFaithful_add F s i a b).inv.app X) =
+theorem CategoryTheory.Functor.FullyFaithful.hasShift.map_add_inv_app (a b : A) (X : C) :
+    F.map ((CategoryTheory.Functor.FullyFaithful.hasShift.add F s i a b).inv.app X) =
       (i b).Hom.app ((s a).obj X) ≫
         (i a).Hom.app X⟦b⟧' ≫ (shiftFunctorAdd D a b).inv.app (F.obj X) ≫ (i (a + b)).inv.app X :=
   by dsimp [has_shift_of_fully_faithful_add]; simp
-#align category_theory.map_has_shift_of_fully_faithful_add_inv_app CategoryTheory.map_hasShiftOfFullyFaithful_add_inv_app
+#align category_theory.map_has_shift_of_fully_faithful_add_inv_app CategoryTheory.Functor.FullyFaithful.hasShift.map_add_inv_app
 -/
 
-#print CategoryTheory.hasShiftOfFullyFaithful /-
+#print CategoryTheory.Functor.FullyFaithful.hasShift /-
 /-- Given a family of endomorphisms of `C` which are interwined by a fully faithful `F : C ⥤ D`
 with shift functors on `D`, we can promote that family to shift functors on `C`. -/
-def hasShiftOfFullyFaithful : HasShift C A :=
+def CategoryTheory.Functor.FullyFaithful.hasShift : HasShift C A :=
   hasShiftMk C A
     { f := s
-      zero := hasShiftOfFullyFaithful_zero F s i
-      add := hasShiftOfFullyFaithful_add F s i
+      zero := CategoryTheory.Functor.FullyFaithful.hasShift.zero F s i
+      add := CategoryTheory.Functor.FullyFaithful.hasShift.add F s i
       assoc_hom_app := fun m₁ m₂ m₃ X =>
         F.map_injective
           (by
@@ -922,7 +922,7 @@ def hasShiftOfFullyFaithful : HasShift C A :=
             dsimp at this
             simpa [this, ← nat_trans.naturality_assoc, eq_to_hom_map,
               shift_functor_add_add_zero_hom_app]) }
-#align category_theory.has_shift_of_fully_faithful CategoryTheory.hasShiftOfFullyFaithful
+#align category_theory.has_shift_of_fully_faithful CategoryTheory.Functor.FullyFaithful.hasShift
 -/
 
 end

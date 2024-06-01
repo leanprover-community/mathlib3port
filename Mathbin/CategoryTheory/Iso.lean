@@ -433,23 +433,23 @@ instance id (X : C) : IsIso (𝟙 X) :=
 #align category_theory.is_iso.id CategoryTheory.IsIso.id
 -/
 
-#print CategoryTheory.IsIso.of_iso /-
-instance of_iso (f : X ≅ Y) : IsIso f.Hom :=
+#print CategoryTheory.Iso.isIso_hom /-
+instance isIso_hom (f : X ≅ Y) : IsIso f.Hom :=
   ⟨⟨f.inv, by simp⟩⟩
-#align category_theory.is_iso.of_iso CategoryTheory.IsIso.of_iso
+#align category_theory.is_iso.of_iso CategoryTheory.Iso.isIso_hom
 -/
 
-#print CategoryTheory.IsIso.of_iso_inv /-
-instance of_iso_inv (f : X ≅ Y) : IsIso f.inv :=
-  IsIso.of_iso f.symm
-#align category_theory.is_iso.of_iso_inv CategoryTheory.IsIso.of_iso_inv
+#print CategoryTheory.Iso.isIso_inv /-
+instance isIso_inv (f : X ≅ Y) : IsIso f.inv :=
+  Iso.isIso_hom f.symm
+#align category_theory.is_iso.of_iso_inv CategoryTheory.Iso.isIso_inv
 -/
 
 variable {f g : X ⟶ Y} {h : Y ⟶ Z}
 
 #print CategoryTheory.IsIso.inv_isIso /-
 instance inv_isIso [IsIso f] : IsIso (inv f) :=
-  IsIso.of_iso_inv (asIso f)
+  Iso.isIso_inv (asIso f)
 #align category_theory.is_iso.inv_is_iso CategoryTheory.IsIso.inv_isIso
 -/
 
@@ -459,7 +459,7 @@ Suppose we are given `f : X ≅ Y` with `X Y : Type u`.
 Without the lower priority, typeclass inference cannot deduce `is_iso f.hom`
 because `f.hom` is defeq to `(λ x, x) ≫ f.hom`, triggering a loop. -/
 instance (priority := 900) comp_isIso [IsIso f] [IsIso h] : IsIso (f ≫ h) :=
-  IsIso.of_iso <| asIso f ≪≫ asIso h
+  Iso.isIso_hom <| asIso f ≪≫ asIso h
 #align category_theory.is_iso.comp_is_iso CategoryTheory.IsIso.comp_isIso
 -/
 
@@ -725,7 +725,7 @@ theorem mapIso_refl (F : C ⥤ D) (X : C) : F.mapIso (Iso.refl X) = Iso.refl (F.
 
 #print CategoryTheory.Functor.map_isIso /-
 instance map_isIso (F : C ⥤ D) (f : X ⟶ Y) [IsIso f] : IsIso (F.map f) :=
-  IsIso.of_iso <| F.mapIso (asIso f)
+  Iso.isIso_hom <| F.mapIso (asIso f)
 #align category_theory.functor.map_is_iso CategoryTheory.Functor.map_isIso
 -/
 

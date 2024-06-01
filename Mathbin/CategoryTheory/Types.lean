@@ -454,7 +454,7 @@ namespace CategoryTheory
 /-- A morphism in `Type u` is an isomorphism if and only if it is bijective. -/
 theorem isIso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : IsIso f ↔ Function.Bijective f :=
   Iff.intro (fun i => (as_iso f : X ≅ Y).toEquiv.Bijective) fun b =>
-    IsIso.of_iso (Equiv.ofBijective f b).toIso
+    Iso.isIso_hom (Equiv.ofBijective f b).toIso
 #align category_theory.is_iso_iff_bijective CategoryTheory.isIso_iff_bijective
 -/
 

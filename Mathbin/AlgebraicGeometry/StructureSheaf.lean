@@ -701,10 +701,10 @@ def stalkIso (x : PrimeSpectrum.Top R) :
 -/
 
 instance (x : PrimeSpectrum R) : IsIso (stalkToFiberRingHom R x) :=
-  IsIso.of_iso (stalkIso R x)
+  Iso.isIso_hom (stalkIso R x)
 
 instance (x : PrimeSpectrum R) : IsIso (localizationToStalk R x) :=
-  IsIso.of_iso (stalkIso R x).symm
+  Iso.isIso_hom (stalkIso R x).symm
 
 #print AlgebraicGeometry.StructureSheaf.stalkToFiberRingHom_localizationToStalk /-
 @[simp, reassoc]

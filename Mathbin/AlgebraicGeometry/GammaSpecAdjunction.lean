@@ -440,7 +440,7 @@ attribute [local semireducible] LocallyRingedSpace_adjunction Γ_Spec.adjunction
 
 #print AlgebraicGeometry.ΓSpec.isIso_locallyRingedSpaceAdjunction_counit /-
 instance isIso_locallyRingedSpaceAdjunction_counit : IsIso locallyRingedSpaceAdjunction.counit :=
-  IsIso.of_iso_inv _
+  Iso.isIso_inv _
 #align algebraic_geometry.Γ_Spec.is_iso_LocallyRingedSpace_adjunction_counit AlgebraicGeometry.ΓSpec.isIso_locallyRingedSpaceAdjunction_counit
 -/
 
@@ -492,21 +492,21 @@ instance Spec.preservesLimits : Limits.preservesLimits Scheme.Spec :=
 
 /-- Spec is a full functor. -/
 instance : CategoryTheory.Functor.Full Spec.toLocallyRingedSpace :=
-  CategoryTheory.Adjunction.R_full_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
+  R_full_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
 
 #print AlgebraicGeometry.Spec.full /-
 instance Spec.full : CategoryTheory.Functor.Full Scheme.Spec :=
-  CategoryTheory.Adjunction.R_full_of_counit_isIso ΓSpec.adjunction
+  R_full_of_counit_isIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.full AlgebraicGeometry.Spec.full
 -/
 
 /-- Spec is a faithful functor. -/
 instance : CategoryTheory.Functor.Faithful Spec.toLocallyRingedSpace :=
-  CategoryTheory.Adjunction.R_faithful_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
+  R_faithful_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
 
 #print AlgebraicGeometry.Spec.faithful /-
 instance Spec.faithful : CategoryTheory.Functor.Faithful Scheme.Spec :=
-  CategoryTheory.Adjunction.R_faithful_of_counit_isIso ΓSpec.adjunction
+  R_faithful_of_counit_isIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.faithful AlgebraicGeometry.Spec.faithful
 -/
 

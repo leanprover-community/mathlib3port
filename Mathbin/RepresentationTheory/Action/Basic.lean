@@ -193,7 +193,7 @@ instance (priority := 100) isIso_of_hom_isIso {M N : Action V G} (f : M ⟶ N) [
 
 #print Action.isIso_hom_mk /-
 instance isIso_hom_mk {M N : Action V G} (f : M.V ⟶ N.V) [IsIso f] (w) : @IsIso _ _ M N ⟨f, w⟩ :=
-  IsIso.of_iso (mkIso (asIso f) w)
+  Iso.isIso_hom (mkIso (asIso f) w)
 #align Action.is_iso_hom_mk Action.isIso_hom_mk
 -/
 

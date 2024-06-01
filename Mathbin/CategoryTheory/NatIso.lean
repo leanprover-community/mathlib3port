@@ -275,7 +275,7 @@ theorem ofComponents.app (app' : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X
 /-- A natural transformation is an isomorphism if all its components are isomorphisms.
 -/
 theorem isIso_of_isIso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIso α :=
-  ⟨(IsIso.of_iso (ofComponents (fun X => asIso (α.app X)) (by tidy))).1⟩
+  ⟨(Iso.isIso_hom (ofComponents (fun X => asIso (α.app X)) (by tidy))).1⟩
 #align category_theory.nat_iso.is_iso_of_is_iso_app CategoryTheory.NatIso.isIso_of_isIso_app
 -/
 

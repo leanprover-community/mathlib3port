@@ -220,14 +220,14 @@ theorem isoWhiskerRight_inv {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) :
 #print CategoryTheory.isIso_whiskerLeft /-
 instance isIso_whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) [IsIso α] :
     IsIso (whiskerLeft F α) :=
-  IsIso.of_iso (isoWhiskerLeft F (asIso α))
+  Iso.isIso_hom (isoWhiskerLeft F (asIso α))
 #align category_theory.is_iso_whisker_left CategoryTheory.isIso_whiskerLeft
 -/
 
 #print CategoryTheory.isIso_whiskerRight /-
 instance isIso_whiskerRight {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) [IsIso α] :
     IsIso (whiskerRight α F) :=
-  IsIso.of_iso (isoWhiskerRight (asIso α) F)
+  Iso.isIso_hom (isoWhiskerRight (asIso α) F)
 #align category_theory.is_iso_whisker_right CategoryTheory.isIso_whiskerRight
 -/
 

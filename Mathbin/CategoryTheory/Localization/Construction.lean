@@ -157,7 +157,7 @@ variable (W)
 
 #print CategoryTheory.MorphismProperty.Q_inverts /-
 theorem CategoryTheory.MorphismProperty.Q_inverts : W.IsInvertedBy W.Q := fun X Y w hw =>
-  IsIso.of_iso (Localization.Construction.wIso w hw)
+  Iso.isIso_hom (Localization.Construction.wIso w hw)
 #align category_theory.morphism_property.Q_inverts CategoryTheory.MorphismProperty.Q_inverts
 -/
 

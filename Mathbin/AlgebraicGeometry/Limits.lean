@@ -128,14 +128,14 @@ instance (priority := 100) isIso_of_isEmpty {X Y : Scheme} (f : X ⟶ Y) [IsEmpt
 #print AlgebraicGeometry.isInitialOfIsEmpty /-
 /-- A scheme is initial if its underlying space is empty . -/
 noncomputable def isInitialOfIsEmpty {X : Scheme} [IsEmpty X.carrier] : IsInitial X :=
-  emptyIsInitial.of_iso (asIso <| emptyIsInitial.to _)
+  emptyIsInitial.isIso_hom (asIso <| emptyIsInitial.to _)
 #align algebraic_geometry.is_initial_of_is_empty AlgebraicGeometry.isInitialOfIsEmpty
 -/
 
 #print AlgebraicGeometry.specPunitIsInitial /-
 /-- `Spec 0` is the initial object in the category of schemes. -/
 noncomputable def specPunitIsInitial : IsInitial (Scheme.Spec.obj (op <| CommRingCat.of PUnit)) :=
-  emptyIsInitial.of_iso (asIso <| emptyIsInitial.to _)
+  emptyIsInitial.isIso_hom (asIso <| emptyIsInitial.to _)
 #align algebraic_geometry.Spec_punit_is_initial AlgebraicGeometry.specPunitIsInitial
 -/
 

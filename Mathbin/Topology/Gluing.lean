@@ -382,7 +382,7 @@ def mk' (h : MkCore.{u}) : TopCat.GlueData
   U := h.U
   V i := (Opens.toTopCat _).obj (h.V i.1 i.2)
   f i j := (h.V i j).inclusion
-  f_id i := (h.v_id i).symm ▸ IsIso.of_iso (Opens.inclusionTopIso (h.U i))
+  f_id i := (h.v_id i).symm ▸ Iso.isIso_hom (Opens.inclusionTopIso (h.U i))
   f_open := fun i j : h.J => (h.V i j).OpenEmbedding
   t := h.t
   t_id i := by ext; rw [h.t_id]; rfl

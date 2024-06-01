@@ -896,11 +896,11 @@ theorem IsRefl.nondegenerate_of_separatingRight {B : M →ₗ[R] M →ₗ[R] R} 
 #align linear_map.is_refl.nondegenerate_of_separating_right LinearMap.IsRefl.nondegenerate_of_separatingRight
 -/
 
-#print LinearMap.nondegenerateRestrictOfDisjointOrthogonal /-
+#print LinearMap.nondegenerate_restrict_of_disjoint_orthogonal /-
 /-- The restriction of a reflexive bilinear form `B` onto a submodule `W` is
 nondegenerate if `W` has trivial intersection with its orthogonal complement,
 that is `disjoint W (W.orthogonal_bilin B)`. -/
-theorem nondegenerateRestrictOfDisjointOrthogonal {B : M →ₗ[R] M →ₗ[R] R} (hB : B.IsRefl)
+theorem nondegenerate_restrict_of_disjoint_orthogonal {B : M →ₗ[R] M →ₗ[R] R} (hB : B.IsRefl)
     {W : Submodule R M} (hW : Disjoint W (W.orthogonalBilin B)) :
     (B.domRestrict₁₂ W W).Nondegenerate :=
   by
@@ -912,7 +912,7 @@ theorem nondegenerateRestrictOfDisjointOrthogonal {B : M →ₗ[R] M →ₗ[R] R
   simp_rw [dom_restrict₁₂_apply, Submodule.coe_mk] at b₁
   rw [hB.ortho_comm]
   exact b₁
-#align linear_map.nondegenerate_restrict_of_disjoint_orthogonal LinearMap.nondegenerateRestrictOfDisjointOrthogonal
+#align linear_map.nondegenerate_restrict_of_disjoint_orthogonal LinearMap.nondegenerate_restrict_of_disjoint_orthogonal
 -/
 
 #print LinearMap.IsOrthoᵢ.not_isOrtho_basis_self_of_separatingLeft /-

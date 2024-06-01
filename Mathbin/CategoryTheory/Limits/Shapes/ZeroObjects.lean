@@ -174,7 +174,7 @@ open CategoryTheory.Limits
 
 #print CategoryTheory.Iso.isZero_iff /-
 theorem Iso.isZero_iff {X Y : C} (e : X ≅ Y) : IsZero X ↔ IsZero Y :=
-  ⟨fun h => h.of_iso e.symm, fun h => h.of_iso e⟩
+  ⟨fun h => h.isIso_hom e.symm, fun h => h.isIso_hom e⟩
 #align category_theory.iso.is_zero_iff CategoryTheory.Iso.isZero_iff
 -/
 
@@ -268,7 +268,7 @@ theorem IsZero.obj [HasZeroObject D] {F : C ⥤ D} (hF : IsZero F) (X : C) : IsZ
   let G : C ⥤ D := (CategoryTheory.Functor.const C).obj 0
   have hG : is_zero G := functor.is_zero _ fun X => is_zero_zero _
   let e : F ≅ G := hF.iso hG
-  exact (is_zero_zero _).of_iso (e.app X)
+  exact (is_zero_zero _).isIso_hom (e.app X)
 #align category_theory.limits.is_zero.obj CategoryTheory.Limits.IsZero.obj
 -/
 
