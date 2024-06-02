@@ -3,7 +3,7 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Data.BitVec.Defs
+import Data.Bitvec.Core
 import Data.Fin.Basic
 import Mathbin.Tactic.Monotonicity.Default
 import Tactic.NormNum
@@ -22,11 +22,9 @@ def ofFin {n : ℕ} (i : Fin <| 2 ^ n) : BitVec n :=
 #align bitvec.of_fin BitVec.ofFin
 -/
 
-#print BitVec.ofFin_val /-
 theorem ofFin_val {n : ℕ} (i : Fin <| 2 ^ n) : (ofFin i).toNat = i.val := by
   rw [of_fin, to_nat_of_nat, Nat.mod_eq_of_lt] <;> apply i.is_lt
 #align bitvec.of_fin_val BitVec.ofFin_val
--/
 
 #print BitVec.toFin /-
 /-- convert `bitvec` to `fin` -/
@@ -35,11 +33,9 @@ def toFin {n : ℕ} (i : BitVec n) : Fin <| 2 ^ n :=
 #align bitvec.to_fin BitVec.toFin
 -/
 
-#print BitVec.addLsb_eq_twice_add_one /-
 theorem addLsb_eq_twice_add_one {x b} : addLsb x b = 2 * x + cond b 1 0 := by
   simp [add_lsb, two_mul]
 #align bitvec.add_lsb_eq_twice_add_one BitVec.addLsb_eq_twice_add_one
--/
 
 theorem toNat_eq_foldr_reverse {n : ℕ} (v : BitVec n) :
     v.toNat = v.toList.reverse.foldr (flip addLsb) 0 := by rw [List.foldr_reverse, flip] <;> rfl
@@ -65,23 +61,19 @@ theorem toNat_lt {n : ℕ} (v : BitVec n) : v.toNat < 2 ^ n :=
 #align bitvec.to_nat_lt BitVec.toNat_lt
 -/
 
-#print BitVec.addLsb_div_two /-
 theorem addLsb_div_two {x b} : addLsb x b / 2 = x := by
   cases b <;>
       simp only [Nat.add_mul_div_left, add_lsb, ← two_mul, add_comm, Nat.succ_pos',
         Nat.mul_div_right, gt_iff_lt, zero_add, cond] <;>
     norm_num
 #align bitvec.add_lsb_div_two BitVec.addLsb_div_two
--/
 
-#print BitVec.decide_addLsb_mod_two /-
 theorem decide_addLsb_mod_two {x b} : decide (addLsb x b % 2 = 1) = b := by
   cases b <;>
       simp only [Bool.decide_iff, Nat.add_mul_mod_self_left, add_lsb, ← two_mul, add_comm,
         Bool.decide_False, Nat.mul_mod_right, zero_add, cond, zero_ne_one] <;>
     norm_num
 #align bitvec.to_bool_add_lsb_mod_two BitVec.decide_addLsb_mod_two
--/
 
 #print BitVec.ofNat_toNat /-
 theorem ofNat_toNat {n : ℕ} (v : BitVec n) : BitVec.ofNat _ v.toNat = v :=
@@ -103,36 +95,26 @@ theorem ofNat_toNat {n : ℕ} (v : BitVec n) : BitVec.ofNat _ v.toNat = v :=
 #align bitvec.of_nat_to_nat BitVec.ofNat_toNat
 -/
 
-#print BitVec.toFin_val /-
 theorem toFin_val {n : ℕ} (v : BitVec n) : (toFin v : ℕ) = v.toNat := by
   rw [to_fin, Fin.coe_ofNat_eq_mod, Nat.mod_eq_of_lt] <;> apply to_nat_lt
 #align bitvec.to_fin_val BitVec.toFin_val
--/
 
-#print BitVec.toFin_le_toFin_of_le /-
 theorem toFin_le_toFin_of_le {n} {v₀ v₁ : BitVec n} (h : v₀ ≤ v₁) : v₀.toFin ≤ v₁.toFin :=
   show (v₀.toFin : ℕ) ≤ v₁.toFin by rw [to_fin_val, to_fin_val] <;> exact h
 #align bitvec.to_fin_le_to_fin_of_le BitVec.toFin_le_toFin_of_le
--/
 
-#print BitVec.ofFin_le_ofFin_of_le /-
 theorem ofFin_le_ofFin_of_le {n : ℕ} {i j : Fin (2 ^ n)} (h : i ≤ j) : ofFin i ≤ ofFin j :=
   show (BitVec.ofNat n i).toNat ≤ (BitVec.ofNat n j).toNat by
     simp only [to_nat_of_nat, Nat.mod_eq_of_lt, Fin.is_lt]; exact h
 #align bitvec.of_fin_le_of_fin_of_le BitVec.ofFin_le_ofFin_of_le
--/
 
-#print BitVec.toFin_ofFin /-
 theorem toFin_ofFin {n} (i : Fin <| 2 ^ n) : (ofFin i).toFin = i :=
   Fin.eq_of_veq (by simp [to_fin_val, of_fin, to_nat_of_nat, Nat.mod_eq_of_lt, i.is_lt])
 #align bitvec.to_fin_of_fin BitVec.toFin_ofFin
--/
 
-#print BitVec.ofFin_toFin /-
 theorem ofFin_toFin {n} (v : BitVec n) : ofFin (toFin v) = v := by
   dsimp [of_fin] <;> rw [to_fin_val, of_nat_to_nat]
 #align bitvec.of_fin_to_fin BitVec.ofFin_toFin
--/
 
 end BitVec
 

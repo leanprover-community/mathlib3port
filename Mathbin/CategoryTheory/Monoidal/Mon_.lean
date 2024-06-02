@@ -191,11 +191,11 @@ instance : CategoryTheory.Functor.ReflectsIsomorphisms (forget C)
         by tidy⟩⟩
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Mon_.isoOfIso /-
+#print Mon_.mkIso /-
 /-- Construct an isomorphism of monoids by giving an isomorphism between the underlying objects
 and checking compatibility with unit and multiplication only in the forward direction.
 -/
-def isoOfIso {M N : Mon_ C} (f : M.pt ≅ N.pt) (one_f : M.one ≫ f.Hom = N.one)
+def mkIso {M N : Mon_ C} (f : M.pt ≅ N.pt) (one_f : M.one ≫ f.Hom = N.one)
     (mul_f : M.mul ≫ f.Hom = (f.Hom ⊗ f.Hom) ≫ N.mul) : M ≅ N
     where
   Hom :=
@@ -209,7 +209,7 @@ def isoOfIso {M N : Mon_ C} (f : M.pt ≅ N.pt) (one_f : M.one ≫ f.Hom = N.one
         rw [← cancel_mono f.hom]
         slice_rhs 2 3 => rw [mul_f]
         simp }
-#align Mon_.iso_of_iso Mon_.isoOfIso
+#align Mon_.iso_of_iso Mon_.mkIso
 -/
 
 #print Mon_.uniqueHomFromTrivial /-
@@ -612,11 +612,11 @@ instance monMonoidal : MonoidalCategory (Mon_ C)
   tensor_id' := by intros; ext; apply tensor_id
   tensor_comp' := by intros; ext; apply tensor_comp
   tensorUnit := trivial C
-  associator M N P := isoOfIso (α_ M.pt N.pt P.pt) one_associator mul_associator
+  associator M N P := mkIso (α_ M.pt N.pt P.pt) one_associator mul_associator
   associator_naturality' := by intros; ext; dsimp; apply associator_naturality
-  leftUnitor M := isoOfIso (λ_ M.pt) one_leftUnitor mul_leftUnitor
+  leftUnitor M := mkIso (λ_ M.pt) one_leftUnitor mul_leftUnitor
   leftUnitor_naturality' := by intros; ext; dsimp; apply left_unitor_naturality
-  rightUnitor M := isoOfIso (ρ_ M.pt) one_rightUnitor mul_rightUnitor
+  rightUnitor M := mkIso (ρ_ M.pt) one_rightUnitor mul_rightUnitor
   rightUnitor_naturality' := by intros; ext; dsimp; apply right_unitor_naturality
   pentagon' := by intros; ext; dsimp; apply pentagon
   triangle' := by intros; ext; dsimp; apply triangle

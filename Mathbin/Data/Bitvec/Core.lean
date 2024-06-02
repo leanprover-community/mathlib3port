@@ -45,14 +45,12 @@ protected def zero (n : ℕ) : BitVec n :=
 #align bitvec.zero BitVec.zero
 -/
 
-#print BitVec.one /-
 /-- Create a bitvector of length `n` whose `n-1`st entry is 1 and other entries are 0. -/
 @[reducible]
 protected def one : ∀ n : ℕ, BitVec n
   | 0 => nil
   | succ n => replicate n false++ₜtrue ::ᵥ nil
 #align bitvec.one BitVec.one
--/
 
 #print BitVec.cast /-
 /-- Create a bitvector from another with a provably equal length. -/
@@ -197,13 +195,11 @@ protected def add (x y : BitVec n) : BitVec n :=
 #align bitvec.add BitVec.add
 -/
 
-#print BitVec.sbb /-
 /-- Subtract with borrow -/
 def sbb (x y : BitVec n) (b : Bool) : Bool × BitVec n :=
   let f x y c := (Bool.carry (not x) y c, Bool.xor3 x y c)
   Vector.mapAccumr₂ f x y b
 #align bitvec.sbb BitVec.sbb
--/
 
 #print BitVec.sub /-
 /-- The difference of two bitvectors -/
@@ -264,12 +260,10 @@ def ult (x y : BitVec n) : Prop :=
 #align bitvec.ult BitVec.ult
 -/
 
-#print BitVec.ugt /-
 /-- unsigned greater-than proposition -/
-def ugt (x y : BitVec n) : Prop :=
+def Ugt (x y : BitVec n) : Prop :=
   ult y x
-#align bitvec.ugt BitVec.ugt
--/
+#align bitvec.ugt BitVec.Ugt
 
 #print BitVec.ule /-
 /-- unsigned less-than-or-equal-to proposition -/
@@ -278,12 +272,10 @@ def ule (x y : BitVec n) : Prop :=
 #align bitvec.ule BitVec.ule
 -/
 
-#print BitVec.uge /-
 /-- unsigned greater-than-or-equal-to proposition -/
-def uge (x y : BitVec n) : Prop :=
+def Uge (x y : BitVec n) : Prop :=
   ule y x
-#align bitvec.uge BitVec.uge
--/
+#align bitvec.uge BitVec.Uge
 
 #print BitVec.slt /-
 /-- `sborrow x y` returns `tt` iff `x < y` as two's complement integers -/
@@ -306,12 +298,10 @@ def slt (x y : BitVec n) : Prop :=
 #align bitvec.slt BitVec.slt
 -/
 
-#print BitVec.sgt /-
 /-- signed greater-than proposition -/
-def sgt (x y : BitVec n) : Prop :=
+def Sgt (x y : BitVec n) : Prop :=
   slt y x
-#align bitvec.sgt BitVec.sgt
--/
+#align bitvec.sgt BitVec.Sgt
 
 #print BitVec.sle /-
 /-- signed less-than-or-equal-to proposition -/
@@ -320,12 +310,10 @@ def sle (x y : BitVec n) : Prop :=
 #align bitvec.sle BitVec.sle
 -/
 
-#print BitVec.sge /-
 /-- signed greater-than-or-equal-to proposition -/
-def sge (x y : BitVec n) : Prop :=
+def Sge (x y : BitVec n) : Prop :=
   sle y x
-#align bitvec.sge BitVec.sge
--/
+#align bitvec.sge BitVec.Sge
 
 end Comparison
 
@@ -352,12 +340,10 @@ protected def ofInt : ∀ n : ℕ, Int → BitVec (succ n)
 #align bitvec.of_int BitVec.ofInt
 -/
 
-#print BitVec.addLsb /-
 /-- `add_lsb r b` is `r + r + 1` if `b` is `tt` and `r + r` otherwise. -/
 def addLsb (r : ℕ) (b : Bool) :=
   r + r + cond b 1 0
 #align bitvec.add_lsb BitVec.addLsb
--/
 
 /-- Given a `list` of `bool`s, return the `nat` they represent as a list of binary digits. -/
 def bitsToNat (v : List Bool) : Nat :=
@@ -444,6 +430,6 @@ end BitVec
 instance {n} {x y : BitVec n} : Decidable (BitVec.ult x y) :=
   Bool.decidableEq _ _
 
-instance {n} {x y : BitVec n} : Decidable (BitVec.ugt x y) :=
+instance {n} {x y : BitVec n} : Decidable (BitVec.Ugt x y) :=
   Bool.decidableEq _ _
 

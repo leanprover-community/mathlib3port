@@ -1271,7 +1271,7 @@ import Data.Analysis.Filter
 import Data.Analysis.Topology
 import Data.Array.Lemmas
 import Data.Bitvec.Basic
-import Data.BitVec.Defs
+import Data.Bitvec.Core
 import Data.Bool.AllAny
 import Data.Bool.Basic
 import Data.Bool.Count
@@ -2380,7 +2380,7 @@ import NumberTheory.SumTwoSquares
 import NumberTheory.VonMangoldt
 import NumberTheory.WellApproximable
 import NumberTheory.Wilson
-import NumberTheory.ZetaFunction
+import NumberTheory.LSeries.RiemannZeta
 import NumberTheory.ZetaValues
 import NumberTheory.Zsqrtd.Basic
 import NumberTheory.Zsqrtd.GaussianInt

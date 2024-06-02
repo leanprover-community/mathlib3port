@@ -437,12 +437,12 @@ noncomputable def primitiveZModChar (n : ℕ+) (F' : Type v) [Field F'] (h : (n 
 -/
 
 
-#print AddChar.primitiveCharFiniteField /-
+#print AddChar.FiniteField.primitiveChar /-
 /-- There is a primitive additive character on the finite field `F` if the characteristic
 of the target is different from that of `F`.
 We obtain it as the composition of the trace from `F` to `zmod p` with a primitive
 additive character on `zmod p`, where `p` is the characteristic of `F`. -/
-noncomputable def primitiveCharFiniteField (F F' : Type _) [Field F] [Fintype F] [Field F']
+noncomputable def AddChar.FiniteField.primitiveChar (F F' : Type _) [Field F] [Fintype F] [Field F']
     (h : ringChar F' ≠ ringChar F) : PrimitiveAddChar F F' :=
   by
   let p := ringChar F
@@ -463,7 +463,7 @@ noncomputable def primitiveCharFiniteField (F F' : Type _) [Field F] [Fintype F]
     rw [one_mul] at ha
     exact ⟨a, fun hf => ha <| (ψ.prim.zmod_char_eq_one_iff pp <| Algebra.trace (ZMod p) F a).mp hf⟩
   exact ⟨ψ.n, ψ', hψ'.is_primitive⟩
-#align add_char.primitive_char_finite_field AddChar.primitiveCharFiniteField
+#align add_char.primitive_char_finite_field AddChar.FiniteField.primitiveChar
 -/
 
 /-!
