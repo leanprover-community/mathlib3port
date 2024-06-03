@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
 -/
 import Algebra.Module.LinearMap.Basic
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Data.Set.Finite
 import Algebra.Group.Submonoid.Membership
 import GroupTheory.GroupAction.BigOperators

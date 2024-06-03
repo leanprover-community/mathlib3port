@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 -/
 import Algebra.Group.Submonoid.Operations
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Algebra.FreeMonoid.Basic
 import Data.Finset.NoncommProd
 

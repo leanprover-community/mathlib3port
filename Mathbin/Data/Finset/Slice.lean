@@ -3,7 +3,7 @@ Copyright (c) 2021 Bhavik Mehta, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 -/
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Order.Interval.Finset.Nat
 import Order.Antichain
 

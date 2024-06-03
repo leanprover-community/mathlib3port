@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Data.Set.Finite
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 
 #align_import data.finset.preimage from "leanprover-community/mathlib"@"3365b20c2ffa7c35e47e5209b89ba9abdddf3ffe"
 

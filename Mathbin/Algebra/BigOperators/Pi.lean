@@ -5,7 +5,7 @@ Authors: Simon Hudon, Patrick Massot
 -/
 import Data.Fintype.Card
 import Algebra.Group.Prod
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Algebra.Ring.Pi
 
 #align_import algebra.big_operators.pi from "leanprover-community/mathlib"@"fa2309577c7009ea243cffdf990cd6c84f0ad497"

@@ -3,7 +3,7 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Algebra.BigOperators.Pi
 import CategoryTheory.Limits.Shapes.Biproducts
 import CategoryTheory.Preadditive.Basic

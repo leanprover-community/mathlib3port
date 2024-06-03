@@ -128,10 +128,12 @@ instance isFiniteMeasure (μ : FiniteMeasure Ω) : IsFiniteMeasure (μ : Measure
 instance : CoeFun (FiniteMeasure Ω) fun _ => Set Ω → ℝ≥0 :=
   ⟨fun μ s => (μ s).toNNReal⟩
 
-theorem coeFn_eq_toNNReal_coeFn_to_measure (ν : FiniteMeasure Ω) :
+#print MeasureTheory.FiniteMeasure.coeFn_def /-
+theorem coeFn_def (ν : FiniteMeasure Ω) :
     (ν : Set Ω → ℝ≥0) = fun s => ((ν : Measure Ω) s).toNNReal :=
   rfl
-#align measure_theory.finite_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure MeasureTheory.FiniteMeasure.coeFn_eq_toNNReal_coeFn_to_measure
+#align measure_theory.finite_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure MeasureTheory.FiniteMeasure.coeFn_def
+-/
 
 #print MeasureTheory.FiniteMeasure.ennreal_coeFn_eq_coeFn_toMeasure /-
 @[simp]
@@ -296,11 +298,11 @@ def toMeasureAddMonoidHom : FiniteMeasure Ω →+ Measure Ω
 instance {Ω : Type _} [MeasurableSpace Ω] : Module ℝ≥0 (FiniteMeasure Ω) :=
   Function.Injective.module _ toMeasureAddMonoidHom toMeasure_injective toMeasure_smul
 
-#print MeasureTheory.FiniteMeasure.coeFn_smul_apply /-
+#print MeasureTheory.FiniteMeasure.smul_apply /-
 @[simp]
-theorem coeFn_smul_apply [IsScalarTower R ℝ≥0 ℝ≥0] (c : R) (μ : FiniteMeasure Ω) (s : Set Ω) :
+theorem smul_apply [IsScalarTower R ℝ≥0 ℝ≥0] (c : R) (μ : FiniteMeasure Ω) (s : Set Ω) :
     (c • μ) s = c • μ s := by simp only [coe_fn_smul, Pi.smul_apply]
-#align measure_theory.finite_measure.coe_fn_smul_apply MeasureTheory.FiniteMeasure.coeFn_smul_apply
+#align measure_theory.finite_measure.coe_fn_smul_apply MeasureTheory.FiniteMeasure.smul_apply
 -/
 
 #print MeasureTheory.FiniteMeasure.restrict /-

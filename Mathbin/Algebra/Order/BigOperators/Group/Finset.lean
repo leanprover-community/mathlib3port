@@ -5,7 +5,7 @@ Authors: Johannes Hölzl
 -/
 import Algebra.Order.AbsoluteValue
 import Algebra.Order.Ring.WithTop
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Data.Fintype.Card
 
 #align_import algebra.big_operators.order from "leanprover-community/mathlib"@"65a1391a0106c9204fe45bc73a039f056558cb83"

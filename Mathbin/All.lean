@@ -88,7 +88,7 @@ import Algebra.Algebra.Tower
 import Algebra.Algebra.Unitization
 import Algebra.Associated
 import Algebra.BigOperators.Associated
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Algebra.BigOperators.Finprod
 import Algebra.BigOperators.Finsupp
 import Algebra.BigOperators.Fin

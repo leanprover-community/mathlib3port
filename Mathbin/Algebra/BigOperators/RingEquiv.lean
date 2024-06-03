@@ -3,7 +3,7 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Algebra.Ring.Equiv
 
 #align_import algebra.big_operators.ring_equiv from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"

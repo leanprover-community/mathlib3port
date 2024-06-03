@@ -123,10 +123,12 @@ instance : CoeFun (ProbabilityMeasure Ω) fun _ => Set Ω → ℝ≥0 :=
 instance (μ : ProbabilityMeasure Ω) : IsProbabilityMeasure (μ : Measure Ω) :=
   μ.Prop
 
-theorem coeFn_eq_toNNReal_coeFn_to_measure (ν : ProbabilityMeasure Ω) :
+#print MeasureTheory.ProbabilityMeasure.coeFn_def /-
+theorem coeFn_def (ν : ProbabilityMeasure Ω) :
     (ν : Set Ω → ℝ≥0) = fun s => ((ν : Measure Ω) s).toNNReal :=
   rfl
-#align measure_theory.probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.coeFn_eq_toNNReal_coeFn_to_measure
+#align measure_theory.probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.coeFn_def
+-/
 
 #print MeasureTheory.ProbabilityMeasure.val_eq_to_measure /-
 @[simp]

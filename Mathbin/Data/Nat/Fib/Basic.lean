@@ -6,7 +6,7 @@ Authors: Kevin Kappelmann, Kyle Miller, Mario Carneiro
 import Data.Nat.GCD.Basic
 import Logic.Function.Iterate
 import Data.Finset.NatAntidiagonal
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Tactic.Ring
 import Tactic.Zify
 import Tactic.Wlog

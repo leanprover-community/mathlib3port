@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard
 -/
 import Algebra.Group.Submonoid.Basic
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Deprecated.Group
 
 #align_import deprecated.submonoid from "leanprover-community/mathlib"@"a11f9106a169dd302a285019e5165f8ab32ff433"

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Algebra.Associated
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 
 #align_import ring_theory.prime from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

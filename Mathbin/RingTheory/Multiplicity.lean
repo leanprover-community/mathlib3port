@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Chris Hughes
 -/
 import Algebra.Associated
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import RingTheory.Valuation.Basic
 
 #align_import ring_theory.multiplicity from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"

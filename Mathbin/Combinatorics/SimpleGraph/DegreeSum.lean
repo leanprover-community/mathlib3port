@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
 import Combinatorics.SimpleGraph.Basic
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Data.Nat.Parity
 import Data.ZMod.Parity
 

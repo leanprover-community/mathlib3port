@@ -5,7 +5,7 @@ Authors: Yury Kudryashov
 -/
 import Order.ConditionallyCompleteLattice.Basic
 import Data.Set.Finite
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import Algebra.Group.Prod
 import Algebra.Group.Pi.Lemmas
 import Algebra.Module.Defs

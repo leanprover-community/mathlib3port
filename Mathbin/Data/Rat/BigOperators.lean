@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Data.Rat.Cast.Defs
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 
 #align_import data.rat.big_operators from "leanprover-community/mathlib"@"327c3c0d9232d80e250dc8f65e7835b82b266ea5"
 

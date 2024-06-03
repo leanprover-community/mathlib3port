@@ -6,7 +6,7 @@ Authors: David Wärn
 import Data.Fintype.Option
 import Data.Fintype.Pi
 import Data.Fintype.Sum
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 
 #align_import combinatorics.hales_jewett from "leanprover-community/mathlib"@"23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6"
 

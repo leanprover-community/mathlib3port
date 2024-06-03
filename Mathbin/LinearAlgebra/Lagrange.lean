@@ -3,7 +3,7 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Wrenna Robson
 -/
-import Algebra.BigOperators.Basic
+import Algebra.BigOperators.Group.Finset
 import LinearAlgebra.Vandermonde
 import RingTheory.Polynomial.Basic
 
