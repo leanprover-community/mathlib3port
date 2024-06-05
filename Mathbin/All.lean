@@ -1670,7 +1670,7 @@ import Data.Rat.Init
 import Data.Rat.Lemmas
 import Data.Rat.MetaDefs
 import Data.NNRat.Defs
-import Data.Rat.Order
+import Algebra.Order.Ring.Rat
 import Data.Rat.Sqrt
 import Data.Rat.Star
 import Data.Rbmap.Basic
@@ -2059,7 +2059,7 @@ import LinearAlgebra.Matrix.Charpoly.FiniteField
 import LinearAlgebra.Matrix.Charpoly.LinearMap
 import LinearAlgebra.Matrix.Charpoly.Minpoly
 import LinearAlgebra.Matrix.Circulant
-import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Determinant.Basic
 import LinearAlgebra.Matrix.Diagonal
 import LinearAlgebra.Matrix.DotProduct
 import LinearAlgebra.Matrix.Dual

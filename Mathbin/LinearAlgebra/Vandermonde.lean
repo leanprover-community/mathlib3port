@@ -5,7 +5,7 @@ Authors: Anne Baanen
 -/
 import Algebra.BigOperators.Fin
 import Algebra.GeomSum
-import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Determinant.Basic
 import LinearAlgebra.Matrix.Nondegenerate
 
 #align_import linear_algebra.vandermonde from "leanprover-community/mathlib"@"9d2f0748e6c50d7a2657c564b1ff2c695b39148d"

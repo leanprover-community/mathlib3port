@@ -3,7 +3,7 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Data.Rat.Order
+import Algebra.Order.Ring.Rat
 import Data.Rat.Lemmas
 import Data.Int.Sqrt
 

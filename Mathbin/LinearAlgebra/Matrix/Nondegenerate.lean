@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Data.Matrix.Basic
-import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Determinant.Basic
 import LinearAlgebra.Matrix.Adjugate
 
 #align_import linear_algebra.matrix.nondegenerate from "leanprover-community/mathlib"@"4f81bc21e32048db7344b7867946e992cf5f68cc"

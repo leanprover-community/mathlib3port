@@ -5,7 +5,7 @@ Authors: Martin Dvorak, Kyle Miller, Eric Wieser
 -/
 import Data.Matrix.Notation
 import LinearAlgebra.BilinearMap
-import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Determinant.Basic
 import Algebra.Lie.Basic
 
 #align_import linear_algebra.cross_product from "leanprover-community/mathlib"@"1b0a28e1c93409dbf6d69526863cd9984ef652ce"

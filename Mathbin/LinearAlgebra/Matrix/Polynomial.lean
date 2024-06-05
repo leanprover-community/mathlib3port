@@ -5,7 +5,7 @@ Authors: Yakov Pechersky
 -/
 import Algebra.Polynomial.BigOperators
 import Algebra.Polynomial.Degree.Lemmas
-import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Determinant.Basic
 
 #align_import linear_algebra.matrix.polynomial from "leanprover-community/mathlib"@"86d1873c01a723aba6788f0b9051ae3d23b4c1c3"
 

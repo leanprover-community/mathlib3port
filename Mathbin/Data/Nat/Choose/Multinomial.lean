@@ -63,11 +63,11 @@ theorem multinomial_spec : (∏ i in s, (f i)!) * multinomial s f = (∑ i in s,
 #align nat.multinomial_spec Nat.multinomial_spec
 -/
 
-#print Nat.multinomial_nil /-
+#print Nat.multinomial_empty /-
 @[simp]
-theorem multinomial_nil : multinomial ∅ f = 1 :=
+theorem multinomial_empty : multinomial ∅ f = 1 :=
   rfl
-#align nat.multinomial_nil Nat.multinomial_nil
+#align nat.multinomial_nil Nat.multinomial_empty
 -/
 
 #print Nat.multinomial_singleton /-

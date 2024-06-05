@@ -5,7 +5,7 @@ Authors: Johan Commelin
 -/
 import Data.Multiset.Sort
 import Data.PNat.Interval
-import Data.Rat.Order
+import Algebra.Order.Ring.Rat
 import Data.PNat.Basic
 import Tactic.NormNum
 import Tactic.FieldSimp

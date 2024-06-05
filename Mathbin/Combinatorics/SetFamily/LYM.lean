@@ -7,7 +7,7 @@ import Algebra.BigOperators.Ring
 import Algebra.Order.Field.Basic
 import Combinatorics.Enumerative.DoubleCounting
 import Combinatorics.SetFamily.Shadow
-import Data.Rat.Order
+import Algebra.Order.Ring.Rat
 
 #align_import combinatorics.set_family.lym from "leanprover-community/mathlib"@"0ebfdb71919ac6ca5d7fbc61a082fa2519556818"
 

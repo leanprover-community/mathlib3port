@@ -5,7 +5,7 @@ Authors: Filippo A. E. Nuccio, Eric Wieser
 -/
 import Data.Matrix.Basic
 import Data.Matrix.Block
-import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Determinant.Basic
 import LinearAlgebra.Matrix.NonsingularInverse
 import LinearAlgebra.TensorProduct.Basic
 import LinearAlgebra.TensorProduct.Tower

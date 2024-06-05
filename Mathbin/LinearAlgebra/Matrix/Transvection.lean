@@ -5,7 +5,7 @@ Authors: Sébastien Gouëzel
 -/
 import Data.Matrix.Basis
 import Data.Matrix.DMatrix
-import LinearAlgebra.Matrix.Determinant
+import LinearAlgebra.Matrix.Determinant.Basic
 import LinearAlgebra.Matrix.Reindex
 import Tactic.FieldSimp
 
