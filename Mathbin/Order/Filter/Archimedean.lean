@@ -218,13 +218,13 @@ section LinearOrderedRing
 
 variable [LinearOrderedRing R] [Archimedean R]
 
-#print Filter.Tendsto.atTop_mul_neg_const' /-
+#print Filter.Tendsto.atTop_mul_const_of_neg' /-
 /-- See also `filter.tendsto.at_top_mul_neg_const` for a version of this lemma for
 `linear_ordered_field`s which does not require the `archimedean` assumption. -/
-theorem Tendsto.atTop_mul_neg_const' (hr : r < 0) (hf : Tendsto f l atTop) :
+theorem Tendsto.atTop_mul_const_of_neg' (hr : r < 0) (hf : Tendsto f l atTop) :
     Tendsto (fun x => f x * r) l atBot := by
   simpa only [tendsto_neg_at_top_iff, mul_neg] using hf.at_top_mul_const' (neg_pos.mpr hr)
-#align filter.tendsto.at_top_mul_neg_const' Filter.Tendsto.atTop_mul_neg_const'
+#align filter.tendsto.at_top_mul_neg_const' Filter.Tendsto.atTop_mul_const_of_neg'
 -/
 
 #print Filter.Tendsto.atBot_mul_const' /-
@@ -238,13 +238,13 @@ theorem Tendsto.atBot_mul_const' (hr : 0 < r) (hf : Tendsto f l atBot) :
 #align filter.tendsto.at_bot_mul_const' Filter.Tendsto.atBot_mul_const'
 -/
 
-#print Filter.Tendsto.atBot_mul_neg_const' /-
+#print Filter.Tendsto.atBot_mul_const_of_neg' /-
 /-- See also `filter.tendsto.at_bot_mul_neg_const` for a version of this lemma for
 `linear_ordered_field`s which does not require the `archimedean` assumption. -/
-theorem Tendsto.atBot_mul_neg_const' (hr : r < 0) (hf : Tendsto f l atBot) :
+theorem Tendsto.atBot_mul_const_of_neg' (hr : r < 0) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x * r) l atTop := by
   simpa only [mul_neg, tendsto_neg_at_bot_iff] using hf.at_bot_mul_const' (neg_pos.2 hr)
-#align filter.tendsto.at_bot_mul_neg_const' Filter.Tendsto.atBot_mul_neg_const'
+#align filter.tendsto.at_bot_mul_neg_const' Filter.Tendsto.atBot_mul_const_of_neg'
 -/
 
 end LinearOrderedRing

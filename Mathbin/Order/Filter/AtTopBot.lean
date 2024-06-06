@@ -1410,14 +1410,12 @@ theorem tendsto_const_mul_atTop_of_neg (hr : r < 0) :
 #align filter.tendsto_const_mul_at_top_of_neg Filter.tendsto_const_mul_atTop_of_neg
 -/
 
-#print Filter.tendsto_mul_const_atTop_of_neg /-
 /-- If `r` is a negative constant, then `λ x, f x * r` tends to infinity along a filter if and only
 if `f` tends to negative infinity along the same filter. -/
-theorem tendsto_mul_const_atTop_of_neg (hr : r < 0) :
+theorem tendsto_hMul_const_atTop_of_neg (hr : r < 0) :
     Tendsto (fun x => f x * r) l atTop ↔ Tendsto f l atBot := by
   simpa only [mul_comm] using tendsto_const_mul_at_top_of_neg hr
-#align filter.tendsto_mul_const_at_top_of_neg Filter.tendsto_mul_const_atTop_of_neg
--/
+#align filter.tendsto_mul_const_at_top_of_neg Filter.tendsto_hMul_const_atTop_of_neg
 
 #print Filter.tendsto_const_mul_atBot_of_neg /-
 /-- If `r` is a negative constant, then `λ x, r * f x` tends to negative infinity along a filter if
@@ -1531,22 +1529,22 @@ theorem tendsto_mul_const_atBot_iff_neg [NeBot l] (h : Tendsto f l atTop) :
 #align filter.tendsto_mul_const_at_bot_iff_neg Filter.tendsto_mul_const_atBot_iff_neg
 -/
 
-#print Filter.Tendsto.neg_const_mul_atTop /-
+#print Filter.Tendsto.const_mul_atTop_of_neg /-
 /-- If a function tends to infinity along a filter, then this function multiplied by a negative
 constant (on the left) tends to negative infinity. -/
-theorem Tendsto.neg_const_mul_atTop (hr : r < 0) (hf : Tendsto f l atTop) :
+theorem Tendsto.const_mul_atTop_of_neg (hr : r < 0) (hf : Tendsto f l atTop) :
     Tendsto (fun x => r * f x) l atBot :=
   (tendsto_const_mul_atBot_of_neg hr).2 hf
-#align filter.tendsto.neg_const_mul_at_top Filter.Tendsto.neg_const_mul_atTop
+#align filter.tendsto.neg_const_mul_at_top Filter.Tendsto.const_mul_atTop_of_neg
 -/
 
-#print Filter.Tendsto.atTop_mul_neg_const /-
+#print Filter.Tendsto.atTop_mul_const_of_neg /-
 /-- If a function tends to infinity along a filter, then this function multiplied by a negative
 constant (on the right) tends to negative infinity. -/
-theorem Tendsto.atTop_mul_neg_const (hr : r < 0) (hf : Tendsto f l atTop) :
+theorem Tendsto.atTop_mul_const_of_neg (hr : r < 0) (hf : Tendsto f l atTop) :
     Tendsto (fun x => f x * r) l atBot :=
   (tendsto_mul_const_atBot_of_neg hr).2 hf
-#align filter.tendsto.at_top_mul_neg_const Filter.Tendsto.atTop_mul_neg_const
+#align filter.tendsto.at_top_mul_neg_const Filter.Tendsto.atTop_mul_const_of_neg
 -/
 
 #print Filter.Tendsto.const_mul_atBot /-
@@ -1576,28 +1574,28 @@ theorem Tendsto.atBot_div_const (hr : 0 < r) (hf : Tendsto f l atBot) :
 #align filter.tendsto.at_bot_div_const Filter.Tendsto.atBot_div_const
 -/
 
-#print Filter.Tendsto.neg_const_mul_atBot /-
+#print Filter.Tendsto.const_mul_atBot_of_neg /-
 /-- If a function tends to negative infinity along a filter, then this function multiplied by
 a negative constant (on the left) tends to positive infinity. -/
-theorem Tendsto.neg_const_mul_atBot (hr : r < 0) (hf : Tendsto f l atBot) :
+theorem Tendsto.const_mul_atBot_of_neg (hr : r < 0) (hf : Tendsto f l atBot) :
     Tendsto (fun x => r * f x) l atTop :=
   (tendsto_const_mul_atTop_of_neg hr).2 hf
-#align filter.tendsto.neg_const_mul_at_bot Filter.Tendsto.neg_const_mul_atBot
+#align filter.tendsto.neg_const_mul_at_bot Filter.Tendsto.const_mul_atBot_of_neg
 -/
 
-#print Filter.Tendsto.atBot_mul_neg_const /-
+#print Filter.Tendsto.atBot_mul_const_of_neg /-
 /-- If a function tends to negative infinity along a filter, then this function multiplied by
 a negative constant (on the right) tends to positive infinity. -/
-theorem Tendsto.atBot_mul_neg_const (hr : r < 0) (hf : Tendsto f l atBot) :
+theorem Tendsto.atBot_mul_const_of_neg (hr : r < 0) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x * r) l atTop :=
-  (tendsto_mul_const_atTop_of_neg hr).2 hf
-#align filter.tendsto.at_bot_mul_neg_const Filter.Tendsto.atBot_mul_neg_const
+  (tendsto_hMul_const_atTop_of_neg hr).2 hf
+#align filter.tendsto.at_bot_mul_neg_const Filter.Tendsto.atBot_mul_const_of_neg
 -/
 
 #print Filter.tendsto_neg_const_mul_pow_atTop /-
 theorem tendsto_neg_const_mul_pow_atTop {c : α} {n : ℕ} (hn : n ≠ 0) (hc : c < 0) :
     Tendsto (fun x => c * x ^ n) atTop atBot :=
-  Tendsto.neg_const_mul_atTop hc (tendsto_pow_atTop hn)
+  Tendsto.const_mul_atTop_of_neg hc (tendsto_pow_atTop hn)
 #align filter.tendsto_neg_const_mul_pow_at_top Filter.tendsto_neg_const_mul_pow_atTop
 -/
 
