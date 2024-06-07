@@ -790,7 +790,7 @@ theorem str_eq_charBuf (s : String) : str s = charBuf s.toList.toBuffer :=
   ext cb n
   rw [str, char_buf]
   congr
-  · simp [Buffer.toString, String.asString_inv_toList]
+  · simp [Buffer.toString, String.asString_toList]
   · simp
 #align parser.str_eq_char_buf Parser.str_eq_charBuf
 
@@ -1036,7 +1036,7 @@ theorem many1_eq_fail {p : Parser α} {err : Batteries.DList String} :
 
 @[simp]
 theorem manyChar1_ne_empty {p : Parser Char} : manyChar1 p cb n ≠ done n' "" := by
-  simp [many_char1, ← String.nil_asString_eq_empty]
+  simp [many_char1, ← String.asString_nil]
 #align parser.many_char1_ne_empty Parser.manyChar1_ne_empty
 
 theorem manyChar1_eq_done {p : Parser Char} {s : String} (h : s ≠ "") :

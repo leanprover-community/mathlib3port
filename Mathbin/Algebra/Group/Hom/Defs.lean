@@ -1716,18 +1716,18 @@ instance : AddMonoidHomClass (AddMonoid.End A) A A :=
 
 end End
 
-#print AddMonoid.coe_one /-
+#print AddMonoid.End.coe_one /-
 @[simp]
-theorem coe_one : ((1 : AddMonoid.End A) : A → A) = id :=
+theorem AddMonoid.End.coe_one : ((1 : AddMonoid.End A) : A → A) = id :=
   rfl
-#align add_monoid.coe_one AddMonoid.coe_one
+#align add_monoid.coe_one AddMonoid.End.coe_one
 -/
 
-#print AddMonoid.coe_mul /-
+#print AddMonoid.End.coe_mul /-
 @[simp]
-theorem coe_mul (f g) : ((f * g : AddMonoid.End A) : A → A) = f ∘ g :=
+theorem AddMonoid.End.coe_mul (f g) : ((f * g : AddMonoid.End A) : A → A) = f ∘ g :=
   rfl
-#align add_monoid.coe_mul AddMonoid.coe_mul
+#align add_monoid.coe_mul AddMonoid.End.coe_mul
 -/
 
 end AddMonoid

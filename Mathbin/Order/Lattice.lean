@@ -137,11 +137,13 @@ theorem le_sup_left : a ≤ a ⊔ b :=
 #align le_sup_left le_sup_left
 -/
 
-#print le_sup_left' /-
+/- warning: le_sup_left' clashes with le_sup_left -> le_sup_left
+Case conversion may be inaccurate. Consider using '#align le_sup_left' le_sup_leftₓ'. -/
+#print le_sup_left /-
 @[ematch]
-theorem le_sup_left' : a ≤ a ⊔ b :=
+theorem le_sup_left : a ≤ a ⊔ b :=
   le_sup_left
-#align le_sup_left' le_sup_left'
+#align le_sup_left' le_sup_left
 -/
 
 #print le_sup_right /-
@@ -151,11 +153,13 @@ theorem le_sup_right : b ≤ a ⊔ b :=
 #align le_sup_right le_sup_right
 -/
 
-#print le_sup_right' /-
+/- warning: le_sup_right' clashes with le_sup_right -> le_sup_right
+Case conversion may be inaccurate. Consider using '#align le_sup_right' le_sup_rightₓ'. -/
+#print le_sup_right /-
 @[ematch]
-theorem le_sup_right' : b ≤ a ⊔ b :=
+theorem le_sup_right : b ≤ a ⊔ b :=
   le_sup_right
-#align le_sup_right' le_sup_right'
+#align le_sup_right' le_sup_right
 -/
 
 #print le_sup_of_le_left /-
@@ -486,11 +490,13 @@ theorem inf_le_left : a ⊓ b ≤ a :=
 #align inf_le_left inf_le_left
 -/
 
-#print inf_le_left' /-
+/- warning: inf_le_left' clashes with inf_le_left -> inf_le_left
+Case conversion may be inaccurate. Consider using '#align inf_le_left' inf_le_leftₓ'. -/
+#print inf_le_left /-
 @[ematch]
-theorem inf_le_left' : a ⊓ b ≤ a :=
+theorem inf_le_left : a ⊓ b ≤ a :=
   SemilatticeInf.inf_le_left a b
-#align inf_le_left' inf_le_left'
+#align inf_le_left' inf_le_left
 -/
 
 #print inf_le_right /-
@@ -500,11 +506,13 @@ theorem inf_le_right : a ⊓ b ≤ b :=
 #align inf_le_right inf_le_right
 -/
 
-#print inf_le_right' /-
+/- warning: inf_le_right' clashes with inf_le_right -> inf_le_right
+Case conversion may be inaccurate. Consider using '#align inf_le_right' inf_le_rightₓ'. -/
+#print inf_le_right /-
 @[ematch]
-theorem inf_le_right' : a ⊓ b ≤ b :=
+theorem inf_le_right : a ⊓ b ≤ b :=
   SemilatticeInf.inf_le_right a b
-#align inf_le_right' inf_le_right'
+#align inf_le_right' inf_le_right
 -/
 
 #print le_inf /-

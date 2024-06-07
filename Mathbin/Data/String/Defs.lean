@@ -60,12 +60,12 @@ abbrev endsWith (x y : String) : Bool :=
 #align string.ends_with String.endsWith
 -/
 
-#print String.getRest /-
+#print String.dropPrefix? /-
 /-- `get_rest s t` returns `some r` if `s = t ++ r`.
   If `t` is not a prefix of `s`, returns `none` -/
-def getRest (s t : String) : Option String :=
+def dropPrefix? (s t : String) : Option String :=
   List.asString <$> s.toList.getRest t.toList
-#align string.get_rest String.getRest
+#align string.get_rest String.dropPrefix?
 -/
 
 #print String.drop /-

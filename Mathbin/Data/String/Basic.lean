@@ -95,10 +95,10 @@ theorem toList_inj : ∀ {s₁ s₂}, toList s₁ = toList s₂ ↔ s₁ = s₂
 #align string.to_list_inj String.toList_inj
 -/
 
-#print String.nil_asString_eq_empty /-
-theorem nil_asString_eq_empty : [].asString = "" :=
+#print String.asString_nil /-
+theorem asString_nil : [].asString = "" :=
   rfl
-#align string.nil_as_string_eq_empty String.nil_asString_eq_empty
+#align string.nil_as_string_eq_empty String.asString_nil
 -/
 
 #print String.toList_empty /-
@@ -108,9 +108,9 @@ theorem toList_empty : "".toList = [] :=
 #align string.to_list_empty String.toList_empty
 -/
 
-#print String.asString_inv_toList /-
-theorem asString_inv_toList (s : String) : s.toList.asString = s := by cases s; rfl
-#align string.as_string_inv_to_list String.asString_inv_toList
+#print String.asString_toList /-
+theorem asString_toList (s : String) : s.toList.asString = s := by cases s; rfl
+#align string.as_string_inv_to_list String.asString_toList
 -/
 
 #print String.data_singleton /-
@@ -163,10 +163,10 @@ end String
 
 open String
 
-#print List.toList_inv_asString /-
-theorem List.toList_inv_asString (l : List Char) : l.asString.toList = l := by
-  cases hl : l.as_string; exact StringImp.mk.inj hl.symm
-#align list.to_list_inv_as_string List.toList_inv_asString
+#print List.toList_asString /-
+theorem List.toList_asString (l : List Char) : l.asString.toList = l := by cases hl : l.as_string;
+  exact StringImp.mk.inj hl.symm
+#align list.to_list_inv_as_string List.toList_asString
 -/
 
 #print List.length_asString /-
@@ -179,15 +179,15 @@ theorem List.length_asString (l : List Char) : l.asString.length = l.length :=
 #print List.asString_inj /-
 @[simp]
 theorem List.asString_inj {l l' : List Char} : l.asString = l'.asString ↔ l = l' :=
-  ⟨fun h => by rw [← List.toList_inv_asString l, ← List.toList_inv_asString l', to_list_inj, h],
-    fun h => h ▸ rfl⟩
+  ⟨fun h => by rw [← List.toList_asString l, ← List.toList_asString l', to_list_inj, h], fun h =>
+    h ▸ rfl⟩
 #align list.as_string_inj List.asString_inj
 -/
 
 #print String.length_data /-
 @[simp]
 theorem String.length_data (s : String) : s.toList.length = s.length := by
-  rw [← String.asString_inv_toList s, List.toList_inv_asString, List.length_asString]
+  rw [← String.asString_toList s, List.toList_asString, List.length_asString]
 #align string.length_to_list String.length_data
 -/
 

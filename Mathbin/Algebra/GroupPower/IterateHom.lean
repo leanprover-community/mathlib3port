@@ -84,14 +84,16 @@ theorem iterate_map_zpow (f : G →* G) (n : ℕ) (a) (m : ℤ) : (f^[n]) (a ^ m
   Commute.iterate_left (fun x => f.map_zpow x m) n a
 #align monoid_hom.iterate_map_zpow MonoidHom.iterate_map_zpow
 
-#print MonoidHom.coe_pow /-
-theorem coe_pow {M} [CommMonoid M] (f : Monoid.End M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
+#print Monoid.End.coe_pow /-
+theorem Monoid.End.coe_pow {M} [CommMonoid M] (f : Monoid.End M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) _ _
-#align monoid_hom.coe_pow MonoidHom.coe_pow
+#align monoid_hom.coe_pow Monoid.End.coe_pow
 -/
 
 end MonoidHom
 
+/- warning: monoid.End.coe_pow clashes with monoid_hom.coe_pow -> Monoid.End.coe_pow
+Case conversion may be inaccurate. Consider using '#align monoid.End.coe_pow Monoid.End.coe_powₓ'. -/
 #print Monoid.End.coe_pow /-
 theorem Monoid.End.coe_pow {M} [Monoid M] (f : Monoid.End M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) _ _
