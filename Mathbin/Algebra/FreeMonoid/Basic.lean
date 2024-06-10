@@ -377,7 +377,7 @@ theorem comp_lift (g : M →* N) (f : α → M) : g.comp (lift f) = lift (g ∘ 
 #print FreeMonoid.hom_map_lift /-
 @[to_additive]
 theorem hom_map_lift (g : M →* N) (f : α → M) (x : FreeMonoid α) : g (lift f x) = lift (g ∘ f) x :=
-  MonoidHom.ext_iff.1 (comp_lift g f) x
+  DFunLike.ext_iff.1 (comp_lift g f) x
 #align free_monoid.hom_map_lift FreeMonoid.hom_map_lift
 #align free_add_monoid.hom_map_lift FreeAddMonoid.hom_map_lift
 -/

@@ -389,7 +389,7 @@ def homotopyFrom (i : N) {p q : Ω^ N X x} (H : (toLoop i p).Homotopy (toLoop i 
     C(I × I^N, X) :=
   (ContinuousMap.comp ⟨_, ContinuousMap.continuous_uncurry⟩
           (ContinuousMap.comp ⟨coe⟩ H.toContinuousMap).curry).uncurry.comp <|
-    (ContinuousMap.id I).Prod_map (Cube.splitAt i).toContinuousMap
+    (ContinuousMap.id I).map_apply (Cube.splitAt i).toContinuousMap
 #align gen_loop.homotopy_from GenLoop.homotopyFrom
 -/
 

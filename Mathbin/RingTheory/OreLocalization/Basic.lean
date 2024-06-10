@@ -230,9 +230,9 @@ private theorem mul'_char (r₁ r₂ : R) (s₁ s₂ : S) (u : S) (v : R) (huv :
   · assoc_rw [← hs₄]; simp only [mul_assoc]
   · assoc_rw [h₃]; simp only [mul_assoc]
 
-#print OreLocalization.mul /-
+#print OreLocalization.smul /-
 /-- The multiplication on the Ore localization of monoids. -/
-protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
+protected def smul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
   lift₂Expand mul' fun r₂ p s₂ hp r₁ r s₁ hr =>
     by
     have h₁ := ore_eq r₁ s₂; set r₁' := ore_num r₁ s₂; set s₂' := ore_denom r₁ s₂
@@ -254,11 +254,11 @@ protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
     rw [← mul_assoc, mul_assoc r₂, OreLocalization.eq_of_num_factor_eq h₂'']
     norm_cast at hsssp ⊢; rw [← OreLocalization.expand _ _ _ hsssp, ← mul_assoc]
     apply OreLocalization.expand
-#align ore_localization.mul OreLocalization.mul
+#align ore_localization.mul OreLocalization.smul
 -/
 
 instance : Mul R[S⁻¹] :=
-  ⟨OreLocalization.mul⟩
+  ⟨OreLocalization.smul⟩
 
 #print OreLocalization.oreDiv_mul_oreDiv /-
 theorem oreDiv_mul_oreDiv {r₁ r₂ : R} {s₁ s₂ : S} :
@@ -357,11 +357,11 @@ protected theorem mul_inv (s s' : S) : (s : R) /ₒ s' * (s' /ₒ s) = 1 := by
 #align ore_localization.mul_inv OreLocalization.mul_inv
 -/
 
-#print OreLocalization.mul_one_div /-
+#print OreLocalization.one_div_mul /-
 @[simp]
-protected theorem mul_one_div {r : R} {s t : S} : r /ₒ s * (1 /ₒ t) = r /ₒ (t * s) := by
+protected theorem one_div_mul {r : R} {s t : S} : r /ₒ s * (1 /ₒ t) = r /ₒ (t * s) := by
   simp [ore_div_mul_char r 1 s t 1 s (by simp)]
-#align ore_localization.mul_one_div OreLocalization.mul_one_div
+#align ore_localization.mul_one_div OreLocalization.one_div_mul
 -/
 
 #print OreLocalization.mul_cancel /-
@@ -378,12 +378,12 @@ protected theorem mul_cancel' {r₁ r₂ : R} {s t : S} : r₁ /ₒ s * (s * r�
 #align ore_localization.mul_cancel' OreLocalization.mul_cancel'
 -/
 
-#print OreLocalization.div_one_mul /-
+#print OreLocalization.mul_div_one /-
 @[simp]
-theorem div_one_mul {p r : R} {s : S} : r /ₒ 1 * (p /ₒ s) = r * p /ₒ s :=
+theorem mul_div_one {p r : R} {s : S} : r /ₒ 1 * (p /ₒ s) = r * p /ₒ s :=
   by--TODO use coercion r ↦ r /ₒ 1
   simp [ore_div_mul_char r p 1 s p 1 (by simp)]
-#align ore_localization.div_one_mul OreLocalization.div_one_mul
+#align ore_localization.div_one_mul OreLocalization.mul_div_one
 -/
 
 #print OreLocalization.numeratorUnit /-
@@ -403,7 +403,7 @@ fraction `r /ₒ 1`. -/
 def numeratorHom : R →* R[S⁻¹] where
   toFun r := r /ₒ 1
   map_one' := rfl
-  map_mul' r₁ r₂ := div_one_mul.symm
+  map_mul' r₁ r₂ := mul_div_one.symm
 #align ore_localization.numerator_hom OreLocalization.numeratorHom
 -/
 
@@ -712,11 +712,11 @@ protected theorem zero_def : (0 : R[S⁻¹]) = 0 /ₒ 1 :=
 #align ore_localization.zero_def OreLocalization.zero_def
 -/
 
-#print OreLocalization.zero_div_eq_zero /-
+#print OreLocalization.zero_oreDiv /-
 @[simp]
-theorem zero_div_eq_zero (s : S) : 0 /ₒ s = 0 := by rw [OreLocalization.zero_def, ore_div_eq_iff];
+theorem zero_oreDiv (s : S) : 0 /ₒ s = 0 := by rw [OreLocalization.zero_def, ore_div_eq_iff];
   exact ⟨s, 1, by simp⟩
-#align ore_localization.zero_div_eq_zero OreLocalization.zero_div_eq_zero
+#align ore_localization.zero_div_eq_zero OreLocalization.zero_oreDiv
 -/
 
 #print OreLocalization.zero_add /-

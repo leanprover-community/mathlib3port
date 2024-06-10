@@ -78,7 +78,7 @@ instance : Algebra R (⨁ i, A i)
   commutes' r x :=
     by
     change AddMonoidHom.mul (DirectSum.of _ _ _) x = add_monoid_hom.mul.flip (DirectSum.of _ _ _) x
-    apply AddMonoidHom.congr_fun _ x
+    apply DFunLike.congr_fun _ x
     ext i xi : 2
     dsimp only [AddMonoidHom.comp_apply, AddMonoidHom.mul_apply, AddMonoidHom.flip_apply]
     rw [of_mul_of, of_mul_of]
@@ -86,7 +86,7 @@ instance : Algebra R (⨁ i, A i)
   smul_def' r x :=
     by
     change DistribMulAction.toAddMonoidHom _ r x = AddMonoidHom.mul (DirectSum.of _ _ _) x
-    apply AddMonoidHom.congr_fun _ x
+    apply DFunLike.congr_fun _ x
     ext i xi : 2
     dsimp only [AddMonoidHom.comp_apply, DistribMulAction.toAddMonoidHom_apply,
       AddMonoidHom.mul_apply]

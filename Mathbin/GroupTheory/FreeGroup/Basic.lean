@@ -861,7 +861,7 @@ theorem lift.of {x} : lift f (of x) = f x :=
 #print FreeGroup.lift.unique /-
 @[to_additive]
 theorem lift.unique (g : FreeGroup α →* β) (hg : ∀ x, g (of x) = f x) : ∀ {x}, g x = lift f x :=
-  MonoidHom.congr_fun <| lift.symm_apply_eq.mp (funext hg : g ∘ of = f)
+  DFunLike.congr_fun <| lift.symm_apply_eq.mp (funext hg : g ∘ of = f)
 #align free_group.lift.unique FreeGroup.lift.unique
 #align free_add_group.lift.unique FreeAddGroup.lift.unique
 -/
@@ -883,7 +883,7 @@ theorem ext_hom {G : Type _} [Group G] (f g : FreeGroup α →* G) (h : ∀ a, f
 #print FreeGroup.lift.of_eq /-
 @[to_additive]
 theorem lift.of_eq (x : FreeGroup α) : lift of x = x :=
-  MonoidHom.congr_fun (lift.apply_symm_apply (MonoidHom.id _)) x
+  DFunLike.congr_fun (lift.apply_symm_apply (MonoidHom.id _)) x
 #align free_group.lift.of_eq FreeGroup.lift.of_eq
 #align free_add_group.lift.of_eq FreeAddGroup.lift.of_eq
 -/

@@ -3427,7 +3427,7 @@ theorem CauchySeq.isBounded_range {f : ℕ → α} (hf : CauchySeq f) : IsBounde
 theorem isBounded_range_of_tendsto_cofinite {f : β → α} {a : α} (hf : Tendsto f cofinite (𝓝 a)) :
     IsBounded (range f) :=
   isBounded_range_of_tendsto_cofinite_uniformity <|
-    (hf.Prod_map hf).mono_right <| nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)
+    (hf.map_apply hf).mono_right <| nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)
 #align metric.bounded_range_of_tendsto_cofinite Metric.isBounded_range_of_tendsto_cofinite
 -/
 

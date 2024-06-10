@@ -240,40 +240,48 @@ theorem map_finsupp_prod [Zero M] [CommMonoid N] [CommMonoid P] {H : Type _} [Mo
 #align map_finsupp_sum map_finsupp_sum
 -/
 
-#print MulEquiv.map_finsupp_prod /-
+/- warning: mul_equiv.map_finsupp_prod clashes with map_finsupp_prod -> map_finsupp_prod
+Case conversion may be inaccurate. Consider using '#align mul_equiv.map_finsupp_prod map_finsupp_prodₓ'. -/
+#print map_finsupp_prod /-
 /-- Deprecated, use `_root_.map_finsupp_prod` instead. -/
 @[to_additive "Deprecated, use `_root_.map_finsupp_sum` instead."]
-protected theorem MulEquiv.map_finsupp_prod [Zero M] [CommMonoid N] [CommMonoid P] (h : N ≃* P)
-    (f : α →₀ M) (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
+protected theorem map_finsupp_prod [Zero M] [CommMonoid N] [CommMonoid P] (h : N ≃* P) (f : α →₀ M)
+    (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
   map_finsupp_prod h f g
-#align mul_equiv.map_finsupp_prod MulEquiv.map_finsupp_prod
-#align add_equiv.map_finsupp_sum AddEquiv.map_finsupp_sum
+#align mul_equiv.map_finsupp_prod map_finsupp_prod
+#align map_finsupp_sum map_finsupp_sum
 -/
 
-#print MonoidHom.map_finsupp_prod /-
+/- warning: monoid_hom.map_finsupp_prod clashes with map_finsupp_prod -> map_finsupp_prod
+Case conversion may be inaccurate. Consider using '#align monoid_hom.map_finsupp_prod map_finsupp_prodₓ'. -/
+#print map_finsupp_prod /-
 /-- Deprecated, use `_root_.map_finsupp_prod` instead. -/
 @[to_additive "Deprecated, use `_root_.map_finsupp_sum` instead."]
-protected theorem MonoidHom.map_finsupp_prod [Zero M] [CommMonoid N] [CommMonoid P] (h : N →* P)
-    (f : α →₀ M) (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
+protected theorem map_finsupp_prod [Zero M] [CommMonoid N] [CommMonoid P] (h : N →* P) (f : α →₀ M)
+    (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
   map_finsupp_prod h f g
-#align monoid_hom.map_finsupp_prod MonoidHom.map_finsupp_prod
-#align add_monoid_hom.map_finsupp_sum AddMonoidHom.map_finsupp_sum
+#align monoid_hom.map_finsupp_prod map_finsupp_prod
+#align map_finsupp_sum map_finsupp_sum
 -/
 
-#print RingHom.map_finsupp_sum /-
+/- warning: ring_hom.map_finsupp_sum clashes with map_finsupp_sum -> map_finsupp_sum
+Case conversion may be inaccurate. Consider using '#align ring_hom.map_finsupp_sum map_finsupp_sumₓ'. -/
+#print map_finsupp_sum /-
 /-- Deprecated, use `_root_.map_finsupp_sum` instead. -/
-protected theorem RingHom.map_finsupp_sum [Zero M] [Semiring R] [Semiring S] (h : R →+* S)
-    (f : α →₀ M) (g : α → M → R) : h (f.Sum g) = f.Sum fun a b => h (g a b) :=
+protected theorem map_finsupp_sum [Zero M] [Semiring R] [Semiring S] (h : R →+* S) (f : α →₀ M)
+    (g : α → M → R) : h (f.Sum g) = f.Sum fun a b => h (g a b) :=
   map_finsupp_sum h f g
-#align ring_hom.map_finsupp_sum RingHom.map_finsupp_sum
+#align ring_hom.map_finsupp_sum map_finsupp_sum
 -/
 
-#print RingHom.map_finsupp_prod /-
+/- warning: ring_hom.map_finsupp_prod clashes with map_finsupp_prod -> map_finsupp_prod
+Case conversion may be inaccurate. Consider using '#align ring_hom.map_finsupp_prod map_finsupp_prodₓ'. -/
+#print map_finsupp_prod /-
 /-- Deprecated, use `_root_.map_finsupp_prod` instead. -/
-protected theorem RingHom.map_finsupp_prod [Zero M] [CommSemiring R] [CommSemiring S] (h : R →+* S)
+protected theorem map_finsupp_prod [Zero M] [CommSemiring R] [CommSemiring S] (h : R →+* S)
     (f : α →₀ M) (g : α → M → R) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
   map_finsupp_prod h f g
-#align ring_hom.map_finsupp_prod RingHom.map_finsupp_prod
+#align ring_hom.map_finsupp_prod map_finsupp_prod
 -/
 
 #print MonoidHom.coe_finsupp_prod /-
@@ -522,7 +530,7 @@ theorem liftAddHom_singleAddHom [AddCommMonoid M] :
 #print Finsupp.sum_single /-
 @[simp]
 theorem sum_single [AddCommMonoid M] (f : α →₀ M) : f.Sum single = f :=
-  AddMonoidHom.congr_fun liftAddHom_singleAddHom f
+  DFunLike.congr_fun liftAddHom_singleAddHom f
 #align finsupp.sum_single Finsupp.sum_single
 -/
 

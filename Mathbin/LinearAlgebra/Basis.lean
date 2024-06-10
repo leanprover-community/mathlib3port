@@ -257,7 +257,7 @@ def coord : M →ₗ[R] R :=
 
 #print Basis.forall_coord_eq_zero_iff /-
 theorem forall_coord_eq_zero_iff {x : M} : (∀ i, b.Coord i x = 0) ↔ x = 0 :=
-  Iff.trans (by simp only [b.coord_apply, Finsupp.ext_iff, Finsupp.zero_apply])
+  Iff.trans (by simp only [b.coord_apply, DFunLike.ext_iff, Finsupp.zero_apply])
     b.repr.map_eq_zero_iff
 #align basis.forall_coord_eq_zero_iff Basis.forall_coord_eq_zero_iff
 -/
@@ -350,7 +350,7 @@ theorem ext' {f₁ f₂ : M ≃ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b
 #print Basis.ext_elem_iff /-
 /-- Two elements are equal iff their coordinates are equal. -/
 theorem ext_elem_iff {x y : M} : x = y ↔ ∀ i, b.repr x i = b.repr y i := by
-  simp only [← Finsupp.ext_iff, EmbeddingLike.apply_eq_iff_eq]
+  simp only [← DFunLike.ext_iff, EmbeddingLike.apply_eq_iff_eq]
 #align basis.ext_elem_iff Basis.ext_elem_iff
 -/
 
@@ -1992,7 +1992,7 @@ theorem Basis.restrictScalars_repr_apply (m : span R (Set.range b)) (i : ι) :
   suffices
     Finsupp.mapRange.linearMap (Algebra.linearMap R S) ∘ₗ (b.restrict_scalars R).repr.toLinearMap =
       ((b.repr : M →ₗ[S] ι →₀ S).restrictScalars R).domRestrict _
-    by exact Finsupp.congr_fun (LinearMap.congr_fun this m) i
+    by exact DFunLike.congr_fun (LinearMap.congr_fun this m) i
   refine' Basis.ext (b.restrict_scalars R) fun _ => _
   simp only [LinearMap.coe_comp, LinearEquiv.coe_toLinearMap, Function.comp_apply, map_one,
     Basis.repr_self, Finsupp.mapRange.linearMap_apply, Finsupp.mapRange_single,

@@ -2132,7 +2132,7 @@ end ConstSmul
 /-! ### Cartesian product of two functions -/
 
 
-section Prod_map
+section Prod.map_apply
 
 variable {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
 
@@ -2199,7 +2199,7 @@ theorem ContDiff.prod_map {f : E → F} {g : E' → F'} (hf : ContDiff 𝕜 n f)
     ContDiff 𝕜 n (Prod.map f g) :=
   by
   rw [contDiff_iff_contDiffAt] at *
-  exact fun ⟨x, y⟩ => (hf x).Prod_map (hg y)
+  exact fun ⟨x, y⟩ => (hf x).map_apply (hg y)
 #align cont_diff.prod_map ContDiff.prod_map
 -/
 
@@ -2215,7 +2215,7 @@ theorem contDiff_prod_mk_right (e₀ : E) : ContDiff 𝕜 n fun f : F => (e₀, 
 #align cont_diff_prod_mk_right contDiff_prod_mk_right
 -/
 
-end Prod_map
+end Prod.map_apply
 
 /-! ### Inversion in a complete normed algebra -/
 

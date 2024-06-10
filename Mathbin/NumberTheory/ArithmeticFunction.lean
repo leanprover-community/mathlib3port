@@ -99,7 +99,7 @@ theorem ArithmeticFunction.map_zero {f : ArithmeticFunction R} : f 0 = 0 :=
 
 #print ArithmeticFunction.coe_inj /-
 theorem ArithmeticFunction.coe_inj {f g : ArithmeticFunction R} : (f : ℕ → R) = g ↔ f = g :=
-  ⟨fun h => ZeroHom.coe_inj h, fun h => h ▸ rfl⟩
+  ⟨fun h => DFunLike.coe_injective h, fun h => h ▸ rfl⟩
 #align nat.arithmetic_function.coe_inj ArithmeticFunction.coe_inj
 -/
 
@@ -119,7 +119,7 @@ theorem ArithmeticFunction.ext ⦃f g : ArithmeticFunction R⦄ (h : ∀ x, f x 
 
 #print ArithmeticFunction.ext_iff /-
 theorem ArithmeticFunction.ext_iff {f g : ArithmeticFunction R} : f = g ↔ ∀ x, f x = g x :=
-  ZeroHom.ext_iff
+  DFunLike.ext_iff
 #align nat.arithmetic_function.ext_iff ArithmeticFunction.ext_iff
 -/
 

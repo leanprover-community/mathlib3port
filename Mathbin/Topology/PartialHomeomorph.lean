@@ -1378,8 +1378,8 @@ def prod (e : PartialHomeomorph α β) (e' : PartialHomeomorph γ δ) :
     where
   open_source := e.open_source.Prod e'.open_source
   open_target := e.open_target.Prod e'.open_target
-  continuous_toFun := e.ContinuousOn.Prod_map e'.ContinuousOn
-  continuous_invFun := e.continuousOn_symm.Prod_map e'.continuousOn_symm
+  continuous_toFun := e.ContinuousOn.map_apply e'.ContinuousOn
+  continuous_invFun := e.continuousOn_symm.map_apply e'.continuousOn_symm
   toPartialEquiv := e.toPartialEquiv.Prod e'.toPartialEquiv
 #align local_homeomorph.prod PartialHomeomorph.prod
 -/

@@ -360,7 +360,7 @@ protected def prod : AbstractCompletion (α × β)
   complete := by infer_instance
   separation := by infer_instance
   UniformInducing := UniformInducing.prod pkg.UniformInducing pkg'.UniformInducing
-  dense := pkg.dense.Prod_map pkg'.dense
+  dense := pkg.dense.map_apply pkg'.dense
 #align abstract_completion.prod AbstractCompletion.prod
 -/
 

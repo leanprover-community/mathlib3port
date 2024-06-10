@@ -192,7 +192,7 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem addHom_ext' {γ : Type _} [AddMonoid γ] ⦃f g : (⨁ i, β i) →+ γ⦄
     (H : ∀ i : ι, f.comp (of _ i) = g.comp (of _ i)) : f = g :=
-  addHom_ext fun i => AddMonoidHom.congr_fun <| H i
+  addHom_ext fun i => DFunLike.congr_fun <| H i
 #align direct_sum.add_hom_ext' DirectSum.addHom_ext'
 -/
 

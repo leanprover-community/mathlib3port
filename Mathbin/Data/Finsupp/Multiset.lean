@@ -94,7 +94,7 @@ theorem toMultiset_sum_single (s : Finset ι) (n : ℕ) :
 
 #print Finsupp.card_toMultiset /-
 theorem card_toMultiset (f : α →₀ ℕ) : f.toMultiset.card = f.Sum fun a => id := by
-  simp [to_multiset_apply, AddMonoidHom.map_finsupp_sum, Function.id_def]
+  simp [to_multiset_apply, map_finsupp_sum, Function.id_def]
 #align finsupp.card_to_multiset Finsupp.card_toMultiset
 -/
 

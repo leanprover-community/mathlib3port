@@ -93,7 +93,7 @@ variable [LinearOrder ι]
 /-- The partial order on `dfinsupp`s obtained by the lexicographic ordering.
 See `dfinsupp.lex.linear_order` for a proof that this partial order is in fact linear. -/
 instance Lex.partialOrder [∀ i, PartialOrder (α i)] : PartialOrder (Lex (Π₀ i, α i)) :=
-  PartialOrder.lift (fun x => toLex ⇑(ofLex x)) DFinsupp.coeFn_injective
+  PartialOrder.lift (fun x => toLex ⇑(ofLex x)) DFunLike.coe_injective
 #align dfinsupp.lex.partial_order DFinsupp.Lex.partialOrder
 -/
 

@@ -2224,7 +2224,7 @@ theorem UniformContinuous₂.comp {f : α → β → γ} {g : γ → δ} (hg : U
 theorem UniformContinuous₂.bicompl {f : α → β → γ} {ga : δ → α} {gb : δ' → β}
     (hf : UniformContinuous₂ f) (hga : UniformContinuous ga) (hgb : UniformContinuous gb) :
     UniformContinuous₂ (bicompl f ga gb) :=
-  hf.UniformContinuous.comp (hga.Prod_map hgb)
+  hf.UniformContinuous.comp (hga.map_apply hgb)
 #align uniform_continuous₂.bicompl UniformContinuous₂.bicompl
 -/
 

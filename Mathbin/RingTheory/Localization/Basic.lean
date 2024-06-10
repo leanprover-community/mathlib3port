@@ -625,14 +625,14 @@ theorem lift_eq_iff {x y : R × M} :
 #print IsLocalization.lift_comp /-
 @[simp]
 theorem lift_comp : (lift hg).comp (algebraMap R S) = g :=
-  RingHom.ext <| MonoidHom.ext_iff.1 <| (toLocalizationMap M S).lift_comp _
+  RingHom.ext <| DFunLike.ext_iff.1 <| (toLocalizationMap M S).lift_comp _
 #align is_localization.lift_comp IsLocalization.lift_comp
 -/
 
 #print IsLocalization.lift_of_comp /-
 @[simp]
 theorem lift_of_comp (j : S →+* P) : lift (isUnit_comp M j) = j :=
-  RingHom.ext <| MonoidHom.ext_iff.1 <| (toLocalizationMap M S).lift_of_comp j.toMonoidHom
+  RingHom.ext <| DFunLike.ext_iff.1 <| (toLocalizationMap M S).lift_of_comp j.toMonoidHom
 #align is_localization.lift_of_comp IsLocalization.lift_of_comp
 -/
 
@@ -642,7 +642,7 @@ variable (M)
 /-- See note [partially-applied ext lemmas] -/
 theorem monoidHom_ext ⦃j k : S →* P⦄
     (h : j.comp (algebraMap R S : R →* S) = k.comp (algebraMap R S)) : j = k :=
-  Submonoid.LocalizationMap.epic_of_localizationMap (toLocalizationMap M S) <| MonoidHom.congr_fun h
+  Submonoid.LocalizationMap.epic_of_localizationMap (toLocalizationMap M S) <| DFunLike.congr_fun h
 #align is_localization.monoid_hom_ext IsLocalization.monoidHom_ext
 -/
 
@@ -679,7 +679,7 @@ variable {M}
 #print IsLocalization.lift_unique /-
 theorem lift_unique {j : S →+* P} (hj : ∀ x, j ((algebraMap R S) x) = g x) : lift hg = j :=
   RingHom.ext <|
-    MonoidHom.ext_iff.1 <|
+    DFunLike.ext_iff.1 <|
       @Submonoid.LocalizationMap.lift_unique _ _ _ _ _ _ _ (toLocalizationMap M S) g.toMonoidHom hg
         j.toMonoidHom hj
 #align is_localization.lift_unique IsLocalization.lift_unique

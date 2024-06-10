@@ -471,7 +471,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
       apply_fun fun x => b.repr x b' at z
       simp only [repr_self, LinearEquiv.map_smul, mul_one, Finsupp.single_eq_same, Pi.neg_apply,
         Finsupp.smul_single', map_neg, Finsupp.coe_neg] at z
-      erw [Finsupp.congr_fun (Finsupp.apply_total R (b.repr : M →ₗ[R] ι →₀ R) v l.some) b'] at z
+      erw [DFunLike.congr_fun (Finsupp.apply_total R (b.repr : M →ₗ[R] ι →₀ R) v l.some) b'] at z
       simpa [Finsupp.total_apply, w] using z
     -- Then all the other coefficients are zero, because `v` is linear independent.
     have l₁ : l.some = 0 := by
@@ -480,7 +480,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
     -- Finally we put those facts together to show the linear combination is trivial.
     ext (_ | a)
     · simp only [l₀, Finsupp.coe_zero, Pi.zero_apply]
-    · erw [Finsupp.congr_fun l₁ a]
+    · erw [DFunLike.congr_fun l₁ a]
       simp only [Finsupp.coe_zero, Pi.zero_apply]
   dsimp [LinearIndependent.Maximal] at m
   specialize m (range v') i' r

@@ -36,7 +36,7 @@ variable [CommMonoid β]
 @[to_additive]
 theorem prod_Ico_add' [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder α]
     (f : α → β) (a b c : α) : ∏ x in Ico a b, f (x + c) = ∏ x in Ico (a + c) (b + c), f x := by
-  rw [← map_add_right_Ico, Prod_map]; rfl
+  rw [← map_add_right_Ico, Prod.map_apply]; rfl
 #align finset.prod_Ico_add' Finset.prod_Ico_add'
 #align finset.sum_Ico_add' Finset.sum_Ico_add'
 -/

@@ -107,27 +107,28 @@ instance monoidHomClass : MonoidHomClass (AddChar R R') (Multiplicative R) R' :=
   MonoidHom.instMonoidHomClass
 #align add_char.monoid_hom_class AddChar.monoidHomClass
 
-#print AddChar.map_zero_one /-
+#print AddChar.map_zero_eq_one /-
 /-- An additive character maps `0` to `1`. -/
 @[simp]
-theorem map_zero_one (ψ : AddChar R R') : ψ 0 = 1 := by rw [coe_to_fun_apply, ofAdd_zero, map_one]
-#align add_char.map_zero_one AddChar.map_zero_one
+theorem map_zero_eq_one (ψ : AddChar R R') : ψ 0 = 1 := by
+  rw [coe_to_fun_apply, ofAdd_zero, map_one]
+#align add_char.map_zero_one AddChar.map_zero_eq_one
 -/
 
-#print AddChar.map_add_mul /-
+#print AddChar.map_add_eq_mul /-
 /-- An additive character maps sums to products. -/
 @[simp]
-theorem map_add_mul (ψ : AddChar R R') (x y : R) : ψ (x + y) = ψ x * ψ y := by
+theorem map_add_eq_mul (ψ : AddChar R R') (x y : R) : ψ (x + y) = ψ x * ψ y := by
   rw [coe_to_fun_apply, coe_to_fun_apply _ x, coe_to_fun_apply _ y, ofAdd_add, map_mul]
-#align add_char.map_add_mul AddChar.map_add_mul
+#align add_char.map_add_mul AddChar.map_add_eq_mul
 -/
 
-#print AddChar.map_nsmul_pow /-
+#print AddChar.map_nsmul_eq_pow /-
 /-- An additive character maps multiples by natural numbers to powers. -/
 @[simp]
-theorem map_nsmul_pow (ψ : AddChar R R') (n : ℕ) (x : R) : ψ (n • x) = ψ x ^ n := by
+theorem map_nsmul_eq_pow (ψ : AddChar R R') (n : ℕ) (x : R) : ψ (n • x) = ψ x ^ n := by
   rw [coe_to_fun_apply, coe_to_fun_apply _ x, ofAdd_nsmul, map_pow]
-#align add_char.map_nsmul_pow AddChar.map_nsmul_pow
+#align add_char.map_nsmul_pow AddChar.map_nsmul_eq_pow
 -/
 
 end CoeToFun
@@ -156,12 +157,12 @@ theorem inv_apply (ψ : AddChar R R') (x : R) : ψ⁻¹ x = ψ (-x) :=
 #align add_char.inv_apply AddChar.inv_apply
 -/
 
-#print AddChar.map_zsmul_zpow /-
+#print AddChar.map_zsmul_eq_zpow /-
 /-- An additive character maps multiples by integers to powers. -/
 @[simp]
-theorem map_zsmul_zpow {R' : Type v} [CommGroup R'] (ψ : AddChar R R') (n : ℤ) (x : R) :
+theorem map_zsmul_eq_zpow {R' : Type v} [CommGroup R'] (ψ : AddChar R R') (n : ℤ) (x : R) :
     ψ (n • x) = ψ x ^ n := by rw [coe_to_fun_apply, coe_to_fun_apply _ x, ofAdd_zsmul, map_zpow]
-#align add_char.map_zsmul_zpow AddChar.map_zsmul_zpow
+#align add_char.map_zsmul_zpow AddChar.map_zsmul_eq_zpow
 -/
 
 #print AddChar.instCommGroup /-

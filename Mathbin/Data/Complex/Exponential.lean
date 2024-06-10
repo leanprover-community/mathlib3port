@@ -585,7 +585,7 @@ theorem exp_add : exp (x + y) = exp x * exp y :=
 
 #print Complex.exp_list_sum /-
 theorem exp_list_sum (l : List ℂ) : exp l.Sum = (l.map exp).Prod :=
-  @MonoidHom.map_list_prod (Multiplicative ℂ) ℂ _ _ ⟨exp, exp_zero, exp_add⟩ l
+  @map_list_prod (Multiplicative ℂ) ℂ _ _ ⟨exp, exp_zero, exp_add⟩ l
 #align complex.exp_list_sum Complex.exp_list_sum
 -/
 
@@ -1436,7 +1436,7 @@ theorem exp_add : exp (x + y) = exp x * exp y := by simp [NormedSpace.exp_add, N
 
 #print Real.exp_list_sum /-
 theorem exp_list_sum (l : List ℝ) : exp l.Sum = (l.map exp).Prod :=
-  @MonoidHom.map_list_prod (Multiplicative ℝ) ℝ _ _ ⟨exp, exp_zero, exp_add⟩ l
+  @map_list_prod (Multiplicative ℝ) ℝ _ _ ⟨exp, exp_zero, exp_add⟩ l
 #align real.exp_list_sum Real.exp_list_sum
 -/
 

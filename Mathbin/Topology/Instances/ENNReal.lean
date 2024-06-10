@@ -2149,11 +2149,11 @@ theorem ediam_eq {s : Set ℝ} (h : IsBounded s) :
   by
   rcases eq_empty_or_nonempty s with (rfl | hne); · simp
   refine' le_antisymm (Metric.ediam_le_of_forall_dist_le fun x hx y hy => _) _
-  · have := Real.subset_Icc_sInf_sSup_of_isBounded h
+  · have := Bornology.IsBounded.subset_Icc_sInf_sSup h
     exact Real.dist_le_of_mem_Icc (this hx) (this hy)
   · apply ENNReal.ofReal_le_of_le_toReal
     rw [← Metric.diam, ← Metric.diam_closure]
-    have h' := Real.isBounded_iff_bddBelow_bddAbove.1 h
+    have h' := isBounded_iff_bddBelow_bddAbove.1 h
     calc
       Sup s - Inf s ≤ dist (Sup s) (Inf s) := le_abs_self _
       _ ≤ diam (closure s) :=
@@ -2166,7 +2166,7 @@ theorem ediam_eq {s : Set ℝ} (h : IsBounded s) :
 theorem diam_eq {s : Set ℝ} (h : IsBounded s) : Metric.diam s = sSup s - sInf s :=
   by
   rw [Metric.diam, Real.ediam_eq h, ENNReal.toReal_ofReal]
-  rw [Real.isBounded_iff_bddBelow_bddAbove] at h
+  rw [isBounded_iff_bddBelow_bddAbove] at h
   exact sub_nonneg.2 (Real.sInf_le_sSup s h.1 h.2)
 #align real.diam_eq Real.diam_eq
 -/

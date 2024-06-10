@@ -5,7 +5,7 @@ Authors: Mario Carneiro
 -/
 import Tactic.Ring
 import Data.Num.Lemmas
-import Data.Tree
+import Data.Tree.Basic
 
 #align_import tactic.ring2 from "leanprover-community/mathlib"@"3d7987cda72abc473c7cdbbb075170e9ac620042"
 

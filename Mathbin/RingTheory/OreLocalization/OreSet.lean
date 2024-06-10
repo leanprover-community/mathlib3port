@@ -42,13 +42,11 @@ class OreSet {R : Type _} [Monoid R] (S : Submonoid R) where
 
 variable {R : Type _} [Monoid R] {S : Submonoid R} [OreSet S]
 
-#print OreLocalization.ore_left_cancel /-
 /-- Common factors on the left can be turned into common factors on the right, a weak form of
 cancellability. -/
 theorem ore_left_cancel (r₁ r₂ : R) (s : S) (h : ↑s * r₁ = s * r₂) : ∃ s' : S, r₁ * s' = r₂ * s' :=
   OreSet.ore_left_cancel r₁ r₂ s h
 #align ore_localization.ore_left_cancel OreLocalization.ore_left_cancel
--/
 
 #print OreLocalization.oreNum /-
 /-- The Ore numerator of a fraction. -/

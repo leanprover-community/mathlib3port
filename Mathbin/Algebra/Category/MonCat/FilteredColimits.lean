@@ -251,7 +251,7 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit
 @[simp, to_additive]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
     F.map f ≫ cocone_morphism j' = cocone_morphism j :=
-  MonoidHom.coe_inj ((Types.colimitCocone (F ⋙ forget MonCat)).ι.naturality f)
+  DFunLike.coe_injective ((Types.colimitCocone (F ⋙ forget MonCat)).ι.naturality f)
 #align Mon.filtered_colimits.cocone_naturality MonCat.FilteredColimits.cocone_naturality
 #align AddMon.filtered_colimits.cocone_naturality AddMonCat.FilteredColimits.cocone_naturality
 -/
@@ -296,12 +296,12 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     where
   desc := colimit_desc
   fac t j :=
-    MonoidHom.coe_inj
+    DFunLike.coe_injective
       ((Types.colimitCoconeIsColimit (F ⋙ forget MonCat)).fac ((forget MonCat).mapCocone t) j)
   uniq t m h :=
-    MonoidHom.coe_inj <|
+    DFunLike.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget MonCat)).uniq ((forget MonCat).mapCocone t) m
-        fun j => funext fun x => MonoidHom.congr_fun (h j) x
+        fun j => funext fun x => DFunLike.congr_fun (h j) x
 #align Mon.filtered_colimits.colimit_cocone_is_colimit MonCat.FilteredColimits.colimitCoconeIsColimit
 #align AddMon.filtered_colimits.colimit_cocone_is_colimit AddMonCat.FilteredColimits.colimitCoconeIsColimit
 -/
@@ -388,12 +388,12 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     MonCat.FilteredColimits.colimitDesc (F ⋙ forget₂ CommMonCat MonCat.{max v u})
       ((forget₂ CommMonCat MonCat.{max v u}).mapCocone t)
   fac t j :=
-    MonoidHom.coe_inj <|
+    DFunLike.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommMonCat)).fac ((forget CommMonCat).mapCocone t) j
   uniq t m h :=
-    MonoidHom.coe_inj <|
+    DFunLike.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommMonCat)).uniq ((forget CommMonCat).mapCocone t)
-        m fun j => funext fun x => MonoidHom.congr_fun (h j) x
+        m fun j => funext fun x => DFunLike.congr_fun (h j) x
 #align CommMon.filtered_colimits.colimit_cocone_is_colimit CommMonCat.FilteredColimits.colimitCoconeIsColimit
 #align AddCommMon.filtered_colimits.colimit_cocone_is_colimit AddCommMonCat.FilteredColimits.colimitCoconeIsColimit
 -/

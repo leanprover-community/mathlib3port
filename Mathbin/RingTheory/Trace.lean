@@ -199,7 +199,7 @@ theorem trace_prod_apply [Module.Free R S] [Module.Free R T] [Module.Finite R S]
     (x : S × T) : trace R (S × T) x = trace R S x.fst + trace R T x.snd :=
   by
   nontriviality R
-  let f := (lmul R S).toLinearMap.Prod_map (lmul R T).toLinearMap
+  let f := (lmul R S).toLinearMap.map_apply (lmul R T).toLinearMap
   have : (lmul R (S × T)).toLinearMap = (prod_map_linear R S T S T R).comp f :=
     LinearMap.ext₂ Prod.mul_def
   simp_rw [trace, this]

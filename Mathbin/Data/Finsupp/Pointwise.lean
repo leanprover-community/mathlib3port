@@ -71,32 +71,32 @@ theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} :
 -/
 
 instance : MulZeroClass (α →₀ β) :=
-  Finsupp.coeFn_injective.MulZeroClass _ coe_zero coe_mul
+  DFunLike.coe_injective.MulZeroClass _ coe_zero coe_mul
 
 end
 
 instance [SemigroupWithZero β] : SemigroupWithZero (α →₀ β) :=
-  Finsupp.coeFn_injective.SemigroupWithZero _ coe_zero coe_mul
+  DFunLike.coe_injective.SemigroupWithZero _ coe_zero coe_mul
 
 instance [NonUnitalNonAssocSemiring β] : NonUnitalNonAssocSemiring (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  DFunLike.coe_injective.NonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalSemiring β] : NonUnitalSemiring (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  DFunLike.coe_injective.NonUnitalSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalCommSemiring β] : NonUnitalCommSemiring (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalCommSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  DFunLike.coe_injective.NonUnitalCommSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalNonAssocRing β] : NonUnitalNonAssocRing (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub
+  DFunLike.coe_injective.NonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub
     (fun _ _ => rfl) fun _ _ => rfl
 
 instance [NonUnitalRing β] : NonUnitalRing (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl)
+  DFunLike.coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl)
     fun _ _ => rfl
 
 instance [NonUnitalCommRing β] : NonUnitalCommRing (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub
+  DFunLike.coe_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub
     (fun _ _ => rfl) fun _ _ => rfl
 
 #print Finsupp.pointwiseScalar /-
@@ -126,7 +126,7 @@ theorem coe_pointwise_smul [Semiring β] (f : α → β) (g : α →₀ β) : �
 #print Finsupp.pointwiseModule /-
 /-- The pointwise multiplicative action of functions on finitely supported functions -/
 instance pointwiseModule [Semiring β] : Module (α → β) (α →₀ β) :=
-  Function.Injective.module _ coeFnAddHom coeFn_injective coe_pointwise_smul
+  Function.Injective.module _ coeFnAddHom coe_injective coe_pointwise_smul
 #align finsupp.pointwise_module Finsupp.pointwiseModule
 -/
 

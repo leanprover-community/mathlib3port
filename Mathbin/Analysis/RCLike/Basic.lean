@@ -313,7 +313,7 @@ theorem ofReal_prod {α : Type _} (s : Finset α) (f : α → ℝ) :
 @[simp, is_R_or_C_simps, norm_cast]
 theorem ofReal_finsupp_prod {α M : Type _} [Zero M] (f : α →₀ M) (g : α → M → ℝ) :
     ((f.Prod fun a b => g a b : ℝ) : K) = f.Prod fun a b => (g a b : K) :=
-  RingHom.map_finsupp_prod _ f g
+  map_finsupp_prod _ f g
 #align is_R_or_C.of_real_finsupp_prod RCLike.ofReal_finsupp_prod
 -/
 

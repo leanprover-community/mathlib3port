@@ -196,7 +196,7 @@ continuous. -/
 theorem CompactSpace.uniformContinuous_of_continuous [CompactSpace α] {f : α → β}
     (h : Continuous f) : UniformContinuous f :=
   have : Tendsto (Prod.map f f) (𝓝ˢ (diagonal α)) (𝓝ˢ (diagonal β)) :=
-    (h.Prod_map h).tendsto_nhdsSet mapsTo_prod_map_diagonal
+    (h.map_apply h).tendsto_nhdsSet mapsTo_prod_map_diagonal
   (this.mono_left nhdsSet_diagonal_eq_uniformity.ge).mono_right nhdsSet_diagonal_le_uniformity
 #align compact_space.uniform_continuous_of_continuous CompactSpace.uniformContinuous_of_continuous
 -/

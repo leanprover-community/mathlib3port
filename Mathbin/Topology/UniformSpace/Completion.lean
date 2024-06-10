@@ -534,7 +534,7 @@ theorem denseEmbedding_coe [T0Space α] : DenseEmbedding (coe : α → Completio
 #print UniformSpace.Completion.denseRange_coe₂ /-
 theorem denseRange_coe₂ :
     DenseRange fun x : α × β => ((x.1 : Completion α), (x.2 : Completion β)) :=
-  denseRange_coe.Prod_map denseRange_coe
+  denseRange_coe.map_apply denseRange_coe
 #align uniform_space.completion.dense_range_coe₂ UniformSpace.Completion.denseRange_coe₂
 -/
 
@@ -542,7 +542,7 @@ theorem denseRange_coe₂ :
 theorem denseRange_coe₃ :
     DenseRange fun x : α × β × γ =>
       ((x.1 : Completion α), ((x.2.1 : Completion β), (x.2.2 : Completion γ))) :=
-  denseRange_coe.Prod_map denseRange_coe₂
+  denseRange_coe.map_apply denseRange_coe₂
 #align uniform_space.completion.dense_range_coe₃ UniformSpace.Completion.denseRange_coe₃
 -/
 

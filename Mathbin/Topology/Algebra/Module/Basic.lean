@@ -1391,7 +1391,7 @@ def prodMap [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (f₁ : M�
 #print ContinuousLinearMap.coe_prodMap /-
 @[simp, norm_cast]
 theorem coe_prodMap [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (f₁ : M₁ →L[R₁] M₂)
-    (f₂ : M₃ →L[R₁] M₄) : ↑(f₁.Prod_map f₂) = (f₁ : M₁ →ₗ[R₁] M₂).Prod_map (f₂ : M₃ →ₗ[R₁] M₄) :=
+    (f₂ : M₃ →L[R₁] M₄) : ↑(f₁.map_apply f₂) = (f₁ : M₁ →ₗ[R₁] M₂).map_apply (f₂ : M₃ →ₗ[R₁] M₄) :=
   rfl
 #align continuous_linear_map.coe_prod_map ContinuousLinearMap.coe_prodMap
 -/
@@ -1399,7 +1399,7 @@ theorem coe_prodMap [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (f�
 #print ContinuousLinearMap.coe_prodMap' /-
 @[simp, norm_cast]
 theorem coe_prodMap' [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (f₁ : M₁ →L[R₁] M₂)
-    (f₂ : M₃ →L[R₁] M₄) : ⇑(f₁.Prod_map f₂) = Prod.map f₁ f₂ :=
+    (f₂ : M₃ →L[R₁] M₄) : ⇑(f₁.map_apply f₂) = Prod.map f₁ f₂ :=
   rfl
 #align continuous_linear_map.coe_prod_map' ContinuousLinearMap.coe_prodMap'
 -/
@@ -2496,8 +2496,8 @@ def prod [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e : M₁ ≃L
   {
     e.toLinearEquiv.Prod
       e'.toLinearEquiv with
-    continuous_toFun := e.continuous_toFun.Prod_map e'.continuous_toFun
-    continuous_invFun := e.continuous_invFun.Prod_map e'.continuous_invFun }
+    continuous_toFun := e.continuous_toFun.map_apply e'.continuous_toFun
+    continuous_invFun := e.continuous_invFun.map_apply e'.continuous_invFun }
 #align continuous_linear_equiv.prod ContinuousLinearEquiv.prod
 -/
 
@@ -2513,7 +2513,7 @@ theorem prod_apply [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e :
 @[simp, norm_cast]
 theorem coe_prod [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e : M₁ ≃L[R₁] M₂)
     (e' : M₃ ≃L[R₁] M₄) :
-    (e.Prod e' : M₁ × M₃ →L[R₁] M₂ × M₄) = (e : M₁ →L[R₁] M₂).Prod_map (e' : M₃ →L[R₁] M₄) :=
+    (e.Prod e' : M₁ × M₃ →L[R₁] M₂ × M₄) = (e : M₁ →L[R₁] M₂).map_apply (e' : M₃ →L[R₁] M₄) :=
   rfl
 #align continuous_linear_equiv.coe_prod ContinuousLinearEquiv.coe_prod
 -/

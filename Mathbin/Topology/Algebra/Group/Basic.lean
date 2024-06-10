@@ -726,7 +726,7 @@ end OrderedCommGroup
 
 @[instance, to_additive]
 instance [TopologicalSpace H] [Group H] [TopologicalGroup H] : TopologicalGroup (G × H)
-    where continuous_inv := continuous_inv.Prod_map continuous_inv
+    where continuous_inv := continuous_inv.map_apply continuous_inv
 
 #print Pi.topologicalGroup /-
 @[to_additive]
@@ -1180,7 +1180,7 @@ instance topologicalGroup_quotient [N.Normal] : TopologicalGroup (G ⧸ N)
       apply IsOpenMap.to_quotientMap
       · exact (QuotientGroup.isOpenMap_coe N).Prod (QuotientGroup.isOpenMap_coe N)
       · exact continuous_quot_mk.prod_map continuous_quot_mk
-      · exact (surjective_quot_mk _).Prod_map (surjective_quot_mk _)
+      · exact (surjective_quot_mk _).map_apply (surjective_quot_mk _)
     exact (QuotientMap.continuous_iff Quot).2 Cont
   continuous_inv := by convert (@continuous_inv G _ _ _).quotient_map' _
 #align topological_group_quotient topologicalGroup_quotient

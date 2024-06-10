@@ -743,7 +743,7 @@ section Graph
 #print LinearPMap.graph /-
 /-- The graph of a `linear_pmap` viewed as a submodule on `E × F`. -/
 def graph (f : E →ₗ.[R] F) : Submodule R (E × F) :=
-  f.toFun.graph.map (f.domain.Subtype.Prod_map (LinearMap.id : F →ₗ[R] F))
+  f.toFun.graph.map (f.domain.Subtype.map_apply (LinearMap.id : F →ₗ[R] F))
 #align linear_pmap.graph LinearPMap.graph
 -/
 
@@ -773,7 +773,7 @@ variable {M : Type _} [Monoid M] [DistribMulAction M F] [SMulCommClass R M F] (y
 /-- The graph of `z • f` as a pushforward. -/
 theorem smul_graph (f : E →ₗ.[R] F) (z : M) :
     (z • f).graph =
-      f.graph.map ((LinearMap.id : E →ₗ[R] E).Prod_map (z • (LinearMap.id : F →ₗ[R] F))) :=
+      f.graph.map ((LinearMap.id : E →ₗ[R] E).map_apply (z • (LinearMap.id : F →ₗ[R] F))) :=
   by
   ext x; cases x
   constructor <;> intro h
@@ -801,7 +801,7 @@ theorem smul_graph (f : E →ₗ.[R] F) (z : M) :
 #print LinearPMap.neg_graph /-
 /-- The graph of `-f` as a pushforward. -/
 theorem neg_graph (f : E →ₗ.[R] F) :
-    (-f).graph = f.graph.map ((LinearMap.id : E →ₗ[R] E).Prod_map (-(LinearMap.id : F →ₗ[R] F))) :=
+    (-f).graph = f.graph.map ((LinearMap.id : E →ₗ[R] E).map_apply (-(LinearMap.id : F →ₗ[R] F))) :=
   by
   ext; cases x
   constructor <;> intro h

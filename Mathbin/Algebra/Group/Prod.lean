@@ -438,14 +438,14 @@ theorem prod_unique (f : M →ₙ* N × P) : ((fst N P).comp f).Prod ((snd N P).
 
 end Prod
 
-section Prod_map
+section Prod.map_apply
 
 variable {M' : Type _} {N' : Type _} [Mul M] [Mul N] [Mul M'] [Mul N'] [Mul P] (f : M →ₙ* M')
   (g : N →ₙ* N')
 
 #print MulHom.prodMap /-
 /-- `prod.map` as a `monoid_hom`. -/
-@[to_additive Prod_map "`prod.map` as an `add_monoid_hom`"]
+@[to_additive Prod.map_apply "`prod.map` as an `add_monoid_hom`"]
 def prodMap : M × N →ₙ* M' × N' :=
   (f.comp (fst M N)).Prod (g.comp (snd M N))
 #align mul_hom.prod_map MulHom.prodMap
@@ -471,13 +471,13 @@ theorem coe_prodMap : ⇑(prodMap f g) = Prod.map f g :=
 #print MulHom.prod_comp_prodMap /-
 @[to_additive prod_comp_prod_map]
 theorem prod_comp_prodMap (f : P →ₙ* M) (g : P →ₙ* N) (f' : M →ₙ* M') (g' : N →ₙ* N') :
-    (f'.Prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+    (f'.map_apply g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 #align mul_hom.prod_comp_prod_map MulHom.prod_comp_prodMap
 #align add_hom.prod_comp_prod_map AddHom.prod_comp_prodMap
 -/
 
-end Prod_map
+end Prod.map_apply
 
 section Coprod
 
@@ -685,14 +685,14 @@ theorem prod_unique (f : M →* N × P) : ((fst N P).comp f).Prod ((snd N P).com
 
 end Prod
 
-section Prod_map
+section Prod.map_apply
 
 variable {M' : Type _} {N' : Type _} [MulOneClass M'] [MulOneClass N'] [MulOneClass P] (f : M →* M')
   (g : N →* N')
 
 #print MonoidHom.prodMap /-
 /-- `prod.map` as a `monoid_hom`. -/
-@[to_additive Prod_map "`prod.map` as an `add_monoid_hom`"]
+@[to_additive Prod.map_apply "`prod.map` as an `add_monoid_hom`"]
 def prodMap : M × N →* M' × N' :=
   (f.comp (fst M N)).Prod (g.comp (snd M N))
 #align monoid_hom.prod_map MonoidHom.prodMap
@@ -718,13 +718,13 @@ theorem coe_prodMap : ⇑(prodMap f g) = Prod.map f g :=
 #print MonoidHom.prod_comp_prodMap /-
 @[to_additive prod_comp_prod_map]
 theorem prod_comp_prodMap (f : P →* M) (g : P →* N) (f' : M →* M') (g' : N →* N') :
-    (f'.Prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+    (f'.map_apply g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 #align monoid_hom.prod_comp_prod_map MonoidHom.prod_comp_prodMap
 #align add_monoid_hom.prod_comp_prod_map AddMonoidHom.prod_comp_prodMap
 -/
 
-end Prod_map
+end Prod.map_apply
 
 section Coprod
 

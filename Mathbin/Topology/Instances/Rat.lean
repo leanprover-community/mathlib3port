@@ -151,16 +151,18 @@ theorem uniformContinuous_abs : UniformContinuous (abs : ℚ → ℚ) :=
 #align rat.uniform_continuous_abs Rat.uniformContinuous_abs
 -/
 
-#print Rat.continuous_mul /-
+/- warning: rat.continuous_mul clashes with continuous_mul -> continuous_mul
+Case conversion may be inaccurate. Consider using '#align rat.continuous_mul continuous_mulₓ'. -/
+#print continuous_mul /-
 theorem continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
   Rat.embedding_coe_real.continuous_iff.2 <| by
     simp [(· ∘ ·)] <;>
       exact real.continuous_mul.comp (rat.continuous_coe_real.prod_map Rat.continuous_coe_real)
-#align rat.continuous_mul Rat.continuous_mul
+#align rat.continuous_mul continuous_mul
 -/
 
 instance : TopologicalRing ℚ :=
-  { Rat.topologicalAddGroup with continuous_hMul := Rat.continuous_mul }
+  { Rat.topologicalAddGroup with continuous_hMul := continuous_mul }
 
 #print Rat.totallyBounded_Icc /-
 theorem totallyBounded_Icc (a b : ℚ) : TotallyBounded (Icc a b) := by

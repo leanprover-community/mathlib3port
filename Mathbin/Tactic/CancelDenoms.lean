@@ -5,7 +5,7 @@ Authors: Robert Y. Lewis
 -/
 import Data.Rat.MetaDefs
 import Tactic.NormNum
-import Data.Tree
+import Data.Tree.Basic
 import Meta.Expr
 
 #align_import tactic.cancel_denoms from "leanprover-community/mathlib"@"eaa771fc4f5f356afeacac4ab92e0cbf10b0b1df"

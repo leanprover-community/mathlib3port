@@ -344,14 +344,14 @@ def sectr {α : Sort _} (a : α) (β : Sort _) : β ↪ α × β :=
 #print Function.Embedding.prodMap /-
 /-- If `e₁` and `e₂` are embeddings, then so is `prod.map e₁ e₂ : (a, b) ↦ (e₁ a, e₂ b)`. -/
 def prodMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : α × γ ↪ β × δ :=
-  ⟨Prod.map e₁ e₂, e₁.Injective.Prod_map e₂.Injective⟩
+  ⟨Prod.map e₁ e₂, e₁.Injective.map_apply e₂.Injective⟩
 #align function.embedding.prod_map Function.Embedding.prodMap
 -/
 
 #print Function.Embedding.coe_prodMap /-
 @[simp]
 theorem coe_prodMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) :
-    ⇑(e₁.Prod_map e₂) = Prod.map e₁ e₂ :=
+    ⇑(e₁.map_apply e₂) = Prod.map e₁ e₂ :=
   rfl
 #align function.embedding.coe_prod_map Function.Embedding.coe_prodMap
 -/

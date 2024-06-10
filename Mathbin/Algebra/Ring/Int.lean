@@ -416,10 +416,9 @@ theorem negSucc_eq' (m : ℕ) : -[m+1] = -m - 1 := by simp [neg_succ_of_nat_eq, 
 #align int.neg_succ_of_nat_eq' Int.negSucc_eq'
 -/
 
-#print Int.natAbs_ne_zero_of_ne_zero /-
-theorem natAbs_ne_zero_of_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h =>
-  hz <| Int.natAbs_eq_zero h
-#align int.nat_abs_ne_zero_of_ne_zero Int.natAbs_ne_zero_of_ne_zero
+#print Int.natAbs_ne_zero /-
+theorem natAbs_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h => hz <| Int.natAbs_eq_zero h
+#align int.nat_abs_ne_zero_of_ne_zero Int.natAbs_ne_zero
 -/
 
 /- warning: int.nat_abs_eq_zero clashes with int.eq_zero_of_nat_abs_eq_zero -> Int.natAbs_eq_zero
@@ -431,6 +430,8 @@ theorem natAbs_eq_zero {a : ℤ} : a.natAbs = 0 ↔ a = 0 :=
 #align int.nat_abs_eq_zero Int.natAbs_eq_zero
 -/
 
+/- warning: int.nat_abs_ne_zero clashes with int.nat_abs_ne_zero_of_ne_zero -> Int.natAbs_ne_zero
+Case conversion may be inaccurate. Consider using '#align int.nat_abs_ne_zero Int.natAbs_ne_zeroₓ'. -/
 #print Int.natAbs_ne_zero /-
 theorem natAbs_ne_zero {a : ℤ} : a.natAbs ≠ 0 ↔ a ≠ 0 :=
   not_congr Int.natAbs_eq_zero

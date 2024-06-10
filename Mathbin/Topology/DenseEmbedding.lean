@@ -120,7 +120,7 @@ protected theorem prod [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α �
     (de₁ : DenseInducing e₁) (de₂ : DenseInducing e₂) :
     DenseInducing fun p : α × γ => (e₁ p.1, e₂ p.2) :=
   { induced := (de₁.to_inducing.prod_mk de₂.to_inducing).induced
-    dense := de₁.dense.Prod_map de₂.dense }
+    dense := de₁.dense.map_apply de₂.dense }
 #align dense_inducing.prod DenseInducing.prod
 -/
 
@@ -401,7 +401,7 @@ theorem isClosed_property [TopologicalSpace β] {e : α → β} {p : β → Prop
 #print isClosed_property2 /-
 theorem isClosed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed {q : β × β | p q.1 q.2}) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
-  have : ∀ q : β × β, p q.1 q.2 := isClosed_property (he.Prod_map he) hp fun _ => h _ _
+  have : ∀ q : β × β, p q.1 q.2 := isClosed_property (he.map_apply he) hp fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 #align is_closed_property2 isClosed_property2
 -/
@@ -411,7 +411,7 @@ theorem isClosed_property3 [TopologicalSpace β] {e : α → β} {p : β → β 
     (he : DenseRange e) (hp : IsClosed {q : β × β × β | p q.1 q.2.1 q.2.2})
     (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) : ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
   have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 :=
-    isClosed_property (he.Prod_map <| he.Prod_map he) hp fun _ => h _ _ _
+    isClosed_property (he.map_apply <| he.map_apply he) hp fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
 #align is_closed_property3 isClosed_property3
 -/

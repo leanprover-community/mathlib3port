@@ -447,7 +447,7 @@ noncomputable def Trivialization.pullback (e : Trivialization F (π F E)) (f : K
       pullback_total_space_embedding]
     refine'
       continuous_on_fst.prod
-        (e.continuous_on_symm.comp ((map_continuous f).Prod_map continuous_id).ContinuousOn
+        (e.continuous_on_symm.comp ((map_continuous f).map_apply continuous_id).ContinuousOn
           subset.rfl)
   source_eq := by dsimp only; rw [e.source_eq]; rfl
   target_eq := rfl

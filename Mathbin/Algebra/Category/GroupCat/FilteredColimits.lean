@@ -169,12 +169,12 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     MonCat.FilteredColimits.colimitDesc (F ⋙ forget₂ GroupCat MonCat.{max v u})
       ((forget₂ GroupCat MonCat).mapCocone t)
   fac t j :=
-    MonoidHom.coe_inj <|
+    DFunLike.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget GroupCat)).fac ((forget GroupCat).mapCocone t) j
   uniq t m h :=
-    MonoidHom.coe_inj <|
+    DFunLike.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget GroupCat)).uniq ((forget GroupCat).mapCocone t) m
-        fun j => funext fun x => MonoidHom.congr_fun (h j) x
+        fun j => funext fun x => DFunLike.congr_fun (h j) x
 #align Group.filtered_colimits.colimit_cocone_is_colimit GroupCat.FilteredColimits.colimitCoconeIsColimit
 #align AddGroup.filtered_colimits.colimit_cocone_is_colimit AddGroupCat.FilteredColimits.colimitCoconeIsColimit
 -/
@@ -266,13 +266,13 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
           (F ⋙ forget₂ CommGroupCat GroupCat.{max v u})).desc
       ((forget₂ CommGroupCat GroupCat.{max v u}).mapCocone t)
   fac t j :=
-    MonoidHom.coe_inj <|
+    DFunLike.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommGroupCat)).fac
         ((forget CommGroupCat).mapCocone t) j
   uniq t m h :=
-    MonoidHom.coe_inj <|
+    DFunLike.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommGroupCat)).uniq
-        ((forget CommGroupCat).mapCocone t) m fun j => funext fun x => MonoidHom.congr_fun (h j) x
+        ((forget CommGroupCat).mapCocone t) m fun j => funext fun x => DFunLike.congr_fun (h j) x
 #align CommGroup.filtered_colimits.colimit_cocone_is_colimit CommGroupCat.FilteredColimits.colimitCoconeIsColimit
 #align AddCommGroup.filtered_colimits.colimit_cocone_is_colimit AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit
 -/

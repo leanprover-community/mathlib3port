@@ -134,32 +134,40 @@ theorem ext {f g : α →₀ M} (h : ∀ a, f a = g a) : f = g :=
 #align finsupp.ext Finsupp.ext
 -/
 
-#print Finsupp.ext_iff /-
+/- warning: finsupp.ext_iff clashes with fun_like.ext_iff -> DFunLike.ext_iff
+Case conversion may be inaccurate. Consider using '#align finsupp.ext_iff DFunLike.ext_iffₓ'. -/
+#print DFunLike.ext_iff /-
 /-- Deprecated. Use `fun_like.ext_iff` instead. -/
 theorem ext_iff {f g : α →₀ M} : f = g ↔ ∀ a, f a = g a :=
   DFunLike.ext_iff
-#align finsupp.ext_iff Finsupp.ext_iff
+#align finsupp.ext_iff DFunLike.ext_iff
 -/
 
-#print Finsupp.coeFn_inj /-
+/- warning: finsupp.coe_fn_inj clashes with fun_like.coe_fn_eq -> DFunLike.coe_fn_eq
+Case conversion may be inaccurate. Consider using '#align finsupp.coe_fn_inj DFunLike.coe_fn_eqₓ'. -/
+#print DFunLike.coe_fn_eq /-
 /-- Deprecated. Use `fun_like.coe_fn_eq` instead. -/
-theorem coeFn_inj {f g : α →₀ M} : (f : α → M) = g ↔ f = g :=
+theorem coe_fn_eq {f g : α →₀ M} : (f : α → M) = g ↔ f = g :=
   DFunLike.coe_fn_eq
-#align finsupp.coe_fn_inj Finsupp.coeFn_inj
+#align finsupp.coe_fn_inj DFunLike.coe_fn_eq
 -/
 
-#print Finsupp.coeFn_injective /-
+/- warning: finsupp.coe_fn_injective clashes with fun_like.coe_injective -> DFunLike.coe_injective
+Case conversion may be inaccurate. Consider using '#align finsupp.coe_fn_injective DFunLike.coe_injectiveₓ'. -/
+#print DFunLike.coe_injective /-
 /-- Deprecated. Use `fun_like.coe_injective` instead. -/
-theorem coeFn_injective : @Function.Injective (α →₀ M) (α → M) coeFn :=
+theorem coe_injective : @Function.Injective (α →₀ M) (α → M) coeFn :=
   DFunLike.coe_injective
-#align finsupp.coe_fn_injective Finsupp.coeFn_injective
+#align finsupp.coe_fn_injective DFunLike.coe_injective
 -/
 
-#print Finsupp.congr_fun /-
+/- warning: finsupp.congr_fun clashes with fun_like.congr_fun -> DFunLike.congr_fun
+Case conversion may be inaccurate. Consider using '#align finsupp.congr_fun DFunLike.congr_funₓ'. -/
+#print DFunLike.congr_fun /-
 /-- Deprecated. Use `fun_like.congr_fun` instead. -/
 theorem congr_fun {f g : α →₀ M} (h : f = g) (a : α) : f a = g a :=
   DFunLike.congr_fun h _
-#align finsupp.congr_fun Finsupp.congr_fun
+#align finsupp.congr_fun DFunLike.congr_fun
 -/
 
 #print Finsupp.coe_mk /-
@@ -398,7 +406,7 @@ theorem single_eq_pi_single [DecidableEq α] (a : α) (b : M) : ⇑(single a b) 
 #print Finsupp.single_zero /-
 @[simp]
 theorem single_zero (a : α) : (single a 0 : α →₀ M) = 0 :=
-  coeFn_injective <| by
+  coe_injective <| by
     classical simpa only [single_eq_update, coe_zero] using Function.update_eq_self a (0 : α → M)
 #align finsupp.single_zero Finsupp.single_zero
 -/
@@ -1363,7 +1371,7 @@ verify `f (single a 1) = g (single a 1)`. -/
 @[ext]
 theorem addHom_ext' [AddZeroClass N] ⦃f g : (α →₀ M) →+ N⦄
     (H : ∀ x, f.comp (singleAddHom x) = g.comp (singleAddHom x)) : f = g :=
-  addHom_ext fun x => AddMonoidHom.congr_fun (H x)
+  addHom_ext fun x => DFunLike.congr_fun (H x)
 #align finsupp.add_hom_ext' Finsupp.addHom_ext'
 -/
 
@@ -1372,7 +1380,7 @@ theorem mulHom_ext [MulOneClass N] ⦃f g : Multiplicative (α →₀ M) →* N�
     (H : ∀ x y, f (Multiplicative.ofAdd <| single x y) = g (Multiplicative.ofAdd <| single x y)) :
     f = g :=
   MonoidHom.ext <|
-    AddMonoidHom.congr_fun <| @addHom_ext α M (Additive N) _ _ f.toAdditive'' g.toAdditive'' H
+    DFunLike.congr_fun <| @addHom_ext α M (Additive N) _ _ f.toAdditive'' g.toAdditive'' H
 #align finsupp.mul_hom_ext Finsupp.mulHom_ext
 -/
 
@@ -1381,7 +1389,7 @@ theorem mulHom_ext [MulOneClass N] ⦃f g : Multiplicative (α →₀ M) →* N�
 theorem mulHom_ext' [MulOneClass N] {f g : Multiplicative (α →₀ M) →* N}
     (H : ∀ x, f.comp (singleAddHom x).toMultiplicative = g.comp (singleAddHom x).toMultiplicative) :
     f = g :=
-  mulHom_ext fun x => MonoidHom.congr_fun (H x)
+  mulHom_ext fun x => DFunLike.congr_fun (H x)
 #align finsupp.mul_hom_ext' Finsupp.mulHom_ext'
 -/
 

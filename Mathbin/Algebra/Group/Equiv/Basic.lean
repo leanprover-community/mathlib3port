@@ -705,7 +705,7 @@ theorem coe_toMonoidHom {M N} [MulOneClass M] [MulOneClass N] (e : M ≃* N) : �
 @[to_additive]
 theorem toMonoidHom_injective {M N} [MulOneClass M] [MulOneClass N] :
     Function.Injective (toMonoidHom : M ≃* N → M →* N) := fun f g h =>
-  MulEquiv.ext (MonoidHom.ext_iff.1 h)
+  MulEquiv.ext (DFunLike.ext_iff.1 h)
 #align mul_equiv.to_monoid_hom_injective MulEquiv.toMonoidHom_injective
 #align add_equiv.to_add_monoid_hom_injective AddEquiv.toAddMonoidHom_injective
 -/
@@ -849,8 +849,8 @@ def MulHom.toMulEquiv [Mul M] [Mul N] (f : M →ₙ* N) (g : N →ₙ* M) (h₁ 
     where
   toFun := f
   invFun := g
-  left_inv := MulHom.congr_fun h₁
-  right_inv := MulHom.congr_fun h₂
+  left_inv := DFunLike.congr_fun h₁
+  right_inv := DFunLike.congr_fun h₂
   map_mul' := f.map_hMul
 #align mul_hom.to_mul_equiv MulHom.toMulEquiv
 #align add_hom.to_add_equiv AddHom.toAddEquiv
@@ -868,8 +868,8 @@ def MonoidHom.toMulEquiv [MulOneClass M] [MulOneClass N] (f : M →* N) (g : N �
     where
   toFun := f
   invFun := g
-  left_inv := MonoidHom.congr_fun h₁
-  right_inv := MonoidHom.congr_fun h₂
+  left_inv := DFunLike.congr_fun h₁
+  right_inv := DFunLike.congr_fun h₂
   map_mul' := f.map_hMul
 #align monoid_hom.to_mul_equiv MonoidHom.toMulEquiv
 #align add_monoid_hom.to_add_equiv AddMonoidHom.toAddEquiv

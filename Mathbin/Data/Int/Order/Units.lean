@@ -5,7 +5,7 @@ Authors: Jeremy Avigad
 -/
 import Algebra.Order.Group.Int
 import Algebra.Group.Int
-import Algebra.GroupPower.Order
+import Algebra.Order.Ring.Basic
 
 #align_import data.int.order.units from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

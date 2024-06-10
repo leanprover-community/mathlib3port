@@ -574,7 +574,7 @@ theorem liftNC_smul [MulOneClass G] {R : Type _} [Semiring R] (f : k →+* R) (g
   suffices :
     (lift_nc (↑f) g).comp (smulAddHom k (MonoidAlgebra k G) c) =
       (AddMonoidHom.mulLeft (f c)).comp (lift_nc (↑f) g)
-  exact AddMonoidHom.congr_fun this φ
+  exact DFunLike.congr_fun this φ
   ext a b; simp [mul_assoc]
 #align monoid_algebra.lift_nc_smul MonoidAlgebra.liftNC_smul
 -/
@@ -638,7 +638,7 @@ theorem nonUnitalAlgHom_ext [DistribMulAction k A] {φ₁ φ₂ : MonoidAlgebra 
 @[ext]
 theorem nonUnitalAlgHom_ext' [DistribMulAction k A] {φ₁ φ₂ : MonoidAlgebra k G →ₙₐ[k] A}
     (h : φ₁.toMulHom.comp (ofMagma k G) = φ₂.toMulHom.comp (ofMagma k G)) : φ₁ = φ₂ :=
-  nonUnitalAlgHom_ext k <| MulHom.congr_fun h
+  nonUnitalAlgHom_ext k <| DFunLike.congr_fun h
 #align monoid_algebra.non_unital_alg_hom_ext' MonoidAlgebra.nonUnitalAlgHom_ext'
 -/
 
@@ -742,7 +742,7 @@ theorem ringHom_ext' {R} [Semiring k] [MulOneClass G] [Semiring R] {f g : Monoid
     (h_of :
       (f : MonoidAlgebra k G →* R).comp (of k G) = (g : MonoidAlgebra k G →* R).comp (of k G)) :
     f = g :=
-  ringHom_ext (RingHom.congr_fun h₁) (MonoidHom.congr_fun h_of)
+  ringHom_ext (RingHom.congr_fun h₁) (DFunLike.congr_fun h_of)
 #align monoid_algebra.ring_hom_ext' MonoidAlgebra.ringHom_ext'
 -/
 
@@ -838,7 +838,7 @@ theorem algHom_ext' ⦃φ₁ φ₂ : MonoidAlgebra k G →ₐ[k] A⦄
     (h :
       (φ₁ : MonoidAlgebra k G →* A).comp (of k G) = (φ₂ : MonoidAlgebra k G →* A).comp (of k G)) :
     φ₁ = φ₂ :=
-  algHom_ext <| MonoidHom.congr_fun h
+  algHom_ext <| DFunLike.congr_fun h
 #align monoid_algebra.alg_hom_ext' MonoidAlgebra.algHom_ext'
 -/
 
@@ -1831,7 +1831,7 @@ theorem ringHom_ext' {R} [Semiring k] [AddMonoid G] [Semiring R] {f g : AddMonoi
       (f : AddMonoidAlgebra k G →* R).comp (of k G) =
         (g : AddMonoidAlgebra k G →* R).comp (of k G)) :
     f = g :=
-  ringHom_ext (RingHom.congr_fun h₁) (MonoidHom.congr_fun h_of)
+  ringHom_ext (RingHom.congr_fun h₁) (DFunLike.congr_fun h_of)
 #align add_monoid_algebra.ring_hom_ext' AddMonoidAlgebra.ringHom_ext'
 -/
 
@@ -1943,7 +1943,7 @@ theorem algHom_ext' ⦃φ₁ φ₂ : AddMonoidAlgebra k G →ₐ[k] A⦄
       (φ₁ : AddMonoidAlgebra k G →* A).comp (of k G) =
         (φ₂ : AddMonoidAlgebra k G →* A).comp (of k G)) :
     φ₁ = φ₂ :=
-  algHom_ext <| MonoidHom.congr_fun h
+  algHom_ext <| DFunLike.congr_fun h
 #align add_monoid_algebra.alg_hom_ext' AddMonoidAlgebra.algHom_ext'
 -/
 

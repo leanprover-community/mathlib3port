@@ -1205,14 +1205,14 @@ def prodMapL : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) →L[𝕜] M₁ 
     have Ψ₂ : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) →L[𝕜] M₃ →L[𝕜] M₄ :=
       ContinuousLinearMap.snd 𝕜 (M₁ →L[𝕜] M₂) (M₃ →L[𝕜] M₄)
     Φ₁' ∘L Φ₁ ∘L Ψ₁ + Φ₂' ∘L Φ₂ ∘L Ψ₂)
-    (fun p : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) => p.1.Prod_map p.2)
+    (fun p : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) => p.1.map_apply p.2)
     (by
       apply funext
       rintro ⟨φ, ψ⟩
       apply ContinuousLinearMap.ext fun x => _
       simp only [add_apply, coe_comp', coe_fst', Function.comp_apply, compL_apply, flip_apply,
-        coe_snd', inl_apply, inr_apply, Prod.mk_add_mk, add_zero, zero_add, coe_prod_map', Prod_map,
-        Prod.mk.inj_iff, eq_self_iff_true, and_self_iff]
+        coe_snd', inl_apply, inr_apply, Prod.mk_add_mk, add_zero, zero_add, coe_prod_map',
+        Prod.map_apply, Prod.mk.inj_iff, eq_self_iff_true, and_self_iff]
       rfl)
 #align continuous_linear_map.prod_mapL ContinuousLinearMap.prodMapL
 -/
@@ -1222,7 +1222,7 @@ variable {M₁ M₂ M₃ M₄}
 #print ContinuousLinearMap.prodMapL_apply /-
 @[simp]
 theorem prodMapL_apply (p : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄)) :
-    ContinuousLinearMap.prodMapL 𝕜 M₁ M₂ M₃ M₄ p = p.1.Prod_map p.2 :=
+    ContinuousLinearMap.prodMapL 𝕜 M₁ M₂ M₃ M₄ p = p.1.map_apply p.2 :=
   rfl
 #align continuous_linear_map.prod_mapL_apply ContinuousLinearMap.prodMapL_apply
 -/
@@ -1231,7 +1231,7 @@ variable {X : Type _} [TopologicalSpace X]
 
 #print Continuous.prod_mapL /-
 theorem Continuous.prod_mapL {f : X → M₁ →L[𝕜] M₂} {g : X → M₃ →L[𝕜] M₄} (hf : Continuous f)
-    (hg : Continuous g) : Continuous fun x => (f x).Prod_map (g x) :=
+    (hg : Continuous g) : Continuous fun x => (f x).map_apply (g x) :=
   (prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp (hf.prod_mk hg)
 #align continuous.prod_mapL Continuous.prod_mapL
 -/
@@ -1247,7 +1247,7 @@ theorem Continuous.prod_map_equivL {f : X → M₁ ≃L[𝕜] M₂} {g : X → M
 #print ContinuousOn.prod_mapL /-
 theorem ContinuousOn.prod_mapL {f : X → M₁ →L[𝕜] M₂} {g : X → M₃ →L[𝕜] M₄} {s : Set X}
     (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
-    ContinuousOn (fun x => (f x).Prod_map (g x)) s :=
+    ContinuousOn (fun x => (f x).map_apply (g x)) s :=
   ((prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp_continuousOn (hf.Prod hg) : _)
 #align continuous_on.prod_mapL ContinuousOn.prod_mapL
 -/

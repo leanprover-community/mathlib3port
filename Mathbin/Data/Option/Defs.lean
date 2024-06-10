@@ -270,11 +270,11 @@ def elimM {α β : Type _} {m : Type _ → Type _} [Monad m] (y : m β) (z : α 
 #align option.melim Option.elimM
 -/
 
-#print Option.getDM' /-
+#print Option.getDM /-
 /-- A monadic analogue of `option.get_or_else`. -/
-def getDM' {α : Type _} {m : Type _ → Type _} [Monad m] (x : m (Option α)) (y : m α) : m α :=
+def getDM {α : Type _} {m : Type _ → Type _} [Monad m] (x : m (Option α)) (y : m α) : m α :=
   elimM y pure x
-#align option.mget_or_else Option.getDM'
+#align option.mget_or_else Option.getDM
 -/
 
 end Option

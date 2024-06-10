@@ -793,7 +793,7 @@ theorem mapDomain_mapRange [AddCommMonoid N] (f : α → β) (v : α →₀ M) (
     { toFun := g
       map_zero' := h0
       map_add' := hadd }
-  AddMonoidHom.congr_fun (mapDomain.addMonoidHom_comp_mapRange f g') v
+  DFunLike.congr_fun (mapDomain.addMonoidHom_comp_mapRange f g') v
 #align finsupp.map_domain_map_range Finsupp.mapDomain_mapRange
 -/
 
@@ -1176,7 +1176,7 @@ end Zero
 #print Finsupp.filter_pos_add_filter_neg /-
 theorem filter_pos_add_filter_neg [AddZeroClass M] (f : α →₀ M) (p : α → Prop) :
     (f.filterₓ p + f.filterₓ fun a => ¬p a) = f :=
-  coeFn_injective <| Set.indicator_self_add_compl {x | p x} f
+  coe_injective <| Set.indicator_self_add_compl {x | p x} f
 #align finsupp.filter_pos_add_filter_neg Finsupp.filter_pos_add_filter_neg
 -/
 
@@ -1326,7 +1326,7 @@ def filterAddHom (p : α → Prop) : (α →₀ M) →+ α →₀ M
     where
   toFun := filter p
   map_zero' := filter_zero p
-  map_add' f g := coeFn_injective <| Set.indicator_add {x | p x} f g
+  map_add' f g := coe_injective <| Set.indicator_add {x | p x} f g
 #align finsupp.filter_add_hom Finsupp.filterAddHom
 -/
 
@@ -1882,7 +1882,7 @@ variable {p : α → Prop}
 @[simp]
 theorem filter_smul {_ : Monoid R} [AddMonoid M] [DistribMulAction R M] {b : R} {v : α →₀ M} :
     (b • v).filterₓ p = b • v.filterₓ p :=
-  coeFn_injective <| Set.indicator_const_smul {x | p x} b v
+  coe_injective <| Set.indicator_const_smul {x | p x} b v
 #align finsupp.filter_smul Finsupp.filter_smul
 -/
 
@@ -1976,7 +1976,7 @@ instance [Semiring R] [AddCommMonoid M] [Module R M] {ι : Type _} [NoZeroSMulDi
     NoZeroSMulDivisors R (ι →₀ M) :=
   ⟨fun c f h =>
     Classical.or_iff_not_imp_left.mpr fun hc =>
-      Finsupp.ext fun i => (smul_eq_zero.mp (Finsupp.ext_iff.mp h i)).resolve_left hc⟩
+      Finsupp.ext fun i => (smul_eq_zero.mp (DFunLike.ext_iff.mp h i)).resolve_left hc⟩
 
 section DistribMulActionHom
 

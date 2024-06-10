@@ -210,7 +210,9 @@ theorem closure_of_rat_image_lt {q : ℚ} : closure ((coe : ℚ → ℝ) '' {x |
 #align closure_of_rat_image_lt closure_of_rat_image_lt
 -/
 
-#print Real.isBounded_iff_bddBelow_bddAbove /-
+/- warning: real.bounded_iff_bdd_below_bdd_above clashes with bounded_iff_bdd_below_bdd_above -> isBounded_iff_bddBelow_bddAbove
+Case conversion may be inaccurate. Consider using '#align real.bounded_iff_bdd_below_bdd_above isBounded_iff_bddBelow_bddAboveₓ'. -/
+#print isBounded_iff_bddBelow_bddAbove /-
 /- TODO(Mario): Put these back only if needed later
 lemma closure_of_rat_image_le_eq {q : ℚ} : closure ((coe:ℚ → ℝ) '' {x | q ≤ x}) = {r | ↑q ≤ r} :=
 _
@@ -218,7 +220,7 @@ _
 lemma closure_of_rat_image_le_le_eq {a b : ℚ} (hab : a ≤ b) :
   closure (of_rat '' {q:ℚ | a ≤ q ∧ q ≤ b}) = {r:ℝ | of_rat a ≤ r ∧ r ≤ of_rat b} :=
 _-/
-theorem Real.isBounded_iff_bddBelow_bddAbove {s : Set ℝ} : Bounded s ↔ BddBelow s ∧ BddAbove s :=
+theorem isBounded_iff_bddBelow_bddAbove {s : Set ℝ} : Bounded s ↔ BddBelow s ∧ BddAbove s :=
   ⟨by
     intro bdd
     rcases(bounded_iff_subset_ball 0).1 bdd with ⟨r, hr⟩
@@ -227,15 +229,15 @@ theorem Real.isBounded_iff_bddBelow_bddAbove {s : Set ℝ} : Bounded s ↔ BddBe
     -- hr : s ⊆ Icc (0 - r) (0 + r)
     exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩,
     fun h => isBounded_of_bddAbove_of_bddBelow h.2 h.1⟩
-#align real.bounded_iff_bdd_below_bdd_above Real.isBounded_iff_bddBelow_bddAbove
+#align real.bounded_iff_bdd_below_bdd_above isBounded_iff_bddBelow_bddAbove
 -/
 
-#print Real.subset_Icc_sInf_sSup_of_isBounded /-
-theorem Real.subset_Icc_sInf_sSup_of_isBounded {s : Set ℝ} (h : Bounded s) :
+#print Bornology.IsBounded.subset_Icc_sInf_sSup /-
+theorem Bornology.IsBounded.subset_Icc_sInf_sSup {s : Set ℝ} (h : Bounded s) :
     s ⊆ Icc (sInf s) (sSup s) :=
-  subset_Icc_csInf_csSup (Real.isBounded_iff_bddBelow_bddAbove.1 h).1
-    (Real.isBounded_iff_bddBelow_bddAbove.1 h).2
-#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_sInf_sSup_of_isBounded
+  subset_Icc_csInf_csSup (isBounded_iff_bddBelow_bddAbove.1 h).1
+    (isBounded_iff_bddBelow_bddAbove.1 h).2
+#align real.subset_Icc_Inf_Sup_of_bounded Bornology.IsBounded.subset_Icc_sInf_sSup
 -/
 
 end

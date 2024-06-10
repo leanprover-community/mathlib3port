@@ -389,14 +389,14 @@ def prodMap (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : M × M₂ →ₗ[
 -/
 
 #print LinearMap.coe_prodMap /-
-theorem coe_prodMap (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : ⇑(f.Prod_map g) = Prod.map f g :=
+theorem coe_prodMap (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : ⇑(f.map_apply g) = Prod.map f g :=
   rfl
 #align linear_map.coe_prod_map LinearMap.coe_prodMap
 -/
 
 #print LinearMap.prodMap_apply /-
 @[simp]
-theorem prodMap_apply (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) (x) : f.Prod_map g x = (f x.1, g x.2) :=
+theorem prodMap_apply (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) (x) : f.map_apply g x = (f x.1, g x.2) :=
   rfl
 #align linear_map.prod_map_apply LinearMap.prodMap_apply
 -/
@@ -420,14 +420,14 @@ theorem ker_prodMap (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) :
 
 #print LinearMap.prodMap_id /-
 @[simp]
-theorem prodMap_id : (id : M →ₗ[R] M).Prod_map (id : M₂ →ₗ[R] M₂) = id :=
+theorem prodMap_id : (id : M →ₗ[R] M).map_apply (id : M₂ →ₗ[R] M₂) = id :=
   LinearMap.ext fun _ => Prod.mk.eta
 #align linear_map.prod_map_id LinearMap.prodMap_id
 -/
 
 #print LinearMap.prodMap_one /-
 @[simp]
-theorem prodMap_one : (1 : M →ₗ[R] M).Prod_map (1 : M₂ →ₗ[R] M₂) = 1 :=
+theorem prodMap_one : (1 : M →ₗ[R] M).map_apply (1 : M₂ →ₗ[R] M₂) = 1 :=
   LinearMap.ext fun _ => Prod.mk.eta
 #align linear_map.prod_map_one LinearMap.prodMap_one
 -/
@@ -435,28 +435,28 @@ theorem prodMap_one : (1 : M →ₗ[R] M).Prod_map (1 : M₂ →ₗ[R] M₂) = 1
 #print LinearMap.prodMap_comp /-
 theorem prodMap_comp (f₁₂ : M →ₗ[R] M₂) (f₂₃ : M₂ →ₗ[R] M₃) (g₁₂ : M₄ →ₗ[R] M₅)
     (g₂₃ : M₅ →ₗ[R] M₆) :
-    f₂₃.Prod_map g₂₃ ∘ₗ f₁₂.Prod_map g₁₂ = (f₂₃ ∘ₗ f₁₂).Prod_map (g₂₃ ∘ₗ g₁₂) :=
+    f₂₃.map_apply g₂₃ ∘ₗ f₁₂.map_apply g₁₂ = (f₂₃ ∘ₗ f₁₂).map_apply (g₂₃ ∘ₗ g₁₂) :=
   rfl
 #align linear_map.prod_map_comp LinearMap.prodMap_comp
 -/
 
 #print LinearMap.prodMap_mul /-
 theorem prodMap_mul (f₁₂ : M →ₗ[R] M) (f₂₃ : M →ₗ[R] M) (g₁₂ : M₂ →ₗ[R] M₂) (g₂₃ : M₂ →ₗ[R] M₂) :
-    f₂₃.Prod_map g₂₃ * f₁₂.Prod_map g₁₂ = (f₂₃ * f₁₂).Prod_map (g₂₃ * g₁₂) :=
+    f₂₃.map_apply g₂₃ * f₁₂.map_apply g₁₂ = (f₂₃ * f₁₂).map_apply (g₂₃ * g₁₂) :=
   rfl
 #align linear_map.prod_map_mul LinearMap.prodMap_mul
 -/
 
 #print LinearMap.prodMap_add /-
 theorem prodMap_add (f₁ : M →ₗ[R] M₃) (f₂ : M →ₗ[R] M₃) (g₁ : M₂ →ₗ[R] M₄) (g₂ : M₂ →ₗ[R] M₄) :
-    (f₁ + f₂).Prod_map (g₁ + g₂) = f₁.Prod_map g₁ + f₂.Prod_map g₂ :=
+    (f₁ + f₂).map_apply (g₁ + g₂) = f₁.map_apply g₁ + f₂.map_apply g₂ :=
   rfl
 #align linear_map.prod_map_add LinearMap.prodMap_add
 -/
 
 #print LinearMap.prodMap_zero /-
 @[simp]
-theorem prodMap_zero : (0 : M →ₗ[R] M₂).Prod_map (0 : M₃ →ₗ[R] M₄) = 0 :=
+theorem prodMap_zero : (0 : M →ₗ[R] M₂).map_apply (0 : M₃ →ₗ[R] M₄) = 0 :=
   rfl
 #align linear_map.prod_map_zero LinearMap.prodMap_zero
 -/
@@ -982,7 +982,7 @@ theorem prod_apply (p) : e₁.Prod e₂ p = (e₁ p.1, e₂ p.2) :=
 #print LinearEquiv.coe_prod /-
 @[simp, norm_cast]
 theorem coe_prod :
-    (e₁.Prod e₂ : M × M₃ →ₗ[R] M₂ × M₄) = (e₁ : M →ₗ[R] M₂).Prod_map (e₂ : M₃ →ₗ[R] M₄) :=
+    (e₁.Prod e₂ : M × M₃ →ₗ[R] M₂ × M₄) = (e₁ : M →ₗ[R] M₂).map_apply (e₂ : M₃ →ₗ[R] M₄) :=
   rfl
 #align linear_equiv.coe_prod LinearEquiv.coe_prod
 -/

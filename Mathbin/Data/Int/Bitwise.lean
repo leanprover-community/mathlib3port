@@ -412,13 +412,13 @@ theorem shiftRight_negSucc (m n : ℕ) : shiftRight -[m+1] n = -[Nat.shiftr m n+
 #align int.shiftr_neg_succ Int.shiftRight_negSucc
 -/
 
-#print Int.shiftRight_add /-
-theorem shiftRight_add : ∀ (m : ℤ) (n k : ℕ), shiftRight m (n + k) = shiftRight (shiftRight m n) k
+#print Int.shiftRight_add' /-
+theorem shiftRight_add' : ∀ (m : ℤ) (n k : ℕ), shiftRight m (n + k) = shiftRight (shiftRight m n) k
   | (m : ℕ), n, k => by
     rw [shiftr_coe_nat, shiftr_coe_nat, ← Int.ofNat_add, shiftr_coe_nat, Nat.shiftr_add]
   | -[m+1], n, k => by
     rw [shiftr_neg_succ, shiftr_neg_succ, ← Int.ofNat_add, shiftr_neg_succ, Nat.shiftr_add]
-#align int.shiftr_add Int.shiftRight_add
+#align int.shiftr_add Int.shiftRight_add'
 -/
 
 /-! ### bitwise ops -/
@@ -486,11 +486,11 @@ theorem zero_shiftLeft : ∀ n : ℤ, shiftLeft 0 n = 0
 #align int.zero_shiftl Int.zero_shiftLeft
 -/
 
-#print Int.zero_shiftRight /-
+#print Int.zero_shiftRight' /-
 @[simp]
-theorem zero_shiftRight (n) : shiftRight 0 n = 0 :=
+theorem zero_shiftRight' (n) : shiftRight 0 n = 0 :=
   zero_shiftLeft _
-#align int.zero_shiftr Int.zero_shiftRight
+#align int.zero_shiftr Int.zero_shiftRight'
 -/
 
 end Int

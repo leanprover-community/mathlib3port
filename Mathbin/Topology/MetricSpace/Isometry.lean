@@ -118,7 +118,7 @@ theorem isometry_id : Isometry (id : α → α) := fun x y => rfl
 #print Isometry.prod_map /-
 theorem prod_map {δ} [PseudoEMetricSpace δ] {f : α → β} {g : γ → δ} (hf : Isometry f)
     (hg : Isometry g) : Isometry (Prod.map f g) := fun x y => by
-  simp only [Prod.edist_eq, hf.edist_eq, hg.edist_eq, Prod_map]
+  simp only [Prod.edist_eq, hf.edist_eq, hg.edist_eq, Prod.map_apply]
 #align isometry.prod_map Isometry.prod_map
 -/
 

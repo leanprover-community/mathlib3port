@@ -441,7 +441,7 @@ theorem curry_apply (f : C(α × β, γ)) (a : α) (b : β) : f.curry a b = f (a
 /-- The uncurried form of a continuous map `α → C(β, γ)` is a continuous map `α × β → γ`. -/
 theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(β, γ))) :
     Continuous (Function.uncurry fun x y => f x y) :=
-  continuous_eval.comp <| f.Continuous.Prod_map continuous_id
+  continuous_eval.comp <| f.Continuous.map_apply continuous_id
 #align continuous_map.continuous_uncurry_of_continuous ContinuousMap.continuous_uncurry_of_continuous
 -/
 

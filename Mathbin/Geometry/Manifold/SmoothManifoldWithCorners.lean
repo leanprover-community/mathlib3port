@@ -498,8 +498,8 @@ def ModelWithCorners.prod {𝕜 : Type u} [NontriviallyNormedField 𝕜] {E : Ty
     source := {x | x.1 ∈ I.source ∧ x.2 ∈ I'.source}
     source_eq := by simp only [set_of_true, mfld_simps]
     unique_diff' := I.unique_diff'.Prod I'.unique_diff'
-    continuous_toFun := I.continuous_toFun.Prod_map I'.continuous_toFun
-    continuous_invFun := I.continuous_invFun.Prod_map I'.continuous_invFun }
+    continuous_toFun := I.continuous_toFun.map_apply I'.continuous_toFun
+    continuous_invFun := I.continuous_invFun.map_apply I'.continuous_invFun }
 #align model_with_corners.prod ModelWithCorners.prod
 -/
 

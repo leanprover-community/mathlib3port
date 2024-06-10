@@ -437,20 +437,20 @@ theorem fderivWithin.snd (hs : UniqueDiffWithinAt 𝕜 s x) (h : DifferentiableW
 
 end Snd
 
-section Prod_map
+section Prod.map_apply
 
 variable {f₂ : G → G'} {f₂' : G →L[𝕜] G'} {y : G} (p : E × G)
 
 #print HasStrictFDerivAt.prodMap /-
 protected theorem HasStrictFDerivAt.prodMap (hf : HasStrictFDerivAt f f' p.1)
-    (hf₂ : HasStrictFDerivAt f₂ f₂' p.2) : HasStrictFDerivAt (Prod.map f f₂) (f'.Prod_map f₂') p :=
+    (hf₂ : HasStrictFDerivAt f₂ f₂' p.2) : HasStrictFDerivAt (Prod.map f f₂) (f'.map_apply f₂') p :=
   (hf.comp p hasStrictFDerivAt_fst).Prod (hf₂.comp p hasStrictFDerivAt_snd)
 #align has_strict_fderiv_at.prod_map HasStrictFDerivAt.prodMap
 -/
 
 #print HasFDerivAt.prodMap /-
 protected theorem HasFDerivAt.prodMap (hf : HasFDerivAt f f' p.1) (hf₂ : HasFDerivAt f₂ f₂' p.2) :
-    HasFDerivAt (Prod.map f f₂) (f'.Prod_map f₂') p :=
+    HasFDerivAt (Prod.map f f₂) (f'.map_apply f₂') p :=
   (hf.comp p hasFDerivAt_fst).Prod (hf₂.comp p hasFDerivAt_snd)
 #align has_fderiv_at.prod_map HasFDerivAt.prodMap
 -/
@@ -463,7 +463,7 @@ protected theorem DifferentiableAt.prod_map (hf : DifferentiableAt 𝕜 f p.1)
 #align differentiable_at.prod_map DifferentiableAt.prod_map
 -/
 
-end Prod_map
+end Prod.map_apply
 
 section Pi
 

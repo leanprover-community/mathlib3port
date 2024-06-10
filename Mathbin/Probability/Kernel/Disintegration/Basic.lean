@@ -338,7 +338,7 @@ theorem exists_cond_kernel (γ : Type _) [MeasurableSpace γ] :
     swap; · exact measurable_snd hf.measurable_set_range.compl
     convert measure_empty
     ext1 x
-    simp only [mem_compl_iff, mem_range, preimage_set_of_eq, Prod_map, mem_set_of_eq,
+    simp only [mem_compl_iff, mem_range, preimage_set_of_eq, Prod.map_apply, mem_set_of_eq,
       mem_empty_iff_false, iff_false_iff, Classical.not_not, exists_apply_eq_apply]
   classical
   obtain ⟨x₀, hx₀⟩ : ∃ x, x ∈ range f := range_nonempty _
@@ -375,7 +375,7 @@ theorem exists_cond_kernel (γ : Type _) [MeasurableSpace γ] :
   have h1 : {c : ℝ | (a, c) ∈ Prod.map id f '' t} = f '' {c : Ω | (a, c) ∈ t} :=
     by
     ext1 x
-    simp only [Prod_map, id.def, mem_image, Prod.mk.inj_iff, Prod.exists, mem_set_of_eq]
+    simp only [Prod.map_apply, id.def, mem_image, Prod.mk.inj_iff, Prod.exists, mem_set_of_eq]
     constructor
     · rintro ⟨a', b, h_mem, rfl, hf_eq⟩
       exact ⟨b, h_mem, hf_eq⟩

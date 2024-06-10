@@ -394,7 +394,7 @@ theorem finite [IsDomain B] [h₁ : Finite S] [h₂ : IsCyclotomicExtension S A 
 #print IsCyclotomicExtension.numberField /-
 /-- A cyclotomic finite extension of a number field is a number field. -/
 theorem numberField [h : NumberField K] [Finite S] [IsCyclotomicExtension S K L] : NumberField L :=
-  { to_charZero := charZero_of_injective_algebraMap (algebraMap K L).Injective
+  { toCharZero := charZero_of_injective_algebraMap (algebraMap K L).Injective
     to_finiteDimensional :=
       by
       haveI := charZero_of_injective_algebraMap (algebraMap K L).Injective

@@ -231,7 +231,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : ∑ x : Kˣ, (x ^ i : K) = if q 
     split_ifs with h h; swap; rfl
     rw [Fintype.card_units, Nat.cast_sub, cast_card_eq_zero, Nat.cast_one, zero_sub]
     show 1 ≤ q; exact fintype.card_pos_iff.mpr ⟨0⟩
-  rw [← forall_pow_eq_one_iff, MonoidHom.ext_iff]
+  rw [← forall_pow_eq_one_iff, DFunLike.ext_iff]
   apply forall_congr'; intro x
   rw [Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one, MonoidHom.one_apply]
   rfl
@@ -319,7 +319,7 @@ theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := b
   rw [separable_def]
   convert is_coprime_one_right.neg_right using 1
   ·
-    rw [derivative_sub, derivative_X, derivative_X_pow, CharP.cast_card_eq_zero K, C_0,
+    rw [derivative_sub, derivative_X, derivative_X_pow, Nat.cast_card_eq_zero K, C_0,
       MulZeroClass.zero_mul, zero_sub]
 #align finite_field.roots_X_pow_card_sub_X FiniteField.roots_X_pow_card_sub_X
 -/

@@ -323,10 +323,10 @@ namespace IsAtomic
 
 variable [OrderBot α] [IsAtomic α]
 
-#print IsAtomic.isCoatomic_dual /-
-instance isCoatomic_dual : IsCoatomic αᵒᵈ :=
+#print OrderDual.instIsCoatomic /-
+instance instIsCoatomic : IsCoatomic αᵒᵈ :=
   isCoatomic_dual_iff_isAtomic.2 ‹IsAtomic α›
-#align is_atomic.is_coatomic_dual IsAtomic.isCoatomic_dual
+#align is_atomic.is_coatomic_dual OrderDual.instIsCoatomic
 -/
 
 instance {x : α} : IsAtomic (Set.Iic x) :=
@@ -340,10 +340,10 @@ namespace IsCoatomic
 
 variable [OrderTop α] [IsCoatomic α]
 
-#print IsCoatomic.isCoatomic /-
-instance isCoatomic : IsAtomic αᵒᵈ :=
+#print OrderDual.instIsAtomic /-
+instance instIsAtomic : IsAtomic αᵒᵈ :=
   isAtomic_dual_iff_isCoatomic.2 ‹IsCoatomic α›
-#align is_coatomic.is_coatomic IsCoatomic.isCoatomic
+#align is_coatomic.is_coatomic OrderDual.instIsAtomic
 -/
 
 instance {x : α} : IsCoatomic (Set.Ici x) :=
@@ -435,10 +435,10 @@ theorem isAtomistic_dual_iff_isCoatomistic : IsAtomistic αᵒᵈ ↔ IsCoatomis
 
 namespace IsAtomistic
 
-#print IsAtomistic.isCoatomistic_dual /-
-instance isCoatomistic_dual [h : IsAtomistic α] : IsCoatomistic αᵒᵈ :=
+#print OrderDual.instIsCoatomistic /-
+instance instIsCoatomistic [h : IsAtomistic α] : IsCoatomistic αᵒᵈ :=
   isCoatomistic_dual_iff_isAtomistic.2 h
-#align is_atomistic.is_coatomistic_dual IsAtomistic.isCoatomistic_dual
+#align is_atomistic.is_coatomistic_dual OrderDual.instIsCoatomistic
 -/
 
 variable [IsAtomistic α]
@@ -487,10 +487,10 @@ end IsAtomistic
 
 namespace IsCoatomistic
 
-#print IsCoatomistic.isAtomistic_dual /-
-instance isAtomistic_dual [h : IsCoatomistic α] : IsAtomistic αᵒᵈ :=
+#print OrderDual.instIsAtomistic /-
+instance instIsAtomistic [h : IsCoatomistic α] : IsAtomistic αᵒᵈ :=
   isAtomistic_dual_iff_isCoatomistic.2 h
-#align is_coatomistic.is_atomistic_dual IsCoatomistic.isAtomistic_dual
+#align is_coatomistic.is_atomistic_dual OrderDual.instIsAtomistic
 -/
 
 variable [IsCoatomistic α]

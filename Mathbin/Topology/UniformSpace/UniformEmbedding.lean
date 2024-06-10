@@ -384,7 +384,7 @@ theorem uniformEmbedding_subtypeEmb (p : α → Prop) {e : α → β} (ue : Unif
 theorem UniformEmbedding.prod {α' : Type _} {β' : Type _} [UniformSpace α'] [UniformSpace β']
     {e₁ : α → α'} {e₂ : β → β'} (h₁ : UniformEmbedding e₁) (h₂ : UniformEmbedding e₂) :
     UniformEmbedding fun p : α × β => (e₁ p.1, e₂ p.2) :=
-  { h₁.to_uniformInducing.Prod h₂.to_uniformInducing with inj := h₁.inj.Prod_map h₂.inj }
+  { h₁.to_uniformInducing.Prod h₂.to_uniformInducing with inj := h₁.inj.map_apply h₂.inj }
 #align uniform_embedding.prod UniformEmbedding.prod
 -/
 

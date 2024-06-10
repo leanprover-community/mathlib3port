@@ -232,7 +232,7 @@ namespace Subgroup
 instance (S : Subgroup α) : UniformGroup S :=
   ⟨uniformContinuous_comap'
       (uniformContinuous_div.comp <|
-        uniformContinuous_subtype_val.Prod_map uniformContinuous_subtype_val)⟩
+        uniformContinuous_subtype_val.map_apply uniformContinuous_subtype_val)⟩
 
 end Subgroup
 

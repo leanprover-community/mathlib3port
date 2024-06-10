@@ -221,13 +221,13 @@ theorem mk_coe (f : α →ₙ+* β) (h₁ h₂ h₃) : NonUnitalRingHom.mk f h�
 
 #print NonUnitalRingHom.coe_addMonoidHom_injective /-
 theorem coe_addMonoidHom_injective : Injective (coe : (α →ₙ+* β) → α →+ β) := fun f g h =>
-  ext <| AddMonoidHom.congr_fun h
+  ext <| DFunLike.congr_fun h
 #align non_unital_ring_hom.coe_add_monoid_hom_injective NonUnitalRingHom.coe_addMonoidHom_injective
 -/
 
 #print NonUnitalRingHom.coe_mulHom_injective /-
 theorem coe_mulHom_injective : Injective (coe : (α →ₙ+* β) → α →ₙ* β) := fun f g h =>
-  ext <| MulHom.congr_fun h
+  ext <| DFunLike.congr_fun h
 #align non_unital_ring_hom.coe_mul_hom_injective NonUnitalRingHom.coe_mulHom_injective
 -/
 
@@ -650,13 +650,13 @@ theorem mk_coe (f : α →+* β) (h₁ h₂ h₃ h₄) : RingHom.mk f h₁ h₂ 
 
 #print RingHom.coe_addMonoidHom_injective /-
 theorem coe_addMonoidHom_injective : Injective (coe : (α →+* β) → α →+ β) := fun f g h =>
-  ext <| AddMonoidHom.congr_fun h
+  ext <| DFunLike.congr_fun h
 #align ring_hom.coe_add_monoid_hom_injective RingHom.coe_addMonoidHom_injective
 -/
 
 #print RingHom.coe_monoidHom_injective /-
 theorem coe_monoidHom_injective : Injective (coe : (α →+* β) → α →* β) := fun f g h =>
-  ext <| MonoidHom.congr_fun h
+  ext <| DFunLike.congr_fun h
 #align ring_hom.coe_monoid_hom_injective RingHom.coe_monoidHom_injective
 -/
 

@@ -815,147 +815,179 @@ theorem MonoidWithZeroHom.ext [MulZeroOneClass M] [MulZeroOneClass N] ⦃f g : M
 
 section Deprecated
 
-#print OneHom.congr_fun /-
+/- warning: one_hom.congr_fun clashes with fun_like.congr_fun -> DFunLike.congr_fun
+Case conversion may be inaccurate. Consider using '#align one_hom.congr_fun DFunLike.congr_funₓ'. -/
+#print DFunLike.congr_fun /-
 /-- Deprecated: use `fun_like.congr_fun` instead. -/
 @[to_additive "Deprecated: use `fun_like.congr_fun` instead."]
-theorem OneHom.congr_fun [One M] [One N] {f g : OneHom M N} (h : f = g) (x : M) : f x = g x :=
+theorem DFunLike.congr_fun [One M] [One N] {f g : OneHom M N} (h : f = g) (x : M) : f x = g x :=
   DFunLike.congr_fun h x
-#align one_hom.congr_fun OneHom.congr_fun
-#align zero_hom.congr_fun ZeroHom.congr_fun
+#align one_hom.congr_fun DFunLike.congr_fun
+#align fun_like.congr_fun DFunLike.congr_fun
 -/
 
-#print MulHom.congr_fun /-
+/- warning: mul_hom.congr_fun clashes with fun_like.congr_fun -> DFunLike.congr_fun
+Case conversion may be inaccurate. Consider using '#align mul_hom.congr_fun DFunLike.congr_funₓ'. -/
+#print DFunLike.congr_fun /-
 /-- Deprecated: use `fun_like.congr_fun` instead. -/
 @[to_additive "Deprecated: use `fun_like.congr_fun` instead."]
-theorem MulHom.congr_fun [Mul M] [Mul N] {f g : M →ₙ* N} (h : f = g) (x : M) : f x = g x :=
+theorem DFunLike.congr_fun [Mul M] [Mul N] {f g : M →ₙ* N} (h : f = g) (x : M) : f x = g x :=
   DFunLike.congr_fun h x
-#align mul_hom.congr_fun MulHom.congr_fun
-#align add_hom.congr_fun AddHom.congr_fun
+#align mul_hom.congr_fun DFunLike.congr_fun
+#align fun_like.congr_fun DFunLike.congr_fun
 -/
 
-#print MonoidHom.congr_fun /-
+/- warning: monoid_hom.congr_fun clashes with fun_like.congr_fun -> DFunLike.congr_fun
+Case conversion may be inaccurate. Consider using '#align monoid_hom.congr_fun DFunLike.congr_funₓ'. -/
+#print DFunLike.congr_fun /-
 /-- Deprecated: use `fun_like.congr_fun` instead. -/
 @[to_additive "Deprecated: use `fun_like.congr_fun` instead."]
-theorem MonoidHom.congr_fun [MulOneClass M] [MulOneClass N] {f g : M →* N} (h : f = g) (x : M) :
+theorem DFunLike.congr_fun [MulOneClass M] [MulOneClass N] {f g : M →* N} (h : f = g) (x : M) :
     f x = g x :=
   DFunLike.congr_fun h x
-#align monoid_hom.congr_fun MonoidHom.congr_fun
-#align add_monoid_hom.congr_fun AddMonoidHom.congr_fun
+#align monoid_hom.congr_fun DFunLike.congr_fun
+#align fun_like.congr_fun DFunLike.congr_fun
 -/
 
-#print MonoidWithZeroHom.congr_fun /-
+/- warning: monoid_with_zero_hom.congr_fun clashes with fun_like.congr_fun -> DFunLike.congr_fun
+Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.congr_fun DFunLike.congr_funₓ'. -/
+#print DFunLike.congr_fun /-
 /-- Deprecated: use `fun_like.congr_fun` instead. -/
-theorem MonoidWithZeroHom.congr_fun [MulZeroOneClass M] [MulZeroOneClass N] {f g : M →*₀ N}
-    (h : f = g) (x : M) : f x = g x :=
+theorem DFunLike.congr_fun [MulZeroOneClass M] [MulZeroOneClass N] {f g : M →*₀ N} (h : f = g)
+    (x : M) : f x = g x :=
   DFunLike.congr_fun h x
-#align monoid_with_zero_hom.congr_fun MonoidWithZeroHom.congr_fun
+#align monoid_with_zero_hom.congr_fun DFunLike.congr_fun
 -/
 
-#print OneHom.congr_arg /-
+/- warning: one_hom.congr_arg clashes with fun_like.congr_arg -> DFunLike.congr_arg
+Case conversion may be inaccurate. Consider using '#align one_hom.congr_arg DFunLike.congr_argₓ'. -/
+#print DFunLike.congr_arg /-
 /-- Deprecated: use `fun_like.congr_arg` instead. -/
 @[to_additive "Deprecated: use `fun_like.congr_arg` instead."]
-theorem OneHom.congr_arg [One M] [One N] (f : OneHom M N) {x y : M} (h : x = y) : f x = f y :=
+theorem DFunLike.congr_arg [One M] [One N] (f : OneHom M N) {x y : M} (h : x = y) : f x = f y :=
   DFunLike.congr_arg f h
-#align one_hom.congr_arg OneHom.congr_arg
-#align zero_hom.congr_arg ZeroHom.congr_arg
+#align one_hom.congr_arg DFunLike.congr_arg
+#align fun_like.congr_arg DFunLike.congr_arg
 -/
 
-#print MulHom.congr_arg /-
+/- warning: mul_hom.congr_arg clashes with fun_like.congr_arg -> DFunLike.congr_arg
+Case conversion may be inaccurate. Consider using '#align mul_hom.congr_arg DFunLike.congr_argₓ'. -/
+#print DFunLike.congr_arg /-
 /-- Deprecated: use `fun_like.congr_arg` instead. -/
 @[to_additive "Deprecated: use `fun_like.congr_arg` instead."]
-theorem MulHom.congr_arg [Mul M] [Mul N] (f : M →ₙ* N) {x y : M} (h : x = y) : f x = f y :=
+theorem DFunLike.congr_arg [Mul M] [Mul N] (f : M →ₙ* N) {x y : M} (h : x = y) : f x = f y :=
   DFunLike.congr_arg f h
-#align mul_hom.congr_arg MulHom.congr_arg
-#align add_hom.congr_arg AddHom.congr_arg
+#align mul_hom.congr_arg DFunLike.congr_arg
+#align fun_like.congr_arg DFunLike.congr_arg
 -/
 
-#print MonoidHom.congr_arg /-
+/- warning: monoid_hom.congr_arg clashes with fun_like.congr_arg -> DFunLike.congr_arg
+Case conversion may be inaccurate. Consider using '#align monoid_hom.congr_arg DFunLike.congr_argₓ'. -/
+#print DFunLike.congr_arg /-
 /-- Deprecated: use `fun_like.congr_arg` instead. -/
 @[to_additive "Deprecated: use `fun_like.congr_arg` instead."]
-theorem MonoidHom.congr_arg [MulOneClass M] [MulOneClass N] (f : M →* N) {x y : M} (h : x = y) :
+theorem DFunLike.congr_arg [MulOneClass M] [MulOneClass N] (f : M →* N) {x y : M} (h : x = y) :
     f x = f y :=
   DFunLike.congr_arg f h
-#align monoid_hom.congr_arg MonoidHom.congr_arg
-#align add_monoid_hom.congr_arg AddMonoidHom.congr_arg
+#align monoid_hom.congr_arg DFunLike.congr_arg
+#align fun_like.congr_arg DFunLike.congr_arg
 -/
 
-#print MonoidWithZeroHom.congr_arg /-
+/- warning: monoid_with_zero_hom.congr_arg clashes with fun_like.congr_arg -> DFunLike.congr_arg
+Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.congr_arg DFunLike.congr_argₓ'. -/
+#print DFunLike.congr_arg /-
 /-- Deprecated: use `fun_like.congr_arg` instead. -/
-theorem MonoidWithZeroHom.congr_arg [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) {x y : M}
+theorem DFunLike.congr_arg [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) {x y : M}
     (h : x = y) : f x = f y :=
   DFunLike.congr_arg f h
-#align monoid_with_zero_hom.congr_arg MonoidWithZeroHom.congr_arg
+#align monoid_with_zero_hom.congr_arg DFunLike.congr_arg
 -/
 
-#print OneHom.coe_inj /-
+/- warning: one_hom.coe_inj clashes with fun_like.coe_injective -> DFunLike.coe_injective
+Case conversion may be inaccurate. Consider using '#align one_hom.coe_inj DFunLike.coe_injectiveₓ'. -/
+#print DFunLike.coe_injective /-
 /-- Deprecated: use `fun_like.coe_injective` instead. -/
 @[to_additive "Deprecated: use `fun_like.coe_injective` instead."]
-theorem OneHom.coe_inj [One M] [One N] ⦃f g : OneHom M N⦄ (h : (f : M → N) = g) : f = g :=
+theorem DFunLike.coe_injective [One M] [One N] ⦃f g : OneHom M N⦄ (h : (f : M → N) = g) : f = g :=
   DFunLike.coe_injective h
-#align one_hom.coe_inj OneHom.coe_inj
-#align zero_hom.coe_inj ZeroHom.coe_inj
+#align one_hom.coe_inj DFunLike.coe_injective
+#align fun_like.coe_injective DFunLike.coe_injective
 -/
 
-#print MulHom.coe_inj /-
+/- warning: mul_hom.coe_inj clashes with fun_like.coe_injective -> DFunLike.coe_injective
+Case conversion may be inaccurate. Consider using '#align mul_hom.coe_inj DFunLike.coe_injectiveₓ'. -/
+#print DFunLike.coe_injective /-
 /-- Deprecated: use `fun_like.coe_injective` instead. -/
 @[to_additive "Deprecated: use `fun_like.coe_injective` instead."]
-theorem MulHom.coe_inj [Mul M] [Mul N] ⦃f g : M →ₙ* N⦄ (h : (f : M → N) = g) : f = g :=
+theorem DFunLike.coe_injective [Mul M] [Mul N] ⦃f g : M →ₙ* N⦄ (h : (f : M → N) = g) : f = g :=
   DFunLike.coe_injective h
-#align mul_hom.coe_inj MulHom.coe_inj
-#align add_hom.coe_inj AddHom.coe_inj
+#align mul_hom.coe_inj DFunLike.coe_injective
+#align fun_like.coe_injective DFunLike.coe_injective
 -/
 
-#print MonoidHom.coe_inj /-
+/- warning: monoid_hom.coe_inj clashes with fun_like.coe_injective -> DFunLike.coe_injective
+Case conversion may be inaccurate. Consider using '#align monoid_hom.coe_inj DFunLike.coe_injectiveₓ'. -/
+#print DFunLike.coe_injective /-
 /-- Deprecated: use `fun_like.coe_injective` instead. -/
 @[to_additive "Deprecated: use `fun_like.coe_injective` instead."]
-theorem MonoidHom.coe_inj [MulOneClass M] [MulOneClass N] ⦃f g : M →* N⦄ (h : (f : M → N) = g) :
-    f = g :=
-  DFunLike.coe_injective h
-#align monoid_hom.coe_inj MonoidHom.coe_inj
-#align add_monoid_hom.coe_inj AddMonoidHom.coe_inj
--/
-
-#print MonoidWithZeroHom.coe_inj /-
-/-- Deprecated: use `fun_like.coe_injective` instead. -/
-theorem MonoidWithZeroHom.coe_inj [MulZeroOneClass M] [MulZeroOneClass N] ⦃f g : M →*₀ N⦄
+theorem DFunLike.coe_injective [MulOneClass M] [MulOneClass N] ⦃f g : M →* N⦄
     (h : (f : M → N) = g) : f = g :=
   DFunLike.coe_injective h
-#align monoid_with_zero_hom.coe_inj MonoidWithZeroHom.coe_inj
+#align monoid_hom.coe_inj DFunLike.coe_injective
+#align fun_like.coe_injective DFunLike.coe_injective
 -/
 
-#print OneHom.ext_iff /-
+/- warning: monoid_with_zero_hom.coe_inj clashes with fun_like.coe_injective -> DFunLike.coe_injective
+Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.coe_inj DFunLike.coe_injectiveₓ'. -/
+#print DFunLike.coe_injective /-
+/-- Deprecated: use `fun_like.coe_injective` instead. -/
+theorem DFunLike.coe_injective [MulZeroOneClass M] [MulZeroOneClass N] ⦃f g : M →*₀ N⦄
+    (h : (f : M → N) = g) : f = g :=
+  DFunLike.coe_injective h
+#align monoid_with_zero_hom.coe_inj DFunLike.coe_injective
+-/
+
+/- warning: one_hom.ext_iff clashes with fun_like.ext_iff -> DFunLike.ext_iff
+Case conversion may be inaccurate. Consider using '#align one_hom.ext_iff DFunLike.ext_iffₓ'. -/
+#print DFunLike.ext_iff /-
 /-- Deprecated: use `fun_like.ext_iff` instead. -/
 @[to_additive "Deprecated: use `fun_like.ext_iff` instead."]
-theorem OneHom.ext_iff [One M] [One N] {f g : OneHom M N} : f = g ↔ ∀ x, f x = g x :=
+theorem DFunLike.ext_iff [One M] [One N] {f g : OneHom M N} : f = g ↔ ∀ x, f x = g x :=
   DFunLike.ext_iff
-#align one_hom.ext_iff OneHom.ext_iff
-#align zero_hom.ext_iff ZeroHom.ext_iff
+#align one_hom.ext_iff DFunLike.ext_iff
+#align fun_like.ext_iff DFunLike.ext_iff
 -/
 
-#print MulHom.ext_iff /-
+/- warning: mul_hom.ext_iff clashes with fun_like.ext_iff -> DFunLike.ext_iff
+Case conversion may be inaccurate. Consider using '#align mul_hom.ext_iff DFunLike.ext_iffₓ'. -/
+#print DFunLike.ext_iff /-
 /-- Deprecated: use `fun_like.ext_iff` instead. -/
 @[to_additive "Deprecated: use `fun_like.ext_iff` instead."]
-theorem MulHom.ext_iff [Mul M] [Mul N] {f g : M →ₙ* N} : f = g ↔ ∀ x, f x = g x :=
+theorem DFunLike.ext_iff [Mul M] [Mul N] {f g : M →ₙ* N} : f = g ↔ ∀ x, f x = g x :=
   DFunLike.ext_iff
-#align mul_hom.ext_iff MulHom.ext_iff
-#align add_hom.ext_iff AddHom.ext_iff
+#align mul_hom.ext_iff DFunLike.ext_iff
+#align fun_like.ext_iff DFunLike.ext_iff
 -/
 
-#print MonoidHom.ext_iff /-
+/- warning: monoid_hom.ext_iff clashes with fun_like.ext_iff -> DFunLike.ext_iff
+Case conversion may be inaccurate. Consider using '#align monoid_hom.ext_iff DFunLike.ext_iffₓ'. -/
+#print DFunLike.ext_iff /-
 /-- Deprecated: use `fun_like.ext_iff` instead. -/
 @[to_additive "Deprecated: use `fun_like.ext_iff` instead."]
-theorem MonoidHom.ext_iff [MulOneClass M] [MulOneClass N] {f g : M →* N} : f = g ↔ ∀ x, f x = g x :=
+theorem DFunLike.ext_iff [MulOneClass M] [MulOneClass N] {f g : M →* N} : f = g ↔ ∀ x, f x = g x :=
   DFunLike.ext_iff
-#align monoid_hom.ext_iff MonoidHom.ext_iff
-#align add_monoid_hom.ext_iff AddMonoidHom.ext_iff
+#align monoid_hom.ext_iff DFunLike.ext_iff
+#align fun_like.ext_iff DFunLike.ext_iff
 -/
 
-#print MonoidWithZeroHom.ext_iff /-
+/- warning: monoid_with_zero_hom.ext_iff clashes with fun_like.ext_iff -> DFunLike.ext_iff
+Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.ext_iff DFunLike.ext_iffₓ'. -/
+#print DFunLike.ext_iff /-
 /-- Deprecated: use `fun_like.ext_iff` instead. -/
-theorem MonoidWithZeroHom.ext_iff [MulZeroOneClass M] [MulZeroOneClass N] {f g : M →*₀ N} :
+theorem DFunLike.ext_iff [MulZeroOneClass M] [MulZeroOneClass N] {f g : M →*₀ N} :
     f = g ↔ ∀ x, f x = g x :=
   DFunLike.ext_iff
-#align monoid_with_zero_hom.ext_iff MonoidWithZeroHom.ext_iff
+#align monoid_with_zero_hom.ext_iff DFunLike.ext_iff
 -/
 
 end Deprecated
@@ -1454,7 +1486,7 @@ theorem MonoidWithZeroHom.comp_assoc {Q : Type _} [MulZeroOneClass M] [MulZeroOn
 @[to_additive]
 theorem OneHom.cancel_right [One M] [One N] [One P] {g₁ g₂ : OneHom N P} {f : OneHom M N}
     (hf : Function.Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => OneHom.ext <| hf.forall.2 (OneHom.ext_iff.1 h), fun h => h ▸ rfl⟩
+  ⟨fun h => OneHom.ext <| hf.forall.2 (DFunLike.ext_iff.1 h), fun h => h ▸ rfl⟩
 #align one_hom.cancel_right OneHom.cancel_right
 #align zero_hom.cancel_right ZeroHom.cancel_right
 -/
@@ -1463,7 +1495,7 @@ theorem OneHom.cancel_right [One M] [One N] [One P] {g₁ g₂ : OneHom N P} {f 
 @[to_additive]
 theorem MulHom.cancel_right [Mul M] [Mul N] [Mul P] {g₁ g₂ : N →ₙ* P} {f : M →ₙ* N}
     (hf : Function.Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => MulHom.ext <| hf.forall.2 (MulHom.ext_iff.1 h), fun h => h ▸ rfl⟩
+  ⟨fun h => MulHom.ext <| hf.forall.2 (DFunLike.ext_iff.1 h), fun h => h ▸ rfl⟩
 #align mul_hom.cancel_right MulHom.cancel_right
 #align add_hom.cancel_right AddHom.cancel_right
 -/
@@ -1472,7 +1504,7 @@ theorem MulHom.cancel_right [Mul M] [Mul N] [Mul P] {g₁ g₂ : N →ₙ* P} {f
 @[to_additive]
 theorem MonoidHom.cancel_right [MulOneClass M] [MulOneClass N] [MulOneClass P] {g₁ g₂ : N →* P}
     {f : M →* N} (hf : Function.Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => MonoidHom.ext <| hf.forall.2 (MonoidHom.ext_iff.1 h), fun h => h ▸ rfl⟩
+  ⟨fun h => MonoidHom.ext <| hf.forall.2 (DFunLike.ext_iff.1 h), fun h => h ▸ rfl⟩
 #align monoid_hom.cancel_right MonoidHom.cancel_right
 #align add_monoid_hom.cancel_right AddMonoidHom.cancel_right
 -/
@@ -1481,7 +1513,7 @@ theorem MonoidHom.cancel_right [MulOneClass M] [MulOneClass N] [MulOneClass P] {
 theorem MonoidWithZeroHom.cancel_right [MulZeroOneClass M] [MulZeroOneClass N] [MulZeroOneClass P]
     {g₁ g₂ : N →*₀ P} {f : M →*₀ N} (hf : Function.Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => MonoidWithZeroHom.ext <| hf.forall.2 (MonoidWithZeroHom.ext_iff.1 h), fun h => h ▸ rfl⟩
+  ⟨fun h => MonoidWithZeroHom.ext <| hf.forall.2 (DFunLike.ext_iff.1 h), fun h => h ▸ rfl⟩
 #align monoid_with_zero_hom.cancel_right MonoidWithZeroHom.cancel_right
 -/
 
@@ -1529,7 +1561,7 @@ theorem MonoidWithZeroHom.cancel_left [MulZeroOneClass M] [MulZeroOneClass N] [M
 @[to_additive]
 theorem MonoidHom.toOneHom_injective [MulOneClass M] [MulOneClass N] :
     Function.Injective (MonoidHom.toOneHom : (M →* N) → OneHom M N) := fun f g h =>
-  MonoidHom.ext <| OneHom.ext_iff.mp h
+  MonoidHom.ext <| DFunLike.ext_iff.mp h
 #align monoid_hom.to_one_hom_injective MonoidHom.toOneHom_injective
 #align add_monoid_hom.to_zero_hom_injective AddMonoidHom.toZeroHom_injective
 -/
@@ -1538,7 +1570,7 @@ theorem MonoidHom.toOneHom_injective [MulOneClass M] [MulOneClass N] :
 @[to_additive]
 theorem MonoidHom.toMulHom_injective [MulOneClass M] [MulOneClass N] :
     Function.Injective (MonoidHom.toMulHom : (M →* N) → M →ₙ* N) := fun f g h =>
-  MonoidHom.ext <| MulHom.ext_iff.mp h
+  MonoidHom.ext <| DFunLike.ext_iff.mp h
 #align monoid_hom.to_mul_hom_injective MonoidHom.toMulHom_injective
 #align add_monoid_hom.to_add_hom_injective AddMonoidHom.toAddHom_injective
 -/
@@ -1546,14 +1578,14 @@ theorem MonoidHom.toMulHom_injective [MulOneClass M] [MulOneClass N] :
 #print MonoidWithZeroHom.toMonoidHom_injective /-
 theorem MonoidWithZeroHom.toMonoidHom_injective [MulZeroOneClass M] [MulZeroOneClass N] :
     Function.Injective (MonoidWithZeroHom.toMonoidHom : (M →*₀ N) → M →* N) := fun f g h =>
-  MonoidWithZeroHom.ext <| MonoidHom.ext_iff.mp h
+  MonoidWithZeroHom.ext <| DFunLike.ext_iff.mp h
 #align monoid_with_zero_hom.to_monoid_hom_injective MonoidWithZeroHom.toMonoidHom_injective
 -/
 
 #print MonoidWithZeroHom.toZeroHom_injective /-
 theorem MonoidWithZeroHom.toZeroHom_injective [MulZeroOneClass M] [MulZeroOneClass N] :
     Function.Injective (MonoidWithZeroHom.toZeroHom : (M →*₀ N) → ZeroHom M N) := fun f g h =>
-  MonoidWithZeroHom.ext <| ZeroHom.ext_iff.mp h
+  MonoidWithZeroHom.ext <| DFunLike.ext_iff.mp h
 #align monoid_with_zero_hom.to_zero_hom_injective MonoidWithZeroHom.toZeroHom_injective
 -/
 

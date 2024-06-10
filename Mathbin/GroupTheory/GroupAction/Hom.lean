@@ -298,7 +298,7 @@ theorem toMulActionHom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g 
 
 #print DistribMulActionHom.toAddMonoidHom_injective /-
 theorem toAddMonoidHom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g : A →+ B)) : f = g := by
-  ext a; exact AddMonoidHom.congr_fun h a
+  ext a; exact DFunLike.congr_fun h a
 #align distrib_mul_action_hom.to_add_monoid_hom_injective DistribMulActionHom.toAddMonoidHom_injective
 -/
 

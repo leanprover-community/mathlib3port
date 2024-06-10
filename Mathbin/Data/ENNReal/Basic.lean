@@ -337,10 +337,10 @@ theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ (a) (_ : a ≠ ∞), p a)
 -/
 
 /- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
-#print ENNReal.exists_ne_top' /-
-theorem exists_ne_top' {p : ℝ≥0∞ → Prop} : (∃ (a : _) (_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0, p r :=
+#print ENNReal.exists_ne_top /-
+theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _) (_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0, p r :=
   Option.bex_ne_none
-#align ennreal.exists_ne_top ENNReal.exists_ne_top'
+#align ennreal.exists_ne_top ENNReal.exists_ne_top
 -/
 
 #print ENNReal.toNNReal_eq_zero_iff /-

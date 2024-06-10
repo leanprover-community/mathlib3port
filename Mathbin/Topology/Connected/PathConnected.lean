@@ -221,7 +221,7 @@ instance : TopologicalSpace (Path x y) :=
 
 #print Path.continuous_eval /-
 theorem continuous_eval : Continuous fun p : Path x y × I => p.1 p.2 :=
-  continuous_eval.comp <| continuous_induced_dom.Prod_map continuous_id
+  continuous_eval.comp <| continuous_induced_dom.map_apply continuous_id
 #align path.continuous_eval Path.continuous_eval
 -/
 
@@ -546,7 +546,7 @@ theorem cast_coe (γ : Path x y) {x' y'} (hx : x' = x) (hy : y' = y) : (γ.cast 
 theorem symm_continuous_family {X ι : Type _} [TopologicalSpace X] [TopologicalSpace ι]
     {a b : ι → X} (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous ↿γ) :
     Continuous ↿fun t => (γ t).symm :=
-  h.comp (continuous_id.Prod_map continuous_symm)
+  h.comp (continuous_id.map_apply continuous_symm)
 #align path.symm_continuous_family Path.symm_continuous_family
 -/
 
@@ -562,7 +562,7 @@ theorem continuous_symm : Continuous (symm : Path x y → Path y x) :=
 theorem continuous_uncurry_extend_of_continuous_family {X ι : Type _} [TopologicalSpace X]
     [TopologicalSpace ι] {a b : ι → X} (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous ↿γ) :
     Continuous ↿fun t => (γ t).extend :=
-  h.comp (continuous_id.Prod_map continuous_projIcc)
+  h.comp (continuous_id.map_apply continuous_projIcc)
 #align path.continuous_uncurry_extend_of_continuous_family Path.continuous_uncurry_extend_of_continuous_family
 -/
 

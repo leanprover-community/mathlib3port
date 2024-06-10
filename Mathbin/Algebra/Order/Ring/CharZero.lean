@@ -18,12 +18,12 @@ import Algebra.Order.Ring.Defs
 
 variable {α : Type _}
 
-#print StrictOrderedSemiring.to_charZero /-
+#print StrictOrderedSemiring.toCharZero /-
 -- see Note [lower instance priority]
-instance (priority := 100) StrictOrderedSemiring.to_charZero [StrictOrderedSemiring α] :
+instance (priority := 100) StrictOrderedSemiring.toCharZero [StrictOrderedSemiring α] :
     CharZero α :=
   ⟨StrictMono.injective <|
       strictMono_nat_of_lt_succ fun n => by rw [Nat.cast_succ]; apply lt_add_one⟩
-#align strict_ordered_semiring.to_char_zero StrictOrderedSemiring.to_charZero
+#align strict_ordered_semiring.to_char_zero StrictOrderedSemiring.toCharZero
 -/
 

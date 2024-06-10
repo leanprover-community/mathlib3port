@@ -473,7 +473,7 @@ end ToList
 @[to_additive]
 theorem Equiv.Perm.prod_comp (σ : Equiv.Perm α) (s : Finset α) (f : α → β)
     (hs : {a | σ a ≠ a} ⊆ s) : ∏ x in s, f (σ x) = ∏ x in s, f x := by
-  convert (Prod_map _ σ.to_embedding _).symm; exact (map_perm hs).symm
+  convert (Prod.map_apply _ σ.to_embedding _).symm; exact (map_perm hs).symm
 #align equiv.perm.prod_comp Equiv.Perm.prod_comp
 #align equiv.perm.sum_comp Equiv.Perm.sum_comp
 -/
@@ -550,7 +550,7 @@ theorem prod_sdiff [DecidableEq α] (h : s₁ ⊆ s₂) :
 theorem prod_disj_sum (s : Finset α) (t : Finset γ) (f : Sum α γ → β) :
     ∏ x in s.disjSum t, f x = (∏ x in s, f (Sum.inl x)) * ∏ x in t, f (Sum.inr x) :=
   by
-  rw [← map_inl_disj_union_map_inr, prod_disj_union, Prod_map, Prod_map]
+  rw [← map_inl_disj_union_map_inr, prod_disj_union, Prod.map_apply, Prod.map_apply]
   rfl
 #align finset.prod_disj_sum Finset.prod_disj_sum
 #align finset.sum_disj_sum Finset.sum_disj_sum
@@ -580,7 +580,8 @@ in the reverse direction, use `finset.prod_sigma'`.  -/
       "Sum over a sigma type equals the sum of fiberwise sums. For rewriting\nin the reverse direction, use `finset.sum_sigma'`"]
 theorem prod_sigma {σ : α → Type _} (s : Finset α) (t : ∀ a, Finset (σ a)) (f : Sigma σ → β) :
     ∏ x in s.Sigma t, f x = ∏ a in s, ∏ s in t a, f ⟨a, s⟩ := by
-  simp_rw [← disj_Union_map_sigma_mk, prod_disj_Union, Prod_map, Function.Embedding.sigmaMk_apply]
+  simp_rw [← disj_Union_map_sigma_mk, prod_disj_Union, Prod.map_apply,
+    Function.Embedding.sigmaMk_apply]
 #align finset.prod_sigma Finset.prod_sigma
 #align finset.sum_sigma Finset.sum_sigma
 -/
@@ -1015,7 +1016,7 @@ theorem prod_attach {f : α → β} : ∏ x in s.attach, f x = ∏ x in s, f x :
 theorem prod_subtype_eq_prod_filter (f : α → β) {p : α → Prop} [DecidablePred p] :
     ∏ x in s.Subtype p, f x = ∏ x in s.filterₓ p, f x :=
   by
-  conv_lhs => erw [← Prod_map (s.subtype p) (Function.Embedding.subtype _) f]
+  conv_lhs => erw [← Prod.map_apply (s.subtype p) (Function.Embedding.subtype _) f]
   exact prod_congr (subtype_map _) fun x hx => rfl
 #align finset.prod_subtype_eq_prod_filter Finset.prod_subtype_eq_prod_filter
 #align finset.sum_subtype_eq_sum_filter Finset.sum_subtype_eq_sum_filter

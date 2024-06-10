@@ -781,8 +781,8 @@ section Distrib
 def sumProdDistrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) :=
   Homeomorph.symm <|
     homeomorphOfContinuousOpen (Equiv.sumProdDistrib α β γ).symm
-        ((continuous_inl.Prod_map continuous_id).sum_elim
-          (continuous_inr.Prod_map continuous_id)) <|
+        ((continuous_inl.map_apply continuous_id).sum_elim
+          (continuous_inr.map_apply continuous_id)) <|
       (isOpenMap_inl.Prod IsOpenMap.id).sum_elim (isOpenMap_inr.Prod IsOpenMap.id)
 #align homeomorph.sum_prod_distrib Homeomorph.sumProdDistrib
 -/

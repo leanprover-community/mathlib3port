@@ -30,7 +30,7 @@ theorem Filter.Tendsto.IccExtend' (f : γ → Icc a b → β) {z : γ} {l : Filt
     (hf : Tendsto (↿f) (𝓝 z ×ᶠ l.map (projIcc a b h)) l') :
     Tendsto (↿(IccExtend h ∘ f)) (𝓝 z ×ᶠ l) l' :=
   show Tendsto (↿f ∘ Prod.map id (projIcc a b h)) (𝓝 z ×ᶠ l) l' from
-    hf.comp <| tendsto_id.Prod_map tendsto_map
+    hf.comp <| tendsto_id.map_apply tendsto_map
 #align filter.tendsto.Icc_extend Filter.Tendsto.IccExtend'
 -/
 

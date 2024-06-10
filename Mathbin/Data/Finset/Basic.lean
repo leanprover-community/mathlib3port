@@ -1450,7 +1450,7 @@ theorem mem_insert_coe {s : Finset α} {x y : α} : x ∈ insert y s ↔ x ∈ i
 #align finset.mem_insert_coe Finset.mem_insert_coe
 -/
 
-instance : IsLawfulSingleton α (Finset α) :=
+instance : LawfulSingleton α (Finset α) :=
   ⟨fun a => by ext; simp⟩
 
 #print Finset.insert_eq_of_mem /-
@@ -4255,7 +4255,7 @@ theorem toFinset_cons (a : α) (s : Multiset α) : toFinset (a ::ₘ s) = insert
 #print Multiset.toFinset_singleton /-
 @[simp]
 theorem toFinset_singleton (a : α) : toFinset ({a} : Multiset α) = {a} := by
-  rw [← cons_zero, to_finset_cons, to_finset_zero, IsLawfulSingleton.insert_emptyCollection_eq]
+  rw [← cons_zero, to_finset_cons, to_finset_zero, LawfulSingleton.insert_emptyCollection_eq]
 #align multiset.to_finset_singleton Multiset.toFinset_singleton
 -/
 

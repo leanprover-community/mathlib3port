@@ -147,7 +147,7 @@ theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun
 instance ContinuousSMul.op [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : ContinuousSMul Mᵐᵒᵖ X :=
   ⟨by
     suffices Continuous fun p : M × X => MulOpposite.op p.fst • p.snd from
-      this.comp (MulOpposite.continuous_unop.Prod_map continuous_id)
+      this.comp (MulOpposite.continuous_unop.map_apply continuous_id)
     simpa only [op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × X => _)⟩
 #align has_continuous_smul.op ContinuousSMul.op
 #align has_continuous_vadd.op ContinuousVAdd.op
@@ -157,7 +157,7 @@ instance ContinuousSMul.op [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : Continuou
 @[to_additive]
 instance MulOpposite.continuousSMul : ContinuousSMul M Xᵐᵒᵖ :=
   ⟨MulOpposite.continuous_op.comp <|
-      continuous_smul.comp <| continuous_id.Prod_map MulOpposite.continuous_unop⟩
+      continuous_smul.comp <| continuous_id.map_apply MulOpposite.continuous_unop⟩
 #align mul_opposite.has_continuous_smul MulOpposite.continuousSMul
 #align add_opposite.has_continuous_vadd AddOpposite.continuousVAdd
 -/

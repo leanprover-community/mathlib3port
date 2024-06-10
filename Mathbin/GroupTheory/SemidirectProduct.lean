@@ -275,7 +275,7 @@ def lift (f₁ : N →* H) (f₂ : G →* H)
   toFun a := f₁ a.1 * f₂ a.2
   map_one' := by simp
   map_mul' a b := by
-    have := fun n g => MonoidHom.ext_iff.1 (h n) g
+    have := fun n g => DFunLike.ext_iff.1 (h n) g
     simp only [MulAut.conj_apply, MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom] at this
     simp [this, mul_assoc]
 #align semidirect_product.lift SemidirectProduct.lift
@@ -338,7 +338,7 @@ def map (f₁ : N →* N₁) (f₂ : G →* G₁)
   toFun x := ⟨f₁ x.1, f₂ x.2⟩
   map_one' := by simp
   map_mul' x y := by
-    replace h := MonoidHom.ext_iff.1 (h x.right) y.left
+    replace h := DFunLike.ext_iff.1 (h x.right) y.left
     ext <;> simp_all
 #align semidirect_product.map SemidirectProduct.map
 -/

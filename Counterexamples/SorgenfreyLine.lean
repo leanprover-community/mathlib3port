@@ -159,7 +159,7 @@ theorem continuous_toReal : Continuous toReal :=
 #align counterexample.sorgenfrey_line.continuous_to_real Counterexample.SorgenfreyLine.continuous_toReal
 
 instance : OrderClosedTopology ℝₗ :=
-  ⟨isClosed_le_prod.Preimage (continuous_toReal.Prod_map continuous_toReal)⟩
+  ⟨isClosed_le_prod.Preimage (continuous_toReal.map_apply continuous_toReal)⟩
 
 instance : ContinuousAdd ℝₗ :=
   by

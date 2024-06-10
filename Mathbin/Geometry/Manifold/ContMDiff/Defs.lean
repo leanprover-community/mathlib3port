@@ -2156,7 +2156,7 @@ theorem smooth_prod_assoc :
 #align smooth_prod_assoc smooth_prod_assoc
 -/
 
-section Prod_map
+section Prod.map_apply
 
 variable {g : N → N'} {r : Set N} {y : N}
 
@@ -2222,14 +2222,14 @@ theorem ContMDiff.prod_map (hf : ContMDiff I I' n f) (hg : ContMDiff J J' n g) :
 #print SmoothWithinAt.prod_map /-
 theorem SmoothWithinAt.prod_map (hf : SmoothWithinAt I I' f s x) (hg : SmoothWithinAt J J' g r y) :
     SmoothWithinAt (I.Prod J) (I'.Prod J') (Prod.map f g) (s ×ˢ r) (x, y) :=
-  hf.Prod_map hg
+  hf.map_apply hg
 #align smooth_within_at.prod_map SmoothWithinAt.prod_map
 -/
 
 #print SmoothAt.prod_map /-
 theorem SmoothAt.prod_map (hf : SmoothAt I I' f x) (hg : SmoothAt J J' g y) :
     SmoothAt (I.Prod J) (I'.Prod J') (Prod.map f g) (x, y) :=
-  hf.Prod_map hg
+  hf.map_apply hg
 #align smooth_at.prod_map SmoothAt.prod_map
 -/
 
@@ -2237,18 +2237,18 @@ theorem SmoothAt.prod_map (hf : SmoothAt I I' f x) (hg : SmoothAt J J' g y) :
 #print SmoothOn.prod_map /-
 theorem SmoothOn.prod_map (hf : SmoothOn I I' f s) (hg : SmoothOn J J' g r) :
     SmoothOn (I.Prod J) (I'.Prod J') (Prod.map f g) (s ×ˢ r) :=
-  hf.Prod_map hg
+  hf.map_apply hg
 #align smooth_on.prod_map SmoothOn.prod_map
 -/
 
 #print Smooth.prod_map /-
 theorem Smooth.prod_map (hf : Smooth I I' f) (hg : Smooth J J' g) :
     Smooth (I.Prod J) (I'.Prod J') (Prod.map f g) :=
-  hf.Prod_map hg
+  hf.map_apply hg
 #align smooth.prod_map Smooth.prod_map
 -/
 
-end Prod_map
+end Prod.map_apply
 
 section PiSpace
 
@@ -2407,9 +2407,9 @@ theorem ContMDiff.clm_apply {g : M → F₁ →L[𝕜] F₂} {f : M → F₁}
 theorem ContMDiffWithinAt.clm_prodMap {g : M → F₁ →L[𝕜] F₃} {f : M → F₂ →L[𝕜] F₄} {s : Set M}
     {x : M} (hg : ContMDiffWithinAt I 𝓘(𝕜, F₁ →L[𝕜] F₃) n g s x)
     (hf : ContMDiffWithinAt I 𝓘(𝕜, F₂ →L[𝕜] F₄) n f s x) :
-    ContMDiffWithinAt I 𝓘(𝕜, F₁ × F₂ →L[𝕜] F₃ × F₄) n (fun x => (g x).Prod_map (f x)) s x :=
+    ContMDiffWithinAt I 𝓘(𝕜, F₁ × F₂ →L[𝕜] F₃ × F₄) n (fun x => (g x).map_apply (f x)) s x :=
   @ContDiffWithinAt.comp_contMDiffWithinAt _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-    (fun x : (F₁ →L[𝕜] F₃) × (F₂ →L[𝕜] F₄) => x.1.Prod_map x.2) (fun x => (g x, f x)) s _ x
+    (fun x : (F₁ →L[𝕜] F₃) × (F₂ →L[𝕜] F₄) => x.1.map_apply x.2) (fun x => (g x, f x)) s _ x
     (by
       apply ContDiff.contDiffAt
       exact (ContinuousLinearMap.prodMapL 𝕜 F₁ F₃ F₂ F₄).ContDiff)
@@ -2420,7 +2420,7 @@ theorem ContMDiffWithinAt.clm_prodMap {g : M → F₁ →L[𝕜] F₃} {f : M �
 #print ContMDiffAt.clm_prodMap /-
 theorem ContMDiffAt.clm_prodMap {g : M → F₁ →L[𝕜] F₃} {f : M → F₂ →L[𝕜] F₄} {x : M}
     (hg : ContMDiffAt I 𝓘(𝕜, F₁ →L[𝕜] F₃) n g x) (hf : ContMDiffAt I 𝓘(𝕜, F₂ →L[𝕜] F₄) n f x) :
-    ContMDiffAt I 𝓘(𝕜, F₁ × F₂ →L[𝕜] F₃ × F₄) n (fun x => (g x).Prod_map (f x)) x :=
+    ContMDiffAt I 𝓘(𝕜, F₁ × F₂ →L[𝕜] F₃ × F₄) n (fun x => (g x).map_apply (f x)) x :=
   (hg.ContMDiffWithinAt.clm_prodMap hf.ContMDiffWithinAt).ContMDiffAt univ_mem
 #align cont_mdiff_at.clm_prod_map ContMDiffAt.clm_prodMap
 -/
@@ -2428,7 +2428,7 @@ theorem ContMDiffAt.clm_prodMap {g : M → F₁ →L[𝕜] F₃} {f : M → F₂
 #print ContMDiffOn.clm_prodMap /-
 theorem ContMDiffOn.clm_prodMap {g : M → F₁ →L[𝕜] F₃} {f : M → F₂ →L[𝕜] F₄} {s : Set M}
     (hg : ContMDiffOn I 𝓘(𝕜, F₁ →L[𝕜] F₃) n g s) (hf : ContMDiffOn I 𝓘(𝕜, F₂ →L[𝕜] F₄) n f s) :
-    ContMDiffOn I 𝓘(𝕜, F₁ × F₂ →L[𝕜] F₃ × F₄) n (fun x => (g x).Prod_map (f x)) s := fun x hx =>
+    ContMDiffOn I 𝓘(𝕜, F₁ × F₂ →L[𝕜] F₃ × F₄) n (fun x => (g x).map_apply (f x)) s := fun x hx =>
   (hg x hx).clm_prodMap (hf x hx)
 #align cont_mdiff_on.clm_prod_map ContMDiffOn.clm_prodMap
 -/
@@ -2436,7 +2436,7 @@ theorem ContMDiffOn.clm_prodMap {g : M → F₁ →L[𝕜] F₃} {f : M → F₂
 #print ContMDiff.clm_prodMap /-
 theorem ContMDiff.clm_prodMap {g : M → F₁ →L[𝕜] F₃} {f : M → F₂ →L[𝕜] F₄}
     (hg : ContMDiff I 𝓘(𝕜, F₁ →L[𝕜] F₃) n g) (hf : ContMDiff I 𝓘(𝕜, F₂ →L[𝕜] F₄) n f) :
-    ContMDiff I 𝓘(𝕜, F₁ × F₂ →L[𝕜] F₃ × F₄) n fun x => (g x).Prod_map (f x) := fun x =>
+    ContMDiff I 𝓘(𝕜, F₁ × F₂ →L[𝕜] F₃ × F₄) n fun x => (g x).map_apply (f x) := fun x =>
   (hg x).clm_prodMap (hf x)
 #align cont_mdiff.clm_prod_map ContMDiff.clm_prodMap
 -/

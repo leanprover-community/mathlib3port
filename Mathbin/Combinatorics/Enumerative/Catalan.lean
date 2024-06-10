@@ -8,7 +8,7 @@ import Algebra.BigOperators.NatAntidiagonal
 import Algebra.CharZero.Lemmas
 import Data.Finset.NatAntidiagonal
 import Data.Nat.Choose.Central
-import Data.Tree
+import Data.Tree.Basic
 import Tactic.FieldSimp
 import Tactic.LinearCombination
 

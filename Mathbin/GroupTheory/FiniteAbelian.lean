@@ -37,7 +37,7 @@ theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ 
   by
   rcases Module.equiv_directSum_of_isTorsion hM with ⟨ι, _, p, h, e, ⟨l⟩⟩
   haveI : ∀ i : ι, NeZero (p i ^ e i).natAbs := fun i =>
-    ⟨Int.natAbs_ne_zero_of_ne_zero <| pow_ne_zero (e i) (h i).NeZero⟩
+    ⟨Int.natAbs_ne_zero <| pow_ne_zero (e i) (h i).NeZero⟩
   haveI : ∀ i : ι, _root_.finite <| ℤ ⧸ Submodule.span ℤ {p i ^ e i} := fun i =>
     Finite.of_equiv _ (p i ^ e i).quotientSpanEquivZMod.symm.toEquiv
   haveI : _root_.finite (⨁ i, ℤ ⧸ (Submodule.span ℤ {p i ^ e i} : Submodule ℤ ℤ)) :=

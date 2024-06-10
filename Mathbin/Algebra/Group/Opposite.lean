@@ -741,7 +741,7 @@ theorem AddMonoidHom.mul_op_ext {α β} [AddZeroClass α] [AddZeroClass β] (f g
       f.comp (opAddEquiv : α ≃+ αᵐᵒᵖ).toAddMonoidHom =
         g.comp (opAddEquiv : α ≃+ αᵐᵒᵖ).toAddMonoidHom) :
     f = g :=
-  AddMonoidHom.ext <| MulOpposite.rec' fun x => (AddMonoidHom.congr_fun h : _) x
+  AddMonoidHom.ext <| MulOpposite.rec' fun x => (DFunLike.congr_fun h : _) x
 #align add_monoid_hom.mul_op_ext AddMonoidHom.mul_op_ext
 -/
 

@@ -102,7 +102,7 @@ variable {F₁ E₁ F₂ E₂} [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module �
 #print Trivialization.prod.isLinear /-
 instance prod.isLinear [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] : (e₁.Prod e₂).isLinear 𝕜
     where linear := fun x ⟨h₁, h₂⟩ =>
-    (((e₁.linear 𝕜 h₁).mk' _).Prod_map ((e₂.linear 𝕜 h₂).mk' _)).isLinear
+    (((e₁.linear 𝕜 h₁).mk' _).map_apply ((e₂.linear 𝕜 h₂).mk' _)).isLinear
 #align trivialization.prod.is_linear Trivialization.prod.isLinear
 -/
 
@@ -111,7 +111,7 @@ instance prod.isLinear [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] : (e₁.Prod e�
 theorem coordChangeL_prod [e₁.isLinear 𝕜] [e₁'.isLinear 𝕜] [e₂.isLinear 𝕜] [e₂'.isLinear 𝕜] ⦃b⦄
     (hb : b ∈ (e₁.Prod e₂).baseSet ∩ (e₁'.Prod e₂').baseSet) :
     ((e₁.Prod e₂).coordChangeL 𝕜 (e₁'.Prod e₂') b : F₁ × F₂ →L[𝕜] F₁ × F₂) =
-      (e₁.coordChangeL 𝕜 e₁' b : F₁ →L[𝕜] F₁).Prod_map (e₂.coordChangeL 𝕜 e₂' b) :=
+      (e₁.coordChangeL 𝕜 e₁' b : F₁ →L[𝕜] F₁).map_apply (e₂.coordChangeL 𝕜 e₂' b) :=
   by
   rw [ContinuousLinearMap.ext_iff, ContinuousLinearMap.coe_prodMap']
   rintro ⟨v₁, v₂⟩

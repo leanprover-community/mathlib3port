@@ -708,7 +708,7 @@ def toFiberBundleCore : FiberBundleCore ι B F :=
     coordChange := fun i j b => Z.coordChange i j b
     continuousOn_coordChange := fun i j =>
       isBoundedBilinearMap_apply.Continuous.comp_continuousOn
-        ((Z.continuousOn_coordChange i j).Prod_map continuousOn_id) }
+        ((Z.continuousOn_coordChange i j).map_apply continuousOn_id) }
 #align vector_bundle_core.to_fiber_bundle_core VectorBundleCore.toFiberBundleCore
 -/
 
@@ -1122,7 +1122,7 @@ def toFiberPrebundle (a : VectorPrebundle R F E) : FiberPrebundle F E :=
       intro e he e' he'
       have :=
         is_bounded_bilinear_map_apply.continuous.comp_continuous_on
-          ((a.continuous_on_coord_change he' he).Prod_map continuousOn_id)
+          ((a.continuous_on_coord_change he' he).map_apply continuousOn_id)
       have H :
         e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.to_local_equiv.source =
           (e'.base_set ∩ e.base_set) ×ˢ univ :=

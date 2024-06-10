@@ -212,19 +212,15 @@ theorem pow_comp [Pow γ α] (x : β → γ) (a : α) (y : I → β) : (x ^ a) �
 #align pi.smul_comp Pi.smul_comp
 -/
 
-#print Pi.bit0_apply /-
 @[simp]
 theorem bit0_apply [∀ i, Add <| f i] : (bit0 x) i = bit0 (x i) :=
   rfl
 #align pi.bit0_apply Pi.bit0_apply
--/
 
-#print Pi.bit1_apply /-
 @[simp]
 theorem bit1_apply [∀ i, Add <| f i] [∀ i, One <| f i] : (bit1 x) i = bit1 (x i) :=
   rfl
 #align pi.bit1_apply Pi.bit1_apply
--/
 
 #print Pi.instInv /-
 @[to_additive]

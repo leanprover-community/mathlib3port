@@ -546,7 +546,7 @@ variable {R}
 
 #print LinearMap.toAddMonoidHom_injective /-
 theorem toAddMonoidHom_injective : Function.Injective (toAddMonoidHom : (M →ₛₗ[σ] M₃) → M →+ M₃) :=
-  fun f g h => ext <| AddMonoidHom.congr_fun h
+  fun f g h => ext <| DFunLike.congr_fun h
 #align linear_map.to_add_monoid_hom_injective LinearMap.toAddMonoidHom_injective
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
 import Data.LazyList.Basic
-import Data.Tree
+import Data.Tree.Basic
 import Data.PNat.Basic
 import Control.Bifunctor
 import Control.ULift

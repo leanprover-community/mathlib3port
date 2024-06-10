@@ -121,8 +121,8 @@ theorem haveLebesgueDecomposition_add (μ ν : Measure α) [HaveLebesgueDecompos
 #align measure_theory.measure.have_lebesgue_decomposition_add MeasureTheory.Measure.haveLebesgueDecomposition_add
 -/
 
-#print MeasureTheory.Measure.haveLebesgueDecompositionSmul /-
-instance haveLebesgueDecompositionSmul (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (r : ℝ≥0) :
+#print MeasureTheory.Measure.haveLebesgueDecompositionSMul /-
+instance haveLebesgueDecompositionSMul (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (r : ℝ≥0) :
     (r • μ).HaveLebesgueDecomposition ν
     where lebesgue_decomposition :=
     by
@@ -134,7 +134,7 @@ instance haveLebesgueDecompositionSmul (μ ν : Measure α) [HaveLebesgueDecompo
     · change _ = (r : ℝ≥0∞) • _ + ν.with_density ((r : ℝ≥0∞) • _)
       rw [with_density_smul _ hmeas, ← smul_add, ← hadd]
       rfl
-#align measure_theory.measure.have_lebesgue_decomposition_smul MeasureTheory.Measure.haveLebesgueDecompositionSmul
+#align measure_theory.measure.have_lebesgue_decomposition_smul MeasureTheory.Measure.haveLebesgueDecompositionSMul
 -/
 
 #print MeasureTheory.Measure.measurable_rnDeriv /-

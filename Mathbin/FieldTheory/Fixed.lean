@@ -366,7 +366,7 @@ theorem linearIndependent_toLinearMap (R : Type u) (A : Type v) (B : Type w) [Co
     LinearIndependent B (AlgHom.toLinearMap : (A →ₐ[R] B) → A →ₗ[R] B) :=
   have : LinearIndependent B (LinearMap.ltoFun R A B ∘ AlgHom.toLinearMap) :=
     ((linearIndependent_monoidHom A B).comp (coe : (A →ₐ[R] B) → A →* B) fun f g hfg =>
-        AlgHom.ext <| MonoidHom.ext_iff.1 hfg :
+        AlgHom.ext <| DFunLike.ext_iff.1 hfg :
       _)
   this.of_comp _
 #align linear_independent_to_linear_map linearIndependent_toLinearMap

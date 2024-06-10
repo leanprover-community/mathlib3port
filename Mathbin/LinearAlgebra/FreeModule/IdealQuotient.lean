@@ -112,7 +112,7 @@ noncomputable def fintypeQuotientOfFreeOfNeBot [Module.Free ℤ S] [Module.Finit
   let a := I.smithCoeffs b hI
   let e := I.quotientEquivPiZMod b hI
   haveI : ∀ i, NeZero (a i).natAbs := fun i =>
-        ⟨Int.natAbs_ne_zero_of_ne_zero (smith_coeffs_ne_zero b I hI i)⟩ <;>
+        ⟨Int.natAbs_ne_zero (smith_coeffs_ne_zero b I hI i)⟩ <;>
       classical skip <;>
     exact Fintype.ofEquiv (∀ i, ZMod (a i).natAbs) e.symm
 #align ideal.fintype_quotient_of_free_of_ne_bot Ideal.fintypeQuotientOfFreeOfNeBot

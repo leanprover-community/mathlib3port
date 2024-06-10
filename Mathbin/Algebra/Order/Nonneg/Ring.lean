@@ -6,7 +6,7 @@ Authors: Floris van Doorn
 import Data.Nat.Cast.Basic
 import Algebra.Order.Ring.Defs
 import Algebra.Order.Ring.InjSurj
-import Algebra.GroupPower.Order
+import Algebra.Order.Ring.Basic
 import Order.CompleteLatticeIntervals
 import Order.LatticeIntervals
 

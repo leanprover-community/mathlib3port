@@ -39,7 +39,7 @@ number field, ring of integers
 /-- A number field is a field which has characteristic zero and is finite
 dimensional over ℚ. -/
 class NumberField (K : Type _) [Field K] : Prop where
-  [to_charZero : CharZero K]
+  [toCharZero : CharZero K]
   [to_finiteDimensional : FiniteDimensional ℚ K]
 #align number_field NumberField
 -/
@@ -211,7 +211,7 @@ open NumberField
 #print Rat.numberField /-
 instance numberField : NumberField ℚ
     where
-  to_charZero := inferInstance
+  toCharZero := inferInstance
   to_finiteDimensional :=-- The vector space structure of `ℚ` over itself can arise in multiple ways:
   -- all fields are vector spaces over themselves (used in `rat.finite_dimensional`)
   -- all char 0 fields have a canonical embedding of `ℚ` (used in `number_field`).
@@ -241,7 +241,7 @@ attribute [-instance] algebraRat
 is a number field. -/
 instance {f : ℚ[X]} [hf : Fact (Irreducible f)] : NumberField (AdjoinRoot f)
     where
-  to_charZero := charZero_of_injective_algebraMap (algebraMap ℚ _).Injective
+  toCharZero := charZero_of_injective_algebraMap (algebraMap ℚ _).Injective
   to_finiteDimensional := by convert (AdjoinRoot.powerBasis hf.out.ne_zero).FiniteDimensional
 
 end

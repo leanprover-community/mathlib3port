@@ -91,7 +91,7 @@ variable [LinearOrder α]
 /-- The partial order on `finsupp`s obtained by the lexicographic ordering.
 See `finsupp.lex.linear_order` for a proof that this partial order is in fact linear. -/
 instance Lex.partialOrder [PartialOrder N] : PartialOrder (Lex (α →₀ N)) :=
-  PartialOrder.lift (fun x => toLex ⇑(ofLex x)) Finsupp.coeFn_injective
+  PartialOrder.lift (fun x => toLex ⇑(ofLex x)) DFunLike.coe_injective
 #align finsupp.lex.partial_order Finsupp.Lex.partialOrder
 -/
 

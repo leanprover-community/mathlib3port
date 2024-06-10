@@ -137,11 +137,11 @@ theorem CharP.cast_eq_zero [AddMonoidWithOne R] (p : ℕ) [CharP R p] : (p : R) 
 #align char_p.cast_eq_zero CharP.cast_eq_zero
 -/
 
-#print CharP.cast_card_eq_zero /-
+#print Nat.cast_card_eq_zero /-
 @[simp]
-theorem CharP.cast_card_eq_zero [AddGroupWithOne R] [Fintype R] : (Fintype.card R : R) = 0 := by
+theorem Nat.cast_card_eq_zero [AddGroupWithOne R] [Fintype R] : (Fintype.card R : R) = 0 := by
   rw [← nsmul_one, card_nsmul_eq_zero]
-#align char_p.cast_card_eq_zero CharP.cast_card_eq_zero
+#align char_p.cast_card_eq_zero Nat.cast_card_eq_zero
 -/
 
 #print CharP.addOrderOf_one /-
@@ -799,7 +799,7 @@ theorem charP_of_ne_zero (hn : Fintype.card R = n) (hR : ∀ i < n, (i : R) = 0 
   {
     cast_eq_zero_iff :=
       by
-      have H : (n : R) = 0 := by rw [← hn, CharP.cast_card_eq_zero]
+      have H : (n : R) = 0 := by rw [← hn, Nat.cast_card_eq_zero]
       intro k
       constructor
       · intro h
@@ -818,7 +818,7 @@ theorem charP_of_prime_pow_injective (R) [Ring R] [Fintype R] (p : ℕ) [hp : Fa
     (hn : Fintype.card R = p ^ n) (hR : ∀ i ≤ n, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) :=
   by
   obtain ⟨c, hc⟩ := CharP.exists R; skip
-  have hcpn : c ∣ p ^ n := by rw [← CharP.cast_eq_zero_iff R c, ← hn, CharP.cast_card_eq_zero]
+  have hcpn : c ∣ p ^ n := by rw [← CharP.cast_eq_zero_iff R c, ← hn, Nat.cast_card_eq_zero]
   obtain ⟨i, hi, hc⟩ : ∃ i ≤ n, c = p ^ i := by rwa [Nat.dvd_prime_pow hp.1] at hcpn
   obtain rfl : i = n := by apply hR i hi; rw [← Nat.cast_pow, ← hc, CharP.cast_eq_zero]
   rwa [← hc]

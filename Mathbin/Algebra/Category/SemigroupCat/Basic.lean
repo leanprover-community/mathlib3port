@@ -54,7 +54,7 @@ namespace MagmaCat
 #print MagmaCat.bundledHom /-
 @[to_additive]
 instance bundledHom : BundledHom @MulHom :=
-  ⟨@MulHom.toFun, @MulHom.id, @MulHom.comp, @MulHom.coe_inj⟩
+  ⟨@MulHom.toFun, @MulHom.id, @MulHom.comp, @DFunLike.coe_injective⟩
 #align Magma.bundled_hom MagmaCat.bundledHom
 #align AddMagma.bundled_hom AddMagmaCat.bundledHom
 -/

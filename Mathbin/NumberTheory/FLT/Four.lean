@@ -114,7 +114,7 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b :=
   apply Nat.le_lt_asymm (h.2 _ _ _ hf)
   rw [Int.natAbs_mul, lt_mul_iff_one_lt_left, Int.natAbs_pow, Int.natAbs_ofNat]
   · exact Nat.one_lt_pow _ _ zero_lt_two (Nat.Prime.one_lt hp)
-  · exact Nat.pos_of_ne_zero (Int.natAbs_ne_zero_of_ne_zero (NeZero hf))
+  · exact Nat.pos_of_ne_zero (Int.natAbs_ne_zero (NeZero hf))
 #align fermat_42.coprime_of_minimal Fermat42.coprime_of_minimal
 -/
 

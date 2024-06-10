@@ -407,7 +407,7 @@ end Mem
 instance : Singleton α (Multiset α) :=
   ⟨fun a => a ::ₘ 0⟩
 
-instance : IsLawfulSingleton α (Multiset α) :=
+instance : LawfulSingleton α (Multiset α) :=
   ⟨fun a => rfl⟩
 
 #print Multiset.cons_zero /-

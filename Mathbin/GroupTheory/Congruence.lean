@@ -1080,7 +1080,7 @@ theorem lift_funext (f g : c.Quotient →* P) (h : ∀ a : M, f a = g a) : f = g
   by
   rw [← lift_apply_mk' f, ← lift_apply_mk' g]
   congr 1
-  exact MonoidHom.ext_iff.2 h
+  exact DFunLike.ext_iff.2 h
 #align con.lift_funext Con.lift_funext
 #align add_con.lift_funext AddCon.lift_funext
 -/

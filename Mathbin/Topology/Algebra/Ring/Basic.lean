@@ -204,7 +204,7 @@ open MulOpposite
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [ContinuousAdd α] : ContinuousAdd αᵐᵒᵖ
     where continuous_add :=
     continuous_induced_rng.2 <|
-      (@continuous_add α _ _ _).comp (continuous_unop.Prod_map continuous_unop)
+      (@continuous_add α _ _ _).comp (continuous_unop.map_apply continuous_unop)
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] :
     TopologicalSemiring αᵐᵒᵖ where

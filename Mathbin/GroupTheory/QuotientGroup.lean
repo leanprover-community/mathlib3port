@@ -127,7 +127,7 @@ See note [partially-applied ext lemmas]. -/
   to_additive
       " Two `add_monoid_hom`s from an additive quotient group are equal if their\ncompositions with `add_quotient_group.mk'` are equal.\n\nSee note [partially-applied ext lemmas]. "]
 theorem monoidHom_ext ⦃f g : G ⧸ N →* H⦄ (h : f.comp (mk' N) = g.comp (mk' N)) : f = g :=
-  MonoidHom.ext fun x => QuotientGroup.induction_on x <| (MonoidHom.congr_fun h : _)
+  MonoidHom.ext fun x => QuotientGroup.induction_on x <| (DFunLike.congr_fun h : _)
 #align quotient_group.monoid_hom_ext QuotientGroup.monoidHom_ext
 #align quotient_add_group.add_monoid_hom_ext QuotientAddGroup.addMonoidHom_ext
 -/

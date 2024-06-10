@@ -228,7 +228,7 @@ theorem to_distribMulActionHom_injective {f g : A →ₙₐ[R] B}
 
 #print NonUnitalAlgHom.to_mulHom_injective /-
 theorem to_mulHom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g : A →ₙ* B)) : f = g := by
-  ext a; exact MulHom.congr_fun h a
+  ext a; exact DFunLike.congr_fun h a
 #align non_unital_alg_hom.to_mul_hom_injective NonUnitalAlgHom.to_mulHom_injective
 -/
 

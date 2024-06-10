@@ -56,7 +56,7 @@ theorem le_def {f g : Π₀ i, α i} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 def orderEmbeddingToFun : (Π₀ i, α i) ↪o ∀ i, α i
     where
   toFun := coeFn
-  inj' := coeFn_injective
+  inj' := coe_injective
   map_rel_iff' a b := (@le_def _ _ _ _ a b).symm
 #align dfinsupp.order_embedding_to_fun DFinsupp.orderEmbeddingToFun
 -/

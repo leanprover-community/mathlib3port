@@ -817,14 +817,14 @@ def prodMap (f : α →. γ) (g : β →. δ) : α × β →. γ × δ := fun x 
 #print PFun.dom_prodMap /-
 @[simp]
 theorem dom_prodMap (f : α →. γ) (g : β →. δ) :
-    (f.Prod_map g).Dom = {x | (f x.1).Dom ∧ (g x.2).Dom} :=
+    (f.map_apply g).Dom = {x | (f x.1).Dom ∧ (g x.2).Dom} :=
   rfl
 #align pfun.dom_prod_map PFun.dom_prodMap
 -/
 
 #print PFun.get_prodMap /-
 theorem get_prodMap (f : α →. γ) (g : β →. δ) (x : α × β) (h) :
-    (f.Prod_map g x).get h = ((f x.1).get h.1, (g x.2).get h.2) :=
+    (f.map_apply g x).get h = ((f x.1).get h.1, (g x.2).get h.2) :=
   rfl
 #align pfun.get_prod_map PFun.get_prodMap
 -/
@@ -832,17 +832,17 @@ theorem get_prodMap (f : α →. γ) (g : β →. δ) (x : α × β) (h) :
 #print PFun.prodMap_apply /-
 @[simp]
 theorem prodMap_apply (f : α →. γ) (g : β →. δ) (x : α × β) :
-    f.Prod_map g x = ⟨(f x.1).Dom ∧ (g x.2).Dom, fun h => ((f x.1).get h.1, (g x.2).get h.2)⟩ :=
+    f.map_apply g x = ⟨(f x.1).Dom ∧ (g x.2).Dom, fun h => ((f x.1).get h.1, (g x.2).get h.2)⟩ :=
   rfl
 #align pfun.prod_map_apply PFun.prodMap_apply
 -/
 
 #print PFun.mem_prodMap /-
 theorem mem_prodMap {f : α →. γ} {g : β →. δ} {x : α × β} {y : γ × δ} :
-    y ∈ f.Prod_map g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 :=
+    y ∈ f.map_apply g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 :=
   by
   trans ∃ hp hq, (f x.1).get hp = y.1 ∧ (g x.2).get hq = y.2
-  · simp only [Prod_map, Part.mem_mk_iff, And.exists, Prod.ext_iff]
+  · simp only [Prod.map_apply, Part.mem_mk_iff, And.exists, Prod.ext_iff]
   · simpa only [exists_and_left, exists_and_right]
 #align pfun.mem_prod_map PFun.mem_prodMap
 -/
@@ -859,7 +859,7 @@ theorem prodLift_fst_comp_snd_comp (f : α →. γ) (g : β →. δ) :
 
 #print PFun.prodMap_id_id /-
 @[simp]
-theorem prodMap_id_id : (PFun.id α).Prod_map (PFun.id β) = PFun.id _ :=
+theorem prodMap_id_id : (PFun.id α).map_apply (PFun.id β) = PFun.id _ :=
   ext fun _ _ => by simp [eq_comm]
 #align pfun.prod_map_id_id PFun.prodMap_id_id
 -/
@@ -867,7 +867,7 @@ theorem prodMap_id_id : (PFun.id α).Prod_map (PFun.id β) = PFun.id _ :=
 #print PFun.prodMap_comp_comp /-
 @[simp]
 theorem prodMap_comp_comp (f₁ : α →. β) (f₂ : β →. γ) (g₁ : δ →. ε) (g₂ : ε →. ι) :
-    (f₂.comp f₁).Prod_map (g₂.comp g₁) = (f₂.Prod_map g₂).comp (f₁.Prod_map g₁) :=
+    (f₂.comp f₁).map_apply (g₂.comp g₁) = (f₂.map_apply g₂).comp (f₁.map_apply g₁) :=
   ext fun _ _ => by tidy
 #align pfun.prod_map_comp_comp PFun.prodMap_comp_comp
 -/

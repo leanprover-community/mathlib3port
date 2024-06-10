@@ -407,7 +407,7 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
   -- Now we map everything through the linear equiv `S ≃ₗ (ι → ℤ)`,
   -- which maps `(S ⧸ I)` to `Π i, zmod (a i).nat_abs`.
   haveI : ∀ i, NeZero (a i).natAbs := fun i =>
-    ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smithCoeffs_ne_zero b I hI i)⟩
+    ⟨Int.natAbs_ne_zero (Ideal.smithCoeffs_ne_zero b I hI i)⟩
   simp_rw [fintype.card_eq.mpr ⟨(Ideal.quotientEquivPiZMod I b hI).toEquiv⟩, Fintype.card_pi,
     ZMod.card]
 #align ideal.nat_abs_det_equiv Ideal.natAbs_det_equiv

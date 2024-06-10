@@ -120,7 +120,7 @@ namespace MonoidHom
 @[to_additive]
 theorem ext_iff₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} {f g : M →* N →* P} :
     f = g ↔ ∀ x y, f x y = g x y :=
-  MonoidHom.ext_iff.trans <| forall_congr' fun _ => MonoidHom.ext_iff
+  DFunLike.ext_iff.trans <| forall_congr' fun _ => DFunLike.ext_iff
 #align monoid_hom.ext_iff₂ MonoidHom.ext_iff₂
 #align add_monoid_hom.ext_iff₂ AddMonoidHom.ext_iff₂
 -/

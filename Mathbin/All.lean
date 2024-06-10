@@ -222,7 +222,7 @@ import Algebra.GradedMulAction
 import Algebra.GroupPower.Basic
 import Algebra.Ring.Identities
 import Algebra.GroupPower.Lemmas
-import Algebra.GroupPower.Order
+import Algebra.Order.Ring.Basic
 import Algebra.GroupPower.Ring
 import Algebra.Ring.Action.Basic
 import Algebra.Ring.Action.Invariant
@@ -1774,7 +1774,7 @@ import Data.Sum.Order
 import Data.Sym.Basic
 import Data.Sym.Card
 import Data.Sym.Sym2
-import Data.Tree
+import Data.Tree.Basic
 import Data.TwoPointing
 import Data.TypeVec
 import Data.ULift
@@ -2335,7 +2335,7 @@ import NumberTheory.LegendreSymbol.Basic
 import NumberTheory.LegendreSymbol.GaussEisensteinLemmas
 import NumberTheory.LegendreSymbol.GaussSum
 import NumberTheory.LegendreSymbol.JacobiSymbol
-import NumberTheory.LegendreSymbol.MulCharacter
+import NumberTheory.MulChar.Basic
 import Tactic.NormNum.LegendreSymbol
 import NumberTheory.LegendreSymbol.QuadraticChar.Basic
 import NumberTheory.LegendreSymbol.QuadraticChar.GaussSum

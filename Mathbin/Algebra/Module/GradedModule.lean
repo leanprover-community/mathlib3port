@@ -129,7 +129,7 @@ open AddMonoidHom
 private theorem one_smul [DecidableEq ι] [GMonoid A] [Gmodule A M] (x : ⨁ i, M i) :
     (1 : ⨁ i, A i) • x = x :=
   by
-  suffices smulAddMonoidHom A M 1 = AddMonoidHom.id (⨁ i, M i) from AddMonoidHom.congr_fun this x
+  suffices smulAddMonoidHom A M 1 = AddMonoidHom.id (⨁ i, M i) from DFunLike.congr_fun this x
   apply DirectSum.addHom_ext; intro i xi
   unfold One.one
   rw [smul_add_monoid_hom_apply_of_of]
@@ -147,8 +147,8 @@ private theorem mul_smul [DecidableEq ι] [GSemiring A] [Gmodule A M] (a b : ⨁
       (AddMonoidHom.compHom AddMonoidHom.flipHom <|
           (smulAddMonoidHom A M).flip.compHom.comp <| smulAddMonoidHom A M).flip
     from-- `λ a b c, a • (b • c)` as a bundled hom
-      AddMonoidHom.congr_fun
-      (AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b) c
+      DFunLike.congr_fun
+      (DFunLike.congr_fun (DFunLike.congr_fun this a) b) c
   ext ai ax bi bx ci cx : 6
   dsimp only [coe_comp, Function.comp_apply, comp_hom_apply_apply, flip_apply, flip_hom_apply]
   rw [smul_add_monoid_hom_apply_of_of, smul_add_monoid_hom_apply_of_of, DirectSum.mulHom_of_of,

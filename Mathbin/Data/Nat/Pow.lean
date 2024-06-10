@@ -3,7 +3,7 @@ Copyright (c) 2014 Floris van Doorn (c) 2016 Microsoft Corporation. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
-import Algebra.GroupPower.Order
+import Algebra.Order.Ring.Basic
 
 #align_import data.nat.pow from "leanprover-community/mathlib"@"55d224c38461be1e8e4363247dd110137c24a4ff"
 

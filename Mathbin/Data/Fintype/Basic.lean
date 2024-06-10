@@ -462,7 +462,7 @@ instance decidableEqEmbeddingFintype [DecidableEq β] [Fintype α] : DecidableEq
 #print FunLike.toDecidableEq /-
 @[to_additive]
 instance toDecidableEq [DecidableEq β] [Fintype α] [One α] [One β] : DecidableEq (OneHom α β) :=
-  fun a b => decidable_of_iff ((a : α → β) = b) (Injective.eq_iff OneHom.coe_inj)
+  fun a b => decidable_of_iff ((a : α → β) = b) (Injective.eq_iff DFunLike.coe_injective)
 #align fintype.decidable_eq_one_hom_fintype FunLike.toDecidableEq
 #align fintype.decidable_eq_one_hom_fintype FunLike.toDecidableEq
 -/
@@ -472,7 +472,7 @@ Case conversion may be inaccurate. Consider using '#align fintype.decidable_eq_m
 #print FunLike.toDecidableEq /-
 @[to_additive]
 instance toDecidableEq [DecidableEq β] [Fintype α] [Mul α] [Mul β] : DecidableEq (α →ₙ* β) :=
-  fun a b => decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MulHom.coe_inj)
+  fun a b => decidable_of_iff ((a : α → β) = b) (Injective.eq_iff DFunLike.coe_injective)
 #align fintype.decidable_eq_mul_hom_fintype FunLike.toDecidableEq
 #align fintype.decidable_eq_one_hom_fintype FunLike.toDecidableEq
 -/
@@ -483,7 +483,7 @@ Case conversion may be inaccurate. Consider using '#align fintype.decidable_eq_m
 @[to_additive]
 instance toDecidableEq [DecidableEq β] [Fintype α] [MulOneClass α] [MulOneClass β] :
     DecidableEq (α →* β) := fun a b =>
-  decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MonoidHom.coe_inj)
+  decidable_of_iff ((a : α → β) = b) (Injective.eq_iff DFunLike.coe_injective)
 #align fintype.decidable_eq_monoid_hom_fintype FunLike.toDecidableEq
 #align fintype.decidable_eq_one_hom_fintype FunLike.toDecidableEq
 -/
@@ -493,7 +493,7 @@ Case conversion may be inaccurate. Consider using '#align fintype.decidable_eq_m
 #print FunLike.toDecidableEq /-
 instance toDecidableEq [DecidableEq β] [Fintype α] [MulZeroOneClass α] [MulZeroOneClass β] :
     DecidableEq (α →*₀ β) := fun a b =>
-  decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MonoidWithZeroHom.coe_inj)
+  decidable_of_iff ((a : α → β) = b) (Injective.eq_iff DFunLike.coe_injective)
 #align fintype.decidable_eq_monoid_with_zero_hom_fintype FunLike.toDecidableEq
 -/
 

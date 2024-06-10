@@ -333,7 +333,7 @@ theorem homogeneousComponent_zero : homogeneousComponent 0 φ = C (coeff 0 φ) :
     classical simp only [coeff_homogeneous_component, sum_eq_zero_iff, Finsupp.zero_apply, if_true,
       coeff_C, eq_self_iff_true, forall_true_iff]
   · rw [coeff_homogeneous_component, if_neg, coeff_C, if_neg (Ne.symm hd)]
-    simp only [Finsupp.ext_iff, Finsupp.zero_apply] at hd
+    simp only [DFunLike.ext_iff, Finsupp.zero_apply] at hd
     simp [hd]
 #align mv_polynomial.homogeneous_component_zero MvPolynomial.homogeneousComponent_zero
 -/

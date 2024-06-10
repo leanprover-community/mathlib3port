@@ -72,7 +72,7 @@ like `ℤ`-algebra of extension degree `≥ 1` and would be completely independe
 whether something is a `ℚ`-algebra or not (e.g. `ℚ[X]` would satisfy it but `ℚ` wouldn't).
 -/
 class MixedCharZero (p : ℕ) : Prop where
-  [to_charZero : CharZero R]
+  [toCharZero : CharZero R]
   charP_quotient : ∃ I : Ideal R, I ≠ ⊤ ∧ CharP (R ⧸ I) p
 #align mixed_char_zero MixedCharZero
 -/

@@ -936,7 +936,7 @@ theorem forall_eq_iff_forall_eq : (∀ f g : R[X], f = g) ↔ ∀ a b : R, a = b
 
 #print Polynomial.ext_iff /-
 theorem ext_iff {p q : R[X]} : p = q ↔ ∀ n, coeff p n = coeff q n := by rcases p with ⟨⟩;
-  rcases q with ⟨⟩; simp [coeff, Finsupp.ext_iff]
+  rcases q with ⟨⟩; simp [coeff, DFunLike.ext_iff]
 #align polynomial.ext_iff Polynomial.ext_iff
 -/
 
@@ -973,7 +973,7 @@ theorem addHom_ext {M : Type _} [AddMonoid M] {f g : R[X] →+ M}
 @[ext]
 theorem addHom_ext' {M : Type _} [AddMonoid M] {f g : R[X] →+ M}
     (h : ∀ n, f.comp (monomial n).toAddMonoidHom = g.comp (monomial n).toAddMonoidHom) : f = g :=
-  addHom_ext fun n => AddMonoidHom.congr_fun (h n)
+  addHom_ext fun n => DFunLike.congr_fun (h n)
 #align polynomial.add_hom_ext' Polynomial.addHom_ext'
 -/
 

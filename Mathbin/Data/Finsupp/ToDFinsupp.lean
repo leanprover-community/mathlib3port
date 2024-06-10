@@ -144,14 +144,14 @@ theorem DFinsupp.toFinsupp_single (i : ι) (m : M) :
 #print Finsupp.toDFinsupp_toFinsupp /-
 @[simp]
 theorem Finsupp.toDFinsupp_toFinsupp (f : ι →₀ M) : f.toDFinsupp.toFinsupp = f :=
-  Finsupp.coeFn_injective rfl
+  DFunLike.coe_injective rfl
 #align finsupp.to_dfinsupp_to_finsupp Finsupp.toDFinsupp_toFinsupp
 -/
 
 #print DFinsupp.toFinsupp_toDFinsupp /-
 @[simp]
 theorem DFinsupp.toFinsupp_toDFinsupp (f : Π₀ i : ι, M) : f.toFinsupp.toDFinsupp = f :=
-  DFinsupp.coeFn_injective rfl
+  DFunLike.coe_injective rfl
 #align dfinsupp.to_finsupp_to_dfinsupp DFinsupp.toFinsupp_toDFinsupp
 -/
 
@@ -169,7 +169,7 @@ namespace Finsupp
 #print Finsupp.toDFinsupp_zero /-
 @[simp]
 theorem toDFinsupp_zero [Zero M] : (0 : ι →₀ M).toDFinsupp = 0 :=
-  DFinsupp.coeFn_injective rfl
+  DFunLike.coe_injective rfl
 #align finsupp.to_dfinsupp_zero Finsupp.toDFinsupp_zero
 -/
 
@@ -177,14 +177,14 @@ theorem toDFinsupp_zero [Zero M] : (0 : ι →₀ M).toDFinsupp = 0 :=
 @[simp]
 theorem toDFinsupp_add [AddZeroClass M] (f g : ι →₀ M) :
     (f + g).toDFinsupp = f.toDFinsupp + g.toDFinsupp :=
-  DFinsupp.coeFn_injective rfl
+  DFunLike.coe_injective rfl
 #align finsupp.to_dfinsupp_add Finsupp.toDFinsupp_add
 -/
 
 #print Finsupp.toDFinsupp_neg /-
 @[simp]
 theorem toDFinsupp_neg [AddGroup M] (f : ι →₀ M) : (-f).toDFinsupp = -f.toDFinsupp :=
-  DFinsupp.coeFn_injective rfl
+  DFunLike.coe_injective rfl
 #align finsupp.to_dfinsupp_neg Finsupp.toDFinsupp_neg
 -/
 
@@ -192,7 +192,7 @@ theorem toDFinsupp_neg [AddGroup M] (f : ι →₀ M) : (-f).toDFinsupp = -f.toD
 @[simp]
 theorem toDFinsupp_sub [AddGroup M] (f g : ι →₀ M) :
     (f - g).toDFinsupp = f.toDFinsupp - g.toDFinsupp :=
-  DFinsupp.coeFn_injective rfl
+  DFunLike.coe_injective rfl
 #align finsupp.to_dfinsupp_sub Finsupp.toDFinsupp_sub
 -/
 
@@ -200,7 +200,7 @@ theorem toDFinsupp_sub [AddGroup M] (f g : ι →₀ M) :
 @[simp]
 theorem toDFinsupp_smul [Monoid R] [AddMonoid M] [DistribMulAction R M] (r : R) (f : ι →₀ M) :
     (r • f).toDFinsupp = r • f.toDFinsupp :=
-  DFinsupp.coeFn_injective rfl
+  DFunLike.coe_injective rfl
 #align finsupp.to_dfinsupp_smul Finsupp.toDFinsupp_smul
 -/
 
@@ -213,7 +213,7 @@ variable [DecidableEq ι]
 #print DFinsupp.toFinsupp_zero /-
 @[simp]
 theorem toFinsupp_zero [Zero M] [∀ m : M, Decidable (m ≠ 0)] : toFinsupp 0 = (0 : ι →₀ M) :=
-  Finsupp.coeFn_injective rfl
+  DFunLike.coe_injective rfl
 #align dfinsupp.to_finsupp_zero DFinsupp.toFinsupp_zero
 -/
 
@@ -221,7 +221,7 @@ theorem toFinsupp_zero [Zero M] [∀ m : M, Decidable (m ≠ 0)] : toFinsupp 0 =
 @[simp]
 theorem toFinsupp_add [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
     (toFinsupp (f + g) : ι →₀ M) = toFinsupp f + toFinsupp g :=
-  Finsupp.coeFn_injective <| DFinsupp.coe_add _ _
+  DFunLike.coe_injective <| DFinsupp.coe_add _ _
 #align dfinsupp.to_finsupp_add DFinsupp.toFinsupp_add
 -/
 
@@ -229,7 +229,7 @@ theorem toFinsupp_add [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] (f g : �
 @[simp]
 theorem toFinsupp_neg [AddGroup M] [∀ m : M, Decidable (m ≠ 0)] (f : Π₀ i : ι, M) :
     (toFinsupp (-f) : ι →₀ M) = -toFinsupp f :=
-  Finsupp.coeFn_injective <| DFinsupp.coe_neg _
+  DFunLike.coe_injective <| DFinsupp.coe_neg _
 #align dfinsupp.to_finsupp_neg DFinsupp.toFinsupp_neg
 -/
 
@@ -237,7 +237,7 @@ theorem toFinsupp_neg [AddGroup M] [∀ m : M, Decidable (m ≠ 0)] (f : Π₀ i
 @[simp]
 theorem toFinsupp_sub [AddGroup M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
     (toFinsupp (f - g) : ι →₀ M) = toFinsupp f - toFinsupp g :=
-  Finsupp.coeFn_injective <| DFinsupp.coe_sub _ _
+  DFunLike.coe_injective <| DFinsupp.coe_sub _ _
 #align dfinsupp.to_finsupp_sub DFinsupp.toFinsupp_sub
 -/
 
@@ -245,7 +245,7 @@ theorem toFinsupp_sub [AddGroup M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀
 @[simp]
 theorem toFinsupp_smul [Monoid R] [AddMonoid M] [DistribMulAction R M] [∀ m : M, Decidable (m ≠ 0)]
     (r : R) (f : Π₀ i : ι, M) : (toFinsupp (r • f) : ι →₀ M) = r • toFinsupp f :=
-  Finsupp.coeFn_injective <| DFinsupp.coe_smul _ _
+  DFunLike.coe_injective <| DFinsupp.coe_smul _ _
 #align dfinsupp.to_finsupp_smul DFinsupp.toFinsupp_smul
 -/
 

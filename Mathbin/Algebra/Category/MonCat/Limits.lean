@@ -99,7 +99,7 @@ def limitCone (F : J ⥤ MonCat.{max v u}) : Cone F
   π :=
     { app := limitπMonoidHom F
       naturality' := fun j j' f =>
-        MonoidHom.coe_inj ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
+        DFunLike.coe_injective ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
 #align Mon.has_limits.limit_cone MonCat.HasLimits.limitCone
 #align AddMon.has_limits.limit_cone AddMonCat.HasLimits.limitCone
 -/

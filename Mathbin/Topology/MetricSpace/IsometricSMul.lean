@@ -587,13 +587,13 @@ variable {Y : Type _} [PseudoEMetricSpace X] [PseudoEMetricSpace Y] [SMul M X] [
 
 @[to_additive]
 instance [SMul M Y] [IsometricSMul M Y] : IsometricSMul M (X × Y) :=
-  ⟨fun c => (isometry_smul X c).Prod_map (isometry_smul Y c)⟩
+  ⟨fun c => (isometry_smul X c).map_apply (isometry_smul Y c)⟩
 
 #print Prod.isometricSMul' /-
 @[to_additive]
 instance Prod.isometricSMul' {N} [Mul M] [PseudoEMetricSpace M] [IsometricSMul M M] [Mul N]
     [PseudoEMetricSpace N] [IsometricSMul N N] : IsometricSMul (M × N) (M × N) :=
-  ⟨fun c => (isometry_smul M c.1).Prod_map (isometry_smul N c.2)⟩
+  ⟨fun c => (isometry_smul M c.1).map_apply (isometry_smul N c.2)⟩
 #align prod.has_isometric_smul' Prod.isometricSMul'
 #align prod.has_isometric_vadd' Prod.isometricVAdd'
 -/
@@ -602,7 +602,7 @@ instance Prod.isometricSMul' {N} [Mul M] [PseudoEMetricSpace M] [IsometricSMul M
 @[to_additive]
 instance Prod.isometricSMul'' {N} [Mul M] [PseudoEMetricSpace M] [IsometricSMul Mᵐᵒᵖ M] [Mul N]
     [PseudoEMetricSpace N] [IsometricSMul Nᵐᵒᵖ N] : IsometricSMul (M × N)ᵐᵒᵖ (M × N) :=
-  ⟨fun c => (isometry_mul_right c.unop.1).Prod_map (isometry_mul_right c.unop.2)⟩
+  ⟨fun c => (isometry_mul_right c.unop.1).map_apply (isometry_mul_right c.unop.2)⟩
 #align prod.has_isometric_smul'' Prod.isometricSMul''
 #align prod.has_isometric_vadd'' Prod.isometricVAdd''
 -/

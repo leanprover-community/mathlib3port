@@ -69,19 +69,23 @@ protected theorem IsLowerSet.cthickening' (hs : IsLowerSet s) (ε : ℝ) :
 #align is_lower_set.cthickening IsLowerSet.cthickening
 -/
 
-@[to_additive upper_closure_interior_subset]
+#print upperClosure_interior_subset' /-
+@[to_additive upperClosure_interior_subset]
 theorem upperClosure_interior_subset' (s : Set α) :
     (upperClosure (interior s) : Set α) ⊆ interior (upperClosure s) :=
   upperClosure_min (interior_mono subset_upperClosure) (upperClosure s).upper.interior
 #align upper_closure_interior_subset' upperClosure_interior_subset'
-#align upper_closure_interior_subset upper_closure_interior_subset
+#align upper_closure_interior_subset upperClosure_interior_subset
+-/
 
-@[to_additive lower_closure_interior_subset]
-theorem lower_closure_interior_subset' (s : Set α) :
+#print lowerClosure_interior_subset' /-
+@[to_additive lowerClosure_interior_subset]
+theorem lowerClosure_interior_subset' (s : Set α) :
     (upperClosure (interior s) : Set α) ⊆ interior (upperClosure s) :=
   upperClosure_min (interior_mono subset_upperClosure) (upperClosure s).upper.interior
-#align lower_closure_interior_subset' lower_closure_interior_subset'
-#align lower_closure_interior_subset lower_closure_interior_subset
+#align lower_closure_interior_subset' lowerClosure_interior_subset'
+#align lower_closure_interior_subset lowerClosure_interior_subset
+-/
 
 end NormedOrderedGroup
 
@@ -143,43 +147,57 @@ section Fintype
 
 variable [Fintype ι] {s t : Set (ι → ℝ)} {a₁ a₂ b₁ b₂ x y : ι → ℝ} {δ : ℝ}
 
+#print dist_inf_sup_pi /-
 -- TODO: Generalise those lemmas so that they also apply to `ℝ` and `euclidean_space ι ℝ`
-theorem dist_inf_sup (x y : ι → ℝ) : dist (x ⊓ y) (x ⊔ y) = dist x y :=
+theorem dist_inf_sup_pi (x y : ι → ℝ) : dist (x ⊓ y) (x ⊔ y) = dist x y :=
   by
   refine' congr_arg coe (Finset.sup_congr rfl fun i _ => _)
   simp only [Real.nndist_eq', sup_eq_max, inf_eq_min, max_sub_min_eq_abs, Pi.inf_apply,
     Pi.sup_apply, Real.nnabs_of_nonneg, abs_nonneg, Real.toNNReal_abs]
-#align dist_inf_sup dist_inf_sup
+#align dist_inf_sup dist_inf_sup_pi
+-/
 
-theorem dist_mono_left : MonotoneOn (fun x => dist x y) (Ici y) :=
+#print dist_mono_left_pi /-
+theorem dist_mono_left_pi : MonotoneOn (fun x => dist x y) (Ici y) :=
   by
   refine' fun y₁ hy₁ y₂ hy₂ hy => NNReal.coe_le_coe.2 (Finset.sup_mono_fun fun i _ => _)
   rw [Real.nndist_eq, Real.nnabs_of_nonneg (sub_nonneg_of_le (‹y ≤ _› i : y i ≤ y₁ i)),
     Real.nndist_eq, Real.nnabs_of_nonneg (sub_nonneg_of_le (‹y ≤ _› i : y i ≤ y₂ i))]
   exact Real.toNNReal_mono (sub_le_sub_right (hy _) _)
-#align dist_mono_left dist_mono_left
+#align dist_mono_left dist_mono_left_pi
+-/
 
-theorem dist_mono_right : MonotoneOn (dist x) (Ici x) := by
-  simpa only [dist_comm] using dist_mono_left
-#align dist_mono_right dist_mono_right
+#print dist_mono_right_pi /-
+theorem dist_mono_right_pi : MonotoneOn (dist x) (Ici x) := by
+  simpa only [dist_comm] using dist_mono_left_pi
+#align dist_mono_right dist_mono_right_pi
+-/
 
-theorem dist_anti_left : AntitoneOn (fun x => dist x y) (Iic y) :=
+#print dist_anti_left_pi /-
+theorem dist_anti_left_pi : AntitoneOn (fun x => dist x y) (Iic y) :=
   by
   refine' fun y₁ hy₁ y₂ hy₂ hy => NNReal.coe_le_coe.2 (Finset.sup_mono_fun fun i _ => _)
   rw [Real.nndist_eq', Real.nnabs_of_nonneg (sub_nonneg_of_le (‹_ ≤ y› i : y₂ i ≤ y i)),
     Real.nndist_eq', Real.nnabs_of_nonneg (sub_nonneg_of_le (‹_ ≤ y› i : y₁ i ≤ y i))]
   exact Real.toNNReal_mono (sub_le_sub_left (hy _) _)
-#align dist_anti_left dist_anti_left
+#align dist_anti_left dist_anti_left_pi
+-/
 
-theorem dist_anti_right : AntitoneOn (dist x) (Iic x) := by
-  simpa only [dist_comm] using dist_anti_left
-#align dist_anti_right dist_anti_right
+#print dist_anti_right_pi /-
+theorem dist_anti_right_pi : AntitoneOn (dist x) (Iic x) := by
+  simpa only [dist_comm] using dist_anti_left_pi
+#align dist_anti_right dist_anti_right_pi
+-/
 
-theorem dist_le_dist_of_le (ha : a₂ ≤ a₁) (h₁ : a₁ ≤ b₁) (hb : b₁ ≤ b₂) : dist a₁ b₁ ≤ dist a₂ b₂ :=
-  (dist_mono_right h₁ (h₁.trans hb) hb).trans <|
-    dist_anti_left (ha.trans <| h₁.trans hb) (h₁.trans hb) ha
-#align dist_le_dist_of_le dist_le_dist_of_le
+#print dist_le_dist_of_le_pi /-
+theorem dist_le_dist_of_le_pi (ha : a₂ ≤ a₁) (h₁ : a₁ ≤ b₁) (hb : b₁ ≤ b₂) :
+    dist a₁ b₁ ≤ dist a₂ b₂ :=
+  (dist_mono_right_pi h₁ (h₁.trans hb) hb).trans <|
+    dist_anti_left_pi (ha.trans <| h₁.trans hb) (h₁.trans hb) ha
+#align dist_le_dist_of_le dist_le_dist_of_le_pi
+-/
 
+#print Bornology.IsBounded.bddBelow /-
 protected theorem Bornology.IsBounded.bddBelow : Bounded s → BddBelow s :=
   by
   rintro ⟨r, hr⟩
@@ -190,7 +208,9 @@ protected theorem Bornology.IsBounded.bddBelow : Bounded s → BddBelow s :=
       ⟨x - const _ r, fun y hy i =>
         sub_le_comm.1 (abs_sub_le_iff.1 <| (dist_le_pi_dist _ _ _).trans <| hr _ hx _ hy).1⟩
 #align metric.bounded.bdd_below Bornology.IsBounded.bddBelow
+-/
 
+#print Bornology.IsBounded.bddAbove /-
 protected theorem Bornology.IsBounded.bddAbove : Bounded s → BddAbove s :=
   by
   rintro ⟨r, hr⟩
@@ -202,30 +222,41 @@ protected theorem Bornology.IsBounded.bddAbove : Bounded s → BddAbove s :=
         sub_le_iff_le_add'.1 <|
           (abs_sub_le_iff.1 <| (dist_le_pi_dist _ _ _).trans <| hr _ hx _ hy).2⟩
 #align metric.bounded.bdd_above Bornology.IsBounded.bddAbove
+-/
 
+#print BddBelow.isBounded /-
 protected theorem BddBelow.isBounded : BddBelow s → BddAbove s → Bounded s :=
   by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   refine' ⟨dist a b, fun x hx y hy => _⟩
-  rw [← dist_inf_sup]
-  exact dist_le_dist_of_le (le_inf (ha hx) <| ha hy) inf_le_sup (sup_le (hb hx) <| hb hy)
+  rw [← dist_inf_sup_pi]
+  exact dist_le_dist_of_le_pi (le_inf (ha hx) <| ha hy) inf_le_sup (sup_le (hb hx) <| hb hy)
 #align bdd_below.bounded BddBelow.isBounded
+-/
 
+#print BddAbove.isBounded /-
 protected theorem BddAbove.isBounded : BddAbove s → BddBelow s → Bounded s :=
   flip BddBelow.isBounded
 #align bdd_above.bounded BddAbove.isBounded
+-/
 
+#print isBounded_iff_bddBelow_bddAbove /-
 theorem isBounded_iff_bddBelow_bddAbove : Bounded s ↔ BddBelow s ∧ BddAbove s :=
   ⟨fun h => ⟨h.BddBelow, h.BddAbove⟩, fun h => h.1.Bounded h.2⟩
 #align bounded_iff_bdd_below_bdd_above isBounded_iff_bddBelow_bddAbove
+-/
 
+#print BddBelow.isBounded_inter /-
 theorem BddBelow.isBounded_inter (hs : BddBelow s) (ht : BddAbove t) : Bounded (s ∩ t) :=
   (hs.mono <| inter_subset_left _ _).Bounded <| ht.mono <| inter_subset_right _ _
 #align bdd_below.bounded_inter BddBelow.isBounded_inter
+-/
 
+#print BddAbove.isBounded_inter /-
 theorem BddAbove.isBounded_inter (hs : BddAbove s) (ht : BddBelow t) : Bounded (s ∩ t) :=
   (hs.mono <| inter_subset_left _ _).Bounded <| ht.mono <| inter_subset_right _ _
 #align bdd_above.bounded_inter BddAbove.isBounded_inter
+-/
 
 #print IsUpperSet.exists_subset_ball /-
 theorem IsUpperSet.exists_subset_ball (hs : IsUpperSet s) (hx : x ∈ closure s) (hδ : 0 < δ) :
@@ -297,7 +328,8 @@ are comparable and both in the closure/frontier.
 -/
 
 
-protected theorem IsClosed.upperClosure (hs : IsClosed s) (hs' : BddBelow s) :
+#print IsClosed.upperClosure_pi /-
+protected theorem IsClosed.upperClosure_pi (hs : IsClosed s) (hs' : BddBelow s) :
     IsClosed (upperClosure s : Set (ι → ℝ)) :=
   by
   cases nonempty_fintype ι
@@ -310,9 +342,11 @@ protected theorem IsClosed.upperClosure (hs : IsClosed s) (hs' : BddBelow s) :
   exact
     ⟨b, closure_minimal (inter_subset_left _ _) hs hb,
       le_of_tendsto_of_tendsto' hbf (hx.comp hφ.tendsto_at_top) fun _ => hgf _⟩
-#align is_closed.upper_closure IsClosed.upperClosure
+#align is_closed.upper_closure IsClosed.upperClosure_pi
+-/
 
-protected theorem IsClosed.lowerClosure (hs : IsClosed s) (hs' : BddAbove s) :
+#print IsClosed.lowerClosure_pi /-
+protected theorem IsClosed.lowerClosure_pi (hs : IsClosed s) (hs' : BddAbove s) :
     IsClosed (lowerClosure s : Set (ι → ℝ)) :=
   by
   cases nonempty_fintype ι
@@ -326,31 +360,40 @@ protected theorem IsClosed.lowerClosure (hs : IsClosed s) (hs' : BddAbove s) :
   exact
     ⟨b, closure_minimal (inter_subset_left _ _) hs hb,
       le_of_tendsto_of_tendsto' (hx.comp hφ.tendsto_at_top) hbf fun _ => hfg _⟩
-#align is_closed.lower_closure IsClosed.lowerClosure
+#align is_closed.lower_closure IsClosed.lowerClosure_pi
+-/
 
-protected theorem IsClopen.upperClosure (hs : IsClopen s) (hs' : BddBelow s) :
+#print IsClopen.upperClosure_pi /-
+protected theorem IsClopen.upperClosure_pi (hs : IsClopen s) (hs' : BddBelow s) :
     IsClopen (upperClosure s : Set (ι → ℝ)) :=
   ⟨hs.1.upperClosure, hs.2.upperClosure hs'⟩
-#align is_clopen.upper_closure IsClopen.upperClosure
+#align is_clopen.upper_closure IsClopen.upperClosure_pi
+-/
 
-protected theorem IsClopen.lowerClosure (hs : IsClopen s) (hs' : BddAbove s) :
+#print IsClopen.lowerClosure_pi /-
+protected theorem IsClopen.lowerClosure_pi (hs : IsClopen s) (hs' : BddAbove s) :
     IsClopen (lowerClosure s : Set (ι → ℝ)) :=
   ⟨hs.1.lowerClosure, hs.2.lowerClosure hs'⟩
-#align is_clopen.lower_closure IsClopen.lowerClosure
+#align is_clopen.lower_closure IsClopen.lowerClosure_pi
+-/
 
-theorem closure_upperClosure_comm (hs : BddBelow s) :
+#print closure_upperClosure_comm_pi /-
+theorem closure_upperClosure_comm_pi (hs : BddBelow s) :
     closure (upperClosure s : Set (ι → ℝ)) = upperClosure (closure s) :=
   (closure_minimal (upperClosure_anti subset_closure) <|
         isClosed_closure.upperClosure hs.closure).antisymm <|
     upperClosure_min (closure_mono subset_upperClosure) (upperClosure s).upper.closure
-#align closure_upper_closure_comm closure_upperClosure_comm
+#align closure_upper_closure_comm closure_upperClosure_comm_pi
+-/
 
-theorem closure_lowerClosure_comm (hs : BddAbove s) :
+#print closure_lowerClosure_comm_pi /-
+theorem closure_lowerClosure_comm_pi (hs : BddAbove s) :
     closure (lowerClosure s : Set (ι → ℝ)) = lowerClosure (closure s) :=
   (closure_minimal (lowerClosure_mono subset_closure) <|
         isClosed_closure.lowerClosure hs.closure).antisymm <|
     lowerClosure_min (closure_mono subset_lowerClosure) (lowerClosure s).lower.closure
-#align closure_lower_closure_comm closure_lowerClosure_comm
+#align closure_lower_closure_comm closure_lowerClosure_comm_pi
+-/
 
 end Finite
 

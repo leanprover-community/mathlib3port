@@ -832,13 +832,15 @@ theorem map_list_prod {F : Type _} [MonoidHomClass F M N] (f : F) (l : List M) :
 
 namespace MonoidHom
 
-#print MonoidHom.map_list_prod /-
+/- warning: monoid_hom.map_list_prod clashes with map_list_prod -> map_list_prod
+Case conversion may be inaccurate. Consider using '#align monoid_hom.map_list_prod map_list_prodₓ'. -/
+#print map_list_prod /-
 /-- Deprecated, use `_root_.map_list_prod` instead. -/
 @[to_additive "Deprecated, use `_root_.map_list_sum` instead."]
 protected theorem map_list_prod (f : M →* N) (l : List M) : f l.Prod = (l.map f).Prod :=
   map_list_prod f l
-#align monoid_hom.map_list_prod MonoidHom.map_list_prod
-#align add_monoid_hom.map_list_sum AddMonoidHom.map_list_sum
+#align monoid_hom.map_list_prod map_list_prod
+#align map_list_sum map_list_sum
 -/
 
 end MonoidHom

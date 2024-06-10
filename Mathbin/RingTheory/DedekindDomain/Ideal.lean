@@ -1048,10 +1048,10 @@ theorem lcm_eq_inf (I J : Ideal A) : lcm I J = I ⊓ J :=
 #align ideal.lcm_eq_inf Ideal.lcm_eq_inf
 -/
 
-#print Ideal.inf_eq_mul_of_coprime /-
-theorem inf_eq_mul_of_coprime {I J : Ideal A} (coprime : I ⊔ J = ⊤) : I ⊓ J = I * J := by
+#print Ideal.inf_eq_mul_of_isCoprime /-
+theorem inf_eq_mul_of_isCoprime {I J : Ideal A} (coprime : I ⊔ J = ⊤) : I ⊓ J = I * J := by
   rw [← associated_iff_eq.mp (gcd_mul_lcm I J), lcm_eq_inf I J, gcd_eq_sup, coprime, top_mul]
-#align ideal.inf_eq_mul_of_coprime Ideal.inf_eq_mul_of_coprime
+#align ideal.inf_eq_mul_of_coprime Ideal.inf_eq_mul_of_isCoprime
 -/
 
 end Ideal
@@ -1621,7 +1621,7 @@ theorem IsDedekindDomain.quotientEquivPiFactors_mk {I : Ideal R} (hI : I ≠ ⊥
 /-- **Chinese remainder theorem**, specialized to two ideals. -/
 noncomputable def Ideal.quotientMulEquivQuotientProd (I J : Ideal R) (coprime : I ⊔ J = ⊤) :
     R ⧸ I * J ≃+* (R ⧸ I) × R ⧸ J :=
-  RingEquiv.trans (Ideal.quotEquivOfEq (inf_eq_mul_of_coprime coprime).symm)
+  RingEquiv.trans (Ideal.quotEquivOfEq (inf_eq_mul_of_isCoprime coprime).symm)
     (Ideal.quotientInfEquivQuotientProd I J coprime)
 #align ideal.quotient_mul_equiv_quotient_prod Ideal.quotientMulEquivQuotientProd
 -/

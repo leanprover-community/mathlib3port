@@ -184,7 +184,7 @@ def prod (f : ContinuousMonoidHom A B) (g : ContinuousMonoidHom A C) :
 @[to_additive "Product of two continuous homomorphisms on different spaces.", simps]
 def prod_map (f : ContinuousMonoidHom A C) (g : ContinuousMonoidHom B D) :
     ContinuousMonoidHom (A × B) (C × D) :=
-  mk' (f.toMonoidHom.Prod_map g.toMonoidHom) (f.continuous_toFun.Prod_map g.continuous_toFun)
+  mk' (f.toMonoidHom.map_apply g.toMonoidHom) (f.continuous_toFun.map_apply g.continuous_toFun)
 #align continuous_monoid_hom.prod_map ContinuousMonoidHom.prod_map
 #align continuous_add_monoid_hom.sum_map ContinuousAddMonoidHom.sum_map
 -/
@@ -292,7 +292,7 @@ variable {A B C D E}
 @[to_additive "Coproduct of two continuous homomorphisms to the same space.", simps]
 def coprod (f : ContinuousMonoidHom A E) (g : ContinuousMonoidHom B E) :
     ContinuousMonoidHom (A × B) E :=
-  (mul E).comp (f.Prod_map g)
+  (mul E).comp (f.map_apply g)
 #align continuous_monoid_hom.coprod ContinuousMonoidHom.coprod
 #align continuous_add_monoid_hom.coprod ContinuousAddMonoidHom.coprod
 -/

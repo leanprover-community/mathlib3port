@@ -176,7 +176,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_map.continu
 /-- See also `continuous_map.continuous_eval'` -/
 @[continuity]
 theorem continuous_eval : Continuous fun p : C(α, β) × α => p.1 p.2 :=
-  continuous_eval.comp ((isometryEquivBoundedOfCompact α β).Continuous.Prod_map continuous_id)
+  continuous_eval.comp ((isometryEquivBoundedOfCompact α β).Continuous.map_apply continuous_id)
 #align continuous_map.continuous_eval ContinuousMap.continuous_eval
 -/
 

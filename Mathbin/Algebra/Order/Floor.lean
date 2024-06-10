@@ -178,11 +178,11 @@ theorem lt_floor_add_one (a : α) : a < ⌊a⌋₊ + 1 := by simpa using lt_succ
 #align nat.lt_floor_add_one Nat.lt_floor_add_one
 -/
 
-#print Nat.floor_coe /-
+#print Nat.floor_natCast /-
 @[simp]
-theorem floor_coe (n : ℕ) : ⌊(n : α)⌋₊ = n :=
+theorem floor_natCast (n : ℕ) : ⌊(n : α)⌋₊ = n :=
   eq_of_forall_le_iff fun a => by rw [le_floor_iff, Nat.cast_le]; exact n.cast_nonneg
-#align nat.floor_coe Nat.floor_coe
+#align nat.floor_coe Nat.floor_natCast
 -/
 
 #print Nat.floor_zero /-

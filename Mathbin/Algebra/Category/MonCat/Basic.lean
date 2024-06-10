@@ -58,7 +58,7 @@ abbrev AssocMonoidHom (M N : Type _) [Monoid M] [Monoid N] :=
 instance bundledHom : BundledHom AssocMonoidHom :=
   ⟨fun M N [Monoid M] [Monoid N] => @MonoidHom.toFun M N _ _, fun M [Monoid M] => @MonoidHom.id M _,
     fun M N P [Monoid M] [Monoid N] [Monoid P] => @MonoidHom.comp M N P _ _ _,
-    fun M N [Monoid M] [Monoid N] => @MonoidHom.coe_inj M N _ _⟩
+    fun M N [Monoid M] [Monoid N] => @DFunLike.coe_injective M N _ _⟩
 #align Mon.bundled_hom MonCat.bundledHom
 #align AddMon.bundled_hom AddMonCat.bundledHom
 -/

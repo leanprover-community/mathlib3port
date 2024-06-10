@@ -41,7 +41,7 @@ def ringEquivEndForget₂ (R : Type u) [Ring R] :
     intro φ; ext M x
     simp only [DistribMulAction.toAddMonoidHom_apply]
     have w :=
-      AddMonoidHom.congr_fun (φ.naturality (ModuleCat.asHomRight (LinearMap.toSpanSingleton R M x)))
+      DFunLike.congr_fun (φ.naturality (ModuleCat.asHomRight (LinearMap.toSpanSingleton R M x)))
         (1 : R)
     convert w.symm
     exact (one_smul _ _).symm
