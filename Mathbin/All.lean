@@ -2333,7 +2333,7 @@ import NumberTheory.LSeries.Basic
 import Algebra.Group.AddChar
 import NumberTheory.LegendreSymbol.Basic
 import NumberTheory.LegendreSymbol.GaussEisensteinLemmas
-import NumberTheory.LegendreSymbol.GaussSum
+import NumberTheory.GaussSum
 import NumberTheory.LegendreSymbol.JacobiSymbol
 import NumberTheory.MulChar.Basic
 import Tactic.NormNum.LegendreSymbol

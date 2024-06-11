@@ -185,20 +185,20 @@ protected def flip (F : C ⥤ D ⥤ E) : D ⥤ C ⥤ E
 
 end Functor
 
-#print CategoryTheory.map_hom_inv_app /-
+#print CategoryTheory.Iso.map_hom_inv_id_app /-
 @[simp, reassoc]
-theorem map_hom_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
+theorem CategoryTheory.Iso.map_hom_inv_id_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
     (F.map e.Hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by
   simp [← nat_trans.comp_app, ← functor.map_comp]
-#align category_theory.map_hom_inv_app CategoryTheory.map_hom_inv_app
+#align category_theory.map_hom_inv_app CategoryTheory.Iso.map_hom_inv_id_app
 -/
 
-#print CategoryTheory.map_inv_hom_app /-
+#print CategoryTheory.Iso.map_inv_hom_id_app /-
 @[simp, reassoc]
-theorem map_inv_hom_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
+theorem CategoryTheory.Iso.map_inv_hom_id_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
     (F.map e.inv).app Z ≫ (F.map e.Hom).app Z = 𝟙 _ := by
   simp [← nat_trans.comp_app, ← functor.map_comp]
-#align category_theory.map_inv_hom_app CategoryTheory.map_inv_hom_app
+#align category_theory.map_inv_hom_app CategoryTheory.Iso.map_inv_hom_id_app
 -/
 
 end CategoryTheory
