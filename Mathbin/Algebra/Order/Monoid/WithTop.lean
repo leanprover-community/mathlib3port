@@ -148,19 +148,15 @@ theorem coe_add : ((x + y : α) : WithTop α) = x + y :=
 #align with_top.coe_add WithTop.coe_add
 -/
 
-#print WithTop.coe_bit0 /-
 @[norm_cast]
 theorem coe_bit0 : ((bit0 x : α) : WithTop α) = bit0 x :=
   rfl
 #align with_top.coe_bit0 WithTop.coe_bit0
--/
 
-#print WithTop.coe_bit1 /-
 @[norm_cast]
 theorem coe_bit1 [One α] {a : α} : ((bit1 a : α) : WithTop α) = bit1 a :=
   rfl
 #align with_top.coe_bit1 WithTop.coe_bit1
--/
 
 #print WithTop.top_add /-
 @[simp]
@@ -654,17 +650,13 @@ theorem coe_add (a b : α) : ((a + b : α) : WithBot α) = a + b :=
 #align with_bot.coe_add WithBot.coe_add
 -/
 
-#print WithBot.coe_bit0 /-
 theorem coe_bit0 : ((bit0 x : α) : WithBot α) = bit0 x :=
   rfl
 #align with_bot.coe_bit0 WithBot.coe_bit0
--/
 
-#print WithBot.coe_bit1 /-
 theorem coe_bit1 [One α] {a : α} : ((bit1 a : α) : WithBot α) = bit1 a :=
   rfl
 #align with_bot.coe_bit1 WithBot.coe_bit1
--/
 
 #print WithBot.bot_add /-
 @[simp]

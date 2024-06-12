@@ -138,11 +138,9 @@ theorem add {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjo
 #align is_self_adjoint.add IsSelfAdjoint.add
 -/
 
-#print IsSelfAdjoint.bit0 /-
 theorem bit0 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit0 x) := by
   simp only [isSelfAdjoint_iff, star_bit0, hx.star_eq]
 #align is_self_adjoint.bit0 IsSelfAdjoint.bit0
--/
 
 end AddMonoid
 
@@ -232,11 +230,9 @@ section Semiring
 
 variable [Semiring R] [StarRing R]
 
-#print IsSelfAdjoint.bit1 /-
 theorem bit1 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit1 x) := by
   simp only [isSelfAdjoint_iff, star_bit1, hx.star_eq]
 #align is_self_adjoint.bit1 IsSelfAdjoint.bit1
--/
 
 #print isSelfAdjoint_natCast /-
 @[simp]
@@ -560,11 +556,9 @@ theorem star_val_eq {x : skewAdjoint R} : star (x : R) = -x :=
 instance : Inhabited (skewAdjoint R) :=
   ⟨0⟩
 
-#print skewAdjoint.bit0_mem /-
 theorem bit0_mem {x : R} (hx : x ∈ skewAdjoint R) : bit0 x ∈ skewAdjoint R := by
   rw [mem_iff, star_bit0, mem_iff.mp hx, bit0, bit0, neg_add]
 #align skew_adjoint.bit0_mem skewAdjoint.bit0_mem
--/
 
 end AddGroup
 

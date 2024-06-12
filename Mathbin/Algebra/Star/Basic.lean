@@ -517,19 +517,15 @@ theorem star_div' [Semifield R] [StarRing R] (x y : R) : star (x / y) = star x /
 #align star_div' star_div'
 -/
 
-#print star_bit0 /-
 @[simp]
 theorem star_bit0 [AddMonoid R] [StarAddMonoid R] (r : R) : star (bit0 r) = bit0 (star r) := by
   simp [bit0]
 #align star_bit0 star_bit0
--/
 
-#print star_bit1 /-
 @[simp]
 theorem star_bit1 [Semiring R] [StarRing R] (r : R) : star (bit1 r) = bit1 (star r) := by
   simp [bit1]
 #align star_bit1 star_bit1
--/
 
 #print starRingOfComm /-
 /-- Any commutative semiring admits the trivial `*`-structure.

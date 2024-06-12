@@ -268,19 +268,15 @@ theorem aeval_one : aeval x (1 : R[X]) = 1 :=
 #align polynomial.aeval_one Polynomial.aeval_one
 -/
 
-#print Polynomial.aeval_bit0 /-
 @[simp]
 theorem aeval_bit0 : aeval x (bit0 p) = bit0 (aeval x p) :=
   AlgHom.map_bit0 _ _
 #align polynomial.aeval_bit0 Polynomial.aeval_bit0
--/
 
-#print Polynomial.aeval_bit1 /-
 @[simp]
 theorem aeval_bit1 : aeval x (bit1 p) = bit1 (aeval x p) :=
   AlgHom.map_bit1 _ _
 #align polynomial.aeval_bit1 Polynomial.aeval_bit1
--/
 
 #print Polynomial.aeval_natCast /-
 @[simp]

@@ -842,7 +842,7 @@ import Tactic.CategoryTheory.BicategoryCoherence
 import CategoryTheory.Bicategory.Coherence
 import CategoryTheory.Bicategory.Free
 import CategoryTheory.Bicategory.FunctorBicategory
-import CategoryTheory.Bicategory.Functor
+import CategoryTheory.Bicategory.Functor.Oplax
 import CategoryTheory.Bicategory.LocallyDiscrete
 import CategoryTheory.Bicategory.NaturalTransformation
 import CategoryTheory.Bicategory.SingleObj

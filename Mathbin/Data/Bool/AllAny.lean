@@ -39,13 +39,13 @@ theorem all_iff_forall {p : α → Bool} : all l p ↔ ∀ a ∈ l, p a :=
   by
   induction' l with a l ih
   · exact iff_of_true rfl (forall_mem_nil _)
-  simp only [all_cons, Bool.coe_and_iff, ih, forall_mem_cons]
+  simp only [all_cons, Bool.and_eq_true_iff, ih, forall_mem_cons]
 #align list.all_iff_forall List.all_iff_forall
 -/
 
 #print List.all_iff_forall_prop /-
 theorem all_iff_forall_prop : (all l fun a => p a) ↔ ∀ a ∈ l, p a := by
-  simp only [all_iff_forall, Bool.of_decide_iff]
+  simp only [all_iff_forall, decide_eq_true_iff]
 #align list.all_iff_forall_prop List.all_iff_forall_prop
 -/
 
@@ -65,8 +65,8 @@ theorem any_cons (p : α → Bool) (a : α) (l : List α) : any (a :: l) p = (p 
 theorem any_iff_exists {p : α → Bool} : any l p ↔ ∃ a ∈ l, p a :=
   by
   induction' l with a l ih
-  · exact iff_of_false Bool.not_false' (not_exists_mem_nil _)
-  simp only [any_cons, Bool.coe_or_iff, ih, exists_mem_cons_iff]
+  · exact iff_of_false Bool.false_ne_true (not_exists_mem_nil _)
+  simp only [any_cons, Bool.or_eq_true_iff, ih, exists_mem_cons_iff]
 #align list.any_iff_exists List.any_iff_exists
 -/
 

@@ -872,17 +872,13 @@ theorem Tendsto.nsmul_atBot (hf : Tendsto f l atBot) {n : ℕ} (hn : 0 < n) :
 #align filter.tendsto.nsmul_at_bot Filter.Tendsto.nsmul_atBot
 -/
 
-#print Filter.tendsto_bit0_atTop /-
 theorem tendsto_bit0_atTop : Tendsto bit0 (atTop : Filter β) atTop :=
   tendsto_atTop_add tendsto_id tendsto_id
 #align filter.tendsto_bit0_at_top Filter.tendsto_bit0_atTop
--/
 
-#print Filter.tendsto_bit0_atBot /-
 theorem tendsto_bit0_atBot : Tendsto bit0 (atBot : Filter β) atBot :=
   tendsto_atBot_add tendsto_id tendsto_id
 #align filter.tendsto_bit0_at_bot Filter.tendsto_bit0_atBot
--/
 
 end OrderedAddCommMonoid
 
@@ -1128,11 +1124,9 @@ section StrictOrderedSemiring
 
 variable [StrictOrderedSemiring α] {l : Filter β} {f g : β → α}
 
-#print Filter.tendsto_bit1_atTop /-
 theorem tendsto_bit1_atTop : Tendsto bit1 (atTop : Filter α) atTop :=
   tendsto_atTop_add_nonneg_right tendsto_bit0_atTop fun _ => zero_le_one
 #align filter.tendsto_bit1_at_top Filter.tendsto_bit1_atTop
--/
 
 #print Filter.Tendsto.atTop_mul_atTop /-
 theorem Tendsto.atTop_mul_atTop (hf : Tendsto f l atTop) (hg : Tendsto g l atTop) :

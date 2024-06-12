@@ -3,7 +3,7 @@ Copyright (c) 2022 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
-import CategoryTheory.Bicategory.Functor
+import CategoryTheory.Bicategory.Functor.Oplax
 
 #align_import category_theory.bicategory.free from "leanprover-community/mathlib"@"33c67ae661dd8988516ff7f247b0be3018cdd952"
 

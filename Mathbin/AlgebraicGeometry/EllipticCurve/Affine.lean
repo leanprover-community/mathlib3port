@@ -1102,7 +1102,6 @@ theorem WeierstrassCurve.Affine.Point.toClass_some :
 #align weierstrass_curve.point.to_class_some WeierstrassCurve.Affine.Point.toClass_some
 -/
 
-#print WeierstrassCurve.Affine.Point.add_eq_zero /-
 @[simp]
 theorem WeierstrassCurve.Affine.Point.add_eq_zero (P Q : W.Point) : P + Q = 0 ↔ P = -Q :=
   by
@@ -1121,20 +1120,15 @@ theorem WeierstrassCurve.Affine.Point.add_eq_zero (P Q : W.Point) : P + Q = 0 �
         contradiction
     · exact fun ⟨hx, hy⟩ => some_add_some_of_Y_eq hx hy
 #align weierstrass_curve.point.add_eq_zero WeierstrassCurve.Affine.Point.add_eq_zero
--/
 
-#print WeierstrassCurve.Affine.Point.add_left_neg /-
 @[simp]
 theorem WeierstrassCurve.Affine.Point.add_left_neg (P : W.Point) : -P + P = 0 := by rw [add_eq_zero]
 #align weierstrass_curve.point.add_left_neg WeierstrassCurve.Affine.Point.add_left_neg
--/
 
-#print WeierstrassCurve.Affine.Point.neg_add_eq_zero /-
 @[simp]
 theorem WeierstrassCurve.Affine.Point.neg_add_eq_zero (P Q : W.Point) : -P + Q = 0 ↔ P = Q := by
   rw [add_eq_zero, neg_inj]
 #align weierstrass_curve.point.neg_add_eq_zero WeierstrassCurve.Affine.Point.neg_add_eq_zero
--/
 
 #print WeierstrassCurve.Affine.Point.toClass_eq_zero /-
 theorem WeierstrassCurve.Affine.Point.toClass_eq_zero (P : W.Point) :
@@ -1163,17 +1157,13 @@ theorem WeierstrassCurve.Affine.Point.toClass_injective :
 #align weierstrass_curve.point.to_class_injective WeierstrassCurve.Affine.Point.toClass_injective
 -/
 
-#print WeierstrassCurve.Affine.Point.add_comm /-
 theorem WeierstrassCurve.Affine.Point.add_comm (P Q : W.Point) : P + Q = Q + P :=
   WeierstrassCurve.Affine.Point.toClass_injective <| by simp only [map_add, add_comm]
 #align weierstrass_curve.point.add_comm WeierstrassCurve.Affine.Point.add_comm
--/
 
-#print WeierstrassCurve.Affine.Point.add_assoc /-
 theorem WeierstrassCurve.Affine.Point.add_assoc (P Q R : W.Point) : P + Q + R = P + (Q + R) :=
   WeierstrassCurve.Affine.Point.toClass_injective <| by simp only [map_add, add_assoc]
 #align weierstrass_curve.point.add_assoc WeierstrassCurve.Affine.Point.add_assoc
--/
 
 noncomputable instance : AddCommGroup W.Point
     where

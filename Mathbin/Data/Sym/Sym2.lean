@@ -747,7 +747,7 @@ theorem
         cases' y with y₁ y₂
         dsimp [ rel_bool ]
         ;
-        split_ifs <;> simp only [ false_iff_iff , Bool.coeSort_false , Bool.of_decide_iff ]
+        split_ifs <;> simp only [ false_iff_iff , Bool.coeSort_false , decide_eq_true_iff ]
         rotate_left 2
         ;
         · contrapose! h ; cases h <;> cc
@@ -788,12 +788,12 @@ def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
       have h' := (rel_bool_spec x y).mpr h
       cases' x with x₁ x₂; cases' y with y₁ y₂
       cases' mem_iff.mp hy with hy' <;> subst a <;> dsimp [rel_bool] at h' <;> split_ifs at h' <;>
-          try rw [Bool.of_decide_iff] at h'; subst x₁; subst x₂ <;>
+          try rw [decide_eq_true_iff] at h'; subst x₁; subst x₂ <;>
         dsimp [pair_other]
       simp only [Ne.symm h_1, if_true, eq_self_iff_true, if_false]
-      exfalso; exact Bool.not_false' h'
+      exfalso; exact Bool.false_ne_true h'
       simp only [h_1, if_true, eq_self_iff_true, if_false]
-      exfalso; exact Bool.not_false' h')
+      exfalso; exact Bool.false_ne_true h')
     z h
 #align sym2.mem.other' Sym2.Mem.other'
 -/

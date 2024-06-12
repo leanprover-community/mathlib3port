@@ -299,17 +299,13 @@ protected theorem map_finsupp_sum {α : Type _} [Zero α] {ι : Type _} (f : ι 
 #align alg_hom.map_finsupp_sum AlgHom.map_finsupp_sum
 -/
 
-#print AlgHom.map_bit0 /-
 protected theorem map_bit0 (x) : φ (bit0 x) = bit0 (φ x) :=
   map_bit0 _ _
 #align alg_hom.map_bit0 AlgHom.map_bit0
--/
 
-#print AlgHom.map_bit1 /-
 protected theorem map_bit1 (x) : φ (bit1 x) = bit1 (φ x) :=
   map_bit1 _ _
 #align alg_hom.map_bit1 AlgHom.map_bit1
--/
 
 #print AlgHom.mk' /-
 /-- If a `ring_hom` is `R`-linear, then it is an `alg_hom`. -/

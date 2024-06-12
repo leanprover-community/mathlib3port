@@ -161,17 +161,13 @@ theorem derivative_one : derivative (1 : R[X]) = 0 :=
 #align polynomial.derivative_one Polynomial.derivative_one
 -/
 
-#print Polynomial.derivative_bit0 /-
 @[simp]
 theorem derivative_bit0 {a : R[X]} : derivative (bit0 a) = bit0 (derivative a) := by simp [bit0]
 #align polynomial.derivative_bit0 Polynomial.derivative_bit0
--/
 
-#print Polynomial.derivative_bit1 /-
 @[simp]
 theorem derivative_bit1 {a : R[X]} : derivative (bit1 a) = bit0 (derivative a) := by simp [bit1]
 #align polynomial.derivative_bit1 Polynomial.derivative_bit1
--/
 
 #print Polynomial.derivative_add /-
 @[simp]

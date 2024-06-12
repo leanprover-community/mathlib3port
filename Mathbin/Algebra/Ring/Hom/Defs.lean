@@ -455,12 +455,10 @@ class RingHomClass (F : Type _) (α β : outParam (Type _)) [NonAssocSemiring α
 
 variable [NonAssocSemiring α] [NonAssocSemiring β] [RingHomClass F α β]
 
-#print map_bit1 /-
 /-- Ring homomorphisms preserve `bit1`. -/
 @[simp]
 theorem map_bit1 (f : F) (a : α) : (f (bit1 a) : β) = bit1 (f a) := by simp [bit1]
 #align map_bit1 map_bit1
--/
 
 instance : CoeTC F (α →+* β) :=
   ⟨fun f =>

@@ -38,18 +38,18 @@ theorem coeSort_false : coeSort.{1, 1} false = False :=
   Bool.coe_sort_false
 #align bool.coe_sort_ff Bool.coeSort_false
 
-#print Bool.decide_True /-
+#print decide_true_eq_true /-
 -- TODO: duplicate of a lemma in core
-theorem decide_True {h} : @decide True h = true :=
+theorem decide_true_eq_true {h} : @decide True h = true :=
   decide_True' h
-#align bool.to_bool_true Bool.decide_True
+#align bool.to_bool_true decide_true_eq_true
 -/
 
-#print Bool.decide_False /-
+#print decide_false_eq_false /-
 -- TODO: duplicate of a lemma in core
-theorem decide_False {h} : @decide False h = false :=
+theorem decide_false_eq_false {h} : @decide False h = false :=
   decide_False' h
-#align bool.to_bool_false Bool.decide_False
+#align bool.to_bool_false decide_false_eq_false
 -/
 
 #print Bool.decide_coe /-
@@ -59,23 +59,25 @@ theorem decide_coe (b : Bool) {h} : @decide b h = b :=
 #align bool.to_bool_coe Bool.decide_coe
 -/
 
-#print Bool.coe_decide /-
-theorem coe_decide (p : Prop) [Decidable p] : decide p ↔ p :=
+#print decide_eq_true_iff /-
+theorem decide_eq_true_iff (p : Prop) [Decidable p] : decide p ↔ p :=
   Bool.decide_iff _
-#align bool.coe_to_bool Bool.coe_decide
+#align bool.coe_to_bool decide_eq_true_iff
 -/
 
-#print Bool.of_decide_iff /-
+/- warning: bool.of_to_bool_iff clashes with bool.coe_to_bool -> decide_eq_true_iff
+Case conversion may be inaccurate. Consider using '#align bool.of_to_bool_iff decide_eq_true_iffₓ'. -/
+#print decide_eq_true_iff /-
 @[simp]
-theorem of_decide_iff {p : Prop} [Decidable p] : decide p ↔ p :=
+theorem decide_eq_true_iff {p : Prop} [Decidable p] : decide p ↔ p :=
   ⟨Bool.of_decide_true, Bool.decide_true⟩
-#align bool.of_to_bool_iff Bool.of_decide_iff
+#align bool.of_to_bool_iff decide_eq_true_iff
 -/
 
 #print true_eq_decide_iff /-
 @[simp]
 theorem true_eq_decide_iff {p : Prop} [Decidable p] : true = decide p ↔ p :=
-  eq_comm.trans of_decide_iff
+  eq_comm.trans decide_eq_true_iff
 #align bool.tt_eq_to_bool_iff true_eq_decide_iff
 -/
 
@@ -86,10 +88,10 @@ theorem false_eq_decide_iff {p : Prop} [Decidable p] : false = decide p ↔ ¬p 
 #align bool.ff_eq_to_bool_iff false_eq_decide_iff
 -/
 
-#print Bool.decide_not /-
+#print decide_not /-
 @[simp]
 theorem decide_not (p : Prop) [Decidable p] : (decide ¬p) = !decide p := by by_cases p <;> simp [*]
-#align bool.to_bool_not Bool.decide_not
+#align bool.to_bool_not decide_not
 -/
 
 #print Bool.decide_and /-
@@ -109,14 +111,14 @@ theorem decide_or (p q : Prop) [Decidable p] [Decidable q] : decide (p ∨ q) = 
 #print decide_eq_decide /-
 @[simp]
 theorem decide_eq_decide {p q : Prop} [Decidable p] [Decidable q] : decide p = decide q ↔ (p ↔ q) :=
-  ⟨fun h => (coe_decide p).symm.trans <| by simp [h], Bool.decide_congr⟩
+  ⟨fun h => (decide_eq_true_iff p).symm.trans <| by simp [h], Bool.decide_congr⟩
 #align bool.to_bool_eq decide_eq_decide
 -/
 
-#print Bool.not_false' /-
-theorem not_false' : ¬false :=
+#print Bool.false_ne_true /-
+theorem false_ne_true : ¬false :=
   false_ne_true
-#align bool.not_ff Bool.not_false'
+#align bool.not_ff Bool.false_ne_true
 -/
 
 #print Bool.default_bool /-
@@ -146,18 +148,20 @@ theorem exists_bool {p : Bool → Prop} : (∃ b, p b) ↔ p false ∨ p true :=
 #align bool.exists_bool Bool.exists_bool
 -/
 
-#print Bool.decidableForallBool /-
+#print Bool.instDecidableForallOfDecidablePred /-
 /-- If `p b` is decidable for all `b : bool`, then `∀ b, p b` is decidable -/
-instance decidableForallBool {p : Bool → Prop} [∀ b, Decidable (p b)] : Decidable (∀ b, p b) :=
+instance instDecidableForallOfDecidablePred {p : Bool → Prop} [∀ b, Decidable (p b)] :
+    Decidable (∀ b, p b) :=
   decidable_of_decidable_of_iff And.decidable forall_bool.symm
-#align bool.decidable_forall_bool Bool.decidableForallBool
+#align bool.decidable_forall_bool Bool.instDecidableForallOfDecidablePred
 -/
 
-#print Bool.decidableExistsBool /-
+#print Bool.instDecidableExistsOfDecidablePred /-
 /-- If `p b` is decidable for all `b : bool`, then `∃ b, p b` is decidable -/
-instance decidableExistsBool {p : Bool → Prop} [∀ b, Decidable (p b)] : Decidable (∃ b, p b) :=
+instance instDecidableExistsOfDecidablePred {p : Bool → Prop} [∀ b, Decidable (p b)] :
+    Decidable (∃ b, p b) :=
   decidable_of_decidable_of_iff Or.decidable exists_bool.symm
-#align bool.decidable_exists_bool Bool.decidableExistsBool
+#align bool.decidable_exists_bool Bool.instDecidableExistsOfDecidablePred
 -/
 
 #print Bool.cond_false /-
@@ -203,14 +207,16 @@ theorem coe_iff_coe : ∀ {a b : Bool}, (a ↔ b) ↔ a = b := by decide
 #align bool.coe_bool_iff Bool.coe_iff_coe
 -/
 
-#print Bool.eq_true_of_ne_false /-
+#print eq_true_of_ne_false /-
 theorem eq_true_of_ne_false : ∀ {a : Bool}, a ≠ false → a = true := by decide
-#align bool.eq_tt_of_ne_ff Bool.eq_true_of_ne_false
+#align bool.eq_tt_of_ne_ff eq_true_of_ne_false
 -/
 
-#print Bool.eq_false_of_ne_true /-
-theorem eq_false_of_ne_true : ∀ {a : Bool}, a ≠ true → a = false := by decide
-#align bool.eq_ff_of_ne_tt Bool.eq_false_of_ne_true
+/- warning: bool.eq_ff_of_ne_tt clashes with bool.eq_tt_of_ne_ff -> eq_true_of_ne_false
+Case conversion may be inaccurate. Consider using '#align bool.eq_ff_of_ne_tt eq_true_of_ne_falseₓ'. -/
+#print eq_true_of_ne_false /-
+theorem eq_true_of_ne_false : ∀ {a : Bool}, a ≠ true → a = false := by decide
+#align bool.eq_ff_of_ne_tt eq_true_of_ne_false
 -/
 
 #print Bool.or_comm /-
@@ -336,10 +342,12 @@ theorem ne_not {a b : Bool} : a ≠ !b ↔ a = b :=
 #align bool.ne_bnot Bool.ne_not
 -/
 
-#print Bool.not_ne /-
-theorem not_ne {a b : Bool} : !a ≠ b ↔ a = b :=
+/- warning: bool.bnot_ne clashes with bool.bnot_not_eq -> Bool.not_not_eq
+Case conversion may be inaccurate. Consider using '#align bool.bnot_ne Bool.not_not_eqₓ'. -/
+#print Bool.not_not_eq /-
+theorem not_not_eq {a b : Bool} : !a ≠ b ↔ a = b :=
   not_not_eq
-#align bool.bnot_ne Bool.not_ne
+#align bool.bnot_ne Bool.not_not_eq
 -/
 
 #print Bool.not_ne_self /-

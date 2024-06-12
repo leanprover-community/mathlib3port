@@ -55,13 +55,11 @@ section AddHomClass
 
 variable {F : Type _} [NonAssocSemiring α] [NonAssocSemiring β] [AddHomClass F α β]
 
-#print map_bit0 /-
 /-- Additive homomorphisms preserve `bit0`. -/
 @[simp]
 theorem map_bit0 (f : F) (a : α) : (f (bit0 a) : β) = bit0 (f a) :=
   map_add _ _ _
 #align map_bit0 map_bit0
--/
 
 end AddHomClass
 

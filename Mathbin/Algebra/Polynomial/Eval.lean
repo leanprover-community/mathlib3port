@@ -965,19 +965,15 @@ protected theorem map_natCast (n : ℕ) : (n : R[X]).map f = n :=
 #align polynomial.map_nat_cast Polynomial.map_natCast
 -/
 
-#print Polynomial.map_bit0 /-
 @[simp]
 protected theorem map_bit0 : (bit0 p).map f = bit0 (p.map f) :=
   map_bit0 (mapRingHom f) p
 #align polynomial.map_bit0 Polynomial.map_bit0
--/
 
-#print Polynomial.map_bit1 /-
 @[simp]
 protected theorem map_bit1 : (bit1 p).map f = bit1 (p.map f) :=
   map_bit1 (mapRingHom f) p
 #align polynomial.map_bit1 Polynomial.map_bit1
--/
 
 #print Polynomial.map_dvd /-
 --TODO rename to `map_dvd_map`
