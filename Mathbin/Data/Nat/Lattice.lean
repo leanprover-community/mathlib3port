@@ -151,7 +151,7 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
     le_cInf := fun s a hs hb => by
       rw [Inf_def hs] <;> exact hb (@Nat.find_spec (fun n => n ∈ s) _ _)
     cInf_le := fun s a hb ha => by rw [Inf_def ⟨a, ha⟩] <;> exact Nat.find_min' _ ha
-    csSup_empty :=
+    sSup_empty :=
       by
       simp only [Sup_def, Set.mem_empty_iff_false, forall_const, forall_prop_of_false,
         not_false_iff, exists_const]

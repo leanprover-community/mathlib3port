@@ -141,11 +141,11 @@ theorem WithTop.coe_iSup [Preorder α] [SupSet α] (f : ι → α) (h : BddAbove
 #align with_top.coe_supr WithTop.coe_iSup
 -/
 
-#print WithBot.csSup_empty /-
+#print WithBot.sSup_empty /-
 @[simp]
-theorem WithBot.csSup_empty {α : Type _} [SupSet α] : sSup (∅ : Set (WithBot α)) = ⊥ :=
+theorem WithBot.sSup_empty {α : Type _} [SupSet α] : sSup (∅ : Set (WithBot α)) = ⊥ :=
   if_pos <| Set.empty_subset _
-#align with_bot.cSup_empty WithBot.csSup_empty
+#align with_bot.cSup_empty WithBot.sSup_empty
 -/
 
 #print WithBot.ciSup_empty /-
@@ -237,7 +237,7 @@ boundedness.-/
 class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCompleteLinearOrder α,
     Bot α where
   bot_le : ∀ x : α, ⊥ ≤ x
-  csSup_empty : Sup ∅ = ⊥
+  sSup_empty : Sup ∅ = ⊥
 #align conditionally_complete_linear_order_bot ConditionallyCompleteLinearOrderBot
 -/
 
@@ -270,7 +270,7 @@ instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [Compl
 instance (priority := 100) CompleteLinearOrder.toConditionallyCompleteLinearOrderBot {α : Type _}
     [CompleteLinearOrder α] : ConditionallyCompleteLinearOrderBot α :=
   { CompleteLattice.toConditionallyCompleteLattice, ‹CompleteLinearOrder α› with
-    csSup_empty := sSup_empty }
+    sSup_empty := sSup_empty }
 #align complete_linear_order.to_conditionally_complete_linear_order_bot CompleteLinearOrder.toConditionallyCompleteLinearOrderBot
 -/
 
@@ -303,7 +303,7 @@ noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) 
       have h's : (upperBounds s).Nonempty := ⟨a, has⟩
       simp only [h's, dif_pos]
       simpa using h.wf.not_lt_min _ h's has
-    csSup_empty := by simpa using eq_bot_iff.2 (not_lt.1 <| h.wf.not_lt_min _ _ <| mem_univ ⊥) }
+    sSup_empty := by simpa using eq_bot_iff.2 (not_lt.1 <| h.wf.not_lt_min _ _ <| mem_univ ⊥) }
 #align is_well_order.conditionally_complete_linear_order_bot IsWellOrder.conditionallyCompleteLinearOrderBot
 -/
 
@@ -1784,7 +1784,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
       · show ite _ _ _ ≤ a
         split_ifs
         · rw [h] at h_1; cases h_1
-        · convert bot_le; convert WithBot.csSup_empty; rw [h]; rfl
+        · convert bot_le; convert WithBot.sSup_empty; rw [h]; rfl
         · exfalso; apply h_2; use⊥; rw [h]; rintro b ⟨⟩
       · refine' (WithTop.isLUB_sSup' h).2 ha
     inf_le := fun S a haS =>

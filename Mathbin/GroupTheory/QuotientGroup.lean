@@ -5,7 +5,7 @@ Authors: Kevin Buzzard, Patrick Massot
 
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 -/
-import GroupTheory.Congruence
+import GroupTheory.Congruence.Basic
 import GroupTheory.Coset
 import Algebra.Group.Subgroup.Finite
 import Algebra.Group.Subgroup.Pointwise

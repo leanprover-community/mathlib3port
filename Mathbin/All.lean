@@ -1893,7 +1893,7 @@ import GroupTheory.Commensurable
 import GroupTheory.Commutator
 import GroupTheory.CommutingProbability
 import GroupTheory.Complement
-import GroupTheory.Congruence
+import GroupTheory.Congruence.Basic
 import GroupTheory.Coset
 import GroupTheory.Divisible
 import GroupTheory.DoubleCoset

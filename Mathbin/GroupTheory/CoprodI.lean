@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Joachim Breitner
 -/
 import Algebra.FreeMonoid.Basic
-import GroupTheory.Congruence
+import GroupTheory.Congruence.Basic
 import GroupTheory.FreeGroup.IsFreeGroup
 import Data.List.Chain
 import SetTheory.Cardinal.Ordinal

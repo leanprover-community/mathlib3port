@@ -22,8 +22,9 @@ section LinearOrderedAddCommGroup
 
 variable [LinearOrderedAddCommGroup α] {a b c d : α}
 
-#print WithTop.linearOrderedAddCommGroupWithTop /-
-instance WithTop.linearOrderedAddCommGroupWithTop : LinearOrderedAddCommGroupWithTop (WithTop α) :=
+#print WithTop.LinearOrderedAddCommGroup.instLinearOrderedAddCommGroupWithTop /-
+instance WithTop.LinearOrderedAddCommGroup.instLinearOrderedAddCommGroupWithTop :
+    LinearOrderedAddCommGroupWithTop (WithTop α) :=
   { WithTop.linearOrderedAddCommMonoidWithTop,
     Option.nontrivial with
     neg := Option.map fun a : α => -a
@@ -32,14 +33,14 @@ instance WithTop.linearOrderedAddCommGroupWithTop : LinearOrderedAddCommGroupWit
       rintro (a | a) ha
       · exact (ha rfl).elim
       · exact with_top.coe_add.symm.trans (WithTop.coe_eq_coe.2 (add_neg_self a)) }
-#align with_top.linear_ordered_add_comm_group_with_top WithTop.linearOrderedAddCommGroupWithTop
+#align with_top.linear_ordered_add_comm_group_with_top WithTop.LinearOrderedAddCommGroup.instLinearOrderedAddCommGroupWithTop
 -/
 
-#print WithTop.coe_neg /-
+#print WithTop.LinearOrderedAddCommGroup.coe_neg /-
 @[simp, norm_cast]
-theorem WithTop.coe_neg (a : α) : ((-a : α) : WithTop α) = -a :=
+theorem WithTop.LinearOrderedAddCommGroup.coe_neg (a : α) : ((-a : α) : WithTop α) = -a :=
   rfl
-#align with_top.coe_neg WithTop.coe_neg
+#align with_top.coe_neg WithTop.LinearOrderedAddCommGroup.coe_neg
 -/
 
 end LinearOrderedAddCommGroup

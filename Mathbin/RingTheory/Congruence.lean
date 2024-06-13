@@ -6,7 +6,7 @@ Authors: Eric Wieser
 import Algebra.Ring.Action.Basic
 import Algebra.Ring.Hom.Defs
 import Algebra.Ring.InjSurj
-import GroupTheory.Congruence
+import GroupTheory.Congruence.Basic
 
 #align_import ring_theory.congruence from "leanprover-community/mathlib"@"2f39bcbc98f8255490f8d4562762c9467694c809"
 
