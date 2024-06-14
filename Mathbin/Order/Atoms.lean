@@ -78,7 +78,7 @@ theorem IsAtom.Iic (ha : IsAtom a) (hax : a ≤ x) : IsAtom (⟨a, hax⟩ : Set.
 #print IsAtom.of_isAtom_coe_Iic /-
 theorem IsAtom.of_isAtom_coe_Iic {a : Set.Iic x} (ha : IsAtom a) : IsAtom (a : α) :=
   ⟨fun con => ha.1 (Subtype.ext Con), fun b hba =>
-    Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.Prop⟩ hba)⟩
+    Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.IProp⟩ hba)⟩
 #align is_atom.of_is_atom_coe_Iic IsAtom.of_isAtom_coe_Iic
 -/
 

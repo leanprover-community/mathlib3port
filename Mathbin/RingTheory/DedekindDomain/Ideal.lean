@@ -1378,10 +1378,10 @@ def normalizedFactorsEquivOfQuotEquiv (hI : I ≠ ⊥) (hJ : J ≠ ⊥) :
     {L : Ideal R | L ∈ normalizedFactors I} ≃ {M : Ideal A | M ∈ normalizedFactors J}
     where
   toFun j :=
-    ⟨idealFactorsEquivOfQuotEquiv f ⟨↑j, dvd_of_mem_normalizedFactors j.Prop⟩,
-      idealFactorsEquivOfQuotEquiv_mem_normalizedFactors_of_mem_normalizedFactors f hJ j.Prop⟩
+    ⟨idealFactorsEquivOfQuotEquiv f ⟨↑j, dvd_of_mem_normalizedFactors j.IProp⟩,
+      idealFactorsEquivOfQuotEquiv_mem_normalizedFactors_of_mem_normalizedFactors f hJ j.IProp⟩
   invFun j :=
-    ⟨(idealFactorsEquivOfQuotEquiv f).symm ⟨↑j, dvd_of_mem_normalizedFactors j.Prop⟩,
+    ⟨(idealFactorsEquivOfQuotEquiv f).symm ⟨↑j, dvd_of_mem_normalizedFactors j.IProp⟩,
       by
       rw [idealFactorsEquivOfQuotEquiv_symm]
       exact
@@ -1596,7 +1596,7 @@ where `P i` ranges over the prime factors of `I` and `e i` over the multipliciti
 noncomputable def IsDedekindDomain.quotientEquivPiFactors {I : Ideal R} (hI : I ≠ ⊥) :
     R ⧸ I ≃+* ∀ P : (factors I).toFinset, R ⧸ (P : Ideal R) ^ (factors I).count P :=
   IsDedekindDomain.quotientEquivPiOfProdEq _ _ _
-    (fun P : (factors I).toFinset => prime_of_factor _ (Multiset.mem_toFinset.mp P.Prop))
+    (fun P : (factors I).toFinset => prime_of_factor _ (Multiset.mem_toFinset.mp P.IProp))
     (fun i j hij => Subtype.coe_injective.Ne hij)
     (calc
       ∏ P : (factors I).toFinset, (P : Ideal R) ^ (factors I).count (P : Ideal R) =
@@ -1759,7 +1759,7 @@ noncomputable def normalizedFactorsEquivSpanNormalizedFactors {r : R} (hr : r �
       {I : Ideal R | I ∈ normalizedFactors (Ideal.span ({r} : Set R))} :=
   Equiv.ofBijective
     (fun d =>
-      ⟨Ideal.span {↑d}, singleton_span_mem_normalizedFactors_of_mem_normalizedFactors d.Prop⟩)
+      ⟨Ideal.span {↑d}, singleton_span_mem_normalizedFactors_of_mem_normalizedFactors d.IProp⟩)
     (by
       constructor
       · rintro ⟨a, ha⟩ ⟨b, hb⟩ h

@@ -262,7 +262,7 @@ theorem ofEven_comp_toEven : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
   CliffordAlgebra.hom_ext <|
     LinearMap.ext fun m =>
       calc
-        ofEven Q (toEven Q (ι Q m)) = ofEven Q ⟨_, (toEven Q (ι Q m)).Prop⟩ := by
+        ofEven Q (toEven Q (ι Q m)) = ofEven Q ⟨_, (toEven Q (ι Q m)).IProp⟩ := by
           rw [Subtype.coe_eta]
         _ = (ι Q 0 + algebraMap R _ 1) * (ι Q m - algebraMap R _ 0) :=
           by

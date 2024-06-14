@@ -1278,7 +1278,7 @@ def sofLeftInverse' {g : S → R} {f : F} (h : Function.LeftInverse g f) : R ≃
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := NonUnitalRingHom.mem_srange.mp x.Prop
+        let ⟨x', hx'⟩ := NonUnitalRingHom.mem_srange.mp x.IProp
         show f (g x) = x by rw [← hx', h x'] }
 #align ring_equiv.sof_left_inverse' RingEquiv.sofLeftInverse'
 -/

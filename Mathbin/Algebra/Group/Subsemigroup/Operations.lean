@@ -277,7 +277,7 @@ theorem mem_map_of_mem (f : M →ₙ* N) {S : Subsemigroup M} {x : M} (hx : x �
 #print Subsemigroup.apply_coe_mem_map /-
 @[to_additive]
 theorem apply_coe_mem_map (f : M →ₙ* N) (S : Subsemigroup M) (x : S) : f x ∈ S.map f :=
-  mem_map_of_mem f x.Prop
+  mem_map_of_mem f x.IProp
 #align subsemigroup.apply_coe_mem_map Subsemigroup.apply_coe_mem_map
 #align add_subsemigroup.apply_coe_mem_map AddSubsemigroup.apply_coe_mem_map
 -/
@@ -1056,7 +1056,7 @@ theorem prod_map_comap_prod' {M' : Type _} {N' : Type _} [Mul M'] [Mul N'] (f : 
 @[to_additive "the `add_hom` from the preimage of an additive subsemigroup to itself.", simps]
 def subsemigroupComap (f : M →ₙ* N) (N' : Subsemigroup N) : N'.comap f →ₙ* N'
     where
-  toFun x := ⟨f x, x.Prop⟩
+  toFun x := ⟨f x, x.IProp⟩
   map_mul' x y := Subtype.eq (@map_mul M N _ _ _ _ f x y)
 #align mul_hom.subsemigroup_comap MulHom.subsemigroupComap
 #align add_hom.subsemigroup_comap AddHom.subsemigroupComap
@@ -1070,7 +1070,7 @@ See `mul_equiv.subsemigroup_map` for a variant for `mul_equiv`s. -/
   simps]
 def subsemigroupMap (f : M →ₙ* N) (M' : Subsemigroup M) : M' →ₙ* M'.map f
     where
-  toFun x := ⟨f x, ⟨x, x.Prop, rfl⟩⟩
+  toFun x := ⟨f x, ⟨x, x.IProp, rfl⟩⟩
   map_mul' x y := Subtype.eq <| @map_mul M N _ _ _ _ f x y
 #align mul_hom.subsemigroup_map MulHom.subsemigroupMap
 #align add_hom.subsemigroup_map AddHom.subsemigroupMap
@@ -1176,7 +1176,7 @@ def ofLeftInverse (f : M →ₙ* N) {g : N → M} (h : Function.LeftInverse g f)
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := MulHom.mem_srange.mp x.Prop
+        let ⟨x', hx'⟩ := MulHom.mem_srange.mp x.IProp
         show f (g x) = x by rw [← hx', h x'] }
 #align mul_equiv.of_left_inverse MulEquiv.ofLeftInverse
 #align add_equiv.of_left_inverse AddEquiv.ofLeftInverse

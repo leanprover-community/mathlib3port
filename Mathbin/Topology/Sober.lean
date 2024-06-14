@@ -220,10 +220,10 @@ attribute [local instance 10] specializationOrder
 noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     {s : Set α | IsIrreducible s ∧ IsClosed s} ≃o α
     where
-  toFun s := s.Prop.1.genericPoint
+  toFun s := s.IProp.1.genericPoint
   invFun x := ⟨closure ({x} : Set α), isIrreducible_singleton.closure, isClosed_closure⟩
   left_inv s :=
-    Subtype.eq <| Eq.trans s.Prop.1.genericPoint_spec <| closure_eq_iff_isClosed.mpr s.2.2
+    Subtype.eq <| Eq.trans s.IProp.1.genericPoint_spec <| closure_eq_iff_isClosed.mpr s.2.2
   right_inv x :=
     isIrreducible_singleton.closure.genericPoint_spec.Eq
       (by convert isGenericPoint_closure using 1; rw [closure_closure])

@@ -366,7 +366,7 @@ theorem mem_iff {x : R} : x ∈ selfAdjoint R ↔ star x = x := by rw [← AddSu
 #print selfAdjoint.star_val_eq /-
 @[simp, norm_cast]
 theorem star_val_eq {x : selfAdjoint R} : star (x : R) = x :=
-  x.Prop
+  x.IProp
 #align self_adjoint.star_coe_eq selfAdjoint.star_val_eq
 -/
 
@@ -399,7 +399,7 @@ instance : IntCast (selfAdjoint R) :=
   ⟨fun n => ⟨n, isSelfAdjoint_intCast _⟩⟩
 
 instance : Pow (selfAdjoint R) ℕ :=
-  ⟨fun x n => ⟨(x : R) ^ n, x.Prop.pow n⟩⟩
+  ⟨fun x n => ⟨(x : R) ^ n, x.IProp.pow n⟩⟩
 
 #print selfAdjoint.val_pow /-
 @[simp, norm_cast]
@@ -415,7 +415,7 @@ section NonUnitalCommRing
 variable [NonUnitalCommRing R] [StarRing R]
 
 instance : Mul (selfAdjoint R) :=
-  ⟨fun x y => ⟨(x : R) * y, x.Prop.mul y.Prop⟩⟩
+  ⟨fun x y => ⟨(x : R) * y, x.IProp.mul y.IProp⟩⟩
 
 #print selfAdjoint.val_mul /-
 @[simp, norm_cast]
@@ -442,7 +442,7 @@ section Field
 
 variable [Field R] [StarRing R]
 
-instance : Inv (selfAdjoint R) where inv x := ⟨x.val⁻¹, x.Prop.inv⟩
+instance : Inv (selfAdjoint R) where inv x := ⟨x.val⁻¹, x.IProp.inv⟩
 
 #print selfAdjoint.val_inv /-
 @[simp, norm_cast]
@@ -451,7 +451,7 @@ theorem val_inv (x : selfAdjoint R) : ↑x⁻¹ = (x : R)⁻¹ :=
 #align self_adjoint.coe_inv selfAdjoint.val_inv
 -/
 
-instance : Div (selfAdjoint R) where div x y := ⟨x / y, x.Prop.div y.Prop⟩
+instance : Div (selfAdjoint R) where div x y := ⟨x / y, x.IProp.div y.IProp⟩
 
 #print selfAdjoint.val_div /-
 @[simp, norm_cast]
@@ -460,7 +460,7 @@ theorem val_div (x y : selfAdjoint R) : ↑(x / y) = (x / y : R) :=
 #align self_adjoint.coe_div selfAdjoint.val_div
 -/
 
-instance : Pow (selfAdjoint R) ℤ where pow x z := ⟨x ^ z, x.Prop.zpow z⟩
+instance : Pow (selfAdjoint R) ℤ where pow x z := ⟨x ^ z, x.IProp.zpow z⟩
 
 #print selfAdjoint.val_zpow /-
 @[simp, norm_cast]
@@ -506,7 +506,7 @@ section SMul
 variable [Star R] [TrivialStar R] [AddGroup A] [StarAddMonoid A]
 
 instance [SMul R A] [StarModule R A] : SMul R (selfAdjoint A) :=
-  ⟨fun r x => ⟨r • x, (IsSelfAdjoint.all _).smul x.Prop⟩⟩
+  ⟨fun r x => ⟨r • x, (IsSelfAdjoint.all _).smul x.IProp⟩⟩
 
 #print selfAdjoint.val_smul /-
 @[simp, norm_cast]
@@ -549,7 +549,7 @@ theorem mem_iff {x : R} : x ∈ skewAdjoint R ↔ star x = -x := by rw [← AddS
 #print skewAdjoint.star_val_eq /-
 @[simp, norm_cast]
 theorem star_val_eq {x : skewAdjoint R} : star (x : R) = -x :=
-  x.Prop
+  x.IProp
 #align skew_adjoint.star_coe_eq skewAdjoint.star_val_eq
 -/
 
@@ -601,7 +601,7 @@ theorem smul_mem [Monoid R] [DistribMulAction R A] [StarModule R A] (r : R) {x :
 -/
 
 instance [Monoid R] [DistribMulAction R A] [StarModule R A] : SMul R (skewAdjoint A) :=
-  ⟨fun r x => ⟨r • x, smul_mem r x.Prop⟩⟩
+  ⟨fun r x => ⟨r • x, smul_mem r x.IProp⟩⟩
 
 #print skewAdjoint.val_smul /-
 @[simp, norm_cast]

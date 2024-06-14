@@ -306,7 +306,7 @@ def ExtensionOfMaxAdjoin.ideal (y : N) : Ideal R :=
 /-- A linear map `I ⟶ Q` by `x ↦ f' (x • y)` where `f'` is the maximal extension-/
 def ExtensionOfMaxAdjoin.idealTo (y : N) : ExtensionOfMaxAdjoin.ideal i f y →ₗ[R] Q
     where
-  toFun z := (extensionOfMax i f).toLinearPMap ⟨(↑z : R) • y, z.Prop⟩
+  toFun z := (extensionOfMax i f).toLinearPMap ⟨(↑z : R) • y, z.IProp⟩
   map_add' z1 z2 := by simp [← (extension_of_max i f).toLinearPMap.map_add, add_smul]
   map_smul' z1 z2 := by simp [← (extension_of_max i f).toLinearPMap.map_smul, mul_smul] <;> rfl
 #align module.Baer.extension_of_max_adjoin.ideal_to Module.Baer.ExtensionOfMaxAdjoin.idealTo

@@ -39,8 +39,8 @@ noncomputable instance [Monoid M] : Group (IsUnit.submonoid M) :=
   {
     show Monoid (IsUnit.submonoid M) by
       infer_instance with
-    inv := fun x => ⟨_, x.Prop.Unit⁻¹.IsUnit⟩
-    hMul_left_inv := fun x => Subtype.eq x.Prop.Unit.inv_val }
+    inv := fun x => ⟨_, x.IProp.Unit⁻¹.IsUnit⟩
+    hMul_left_inv := fun x => Subtype.eq x.IProp.Unit.inv_val }
 
 @[to_additive]
 noncomputable instance [CommMonoid M] : CommGroup (IsUnit.submonoid M) :=
@@ -49,7 +49,7 @@ noncomputable instance [CommMonoid M] : CommGroup (IsUnit.submonoid M) :=
 #print Submonoid.IsUnit.Submonoid.coe_inv /-
 @[to_additive]
 theorem IsUnit.Submonoid.coe_inv [Monoid M] (x : IsUnit.submonoid M) :
-    ↑x⁻¹ = (↑x.Prop.Unit⁻¹ : M) :=
+    ↑x⁻¹ = (↑x.IProp.Unit⁻¹ : M) :=
   rfl
 #align submonoid.is_unit.submonoid.coe_inv Submonoid.IsUnit.Submonoid.coe_inv
 #align add_submonoid.is_unit.submonoid.coe_neg AddSubmonoid.IsUnit.Submonoid.coe_neg
@@ -109,7 +109,7 @@ theorem leftInv_leftInv_eq (hS : S ≤ IsUnit.submonoid M) : S.left_inv.left_inv
 This is a `monoid_hom` when `M` is commutative. -/
 @[to_additive
       "The function from `S.left_add` to `S` sending an element to its right additive\ninverse in `S`. This is an `add_monoid_hom` when `M` is commutative."]
-noncomputable def fromLeftInv : S.left_inv → S := fun x => x.Prop.some
+noncomputable def fromLeftInv : S.left_inv → S := fun x => x.IProp.some
 #align submonoid.from_left_inv Submonoid.fromLeftInv
 #align add_submonoid.from_left_neg AddSubmonoid.fromLeftNeg
 -/
@@ -117,7 +117,7 @@ noncomputable def fromLeftInv : S.left_inv → S := fun x => x.Prop.some
 #print Submonoid.mul_fromLeftInv /-
 @[simp, to_additive]
 theorem mul_fromLeftInv (x : S.left_inv) : (x : M) * S.fromLeftInv x = 1 :=
-  x.Prop.choose_spec
+  x.IProp.choose_spec
 #align submonoid.mul_from_left_inv Submonoid.mul_fromLeftInv
 #align add_submonoid.add_from_left_neg AddSubmonoid.add_fromLeftNeg
 -/
@@ -257,7 +257,8 @@ open scoped Pointwise
 @[to_additive]
 theorem leftInv_eq_inv : S.left_inv = S⁻¹ :=
   Submonoid.ext fun x =>
-    ⟨fun h => Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_one_right h.choose_spec).symm ▸ h.some.Prop),
+    ⟨fun h =>
+      Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_one_right h.choose_spec).symm ▸ h.some.IProp),
       fun h => ⟨⟨_, h⟩, mul_right_inv _⟩⟩
 #align submonoid.left_inv_eq_inv Submonoid.leftInv_eq_inv
 #align add_submonoid.left_neg_eq_neg AddSubmonoid.leftNeg_eq_neg

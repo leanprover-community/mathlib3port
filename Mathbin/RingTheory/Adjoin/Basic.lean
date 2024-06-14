@@ -407,7 +407,7 @@ theorem pow_smul_mem_of_smul_subset_of_mem_adjoin [CommSemiring B] [Algebra R B]
   change x ∈ (adjoin R s).toSubmodule at hx
   rw [adjoin_eq_span, Finsupp.mem_span_iff_total] at hx
   rcases hx with ⟨l, rfl : (l.sum fun (i : Submonoid.closure s) (c : R) => c • ↑i) = x⟩
-  choose n₁ n₂ using fun x : Submonoid.closure s => Submonoid.pow_smul_mem_closure_smul r s x.Prop
+  choose n₁ n₂ using fun x : Submonoid.closure s => Submonoid.pow_smul_mem_closure_smul r s x.IProp
   use l.support.sup n₁
   intro n hn
   rw [Finsupp.smul_sum]

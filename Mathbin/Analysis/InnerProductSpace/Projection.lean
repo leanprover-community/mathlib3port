@@ -941,7 +941,7 @@ theorem orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero [Complete
 theorem Submodule.IsOrtho.orthogonalProjection_comp_subtypeL {U V : Submodule 𝕜 E} [CompleteSpace U]
     (h : U ⟂ V) : orthogonalProjection U ∘L V.subtypeL = 0 :=
   ContinuousLinearMap.ext fun v =>
-    orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero <| h.symm v.Prop
+    orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero <| h.symm v.IProp
 #align submodule.is_ortho.orthogonal_projection_comp_subtypeL Submodule.IsOrtho.orthogonalProjection_comp_subtypeL
 -/
 

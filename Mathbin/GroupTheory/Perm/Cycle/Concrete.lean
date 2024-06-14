@@ -523,8 +523,8 @@ The forward direction is implemented by `equiv.perm.to_cycle`.
 -/
 def isoCycle : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.Nontrivial }
     where
-  toFun f := ⟨toCycle (f : Perm α) f.Prop, nodup_toCycle f f.Prop, nontrivial_toCycle _ f.Prop⟩
-  invFun s := ⟨(s : Cycle α).formPerm s.Prop.left, (s : Cycle α).isCycle_formPerm _ s.Prop.right⟩
+  toFun f := ⟨toCycle (f : Perm α) f.IProp, nodup_toCycle f f.IProp, nontrivial_toCycle _ f.IProp⟩
+  invFun s := ⟨(s : Cycle α).formPerm s.IProp.left, (s : Cycle α).isCycle_formPerm _ s.IProp.right⟩
   left_inv f := by
     obtain ⟨x, hx, -⟩ := id f.prop
     simpa [to_cycle_eq_to_list (f : perm α) f.prop x hx, form_perm_to_list, Subtype.ext_iff] using
@@ -574,7 +574,7 @@ theorem IsCycle.existsUnique_cycle {f : Perm α} (hf : IsCycle f) :
 
 #print Equiv.Perm.IsCycle.existsUnique_cycle_subtype /-
 theorem IsCycle.existsUnique_cycle_subtype {f : Perm α} (hf : IsCycle f) :
-    ∃! s : { s : Cycle α // s.Nodup }, (s : Cycle α).formPerm s.Prop = f :=
+    ∃! s : { s : Cycle α // s.Nodup }, (s : Cycle α).formPerm s.IProp = f :=
   by
   obtain ⟨s, ⟨hs, rfl⟩, hs'⟩ := hf.exists_unique_cycle
   refine' ⟨⟨s, hs⟩, rfl, _⟩
@@ -585,7 +585,7 @@ theorem IsCycle.existsUnique_cycle_subtype {f : Perm α} (hf : IsCycle f) :
 
 #print Equiv.Perm.IsCycle.existsUnique_cycle_nontrivial_subtype /-
 theorem IsCycle.existsUnique_cycle_nontrivial_subtype {f : Perm α} (hf : IsCycle f) :
-    ∃! s : { s : Cycle α // s.Nodup ∧ s.Nontrivial }, (s : Cycle α).formPerm s.Prop.left = f :=
+    ∃! s : { s : Cycle α // s.Nodup ∧ s.Nontrivial }, (s : Cycle α).formPerm s.IProp.left = f :=
   by
   obtain ⟨⟨s, hn⟩, hs, hs'⟩ := hf.exists_unique_cycle_subtype
   refine' ⟨⟨s, hn, _⟩, _, _⟩
@@ -611,8 +611,8 @@ The forward direction is implemented by finding this `cycle α` using `fintype.c
 -/
 def isoCycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.Nontrivial }
     where
-  toFun f := Fintype.choose _ f.Prop.existsUnique_cycle_nontrivial_subtype
-  invFun s := ⟨(s : Cycle α).formPerm s.Prop.left, (s : Cycle α).isCycle_formPerm _ s.Prop.right⟩
+  toFun f := Fintype.choose _ f.IProp.existsUnique_cycle_nontrivial_subtype
+  invFun s := ⟨(s : Cycle α).formPerm s.IProp.left, (s : Cycle α).isCycle_formPerm _ s.IProp.right⟩
   left_inv f := by
     simpa [Subtype.ext_iff] using
       Fintype.choose_spec _ f.prop.exists_unique_cycle_nontrivial_subtype

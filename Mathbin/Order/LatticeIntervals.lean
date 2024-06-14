@@ -93,7 +93,7 @@ instance [Lattice α] {a : α} : Lattice (Iic a) :=
 instance [Preorder α] {a : α} : OrderTop (Iic a)
     where
   top := ⟨a, le_refl a⟩
-  le_top x := x.Prop
+  le_top x := x.IProp
 
 #print Set.Iic.coe_top /-
 @[simp]
@@ -136,7 +136,7 @@ instance [DistribLattice α] {a : α} : DistribLattice (Ici a) :=
 instance [Preorder α] {a : α} : OrderBot (Ici a)
     where
   bot := ⟨a, le_refl a⟩
-  bot_le x := x.Prop
+  bot_le x := x.IProp
 
 #print Set.Ici.coe_bot /-
 @[simp]

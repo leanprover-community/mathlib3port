@@ -585,14 +585,14 @@ variable [StrictOrderedSemiring α] {a b c d : α}
 #print StrictOrderedSemiring.toPosMulStrictMono /-
 -- see Note [lower instance priority]
 instance (priority := 200) StrictOrderedSemiring.toPosMulStrictMono : PosMulStrictMono α :=
-  ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_left _ _ _ h x.Prop⟩
+  ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_left _ _ _ h x.IProp⟩
 #align strict_ordered_semiring.to_pos_mul_strict_mono StrictOrderedSemiring.toPosMulStrictMono
 -/
 
 #print StrictOrderedSemiring.toMulPosStrictMono /-
 -- see Note [lower instance priority]
 instance (priority := 200) StrictOrderedSemiring.toMulPosStrictMono : MulPosStrictMono α :=
-  ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_right _ _ _ h x.Prop⟩
+  ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_right _ _ _ h x.IProp⟩
 #align strict_ordered_semiring.to_mul_pos_strict_mono StrictOrderedSemiring.toMulPosStrictMono
 -/
 

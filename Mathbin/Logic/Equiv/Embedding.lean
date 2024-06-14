@@ -57,8 +57,8 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
 This is `function.embedding.cod_restrict` as an equiv. -/
 def codRestrict (α : Type _) {β : Type _} (bs : Set β) : { f : α ↪ β // ∀ a, f a ∈ bs } ≃ (α ↪ bs)
     where
-  toFun f := (f : α ↪ β).codRestrict bs f.Prop
-  invFun f := ⟨f.trans (Function.Embedding.subtype _), fun a => (f a).Prop⟩
+  toFun f := (f : α ↪ β).codRestrict bs f.IProp
+  invFun f := ⟨f.trans (Function.Embedding.subtype _), fun a => (f a).IProp⟩
   left_inv x := by ext <;> rfl
   right_inv x := by ext <;> rfl
 #align equiv.cod_restrict Equiv.codRestrict

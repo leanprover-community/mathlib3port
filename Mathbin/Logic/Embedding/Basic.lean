@@ -578,7 +578,7 @@ variable {α : Type _}
 into a sum of subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to the right. -/
 def subtypeOrLeftEmbedding (p q : α → Prop) [DecidablePred p] :
     { x // p x ∨ q x } ↪ Sum { x // p x } { x // q x } :=
-  ⟨fun x => if h : p x then Sum.inl ⟨x, h⟩ else Sum.inr ⟨x, x.Prop.resolve_left h⟩,
+  ⟨fun x => if h : p x then Sum.inl ⟨x, h⟩ else Sum.inr ⟨x, x.IProp.resolve_left h⟩,
     by
     intro x y
     dsimp only
@@ -596,7 +596,7 @@ theorem subtypeOrLeftEmbedding_apply_left {p q : α → Prop} [DecidablePred p]
 #print subtypeOrLeftEmbedding_apply_right /-
 theorem subtypeOrLeftEmbedding_apply_right {p q : α → Prop} [DecidablePred p]
     (x : { x // p x ∨ q x }) (hx : ¬p x) :
-    subtypeOrLeftEmbedding p q x = Sum.inr ⟨x, x.Prop.resolve_left hx⟩ :=
+    subtypeOrLeftEmbedding p q x = Sum.inr ⟨x, x.IProp.resolve_left hx⟩ :=
   dif_neg hx
 #align subtype_or_left_embedding_apply_right subtypeOrLeftEmbedding_apply_right
 -/
@@ -606,7 +606,7 @@ theorem subtypeOrLeftEmbedding_apply_right {p q : α → Prop} [DecidablePred p]
 if `p x → q x` for all `x : α`. -/
 @[simps]
 def Subtype.impEmbedding (p q : α → Prop) (h : ∀ x, p x → q x) : { x // p x } ↪ { x // q x } :=
-  ⟨fun x => ⟨x, h x x.Prop⟩, fun x y => by simp [Subtype.ext_iff]⟩
+  ⟨fun x => ⟨x, h x x.IProp⟩, fun x y => by simp [Subtype.ext_iff]⟩
 #align subtype.imp_embedding Subtype.impEmbedding
 -/
 

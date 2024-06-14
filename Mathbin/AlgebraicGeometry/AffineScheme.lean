@@ -636,7 +636,7 @@ theorem AlgebraicGeometry.IsAffineOpen.basicOpen_basicOpen_is_basicOpen {X : Sch
   apply
     Submonoid.leftInv_le_isUnit _
       (IsLocalization.toInvSubmonoid (Submonoid.powers f) (X.presheaf.obj (op <| X.basic_open f))
-          _).Prop
+          _).IProp
 #align algebraic_geometry.basic_open_basic_open_is_basic_open AlgebraicGeometry.IsAffineOpen.basicOpen_basicOpen_is_basicOpen
 -/
 
@@ -758,7 +758,7 @@ theorem IsAffineOpen.isLocalization_stalk {X : Scheme} {U : Opens X.carrier} (hU
 @[simps]
 def Scheme.affineBasicOpen (X : Scheme) {U : X.affineOpens} (f : X.Presheaf.obj <| op U) :
     X.affineOpens :=
-  ⟨X.basicOpen f, U.Prop.basicOpenIsAffine f⟩
+  ⟨X.basicOpen f, U.IProp.basicOpenIsAffine f⟩
 #align algebraic_geometry.Scheme.affine_basic_open AlgebraicGeometry.Scheme.affineBasicOpen
 -/
 
@@ -857,7 +857,7 @@ theorem of_affine_open_cover {X : Scheme} (V : X.affineOpens) (S : Set X.affineO
     have : ↑x ∈ (Set.univ : Set X.carrier) := trivial
     rw [← hS] at this
     obtain ⟨W, hW⟩ := set.mem_Union.mp this
-    obtain ⟨f, g, e, hf⟩ := exists_basic_open_le_affine_inter V.prop W.1.Prop x ⟨x.prop, hW⟩
+    obtain ⟨f, g, e, hf⟩ := exists_basic_open_le_affine_inter V.prop W.1.IProp x ⟨x.prop, hW⟩
     refine' ⟨f, hf, _⟩
     convert hP₁ _ g (hS' W) using 1
     ext1

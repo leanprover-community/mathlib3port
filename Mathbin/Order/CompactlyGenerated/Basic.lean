@@ -102,7 +102,7 @@ theorem isCompactElement_iff.{u} {α : Type u} [CompleteLattice α] (k : α) :
   constructor
   · intro H ι s hs
     obtain ⟨t, ht, ht'⟩ := H (Set.range s) hs
-    have : ∀ x : t, ∃ i, s i = x := fun x => ht x.Prop
+    have : ∀ x : t, ∃ i, s i = x := fun x => ht x.IProp
     choose f hf using this
     refine' ⟨finset.univ.image f, ht'.trans _⟩
     · rw [Finset.sup_le_iff]

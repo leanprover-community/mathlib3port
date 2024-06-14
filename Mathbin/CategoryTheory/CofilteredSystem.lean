@@ -337,9 +337,9 @@ instance toEventualRanges_finite [∀ j, Finite (F.obj j)] : ∀ j, Finite (F.to
 -/
 def toEventualRangesSectionsEquiv : F.toEventualRanges.sections ≃ F.sections
     where
-  toFun s := ⟨_, fun i j f => Subtype.coe_inj.2 <| s.Prop f⟩
+  toFun s := ⟨_, fun i j f => Subtype.coe_inj.2 <| s.IProp f⟩
   invFun s :=
-    ⟨fun j => ⟨_, mem_iInter₂.2 fun i f => ⟨_, s.Prop f⟩⟩, fun i j f => Subtype.ext <| s.Prop f⟩
+    ⟨fun j => ⟨_, mem_iInter₂.2 fun i f => ⟨_, s.IProp f⟩⟩, fun i j f => Subtype.ext <| s.IProp f⟩
   left_inv _ := by ext; rfl
   right_inv _ := by ext; rfl
 #align category_theory.functor.to_eventual_ranges_sections_equiv CategoryTheory.Functor.toEventualRangesSectionsEquiv
@@ -416,7 +416,7 @@ theorem eval_section_surjective_of_surjective (i : J) :
   haveI := F.to_preimages_nonempty_of_surjective s Fsur (singleton_nonempty x)
   obtain ⟨sec, h⟩ := nonempty_sections_of_finite_cofiltered_system (F.to_preimages s)
   refine' ⟨⟨fun j => (sec j).val, fun j k jk => by simpa [Subtype.ext_iff] using h jk⟩, _⟩
-  · have := (sec i).Prop
+  · have := (sec i).IProp
     simp only [mem_Inter, mem_preimage, mem_singleton_iff] at this
     replace this := this (𝟙 i); rwa [map_id_apply] at this
 #align category_theory.functor.eval_section_surjective_of_surjective CategoryTheory.Functor.eval_section_surjective_of_surjective

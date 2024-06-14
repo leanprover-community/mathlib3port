@@ -416,7 +416,7 @@ protected theorem monotone {p q : ℝ≥0∞} (hpq : q ≤ p) : lp E q ≤ lp E 
 
 #print lp.memℓp /-
 protected theorem memℓp (f : lp E p) : Memℓp f p :=
-  f.Prop
+  f.IProp
 #align lp.mem_ℓp lp.memℓp
 -/
 

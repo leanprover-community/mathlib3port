@@ -4695,7 +4695,7 @@ theorem disjiUnion_disjiUnion (s : Finset α) (f : α → Finset β) (g : β →
       s.attach.disjUnionₓ
         (fun a =>
           (f a).disjUnionₓ g fun b hb c hc =>
-            h2 (mem_disjiUnion.mpr ⟨_, a.Prop, hb⟩) (mem_disjiUnion.mpr ⟨_, a.Prop, hc⟩))
+            h2 (mem_disjiUnion.mpr ⟨_, a.IProp, hb⟩) (mem_disjiUnion.mpr ⟨_, a.IProp, hc⟩))
         fun a ha b hb hab =>
         disjoint_left.mpr fun x hxa hxb =>
           by

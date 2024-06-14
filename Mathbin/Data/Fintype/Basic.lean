@@ -1301,7 +1301,7 @@ variable (α)
 def unitsEquivProdSubtype [Monoid α] : αˣ ≃ { p : α × α // p.1 * p.2 = 1 ∧ p.2 * p.1 = 1 }
     where
   toFun u := ⟨(u, ↑u⁻¹), u.val_inv, u.inv_val⟩
-  invFun p := Units.mk (p : α × α).1 (p : α × α).2 p.Prop.1 p.Prop.2
+  invFun p := Units.mk (p : α × α).1 (p : α × α).2 p.IProp.1 p.IProp.2
   left_inv u := Units.ext rfl
   right_inv p := Subtype.ext <| Prod.ext rfl rfl
 #align units_equiv_prod_subtype unitsEquivProdSubtype
@@ -1312,7 +1312,7 @@ def unitsEquivProdSubtype [Monoid α] : αˣ ≃ { p : α × α // p.1 * p.2 = 1
 elements. -/
 @[simps]
 def unitsEquivNeZero [GroupWithZero α] : αˣ ≃ { a : α // a ≠ 0 } :=
-  ⟨fun a => ⟨a, a.NeZero⟩, fun a => Units.mk0 _ a.Prop, fun _ => Units.ext rfl, fun _ =>
+  ⟨fun a => ⟨a, a.NeZero⟩, fun a => Units.mk0 _ a.IProp, fun _ => Units.ext rfl, fun _ =>
     Subtype.ext rfl⟩
 #align units_equiv_ne_zero unitsEquivNeZero
 -/

@@ -131,7 +131,7 @@ section OfMulOfFin
 private def name_suffix {m n : ℕ} : Fin m → Fin n → String :=
   let chars := "₀₁₂₃₄₅₆₇₈₉".data
   if h : m ≤ 10 ∧ n ≤ 10 then fun i j =>
-    [chars.nthLe i (i.Prop.trans_le h.1), chars.nthLe j (j.Prop.trans_le h.2)].asString
+    [chars.nthLe i (i.IProp.trans_le h.1), chars.nthLe j (j.IProp.trans_le h.2)].asString
   else fun i j => "_" ++ toString i ++ "_" ++ toString j
 
 /-- `pi_fin.to_pexpr` but for matrices -/

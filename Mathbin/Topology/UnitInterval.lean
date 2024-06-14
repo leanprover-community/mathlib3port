@@ -127,7 +127,7 @@ theorem mul_le_right {x y : I} : x * y ≤ y :=
 
 #print unitInterval.symm /-
 /-- Unit interval central symmetry. -/
-def symm : I → I := fun t => ⟨1 - t, mem_iff_one_sub_mem.mp t.Prop⟩
+def symm : I → I := fun t => ⟨1 - t, mem_iff_one_sub_mem.mp t.IProp⟩
 #align unit_interval.symm unitInterval.symm
 -/
 

@@ -258,7 +258,7 @@ end SetCoe
 #print Subtype.mem /-
 /-- See also `subtype.prop` -/
 theorem Subtype.mem {α : Type _} {s : Set α} (p : s) : (p : α) ∈ s :=
-  p.Prop
+  p.IProp
 #align subtype.mem Subtype.mem
 -/
 

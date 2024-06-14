@@ -275,7 +275,7 @@ theorem mem_map_of_mem (f : F) {S : Submonoid M} {x : M} (hx : x ∈ S) : f x �
 #print Submonoid.apply_coe_mem_map /-
 @[to_additive]
 theorem apply_coe_mem_map (f : F) (S : Submonoid M) (x : S) : f x ∈ S.map f :=
-  mem_map_of_mem f x.Prop
+  mem_map_of_mem f x.IProp
 #align submonoid.apply_coe_mem_map Submonoid.apply_coe_mem_map
 #align add_submonoid.apply_coe_mem_map AddSubmonoid.apply_coe_mem_map
 -/
@@ -1510,7 +1510,7 @@ theorem mker_inr : (inr M N).mker = ⊥ := by ext x; simp [mem_mker]
 @[to_additive "the `add_monoid_hom` from the preimage of an additive submonoid to itself.", simps]
 def submonoidComap (f : M →* N) (N' : Submonoid N) : N'.comap f →* N'
     where
-  toFun x := ⟨f x, x.Prop⟩
+  toFun x := ⟨f x, x.IProp⟩
   map_one' := Subtype.eq f.map_one
   map_mul' x y := Subtype.eq (f.map_hMul x y)
 #align monoid_hom.submonoid_comap MonoidHom.submonoidComap
@@ -1525,7 +1525,7 @@ See `mul_equiv.submonoid_map` for a variant for `mul_equiv`s. -/
   simps]
 def submonoidMap (f : M →* N) (M' : Submonoid M) : M' →* M'.map f
     where
-  toFun x := ⟨f x, ⟨x, x.Prop, rfl⟩⟩
+  toFun x := ⟨f x, ⟨x, x.IProp, rfl⟩⟩
   map_one' := Subtype.eq <| f.map_one
   map_mul' x y := Subtype.eq <| f.map_hMul x y
 #align monoid_hom.submonoid_map MonoidHom.submonoidMap
@@ -1713,7 +1713,7 @@ def ofLeftInverse' (f : M →* N) {g : N → M} (h : Function.LeftInverse g f) :
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := MonoidHom.mem_mrange.mp x.Prop
+        let ⟨x', hx'⟩ := MonoidHom.mem_mrange.mp x.IProp
         show f (g x) = x by rw [← hx', h x'] }
 #align mul_equiv.of_left_inverse' MulEquiv.ofLeftInverse'
 #align add_equiv.of_left_inverse' AddEquiv.ofLeftInverse'

@@ -58,8 +58,8 @@ it on each component, and proving that it agrees on the intersections. -/
 noncomputable def iUnionLift (S : ι → Set α) (f : ∀ (i) (x : S i), β)
     (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α)
     (hT : T ⊆ iUnion S) (x : T) : β :=
-  let i := Classical.indefiniteDescription _ (mem_iUnion.1 (hT x.Prop))
-  f i ⟨x, i.Prop⟩
+  let i := Classical.indefiniteDescription _ (mem_iUnion.1 (hT x.IProp))
+  f i ⟨x, i.IProp⟩
 #align set.Union_lift Set.iUnionLift
 -/
 
@@ -99,7 +99,7 @@ theorem iUnionLift_of_mem (x : T) {i : ι} (hx : (x : α) ∈ S i) :
 theorem iUnionLift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c) (cβ : β)
     (h : ∀ i, f i (ci i) = cβ) : iUnionLift S f hf T hT c = cβ :=
   by
-  let ⟨i, hi⟩ := Set.mem_iUnion.1 (hT c.Prop)
+  let ⟨i, hi⟩ := Set.mem_iUnion.1 (hT c.IProp)
   have : ci i = ⟨c, hi⟩ := Subtype.ext (hci i)
   rw [Union_lift_of_mem _ hi, ← this, h]
 #align set.Union_lift_const Set.iUnionLift_const
@@ -122,7 +122,8 @@ theorem iUnionLift_unary (u : T → T) (ui : ∀ i, S i → S i)
   cases' Set.mem_iUnion.1 x.prop with i hi
   rw [Union_lift_of_mem x hi, ← h i]
   have : x = Set.inclusion (Set.subset_iUnion S i) ⟨x, hi⟩ := by cases x; rfl
-  have hx' : (Set.inclusion (Set.subset_iUnion S i) (ui i ⟨x, hi⟩) : α) ∈ S i := (ui i ⟨x, hi⟩).Prop
+  have hx' : (Set.inclusion (Set.subset_iUnion S i) (ui i ⟨x, hi⟩) : α) ∈ S i :=
+    (ui i ⟨x, hi⟩).IProp
   conv_lhs => rw [this, hui, Union_lift_inclusion]
 #align set.Union_lift_unary Set.iUnionLift_unary
 -/
@@ -150,7 +151,7 @@ theorem iUnionLift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
   have hx : x = Set.inclusion (Set.subset_iUnion S k) ⟨x, hik hi⟩ := by cases x; rfl
   have hy : y = Set.inclusion (Set.subset_iUnion S k) ⟨y, hjk hj⟩ := by cases y; rfl
   have hxy : (Set.inclusion (Set.subset_iUnion S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k :=
-    (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop
+    (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).IProp
   conv_lhs => rw [hx, hy, ← hopi, Union_lift_of_mem _ hxy]
   simp only [coe_inclusion, Subtype.coe_eta]
 #align set.Union_lift_binary Set.iUnionLift_binary

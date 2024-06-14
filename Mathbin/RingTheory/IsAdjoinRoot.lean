@@ -628,7 +628,7 @@ theorem coeff_apply_lt (h : IsAdjoinRootMonic S f) (z : S) (i : ℕ) (hi : i < n
 #print IsAdjoinRootMonic.coeff_apply_coe /-
 theorem coeff_apply_coe (h : IsAdjoinRootMonic S f) (z : S) (i : Fin (natDegree f)) :
     h.coeff z i = h.Basis.repr z i :=
-  h.coeff_apply_lt z i i.Prop
+  h.coeff_apply_lt z i i.IProp
 #align is_adjoin_root_monic.coeff_apply_coe IsAdjoinRootMonic.coeff_apply_coe
 -/
 

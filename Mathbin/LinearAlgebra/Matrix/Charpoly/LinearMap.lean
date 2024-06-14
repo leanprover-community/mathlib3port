@@ -253,7 +253,7 @@ theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.End R M) (I :
     rwa [Ideal.finsuppTotal_apply_eq_of_fintype] at hbM'
   exact
     ⟨⟨A, f, this⟩, Matrix.isRepresentation.eq_toEnd_of_represents R b hb ⟨A, f, this⟩ this,
-      fun i j => (bM' (b j) i).Prop⟩
+      fun i j => (bM' (b j) i).IProp⟩
 #align matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.toEnd_exists_mem_ideal
 -/
 

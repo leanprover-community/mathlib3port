@@ -131,7 +131,7 @@ def comparisonLeftAdjointHomEquiv (A : adj.toMonad.Algebra) (B : D)
     _ ≃ (A ⟶ (comparison adj).obj B) :=
       { toFun := fun g =>
           { f := _
-            h' := g.Prop }
+            h' := g.IProp }
         invFun := fun f => ⟨f.f, f.h⟩
         left_inv := fun g => by ext; rfl
         right_inv := fun f => by ext; rfl }

@@ -266,8 +266,8 @@ theorem orthogonal_eq_top_iff : Kᗮ = ⊤ ↔ K = ⊥ :=
 theorem orthogonalFamily_self :
     OrthogonalFamily 𝕜 (fun b => ↥(cond b K Kᗮ)) fun b => (cond b K Kᗮ).subtypeₗᵢ
   | tt, tt => absurd rfl
-  | tt, ff => fun _ x y => inner_right_of_mem_orthogonal x.Prop y.Prop
-  | ff, tt => fun _ x y => inner_left_of_mem_orthogonal y.Prop x.Prop
+  | tt, ff => fun _ x y => inner_right_of_mem_orthogonal x.IProp y.IProp
+  | ff, tt => fun _ x y => inner_left_of_mem_orthogonal y.IProp x.IProp
   | ff, ff => absurd rfl
 #align submodule.orthogonal_family_self Submodule.orthogonalFamily_self
 -/

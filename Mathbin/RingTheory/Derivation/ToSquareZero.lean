@@ -123,7 +123,7 @@ def liftOfDerivationToSquareZero (f : Derivation R A I) : A →ₐ[R] B :=
 theorem liftOfDerivationToSquareZero_mk_apply (d : Derivation R A I) (x : A) :
     Ideal.Quotient.mk I (liftOfDerivationToSquareZero I hI d x) = algebraMap A (B ⧸ I) x :=
   by
-  rw [liftOfDerivationToSquareZero_apply, map_add, ideal.quotient.eq_zero_iff_mem.mpr (d x).Prop,
+  rw [liftOfDerivationToSquareZero_apply, map_add, ideal.quotient.eq_zero_iff_mem.mpr (d x).IProp,
     zero_add]
   rfl
 #align lift_of_derivation_to_square_zero_mk_apply liftOfDerivationToSquareZero_mk_apply

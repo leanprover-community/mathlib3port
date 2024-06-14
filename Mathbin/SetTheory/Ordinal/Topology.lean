@@ -93,7 +93,7 @@ theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo 
       rcases H u hu hu' with ⟨a, ha, ha'⟩
       exact ⟨a, ha, fun b hb => ⟨u, hu, ha' hb⟩⟩
   · let f : s → Set Ordinal := fun o =>
-      if ho : is_limit o.val then Set.Ioo (Classical.choose (h o.val o.Prop ho)) (o + 1)
+      if ho : is_limit o.val then Set.Ioo (Classical.choose (h o.val o.IProp ho)) (o + 1)
       else {o.val}
     have : ∀ a, IsOpen (f a) := fun a =>
       by

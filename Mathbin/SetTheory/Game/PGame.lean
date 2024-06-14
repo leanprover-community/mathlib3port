@@ -189,7 +189,7 @@ theorem SetTheory.PGame.moveRight_mk {xl xr xL xR} :
 -/
 def SetTheory.PGame.ofLists (L R : List SetTheory.PGame.{u}) : SetTheory.PGame.{u} :=
   SetTheory.PGame.mk (ULift (Fin L.length)) (ULift (Fin R.length))
-    (fun i => L.nthLe i.down i.down.is_lt) fun j => R.nthLe j.down j.down.Prop
+    (fun i => L.nthLe i.down i.down.is_lt) fun j => R.nthLe j.down j.down.IProp
 #align pgame.of_lists SetTheory.PGame.ofLists
 -/
 

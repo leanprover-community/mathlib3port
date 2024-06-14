@@ -258,7 +258,7 @@ theorem toStalk_stalkMap_toΓSpec (x : X) :
 def toΓSpec : X ⟶ Spec.locallyRingedSpaceObj (Γ.obj (op X))
     where
   val := X.toΓSpecSheafedSpace
-  Prop := by
+  IProp := by
     intro x
     let p : PrimeSpectrum (Γ.obj (op X)) := X.to_Γ_Spec_fun x
     constructor

@@ -41,7 +41,7 @@ is stable under the action of the decomposition group. -/
 def subMulAction (A : ValuationSubring L) : SubMulAction (A.decompositionSubgroup K) L
     where
   carrier := A
-  smul_mem' g l h := Set.mem_of_mem_of_subset (Set.smul_mem_smul_set h) g.Prop.le
+  smul_mem' g l h := Set.mem_of_mem_of_subset (Set.smul_mem_smul_set h) g.IProp.le
 #align valuation_subring.sub_mul_action ValuationSubring.subMulAction
 -/
 

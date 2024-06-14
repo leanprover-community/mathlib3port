@@ -1981,7 +1981,7 @@ section DivMod
 #print Fin.divNat /-
 /-- Compute `i / n`, where `n` is a `nat` and inferred the type of `i`. -/
 def divNat (i : Fin (m * n)) : Fin m :=
-  ⟨i / n, Nat.div_lt_of_lt_mul <| mul_comm m n ▸ i.Prop⟩
+  ⟨i / n, Nat.div_lt_of_lt_mul <| mul_comm m n ▸ i.IProp⟩
 #align fin.div_nat Fin.divNat
 -/
 

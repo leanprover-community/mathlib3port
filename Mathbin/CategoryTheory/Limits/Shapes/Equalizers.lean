@@ -629,9 +629,9 @@ def Fork.IsLimit.homIso {X Y : C} {f g : X ⟶ Y} {t : Fork f g} (ht : IsLimit t
     (Z ⟶ t.pt) ≃ { h : Z ⟶ X // h ≫ f = h ≫ g }
     where
   toFun k := ⟨k ≫ t.ι, by simp only [category.assoc, t.condition]⟩
-  invFun h := (Fork.IsLimit.lift' ht _ h.Prop).1
-  left_inv k := Fork.IsLimit.hom_ext ht (Fork.IsLimit.lift' _ _ _).Prop
-  right_inv h := Subtype.ext (Fork.IsLimit.lift' ht _ _).Prop
+  invFun h := (Fork.IsLimit.lift' ht _ h.IProp).1
+  left_inv k := Fork.IsLimit.hom_ext ht (Fork.IsLimit.lift' _ _ _).IProp
+  right_inv h := Subtype.ext (Fork.IsLimit.lift' ht _ _).IProp
 #align category_theory.limits.fork.is_limit.hom_iso CategoryTheory.Limits.Fork.IsLimit.homIso
 -/
 
@@ -655,9 +655,9 @@ def Cofork.IsColimit.homIso {X Y : C} {f g : X ⟶ Y} {t : Cofork f g} (ht : IsC
     (t.pt ⟶ Z) ≃ { h : Y ⟶ Z // f ≫ h = g ≫ h }
     where
   toFun k := ⟨t.π ≫ k, by simp only [← category.assoc, t.condition]⟩
-  invFun h := (Cofork.IsColimit.desc' ht _ h.Prop).1
-  left_inv k := Cofork.IsColimit.hom_ext ht (Cofork.IsColimit.desc' _ _ _).Prop
-  right_inv h := Subtype.ext (Cofork.IsColimit.desc' ht _ _).Prop
+  invFun h := (Cofork.IsColimit.desc' ht _ h.IProp).1
+  left_inv k := Cofork.IsColimit.hom_ext ht (Cofork.IsColimit.desc' _ _ _).IProp
+  right_inv h := Subtype.ext (Cofork.IsColimit.desc' ht _ _).IProp
 #align category_theory.limits.cofork.is_colimit.hom_iso CategoryTheory.Limits.Cofork.IsColimit.homIso
 -/
 

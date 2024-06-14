@@ -2346,7 +2346,7 @@ theorem coe_empty : ↑(∅ : Subtype (MeasurableSet : Set α → Prop)) = (∅ 
 -/
 
 instance [MeasurableSingletonClass α] : Insert α (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun a s => ⟨Insert.insert a s, s.Prop.insert a⟩⟩
+  ⟨fun a s => ⟨Insert.insert a s, s.IProp.insert a⟩⟩
 
 #print MeasurableSet.coe_insert /-
 @[simp]
@@ -2358,7 +2358,7 @@ theorem coe_insert [MeasurableSingletonClass α] (a : α)
 -/
 
 instance : HasCompl (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun x => ⟨xᶜ, x.Prop.compl⟩⟩
+  ⟨fun x => ⟨xᶜ, x.IProp.compl⟩⟩
 
 #print MeasurableSet.coe_compl /-
 @[simp]
@@ -2368,7 +2368,7 @@ theorem coe_compl (s : Subtype (MeasurableSet : Set α → Prop)) : ↑(sᶜ) = 
 -/
 
 instance : Union (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun x y => ⟨x ∪ y, x.Prop.union y.Prop⟩⟩
+  ⟨fun x y => ⟨x ∪ y, x.IProp.union y.IProp⟩⟩
 
 #print MeasurableSet.coe_union /-
 @[simp]
@@ -2378,7 +2378,7 @@ theorem coe_union (s t : Subtype (MeasurableSet : Set α → Prop)) : ↑(s ∪ 
 -/
 
 instance : Inter (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun x y => ⟨x ∩ y, x.Prop.inter y.Prop⟩⟩
+  ⟨fun x y => ⟨x ∩ y, x.IProp.inter y.IProp⟩⟩
 
 #print MeasurableSet.coe_inter /-
 @[simp]
@@ -2388,7 +2388,7 @@ theorem coe_inter (s t : Subtype (MeasurableSet : Set α → Prop)) : ↑(s ∩ 
 -/
 
 instance : SDiff (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun x y => ⟨x \ y, x.Prop.diffₓ y.Prop⟩⟩
+  ⟨fun x y => ⟨x \ y, x.IProp.diffₓ y.IProp⟩⟩
 
 #print MeasurableSet.coe_sdiff /-
 @[simp]

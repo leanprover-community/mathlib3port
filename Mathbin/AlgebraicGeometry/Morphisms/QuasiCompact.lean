@@ -117,7 +117,7 @@ theorem quasiCompact_iff_forall_affine :
   intro H U hU hU'
   obtain ⟨S, hS, rfl⟩ := (is_compact_open_iff_eq_finset_affine_union U).mp ⟨hU', hU⟩
   simp only [Set.preimage_iUnion, Subtype.val_eq_coe]
-  exact hS.is_compact_bUnion fun i _ => H i i.Prop
+  exact hS.is_compact_bUnion fun i _ => H i i.IProp
 #align algebraic_geometry.quasi_compact_iff_forall_affine AlgebraicGeometry.quasiCompact_iff_forall_affine
 -/
 
@@ -135,7 +135,7 @@ theorem quasiCompact_iff_affineProperty :
   by
   rw [quasi_compact_iff_forall_affine]
   trans ∀ U : Y.affine_opens, IsCompact (f.1.base ⁻¹' (U : Set Y.carrier))
-  · exact ⟨fun h U => h U U.Prop, fun h U hU => h ⟨U, hU⟩⟩
+  · exact ⟨fun h U => h U U.IProp, fun h U hU => h ⟨U, hU⟩⟩
   apply forall_congr'
   exact fun _ => isCompact_iff_compactSpace
 #align algebraic_geometry.quasi_compact_iff_affine_property AlgebraicGeometry.quasiCompact_iff_affineProperty
@@ -163,7 +163,7 @@ theorem isCompact_basicOpen (X : Scheme) {U : Opens X.carrier} (hU : IsCompact (
         1
       rfl
     erw [← X.to_LocallyRingedSpace.to_RingedSpace.basic_open_res this.op]
-    exact is_affine_open.basic_open_is_affine V.1.Prop _
+    exact is_affine_open.basic_open_is_affine V.1.IProp _
   haveI : Finite s := hs.to_subtype
   refine' ⟨Set.range g, Set.finite_range g, _⟩
   refine'

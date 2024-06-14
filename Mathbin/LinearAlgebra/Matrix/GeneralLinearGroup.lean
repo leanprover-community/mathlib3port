@@ -180,7 +180,7 @@ instance hasCoeToGeneralLinearGroup : Coe (SpecialLinearGroup n R) (GL n R) :=
 #print Matrix.SpecialLinearGroup.coeToGL_det /-
 @[simp]
 theorem coeToGL_det (g : SpecialLinearGroup n R) : (g : GL n R).det = 1 :=
-  Units.ext g.Prop
+  Units.ext g.IProp
 #align matrix.special_linear_group.coe_to_GL_det Matrix.SpecialLinearGroup.coeToGL_det
 -/
 
@@ -213,7 +213,7 @@ theorem mem_glpos (A : GL n R) : A ∈ GLPos n R ↔ 0 < (A.det : R) :=
 
 #print Matrix.GLPos.det_ne_zero /-
 theorem GLPos.det_ne_zero (A : GLPos n R) : (A : Matrix n n R).det ≠ 0 :=
-  ne_of_gt A.Prop
+  ne_of_gt A.IProp
 #align matrix.GL_pos.det_ne_zero Matrix.GLPos.det_ne_zero
 -/
 
@@ -269,7 +269,7 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [LinearOrderedCom
 /-- `special_linear_group n R` embeds into `GL_pos n R` -/
 def toGLPos : SpecialLinearGroup n R →* GLPos n R
     where
-  toFun A := ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.Prop.symm ▸ zero_lt_one⟩
+  toFun A := ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.IProp.symm ▸ zero_lt_one⟩
   map_one' := Subtype.ext <| Units.ext <| rfl
   map_mul' A₁ A₂ := Subtype.ext <| Units.ext <| rfl
 #align matrix.special_linear_group.to_GL_pos Matrix.SpecialLinearGroup.toGLPos
@@ -302,7 +302,7 @@ theorem coe_GLPos_coe_GL_coe_matrix (g : SpecialLinearGroup n R) :
 #print Matrix.SpecialLinearGroup.coe_to_GLPos_to_GL_det /-
 @[simp]
 theorem coe_to_GLPos_to_GL_det (g : SpecialLinearGroup n R) : ((g : GLPos n R) : GL n R).det = 1 :=
-  Units.ext g.Prop
+  Units.ext g.IProp
 #align matrix.special_linear_group.coe_to_GL_pos_to_GL_det Matrix.SpecialLinearGroup.coe_to_GLPos_to_GL_det
 -/
 

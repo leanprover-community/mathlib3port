@@ -625,7 +625,7 @@ variable [NormOneClass 𝕜'] [NormedAlgebra ℝ 𝕜']
 #print norm_algebraMap_nnreal /-
 @[simp]
 theorem norm_algebraMap_nnreal (x : ℝ≥0) : ‖algebraMap ℝ≥0 𝕜' x‖ = x :=
-  (norm_algebraMap' 𝕜' (x : ℝ)).symm ▸ Real.norm_of_nonneg x.Prop
+  (norm_algebraMap' 𝕜' (x : ℝ)).symm ▸ Real.norm_of_nonneg x.IProp
 #align norm_algebra_map_nnreal norm_algebraMap_nnreal
 -/
 

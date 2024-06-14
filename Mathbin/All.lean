@@ -2834,7 +2834,7 @@ import Tactic.Induction
 import Tactic.InteractiveExpr
 import Tactic.Interactive
 import Tactic.IntervalCases
-import Tactic.Itauto
+import Tactic.ITauto
 import Tactic.LeanCoreDocs
 import Tactic.Lift
 import Tactic.Linarith.Datatypes

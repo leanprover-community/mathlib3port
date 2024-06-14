@@ -114,7 +114,7 @@ noncomputable def SetTheory.PGame.toRightMovesNim {o : Ordinal} :
 @[simp]
 theorem SetTheory.PGame.toLeftMovesNim_symm_lt {o : Ordinal}
     (i : (SetTheory.PGame.nim o).LeftMoves) : ↑(SetTheory.PGame.toLeftMovesNim.symm i) < o :=
-  (SetTheory.PGame.toLeftMovesNim.symm i).Prop
+  (SetTheory.PGame.toLeftMovesNim.symm i).IProp
 #align pgame.to_left_moves_nim_symm_lt SetTheory.PGame.toLeftMovesNim_symm_lt
 -/
 
@@ -122,7 +122,7 @@ theorem SetTheory.PGame.toLeftMovesNim_symm_lt {o : Ordinal}
 @[simp]
 theorem SetTheory.PGame.toRightMovesNim_symm_lt {o : Ordinal}
     (i : (SetTheory.PGame.nim o).RightMoves) : ↑(SetTheory.PGame.toRightMovesNim.symm i) < o :=
-  (SetTheory.PGame.toRightMovesNim.symm i).Prop
+  (SetTheory.PGame.toRightMovesNim.symm i).IProp
 #align pgame.to_right_moves_nim_symm_lt SetTheory.PGame.toRightMovesNim_symm_lt
 -/
 

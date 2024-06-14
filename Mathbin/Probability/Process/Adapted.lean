@@ -264,7 +264,7 @@ theorem Adapted.progMeasurable_of_continuous [TopologicalSpace ι] [MetrizableSp
     [PseudoMetrizableSpace β] (h : Adapted f u) (hu_cont : ∀ ω, Continuous fun i => u i ω) :
     ProgMeasurable f u := fun i =>
   @stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurable _ _ (Set.Iic i) _ _ _ _ _ _ _
-    (f i) _ (fun ω => (hu_cont ω).comp continuous_induced_dom) fun j => (h j).mono (f.mono j.Prop)
+    (f i) _ (fun ω => (hu_cont ω).comp continuous_induced_dom) fun j => (h j).mono (f.mono j.IProp)
 #align measure_theory.adapted.prog_measurable_of_continuous MeasureTheory.Adapted.progMeasurable_of_continuous
 -/
 

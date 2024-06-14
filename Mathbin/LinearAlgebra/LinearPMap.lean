@@ -145,7 +145,7 @@ noncomputable def mkSpanSingleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0 �
       intro c₁ c₂ h
       rw [← sub_eq_zero, ← sub_smul] at h ⊢
       exact H _ h
-    { toFun := fun z => Classical.choose (mem_span_singleton.1 z.Prop) • y
+    { toFun := fun z => Classical.choose (mem_span_singleton.1 z.IProp) • y
       map_add' := fun y z => by
         rw [← add_smul]
         apply H
@@ -343,7 +343,7 @@ private theorem sup_aux (f g : E →ₗ.[R] F)
     ∃ fg : ↥(f.domain ⊔ g.domain) →ₗ[R] F,
       ∀ (x : f.domain) (y : g.domain) (z), (x : E) + y = ↑z → fg z = f x + g y :=
   by
-  choose x hx y hy hxy using fun z : f.domain ⊔ g.domain => mem_sup.1 z.Prop
+  choose x hx y hy hxy using fun z : f.domain ⊔ g.domain => mem_sup.1 z.IProp
   set fg := fun z => f ⟨x z, hx z⟩ + g ⟨y z, hy z⟩
   have fg_eq :
     ∀ (x' : f.domain) (y' : g.domain) (z' : f.domain ⊔ g.domain) (H : (x' : E) + y' = z'),

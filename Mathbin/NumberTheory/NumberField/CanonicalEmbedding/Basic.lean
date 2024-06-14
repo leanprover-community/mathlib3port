@@ -67,7 +67,7 @@ theorem non_trivial_space [NumberField K] : Nontrivial E :=
 #print NumberField.canonicalEmbedding /-
 /-- The canonical embedding of a number field `K` of signature `(r₁, r₂)` into `ℝ^r₁ × ℂ^r₂`. -/
 def NumberField.canonicalEmbedding : K →+* E :=
-  RingHom.prod (Pi.ringHom fun w => w.Prop.Embedding) (Pi.ringHom fun w => w.val.Embedding)
+  RingHom.prod (Pi.ringHom fun w => w.IProp.Embedding) (Pi.ringHom fun w => w.val.Embedding)
 #align number_field.canonical_embedding NumberField.canonicalEmbedding
 -/
 
@@ -84,7 +84,7 @@ variable {K}
 
 @[simp]
 theorem apply_at_real_infinitePlace (w : { w : InfinitePlace K // IsReal w }) (x : K) :
-    (NumberField.canonicalEmbedding K x).1 w = w.Prop.Embedding x := by
+    (NumberField.canonicalEmbedding K x).1 w = w.IProp.Embedding x := by
   simp only [canonical_embedding, RingHom.prod_apply, Pi.ringHom_apply]
 #align number_field.canonical_embedding.apply_at_real_infinite_place NumberField.canonicalEmbedding.apply_at_real_infinitePlace
 

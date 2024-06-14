@@ -865,7 +865,7 @@ theorem mem_map_of_mem {f : F} {p : Submodule R M} {r} (h : r ∈ p) : f r ∈ m
 
 #print Submodule.apply_coe_mem_map /-
 theorem apply_coe_mem_map (f : F) {p : Submodule R M} (r : p) : f r ∈ map f p :=
-  mem_map_of_mem r.Prop
+  mem_map_of_mem r.IProp
 #align submodule.apply_coe_mem_map Submodule.apply_coe_mem_map
 -/
 
@@ -2695,7 +2695,7 @@ def ofLeftInverse [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := LinearMap.mem_range.mp x.Prop
+        let ⟨x', hx'⟩ := LinearMap.mem_range.mp x.IProp
         show f (g x) = x by rw [← hx', h x'] }
 #align linear_equiv.of_left_inverse LinearEquiv.ofLeftInverse
 -/

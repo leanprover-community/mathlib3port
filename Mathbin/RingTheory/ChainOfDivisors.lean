@@ -263,7 +263,7 @@ theorem coe_factor_orderIso_map_eq_one_iff {m u : Associates M} {n : Associates 
     (d : Set.Iic m ≃o Set.Iic n) : (d ⟨u, hu'⟩ : Associates N) = 1 ↔ u = 1 :=
   ⟨fun hu =>
     by
-    rw [show u = ↑(d.symm ⟨↑(d ⟨u, hu'⟩), (d ⟨u, hu'⟩).Prop⟩) by
+    rw [show u = ↑(d.symm ⟨↑(d ⟨u, hu'⟩), (d ⟨u, hu'⟩).IProp⟩) by
         simp only [Subtype.coe_eta, OrderIso.symm_apply_apply, Subtype.coe_mk]]
     convert factor_orderIso_map_one_eq_bot d.symm, fun hu => by simp_rw [hu];
     convert factor_orderIso_map_one_eq_bot d⟩
@@ -317,13 +317,14 @@ theorem map_prime_of_factor_orderIso [DecidableEq (Associates M)] {m p : Associa
     Prime (d ⟨p, dvd_of_mem_normalizedFactors hp⟩ : Associates N) :=
   by
   rw [← irreducible_iff_prime]
-  refine' (Associates.isAtom_iff <| ne_zero_of_dvd_ne_zero hn (d ⟨p, _⟩).Prop).mp ⟨_, fun b hb => _⟩
+  refine'
+    (Associates.isAtom_iff <| ne_zero_of_dvd_ne_zero hn (d ⟨p, _⟩).IProp).mp ⟨_, fun b hb => _⟩
   · rw [Ne.def, ← Associates.isUnit_iff_eq_bot, Associates.isUnit_iff_eq_one,
       coe_factor_orderIso_map_eq_one_iff _ d]
     rintro rfl
     exact (prime_of_normalized_factor 1 hp).not_unit isUnit_one
   · obtain ⟨x, hx⟩ :=
-      d.surjective ⟨b, le_trans (le_of_lt hb) (d ⟨p, dvd_of_mem_normalized_factors hp⟩).Prop⟩
+      d.surjective ⟨b, le_trans (le_of_lt hb) (d ⟨p, dvd_of_mem_normalized_factors hp⟩).IProp⟩
     rw [← Subtype.coe_mk b _, Subtype.coe_lt_coe, ← hx] at hb
     letI : OrderBot { l : Associates M // l ≤ m } := Subtype.orderBot bot_le
     letI : OrderBot { l : Associates N // l ≤ n } := Subtype.orderBot bot_le
@@ -350,7 +351,7 @@ theorem mem_normalizedFactors_factor_orderIso_of_mem_normalizedFactors [Decidabl
   by
   obtain ⟨q, hq, hq'⟩ :=
     exists_mem_normalized_factors_of_dvd hn (map_prime_of_factor_orderIso hn hp d).Irreducible
-      (d ⟨p, dvd_of_mem_normalized_factors hp⟩).Prop
+      (d ⟨p, dvd_of_mem_normalized_factors hp⟩).IProp
   rw [associated_iff_eq] at hq'
   rwa [hq']
 #align mem_normalized_factors_factor_order_iso_of_mem_normalized_factors mem_normalizedFactors_factor_orderIso_of_mem_normalizedFactors
@@ -456,7 +457,7 @@ theorem mem_normalizedFactors_factor_dvd_iso_of_mem_normalizedFactors [Decidable
       associatesEquivOfUniqueUnits_symm_apply] at this
     obtain ⟨q, hq, hq'⟩ :=
       exists_mem_normalized_factors_of_dvd hn this.irreducible
-        (d ⟨p, by apply dvd_of_mem_normalized_factors <;> convert hp⟩).Prop
+        (d ⟨p, by apply dvd_of_mem_normalized_factors <;> convert hp⟩).IProp
     rwa [associated_iff_eq.mp hq']
   have :
     Associates.mk

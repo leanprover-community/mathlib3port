@@ -560,7 +560,7 @@ theorem mem_map_of_mem (f : M →[L] N) {S : L.Substructure M} {x : M} (hx : x �
 
 #print FirstOrder.Language.Substructure.apply_coe_mem_map /-
 theorem apply_coe_mem_map (f : M →[L] N) (S : L.Substructure M) (x : S) : f x ∈ S.map f :=
-  mem_map_of_mem f x.Prop
+  mem_map_of_mem f x.IProp
 #align first_order.language.substructure.apply_coe_mem_map FirstOrder.Language.Substructure.apply_coe_mem_map
 -/
 

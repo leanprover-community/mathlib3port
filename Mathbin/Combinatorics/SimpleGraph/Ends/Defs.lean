@@ -106,7 +106,7 @@ for adjacent vertices.
 -/
 protected def lift {β : Sort _} (f : ∀ ⦃v⦄ (hv : v ∉ K), β)
     (h : ∀ ⦃v w⦄ (hv : v ∉ K) (hw : w ∉ K) (a : G.adj v w), f hv = f hw) : G.ComponentCompl K → β :=
-  ConnectedComponent.lift (fun vv => f vv.Prop) fun v w p =>
+  ConnectedComponent.lift (fun vv => f vv.IProp) fun v w p =>
     by
     induction' p with _ u v w a q ih
     · rintro _; rfl

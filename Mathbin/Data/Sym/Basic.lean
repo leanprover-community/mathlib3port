@@ -361,7 +361,7 @@ theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α) (s' : Sym α n
 
 #print Sym.eq_replicate /-
 theorem eq_replicate {a : α} {n : ℕ} {s : Sym α n} : s = replicate n a ↔ ∀ b ∈ s, b = a :=
-  Subtype.ext_iff.trans <| Multiset.eq_replicate.trans <| and_iff_right s.Prop
+  Subtype.ext_iff.trans <| Multiset.eq_replicate.trans <| and_iff_right s.IProp
 #align sym.eq_replicate Sym.eq_replicate
 -/
 
@@ -552,7 +552,7 @@ theorem attach_nil : (nil : Sym α 0).attach = nil :=
 @[simp]
 theorem attach_cons (x : α) (s : Sym α n) :
     (cons x s).attach =
-      cons ⟨x, mem_cons_self _ _⟩ (s.attach.map fun x => ⟨x, mem_cons_of_mem x.Prop⟩) :=
+      cons ⟨x, mem_cons_self _ _⟩ (s.attach.map fun x => ⟨x, mem_cons_of_mem x.IProp⟩) :=
   coe_injective <| Multiset.attach_cons _ _
 #align sym.attach_cons Sym.attach_cons
 -/

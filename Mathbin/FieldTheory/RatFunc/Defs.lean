@@ -713,7 +713,7 @@ def map [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap �
 theorem map_apply_ofFractionRing_mk [MonoidHomClass F R[X] S[X]] (φ : F)
     (hφ : R[X]⁰ ≤ S[X]⁰.comap φ) (n : R[X]) (d : R[X]⁰) :
     map φ hφ (ofFractionRing (Localization.mk n d)) =
-      ofFractionRing (Localization.mk (φ n) ⟨φ d, hφ d.Prop⟩) :=
+      ofFractionRing (Localization.mk (φ n) ⟨φ d, hφ d.IProp⟩) :=
   by
   convert lift_on_of_fraction_ring_mk _ _ _ _
   rw [dif_pos]

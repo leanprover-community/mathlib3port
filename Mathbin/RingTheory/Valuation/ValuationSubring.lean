@@ -582,8 +582,8 @@ theorem mem_unitGroup_iff (x : Kˣ) : x ∈ A.unitGroup ↔ A.Valuation x = 1 :=
 def unitGroupMulEquiv : A.unitGroup ≃* Aˣ
     where
   toFun x :=
-    { val := ⟨x, mem_of_valuation_le_one A _ x.Prop.le⟩
-      inv := ⟨↑x⁻¹, mem_of_valuation_le_one _ _ x⁻¹.Prop.le⟩
+    { val := ⟨x, mem_of_valuation_le_one A _ x.IProp.le⟩
+      inv := ⟨↑x⁻¹, mem_of_valuation_le_one _ _ x⁻¹.IProp.le⟩
       val_inv := Subtype.ext (Units.mul_inv x)
       inv_val := Subtype.ext (Units.inv_mul x) }
   invFun x := ⟨Units.map A.Subtype.toMonoidHom x, A.valuation_unit x⟩

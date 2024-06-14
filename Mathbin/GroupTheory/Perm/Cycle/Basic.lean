@@ -1161,7 +1161,7 @@ theorem IsCycleOn.isCycle_subtypePerm (hf : f.IsCycleOn s) (hs : s.Nontrivial) :
   obtain ⟨a, ha⟩ := hs.nonempty
   exact
     ⟨⟨a, ha⟩, ne_of_apply_ne (coe : s → α) (hf.apply_ne hs ha), fun b hb =>
-      (hf.2 (⟨a, ha⟩ : s).Prop b.Prop).subtypePerm⟩
+      (hf.2 (⟨a, ha⟩ : s).IProp b.IProp).subtypePerm⟩
 #align equiv.perm.is_cycle_on.is_cycle_subtype_perm Equiv.Perm.IsCycleOn.isCycle_subtypePerm
 -/
 
@@ -1175,7 +1175,7 @@ protected theorem IsCycleOn.subtypePerm (hf : f.IsCycleOn s) :
     exact is_cycle_on_of_subsingleton _ _
   convert (hf.is_cycle_subtype_perm hs).IsCycleOn
   rw [eq_comm, Set.eq_univ_iff_forall]
-  exact fun x => ne_of_apply_ne (coe : s → α) (hf.apply_ne hs x.Prop)
+  exact fun x => ne_of_apply_ne (coe : s → α) (hf.apply_ne hs x.IProp)
 #align equiv.perm.is_cycle_on.subtype_perm Equiv.Perm.IsCycleOn.subtypePerm
 -/
 
@@ -1188,12 +1188,12 @@ theorem IsCycleOn.pow_apply_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈ 
   · rw [coe_singleton, is_cycle_on_singleton] at hf
     simpa using is_fixed_pt.iterate hf n
   classical
-  have h : ∀ x ∈ s.attach, ¬f ↑x = ↑x := fun x hx => hf.apply_ne hs x.Prop
+  have h : ∀ x ∈ s.attach, ¬f ↑x = ↑x := fun x hx => hf.apply_ne hs x.IProp
   have := (hf.is_cycle_subtype_perm hs).orderOf
   simp only [filter_true_of_mem h, support_subtype_perm, card_attach] at this
   rw [← this, orderOf_dvd_iff_pow_eq_one,
     (hf.is_cycle_subtype_perm hs).pow_eq_one_iff'
-      (ne_of_apply_ne (coe : s → α) <| hf.apply_ne hs (⟨a, ha⟩ : s).Prop)]
+      (ne_of_apply_ne (coe : s → α) <| hf.apply_ne hs (⟨a, ha⟩ : s).IProp)]
   simp only [Subtype.coe_mk, subtype_perm_pow, subtype_perm_apply]
 #align equiv.perm.is_cycle_on.pow_apply_eq Equiv.Perm.IsCycleOn.pow_apply_eq
 -/

@@ -70,7 +70,7 @@ namespace StarMemClass
 
 variable {S : Type u} [Star R] [SetLike S R] [hS : StarMemClass S R] (s : S)
 
-instance : Star s where unit r := ⟨star (r : R), star_mem r.Prop⟩
+instance : Star s where unit r := ⟨star (r : R), star_mem r.IProp⟩
 
 end StarMemClass
 

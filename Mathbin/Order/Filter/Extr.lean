@@ -899,7 +899,7 @@ variable [ConditionallyCompleteLinearOrder α] {f : β → α} {s : Set β} {x�
 #print IsMaxOn.iSup_eq /-
 theorem IsMaxOn.iSup_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s, f x) = f x₀ :=
   haveI : Nonempty s := ⟨⟨x₀, hx₀⟩⟩
-  ciSup_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.Prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
+  ciSup_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.IProp) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
 #align is_max_on.supr_eq IsMaxOn.iSup_eq
 -/
 

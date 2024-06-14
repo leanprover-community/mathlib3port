@@ -484,7 +484,7 @@ theorem ModularGroup.im_smul_eq_div_normSq : (g • z).im = z.im / Complex.normS
   by
   convert im_smul_eq_div_norm_sq g z
   simp only [coe_coe, general_linear_group.coe_det_apply, coe_GL_pos_coe_GL_coe_matrix,
-    Int.coe_castRingHom, (g : SL(2, ℝ)).Prop, one_mul]
+    Int.coe_castRingHom, (g : SL(2, ℝ)).IProp, one_mul]
 #align upper_half_plane.special_linear_group.im_smul_eq_div_norm_sq UpperHalfPlane.ModularGroup.im_smul_eq_div_normSq
 -/
 

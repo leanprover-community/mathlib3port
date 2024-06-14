@@ -1058,7 +1058,7 @@ def QuotientAddGroup.equivIcoMod (a : α) : α ⧸ AddSubgroup.zmultiples p ≃ 
   toFun b :=
     ⟨(toIcoMod_periodic hp a).lift b, QuotientAddGroup.induction_on' b <| toIcoMod_mem_Ico hp a⟩
   invFun := coe
-  right_inv b := Subtype.ext <| (toIcoMod_eq_self hp).mpr b.Prop
+  right_inv b := Subtype.ext <| (toIcoMod_eq_self hp).mpr b.IProp
   left_inv b := by
     induction b using QuotientAddGroup.induction_on'
     dsimp
@@ -1091,7 +1091,7 @@ def QuotientAddGroup.equivIocMod (a : α) : α ⧸ AddSubgroup.zmultiples p ≃ 
   toFun b :=
     ⟨(toIocMod_periodic hp a).lift b, QuotientAddGroup.induction_on' b <| toIocMod_mem_Ioc hp a⟩
   invFun := coe
-  right_inv b := Subtype.ext <| (toIocMod_eq_self hp).mpr b.Prop
+  right_inv b := Subtype.ext <| (toIocMod_eq_self hp).mpr b.IProp
   left_inv b := by
     induction b using QuotientAddGroup.induction_on'
     dsimp

@@ -1307,7 +1307,7 @@ theorem natCast_succ (n : ℕ) : ↑n.succ = succ (n : Ordinal) :=
 instance uniqueIioOne : Unique (Iio (1 : Ordinal))
     where
   default := ⟨0, zero_lt_one⟩
-  uniq a := Subtype.ext <| lt_one_iff_zero.1 a.Prop
+  uniq a := Subtype.ext <| lt_one_iff_zero.1 a.IProp
 #align ordinal.unique_Iio_one Ordinal.uniqueIioOne
 -/
 

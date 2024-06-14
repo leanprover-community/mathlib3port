@@ -176,7 +176,7 @@ theorem linearMap_ext ⦃ψ ψ' : (⨁ i, M i) →ₗ[R] N⦄
 into a larger subset of the direct summands, as a linear map.
 -/
 def lsetToSet (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, M i) →ₗ[R] ⨁ i : T, M i :=
-  toModule R _ _ fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.Prop⟩
+  toModule R _ _ fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.IProp⟩
 #align direct_sum.lset_to_set DirectSum.lsetToSet
 -/
 

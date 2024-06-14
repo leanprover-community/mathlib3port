@@ -1291,7 +1291,7 @@ theorem nndist_le_two_nnnorm (x y : α) : nndist (f x) (f y) ≤ 2 * ‖f‖₊ 
 #print BoundedContinuousFunction.nnnorm_le /-
 /-- The nnnorm of a function is controlled by the supremum of the pointwise nnnorms -/
 theorem nnnorm_le (C : ℝ≥0) : ‖f‖₊ ≤ C ↔ ∀ x : α, ‖f x‖₊ ≤ C :=
-  norm_le C.Prop
+  norm_le C.IProp
 #align bounded_continuous_function.nnnorm_le BoundedContinuousFunction.nnnorm_le
 -/
 

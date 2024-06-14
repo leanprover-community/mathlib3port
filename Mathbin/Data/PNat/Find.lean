@@ -66,13 +66,13 @@ protected def find : ℕ+ :=
 
 #print PNat.find_spec /-
 protected theorem find_spec : p (PNat.find h) :=
-  (PNat.findX h).Prop.left
+  (PNat.findX h).IProp.left
 #align pnat.find_spec PNat.find_spec
 -/
 
 #print PNat.find_min /-
 protected theorem find_min : ∀ {m : ℕ+}, m < PNat.find h → ¬p m :=
-  (PNat.findX h).Prop.right
+  (PNat.findX h).IProp.right
 #align pnat.find_min PNat.find_min
 -/
 

@@ -92,7 +92,7 @@ theorem star_mem_iff {U : R} : star U ∈ unitary R ↔ U ∈ unitary R :=
 -/
 
 instance : Star (unitary R) :=
-  ⟨fun U => ⟨star U, star_mem U.Prop⟩⟩
+  ⟨fun U => ⟨star U, star_mem U.IProp⟩⟩
 
 #print unitary.coe_star /-
 @[simp, norm_cast]
@@ -103,13 +103,13 @@ theorem coe_star {U : unitary R} : ↑(star U) = (star U : R) :=
 
 #print unitary.coe_star_mul_self /-
 theorem coe_star_mul_self (U : unitary R) : (star U : R) * U = 1 :=
-  star_mul_self_of_mem U.Prop
+  star_mul_self_of_mem U.IProp
 #align unitary.coe_star_mul_self unitary.coe_star_mul_self
 -/
 
 #print unitary.coe_mul_star_self /-
 theorem coe_mul_star_self (U : unitary R) : (U : R) * star U = 1 :=
-  mul_star_self_of_mem U.Prop
+  mul_star_self_of_mem U.IProp
 #align unitary.coe_mul_star_self unitary.coe_mul_star_self
 -/
 

@@ -122,7 +122,7 @@ theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] {a : A} (ha : IsSelf
 /-- Any element of the spectrum of a selfadjoint is real. -/
 theorem selfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] (a : selfAdjoint A) {z : ℂ}
     (hz : z ∈ spectrum ℂ (a : A)) : z = z.re :=
-  a.Prop.mem_spectrum_eq_re hz
+  a.IProp.mem_spectrum_eq_re hz
 #align self_adjoint.mem_spectrum_eq_re selfAdjoint.mem_spectrum_eq_re
 -/
 

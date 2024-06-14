@@ -337,7 +337,7 @@ theorem coe_zpow (x : H) (n : ℤ) : ((x ^ n : H) : G) = x ^ n :=
 /-- The inclusion homomorphism from a subgroup `H` contained in `K` to `K`. -/
 @[to_additive "The inclusion homomorphism from a additive subgroup `H` contained in `K` to `K`."]
 def inclusion {H K : S} (h : H ≤ K) : H →* K :=
-  MonoidHom.mk' (fun x => ⟨x, h x.Prop⟩) fun ⟨a, ha⟩ ⟨b, hb⟩ => rfl
+  MonoidHom.mk' (fun x => ⟨x, h x.IProp⟩) fun ⟨a, ha⟩ ⟨b, hb⟩ => rfl
 #align subgroup_class.inclusion SubgroupClass.inclusion
 #align add_subgroup_class.inclusion AddSubgroupClass.inclusion
 -/
@@ -949,7 +949,7 @@ theorem subtype_injective : Injective (Subgroup.subtype H) :=
 /-- The inclusion homomorphism from a subgroup `H` contained in `K` to `K`. -/
 @[to_additive "The inclusion homomorphism from a additive subgroup `H` contained in `K` to `K`."]
 def inclusion {H K : Subgroup G} (h : H ≤ K) : H →* K :=
-  MonoidHom.mk' (fun x => ⟨x, h x.Prop⟩) fun ⟨a, ha⟩ ⟨b, hb⟩ => rfl
+  MonoidHom.mk' (fun x => ⟨x, h x.IProp⟩) fun ⟨a, ha⟩ ⟨b, hb⟩ => rfl
 #align subgroup.inclusion Subgroup.inclusion
 #align add_subgroup.inclusion AddSubgroup.inclusion
 -/
@@ -1691,7 +1691,7 @@ theorem mem_map_of_mem (f : G →* N) {K : Subgroup G} {x : G} (hx : x ∈ K) : 
 #print Subgroup.apply_coe_mem_map /-
 @[to_additive]
 theorem apply_coe_mem_map (f : G →* N) (K : Subgroup G) (x : K) : f x ∈ K.map f :=
-  mem_map_of_mem f x.Prop
+  mem_map_of_mem f x.IProp
 #align subgroup.apply_coe_mem_map Subgroup.apply_coe_mem_map
 #align add_subgroup.apply_coe_mem_map AddSubgroup.apply_coe_mem_map
 -/
@@ -4430,7 +4430,7 @@ theorem mul_injective_of_disjoint {H₁ H₂ : Subgroup G} (h : Disjoint H₁ H�
   by
   intro x y hxy
   rw [← inv_mul_eq_iff_eq_mul, ← mul_assoc, ← mul_inv_eq_one, mul_assoc] at hxy
-  replace hxy := disjoint_iff_mul_eq_one.mp h (y.1⁻¹ * x.1).Prop (x.2 * y.2⁻¹).Prop hxy
+  replace hxy := disjoint_iff_mul_eq_one.mp h (y.1⁻¹ * x.1).IProp (x.2 * y.2⁻¹).IProp hxy
   rwa [coe_mul, coe_mul, coe_inv, coe_inv, inv_mul_eq_one, mul_inv_eq_one, ← Subtype.ext_iff, ←
     Subtype.ext_iff, eq_comm, ← Prod.ext_iff] at hxy
 #align subgroup.mul_injective_of_disjoint Subgroup.mul_injective_of_disjoint

@@ -339,24 +339,24 @@ variable [LinearOrder α]
 -- see Note [lower instance priority]
 instance (priority := 100) PosMulStrictMono.to_posMulReflectLE [PosMulStrictMono α] :
     PosMulReflectLE α :=
-  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_left h' x.Prop⟩
+  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_left h' x.IProp⟩
 #align pos_mul_strict_mono.to_pos_mul_mono_rev PosMulStrictMono.to_posMulReflectLE
 
 -- see Note [lower instance priority]
 instance (priority := 100) MulPosStrictMono.to_mulPosReflectLE [MulPosStrictMono α] :
     MulPosReflectLE α :=
-  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_right h' x.Prop⟩
+  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_right h' x.IProp⟩
 #align mul_pos_strict_mono.to_mul_pos_mono_rev MulPosStrictMono.to_mulPosReflectLE
 
 #print PosMulReflectLE.toPosMulStrictMono /-
 theorem PosMulReflectLE.toPosMulStrictMono [PosMulReflectLE α] : PosMulStrictMono α :=
-  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_left h' x.Prop⟩
+  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_left h' x.IProp⟩
 #align pos_mul_mono_rev.to_pos_mul_strict_mono PosMulReflectLE.toPosMulStrictMono
 -/
 
 #print MulPosReflectLE.toMulPosStrictMono /-
 theorem MulPosReflectLE.toMulPosStrictMono [MulPosReflectLE α] : MulPosStrictMono α :=
-  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_right h' x.Prop⟩
+  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_right h' x.IProp⟩
 #align mul_pos_mono_rev.to_mul_pos_strict_mono MulPosReflectLE.toMulPosStrictMono
 -/
 
@@ -374,25 +374,25 @@ theorem mulPosStrictMono_iff_mulPosReflectLE : MulPosStrictMono α ↔ MulPosRef
 
 #print PosMulReflectLT.toPosMulMono /-
 theorem PosMulReflectLT.toPosMulMono [PosMulReflectLT α] : PosMulMono α :=
-  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| lt_of_mul_lt_mul_left h' x.Prop⟩
+  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| lt_of_mul_lt_mul_left h' x.IProp⟩
 #align pos_mul_reflect_lt.to_pos_mul_mono PosMulReflectLT.toPosMulMono
 -/
 
 #print MulPosReflectLT.toMulPosMono /-
 theorem MulPosReflectLT.toMulPosMono [MulPosReflectLT α] : MulPosMono α :=
-  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| lt_of_mul_lt_mul_right h' x.Prop⟩
+  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| lt_of_mul_lt_mul_right h' x.IProp⟩
 #align mul_pos_reflect_lt.to_mul_pos_mono MulPosReflectLT.toMulPosMono
 -/
 
 #print PosMulMono.toPosMulReflectLT /-
 theorem PosMulMono.toPosMulReflectLT [PosMulMono α] : PosMulReflectLT α :=
-  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_left h' x.Prop⟩
+  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_left h' x.IProp⟩
 #align pos_mul_mono.to_pos_mul_reflect_lt PosMulMono.toPosMulReflectLT
 -/
 
 #print MulPosMono.toMulPosReflectLT /-
 theorem MulPosMono.toMulPosReflectLT [MulPosMono α] : MulPosReflectLT α :=
-  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_right h' x.Prop⟩
+  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_right h' x.IProp⟩
 #align mul_pos_mono.to_mul_pos_reflect_lt MulPosMono.toMulPosReflectLT
 -/
 

@@ -125,7 +125,7 @@ theorem mem_invSubmonoid_iff_exists_mk' (x : S) : x ∈ invSubmonoid M S ↔ ∃
   simp_rw [← to_inv_submonoid_eq_mk']
   exact
     ⟨fun h => ⟨_, congr_arg Subtype.val (to_inv_submonoid_surjective M S ⟨x, h⟩).choose_spec⟩,
-      fun h => h.choose_spec ▸ (to_inv_submonoid M S h.some).Prop⟩
+      fun h => h.choose_spec ▸ (to_inv_submonoid M S h.some).IProp⟩
 #align is_localization.mem_inv_submonoid_iff_exists_mk' IsLocalization.mem_invSubmonoid_iff_exists_mk'
 -/
 
@@ -137,7 +137,7 @@ theorem span_invSubmonoid : Submodule.span R (invSubmonoid M S : Set S) = ⊤ :=
   rw [eq_top_iff]
   rintro x -
   rcases IsLocalization.surj'' M x with ⟨r, m, rfl⟩
-  exact Submodule.smul_mem _ _ (Submodule.subset_span (to_inv_submonoid M S m).Prop)
+  exact Submodule.smul_mem _ _ (Submodule.subset_span (to_inv_submonoid M S m).IProp)
 #align is_localization.span_inv_submonoid IsLocalization.span_invSubmonoid
 -/
 

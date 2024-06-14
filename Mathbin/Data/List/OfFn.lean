@@ -199,8 +199,8 @@ theorem ofFn_mul {m n} (f : Fin (m * n) → α) :
               ⟨i * n + j,
                 calc
                   ↑i * n + j < (i + 1) * n :=
-                    (add_lt_add_left j.Prop _).trans_eq (add_one_mul _ _).symm
-                  _ ≤ _ := Nat.mul_le_mul_right _ i.Prop⟩) :=
+                    (add_lt_add_left j.IProp _).trans_eq (add_one_mul _ _).symm
+                  _ ≤ _ := Nat.mul_le_mul_right _ i.IProp⟩) :=
   by
   induction' m with m IH
   · simp_rw [of_fn_zero, MulZeroClass.zero_mul, of_fn_zero, join]
@@ -219,8 +219,8 @@ theorem ofFn_mul' {m n} (f : Fin (m * n) → α) :
               ⟨m * i + j,
                 calc
                   m * i + j < m * (i + 1) :=
-                    (add_lt_add_left j.Prop _).trans_eq (mul_add_one _ _).symm
-                  _ ≤ _ := Nat.mul_le_mul_left _ i.Prop⟩) :=
+                    (add_lt_add_left j.IProp _).trans_eq (mul_add_one _ _).symm
+                  _ ≤ _ := Nat.mul_le_mul_left _ i.IProp⟩) :=
   by simp_rw [mul_comm m n, mul_comm m, of_fn_mul, Fin.cast_mk]
 #align list.of_fn_mul' List.ofFn_mul'
 -/
@@ -285,7 +285,7 @@ def equivSigmaTuple : List α ≃ Σ n, Fin n → α
   invFun f := List.ofFn f.2
   left_inv := List.ofFn_nthLe
   right_inv := fun ⟨n, f⟩ =>
-    Fin.sigma_eq_of_eq_comp_cast (length_ofFn _) <| funext fun i => nthLe_ofFn' f i.Prop
+    Fin.sigma_eq_of_eq_comp_cast (length_ofFn _) <| funext fun i => nthLe_ofFn' f i.IProp
 #align list.equiv_sigma_tuple List.equivSigmaTuple
 -/
 

@@ -553,14 +553,14 @@ theorem pow_apply (n : M) (m : ℕ) : Submonoid.pow n m = ⟨n ^ m, m, rfl⟩ :=
 #print Submonoid.log /-
 /-- Logarithms from powers to natural numbers. -/
 def log [DecidableEq M] {n : M} (p : powers n) : ℕ :=
-  Nat.find <| (mem_powers_iff p.val n).mp p.Prop
+  Nat.find <| (mem_powers_iff p.val n).mp p.IProp
 #align submonoid.log Submonoid.log
 -/
 
 #print Submonoid.pow_log_eq_self /-
 @[simp]
 theorem pow_log_eq_self [DecidableEq M] {n : M} (p : powers n) : pow n (log p) = p :=
-  Subtype.ext <| Nat.find_spec p.Prop
+  Subtype.ext <| Nat.find_spec p.IProp
 #align submonoid.pow_log_eq_self Submonoid.pow_log_eq_self
 -/
 

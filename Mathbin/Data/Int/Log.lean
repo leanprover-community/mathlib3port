@@ -194,9 +194,9 @@ def zpowLogGi {b : ℕ} (hb : 1 < b) :
       (fun z : ℤ =>
         Subtype.mk ((b : R) ^ z) <| zpow_pos_of_pos (by exact_mod_cast zero_lt_one.trans hb) z)
       fun r : Set.Ioi (0 : R) => Int.log b (r : R) :=
-  GaloisCoinsertion.monotoneIntro (fun r₁ r₂ => log_mono_right r₁.Prop)
+  GaloisCoinsertion.monotoneIntro (fun r₁ r₂ => log_mono_right r₁.IProp)
     (fun z₁ z₂ hz => Subtype.coe_le_coe.mp <| (zpow_strictMono <| by exact_mod_cast hb).Monotone hz)
-    (fun r => Subtype.coe_le_coe.mp <| zpow_log_le_self hb r.Prop) fun _ => log_zpow hb _
+    (fun r => Subtype.coe_le_coe.mp <| zpow_log_le_self hb r.IProp) fun _ => log_zpow hb _
 #align int.zpow_log_gi Int.zpowLogGi
 -/
 
@@ -361,7 +361,7 @@ def clogZPowGi {b : ℕ} (hb : 1 < b) :
       ⟨(b : R) ^ z, zpow_pos_of_pos (by exact_mod_cast zero_lt_one.trans hb) z⟩ :=
   GaloisInsertion.monotoneIntro
     (fun z₁ z₂ hz => Subtype.coe_le_coe.mp <| (zpow_strictMono <| by exact_mod_cast hb).Monotone hz)
-    (fun r₁ r₂ => clog_mono_right r₁.Prop)
+    (fun r₁ r₂ => clog_mono_right r₁.IProp)
     (fun r => Subtype.coe_le_coe.mp <| self_le_zpow_clog hb _) fun _ => clog_zpow hb _
 #align int.clog_zpow_gi Int.clogZPowGi
 -/

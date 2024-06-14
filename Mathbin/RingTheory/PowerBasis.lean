@@ -406,7 +406,7 @@ noncomputable def liftEquiv (pb : PowerBasis A S) :
   toFun f := ⟨f pb.gen, by rw [aeval_alg_hom_apply, minpoly.aeval, f.map_zero]⟩
   invFun y := pb.lift y y.2
   left_inv f := pb.algHom_ext <| lift_gen _ _ _
-  right_inv y := Subtype.ext <| lift_gen _ _ y.Prop
+  right_inv y := Subtype.ext <| lift_gen _ _ y.IProp
 #align power_basis.lift_equiv PowerBasis.liftEquiv
 -/
 

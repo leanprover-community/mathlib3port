@@ -453,7 +453,7 @@ section FilterAndSubtypeDomain
 def filter [∀ i, Zero (β i)] (p : ι → Prop) [DecidablePred p] (x : Π₀ i, β i) : Π₀ i, β i :=
   ⟨fun i => if p i then x i else 0,
     x.support'.map fun xs =>
-      ⟨xs, fun i => (xs.Prop i).imp_right fun H : x i = 0 => by rw [H, if_t_t]⟩⟩
+      ⟨xs, fun i => (xs.IProp i).imp_right fun H : x i = 0 => by rw [H, if_t_t]⟩⟩
 #align dfinsupp.filter DFinsupp.filter
 -/
 
@@ -558,7 +558,7 @@ def subtypeDomain [∀ i, Zero (β i)] (p : ι → Prop) [DecidablePred p] (x : 
   ⟨fun i => x (i : ι),
     x.support'.map fun xs =>
       ⟨(Multiset.filter p xs).attach.map fun j => ⟨j, (Multiset.mem_filter.1 j.2).2⟩, fun i =>
-        (xs.Prop i).imp_left fun H =>
+        (xs.IProp i).imp_left fun H =>
           Multiset.mem_map.2
             ⟨⟨i, Multiset.mem_filter.2 ⟨H, i.2⟩⟩, Multiset.mem_attach _ _, Subtype.eta _ _⟩⟩⟩
 #align dfinsupp.subtype_domain DFinsupp.subtypeDomain
@@ -654,7 +654,7 @@ theorem finite_support (f : Π₀ i, β i) : Set.Finite {i | f i ≠ 0} := by
   classical exact
     Trunc.induction_on f.support' fun xs =>
       (Multiset.toFinset ↑xs).finite_toSet.Subset fun i H =>
-        Multiset.mem_toFinset.2 ((xs.Prop i).resolve_right H)
+        Multiset.mem_toFinset.2 ((xs.IProp i).resolve_right H)
 #align dfinsupp.finite_support DFinsupp.finite_support
 -/
 
@@ -880,7 +880,8 @@ theorem equivFunOnFintype_symm_single [Fintype ι] (i : ι) (m : β i) :
 /-- Redefine `f i` to be `0`. -/
 def erase (i : ι) (x : Π₀ i, β i) : Π₀ i, β i :=
   ⟨fun j => if j = i then 0 else x.1 j,
-    x.support'.map fun xs => ⟨xs, fun j => (xs.Prop j).imp_right fun H => by simp only [H, if_t_t]⟩⟩
+    x.support'.map fun xs =>
+      ⟨xs, fun j => (xs.IProp j).imp_right fun H => by simp only [H, if_t_t]⟩⟩
 #align dfinsupp.erase DFinsupp.erase
 -/
 
@@ -1585,7 +1586,7 @@ noncomputable def comapDomain [∀ i, Zero (β i)] (h : κ → ι) (hh : Functio
   support' :=
     f.support'.map fun s =>
       ⟨((Multiset.toFinset ↑s).Preimage h (hh.InjOn _)).val, fun x =>
-        (s.Prop (h x)).imp_left fun hx => mem_preimage.mpr <| Multiset.mem_toFinset.mpr hx⟩
+        (s.IProp (h x)).imp_left fun hx => mem_preimage.mpr <| Multiset.mem_toFinset.mpr hx⟩
 #align dfinsupp.comap_domain DFinsupp.comapDomain
 -/
 
@@ -1642,7 +1643,7 @@ def comapDomain' [∀ i, Zero (β i)] (h : κ → ι) {h' : ι → κ} (hh' : Fu
   support' :=
     f.support'.map fun s =>
       ⟨Multiset.map h' s, fun x =>
-        (s.Prop (h x)).imp_left fun hx => Multiset.mem_map.mpr ⟨_, hx, hh' _⟩⟩
+        (s.IProp (h x)).imp_left fun hx => Multiset.mem_map.mpr ⟨_, hx, hh' _⟩⟩
 #align dfinsupp.comap_domain' DFinsupp.comapDomain'
 -/
 
@@ -1934,7 +1935,7 @@ def extendWith [∀ i, Zero (α i)] (a : α none) (f : Π₀ i, α (some i)) : �
       ⟨none ::ₘ Multiset.map some s, fun i =>
         Option.rec (Or.inl <| Multiset.mem_cons_self _ _)
           (fun i =>
-            (s.Prop i).imp_left fun h => Multiset.mem_cons_of_mem <| Multiset.mem_map_of_mem _ h)
+            (s.IProp i).imp_left fun h => Multiset.mem_cons_of_mem <| Multiset.mem_map_of_mem _ h)
           i⟩
 #align dfinsupp.extend_with DFinsupp.extendWith
 -/
@@ -2308,7 +2309,7 @@ theorem AddSubmonoid.iSup_eq_mrange_dfinsupp_sumAddHom [AddCommMonoid γ] (S : �
     intro i y hy
     exact ⟨DFinsupp.single i ⟨y, hy⟩, DFinsupp.sumAddHom_single _ _ _⟩
   · rintro x ⟨v, rfl⟩
-    exact dfinsupp_sumAddHom_mem _ v _ fun i _ => (le_iSup S i : S i ≤ _) (v i).Prop
+    exact dfinsupp_sumAddHom_mem _ v _ fun i _ => (le_iSup S i : S i ≤ _) (v i).IProp
 #align add_submonoid.supr_eq_mrange_dfinsupp_sum_add_hom AddSubmonoid.iSup_eq_mrange_dfinsupp_sumAddHom
 -/
 

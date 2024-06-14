@@ -1013,7 +1013,7 @@ This isomorphism is named to match the very similar `complex.lift`. -/
 @[simps]
 def liftEquiv : { f : M →ₗ[R'] A // ∀ x y, f x * f y = 0 } ≃ (tsze R' M →ₐ[R'] A)
     where
-  toFun f := lift f f.Prop
+  toFun f := lift f f.IProp
   invFun F :=
     ⟨F.toLinearMap.comp (inrHom R' M), fun x y =>
       (F.map_hMul _ _).symm.trans <| (F.congr_arg <| inr_mul_inr _ _ _).trans F.map_zero⟩

@@ -938,7 +938,7 @@ def ofFiberEquiv {α β γ : Type _} {f : α → γ} {g : β → γ}
 #print Equiv.ofFiberEquiv_map /-
 theorem ofFiberEquiv_map {α β γ} {f : α → γ} {g : β → γ}
     (e : ∀ c, { a // f a = c } ≃ { b // g b = c }) (a : α) : g (ofFiberEquiv e a) = f a :=
-  (_ : { b // g b = _ }).Prop
+  (_ : { b // g b = _ }).IProp
 #align equiv.of_fiber_equiv_map Equiv.ofFiberEquiv_map
 -/
 
@@ -1284,8 +1284,8 @@ For the statement where `α = β`, that is, `e : perm α`, see `perm.subtype_per
 def subtypeEquiv {p : α → Prop} {q : β → Prop} (e : α ≃ β) (h : ∀ a, p a ↔ q (e a)) :
     { a : α // p a } ≃ { b : β // q b }
     where
-  toFun a := ⟨e a, (h _).mp a.Prop⟩
-  invFun b := ⟨e.symm b, (h _).mpr ((e.apply_symm_apply b).symm ▸ b.Prop)⟩
+  toFun a := ⟨e a, (h _).mp a.IProp⟩
+  invFun b := ⟨e.symm b, (h _).mpr ((e.apply_symm_apply b).symm ▸ b.IProp)⟩
   left_inv a := Subtype.ext <| by simp
   right_inv b := Subtype.ext <| by simp
 #align equiv.subtype_equiv Equiv.subtypeEquiv
@@ -1501,8 +1501,8 @@ def subtypeProdEquivProd {α : Type u} {β : Type v} {p : α → Prop} {q : β �
 def subtypeProdEquivSigmaSubtype {α β : Type _} (p : α → β → Prop) :
     { x : α × β // p x.1 x.2 } ≃ Σ a, { b : β // p a b }
     where
-  toFun x := ⟨x.1.1, x.1.2, x.Prop⟩
-  invFun x := ⟨⟨x.1, x.2⟩, x.2.Prop⟩
+  toFun x := ⟨x.1.1, x.1.2, x.IProp⟩
+  invFun x := ⟨⟨x.1, x.2⟩, x.2.IProp⟩
   left_inv x := by ext <;> rfl
   right_inv := fun ⟨a, b, pab⟩ => rfl
 #align equiv.subtype_prod_equiv_sigma_subtype Equiv.subtypeProdEquivSigmaSubtype
@@ -1753,7 +1753,7 @@ theorem subtypeQuotientEquivQuotientSubtype_mk (p₁ : α → Prop) [s₁ : Seto
 theorem subtypeQuotientEquivQuotientSubtype_symm_mk (p₁ : α → Prop) [s₁ : Setoid α]
     [s₂ : Setoid (Subtype p₁)] (p₂ : Quotient s₁ → Prop) (hp₂ : ∀ a, p₁ a ↔ p₂ ⟦a⟧)
     (h : ∀ x y : Subtype p₁, @Setoid.r _ s₂ x y ↔ (x : α) ≈ y) (x) :
-    (subtypeQuotientEquivQuotientSubtype p₁ p₂ hp₂ h).symm ⟦x⟧ = ⟨⟦x⟧, (hp₂ _).1 x.Prop⟩ :=
+    (subtypeQuotientEquivQuotientSubtype p₁ p₂ hp₂ h).symm ⟦x⟧ = ⟨⟦x⟧, (hp₂ _).1 x.IProp⟩ :=
   rfl
 #align equiv.subtype_quotient_equiv_quotient_subtype_symm_mk Equiv.subtypeQuotientEquivQuotientSubtype_symm_mk
 -/

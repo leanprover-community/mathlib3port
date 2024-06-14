@@ -1457,7 +1457,7 @@ theorem cthickening_subset_of_subset (δ : ℝ) {E₁ E₂ : Set α} (h : E₁ �
 #print Metric.cthickening_subset_thickening /-
 theorem cthickening_subset_thickening {δ₁ : ℝ≥0} {δ₂ : ℝ} (hlt : (δ₁ : ℝ) < δ₂) (E : Set α) :
     cthickening δ₁ E ⊆ thickening δ₂ E := fun _ hx =>
-  lt_of_le_of_lt hx ((ENNReal.ofReal_lt_ofReal_iff (lt_of_le_of_lt δ₁.Prop hlt)).mpr hlt)
+  lt_of_le_of_lt hx ((ENNReal.ofReal_lt_ofReal_iff (lt_of_le_of_lt δ₁.IProp hlt)).mpr hlt)
 #align metric.cthickening_subset_thickening Metric.cthickening_subset_thickening
 -/
 

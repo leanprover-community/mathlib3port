@@ -507,7 +507,7 @@ instance zariskiTopology : TopologicalSpace (PrimeSpectrum R) :=
     (by
       intro Zs h
       rw [Set.sInter_eq_iInter]
-      choose f hf using fun i : Zs => h i.Prop
+      choose f hf using fun i : Zs => h i.IProp
       simp only [← hf]
       exact ⟨_, zero_locus_Union _⟩)
     (by rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩; exact ⟨_, (union_zero_locus s t).symm⟩)

@@ -329,7 +329,7 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
     simp only [Multiset.mem_attach, true_and_iff, not_exists]
     rintro J' rfl
     exact
-      hJ ((normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx').symm J').Prop
+      hJ ((normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx').symm J').IProp
   -- Then we just have to compare the multiplicities, which we already proved are equal.
   have := multiplicity_factors_map_eq_multiplicity hI hI' hx hx' hJ
   rw [multiplicity_eq_count_normalized_factors, multiplicity_eq_count_normalized_factors,
@@ -351,11 +351,11 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
         Ideal S),
     Multiset.count_attach]
   · exact subtype.coe_injective.comp (Equiv.injective _)
-  · exact (normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx' _).Prop
+  · exact (normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx' _).IProp
   ·
     exact
       irreducible_of_normalized_factor _
-        (normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx' _).Prop
+        (normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx' _).IProp
   · exact Polynomial.map_monic_ne_zero (minpoly.monic hx')
   · exact irreducible_of_normalized_factor _ hJ
   ·

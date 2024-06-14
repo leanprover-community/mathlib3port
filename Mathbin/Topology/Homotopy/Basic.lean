@@ -583,7 +583,7 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) (G 
 @[simps]
 def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) :
     HomotopyWith g₀ g₁ P :=
-  { F.toHomotopy.cast h₀ h₁ with prop' := F.Prop }
+  { F.toHomotopy.cast h₀ h₁ with prop' := F.IProp }
 #align continuous_map.homotopy_with.cast ContinuousMap.HomotopyWith.cast
 -/
 
@@ -643,13 +643,13 @@ variable {f₀ f₁ : C(X, Y)} {S : Set X}
 
 #print ContinuousMap.HomotopyRel.eq_fst /-
 theorem eq_fst (F : HomotopyRel f₀ f₁ S) (t : I) {x : X} (hx : x ∈ S) : F (t, x) = f₀ x :=
-  (F.Prop t x hx).1
+  (F.IProp t x hx).1
 #align continuous_map.homotopy_rel.eq_fst ContinuousMap.HomotopyRel.eq_fst
 -/
 
 #print ContinuousMap.HomotopyRel.eq_snd /-
 theorem eq_snd (F : HomotopyRel f₀ f₁ S) (t : I) {x : X} (hx : x ∈ S) : F (t, x) = f₁ x :=
-  (F.Prop t x hx).2
+  (F.IProp t x hx).2
 #align continuous_map.homotopy_rel.eq_snd ContinuousMap.HomotopyRel.eq_snd
 -/
 

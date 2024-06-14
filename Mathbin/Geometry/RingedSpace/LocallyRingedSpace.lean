@@ -89,7 +89,7 @@ def 𝒪 : Sheaf CommRingCat X.toTopCat :=
 @[ext]
 structure Hom (X Y : LocallyRingedSpace.{u}) : Type u where
   val : X.toSheafedSpace ⟶ Y.toSheafedSpace
-  Prop : ∀ x, IsLocalRingHom (PresheafedSpace.stalkMap val x)
+  IProp : ∀ x, IsLocalRingHom (PresheafedSpace.stalkMap val x)
 #align algebraic_geometry.LocallyRingedSpace.hom AlgebraicGeometry.LocallyRingedSpace.Hom
 -/
 

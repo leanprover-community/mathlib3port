@@ -341,7 +341,7 @@ theorem of_s_of_int (a : ℤ) : (of (a : K)).s = Seq.nil :=
     intro n
     induction' n with n ih
     · rw [of_s_head_aux, stream_succ_of_int, Option.bind]
-    · exact (of (a : K)).s.Prop ih
+    · exact (of (a : K)).s.IProp ih
   seq.ext fun n => (h n).trans (seq.nth_nil n).symm
 #align generalized_continued_fraction.of_s_of_int GeneralizedContinuedFraction.of_s_of_int
 -/

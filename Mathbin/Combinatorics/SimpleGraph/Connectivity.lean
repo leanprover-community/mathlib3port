@@ -2731,8 +2731,8 @@ itself defines an equivalence on the supports of each connected component.
 def isoEquivSupp (φ : G ≃g G') (C : G.ConnectedComponent) :
     C.supp ≃ (φ.connectedComponentEquiv C).supp
     where
-  toFun v := ⟨φ v, ConnectedComponent.iso_image_comp_eq_map_iff_eq_comp.mpr v.Prop⟩
-  invFun v' := ⟨φ.symm v', ConnectedComponent.iso_inv_image_comp_eq_iff_eq_map.mpr v'.Prop⟩
+  toFun v := ⟨φ v, ConnectedComponent.iso_image_comp_eq_map_iff_eq_comp.mpr v.IProp⟩
+  invFun v' := ⟨φ.symm v', ConnectedComponent.iso_inv_image_comp_eq_iff_eq_map.mpr v'.IProp⟩
   left_inv v := Subtype.ext_val (φ.toEquiv.left_inv ↑v)
   right_inv v := Subtype.ext_val (φ.toEquiv.right_inv ↑v)
 #align simple_graph.connected_component.iso_equiv_supp SimpleGraph.ConnectedComponent.isoEquivSupp

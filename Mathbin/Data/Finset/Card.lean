@@ -473,10 +473,10 @@ theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀ a ∈ s, β) (hf :
     ∀ b ∈ t, ∃ a ha, b = f a ha := by
   classical
   intro b hb
-  have h : (s.attach.image fun a : { a // a ∈ s } => f a a.Prop).card = s.card :=
+  have h : (s.attach.image fun a : { a // a ∈ s } => f a a.IProp).card = s.card :=
     @card_attach _ s ▸
       card_image_of_injective _ fun ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ h => Subtype.eq <| hinj _ _ _ _ h
-  have h' : image (fun a : { a // a ∈ s } => f a a.Prop) s.attach = t :=
+  have h' : image (fun a : { a // a ∈ s } => f a a.IProp) s.attach = t :=
     eq_of_subset_of_card_le
       (fun b h =>
         let ⟨a, ha₁, ha₂⟩ := mem_image.1 h

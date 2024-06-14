@@ -937,7 +937,7 @@ def ofLeftInverse {g : B → A} {f : A →ₐ[R] B} (h : Function.LeftInverse g 
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := f.mem_range.mp x.Prop
+        let ⟨x', hx'⟩ := f.mem_range.mp x.IProp
         show f (g x) = x by rw [← hx', h x'] }
 #align alg_equiv.of_left_inverse AlgEquiv.ofLeftInverse
 -/

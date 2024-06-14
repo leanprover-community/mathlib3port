@@ -612,7 +612,7 @@ theorem SetLike.mul_mem_graded {S : Type _} [SetLike S R] [Mul R] [Add ι] {A : 
 #print SetLike.gMul /-
 instance SetLike.gMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) [SetLike.GradedMul A] :
     GradedMonoid.GMul fun i => A i
-    where mul i j a b := ⟨(a * b : R), SetLike.mul_mem_graded a.Prop b.Prop⟩
+    where mul i j a b := ⟨(a * b : R), SetLike.mul_mem_graded a.IProp b.IProp⟩
 #align set_like.ghas_mul SetLike.gMul
 -/
 
@@ -683,7 +683,7 @@ instance SetLike.gMonoid {S : Type _} [SetLike S R] [Monoid R] [AddMonoid ι] (A
     mul_one := fun ⟨i, a, h⟩ => Sigma.subtype_ext (add_zero _) (mul_one _)
     mul_assoc := fun ⟨i, a, ha⟩ ⟨j, b, hb⟩ ⟨k, c, hc⟩ =>
       Sigma.subtype_ext (add_assoc _ _ _) (mul_assoc _ _ _)
-    gnpow := fun n i a => ⟨a ^ n, SetLike.pow_mem_graded n a.Prop⟩
+    gnpow := fun n i a => ⟨a ^ n, SetLike.pow_mem_graded n a.IProp⟩
     gnpow_zero' := fun n => Sigma.subtype_ext (zero_nsmul _) (pow_zero _)
     gnpow_succ' := fun n a => Sigma.subtype_ext (succ_nsmul' _ _) (pow_succ' _ _) }
 #align set_like.gmonoid SetLike.gMonoid
@@ -734,7 +734,7 @@ theorem SetLike.list_dProd_eq (A : ι → S) [SetLike.GradedMonoid A] (fι : α 
     (l.dProd fι fA : (fun i => ↥(A i)) _) =
       ⟨List.prod (l.map fun a => fA a),
         (l.dProdIndex_eq_map_sum fι).symm ▸
-          list_prod_map_mem_graded l _ _ fun i hi => (fA i).Prop⟩ :=
+          list_prod_map_mem_graded l _ _ fun i hi => (fA i).IProp⟩ :=
   Subtype.ext <| SetLike.coe_list_dProd _ _ _ _
 #align set_like.list_dprod_eq SetLike.list_dProd_eq
 -/
@@ -757,7 +757,7 @@ def SetLike.Homogeneous (A : ι → S) (a : R) : Prop :=
 #print SetLike.homogeneous_coe /-
 @[simp]
 theorem SetLike.homogeneous_coe {A : ι → S} {i} (x : A i) : SetLike.Homogeneous A (x : R) :=
-  ⟨i, x.Prop⟩
+  ⟨i, x.IProp⟩
 #align set_like.is_homogeneous_coe SetLike.homogeneous_coe
 -/
 

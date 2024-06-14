@@ -100,7 +100,7 @@ instance : NonUnitalAlgSemiHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
     characterSpace.continuousLinearMapClass with
     map_smul := fun φ => map_smul φ
     map_zero := fun φ => map_zero φ
-    map_hMul := fun φ => φ.Prop.2 }
+    map_hMul := fun φ => φ.IProp.2 }
 
 #print WeakDual.CharacterSpace.toNonUnitalAlgHom /-
 /-- An element of the character space, as an non-unital algebra homomorphism. -/
@@ -123,7 +123,7 @@ theorem coe_toNonUnitalAlgHom (φ : characterSpace 𝕜 A) : ⇑(toNonUnitalAlgH
 
 instance [Subsingleton A] : IsEmpty (characterSpace 𝕜 A) :=
   ⟨fun φ =>
-    φ.Prop.1 <| ContinuousLinearMap.ext fun x => by simp only [Subsingleton.elim x 0, map_zero]⟩
+    φ.IProp.1 <| ContinuousLinearMap.ext fun x => by simp only [Subsingleton.elim x 0, map_zero]⟩
 
 variable (𝕜 A)
 

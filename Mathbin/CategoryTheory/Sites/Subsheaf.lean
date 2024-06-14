@@ -70,7 +70,7 @@ instance : Nonempty (Subpresheaf F) :=
 def Subpresheaf.toPresheaf : Cᵒᵖ ⥤ Type w
     where
   obj U := G.obj U
-  map U V i x := ⟨F.map i x, G.map i x.Prop⟩
+  map U V i x := ⟨F.map i x, G.map i x.IProp⟩
   map_id' X := by ext ⟨x, _⟩; dsimp; rw [F.map_id]; rfl
   map_comp' X Y Z i j := by ext ⟨x, _⟩; dsimp; rw [F.map_comp]; rfl
 #align category_theory.grothendieck_topology.subpresheaf.to_presheaf CategoryTheory.GrothendieckTopology.Subpresheaf.toPresheaf
@@ -95,7 +95,7 @@ instance : Mono G.ι :=
 /-- The inclusion of a subpresheaf to a larger subpresheaf -/
 @[simps]
 def Subpresheaf.homOfLe {G G' : Subpresheaf F} (h : G ≤ G') : G.toPresheaf ⟶ G'.toPresheaf
-    where app U x := ⟨x, h U x.Prop⟩
+    where app U x := ⟨x, h U x.IProp⟩
 #align category_theory.grothendieck_topology.subpresheaf.hom_of_le CategoryTheory.GrothendieckTopology.Subpresheaf.homOfLe
 -/
 
@@ -299,11 +299,11 @@ theorem Subpresheaf.sheafify_sheafify (h : Presieve.IsSheaf J F) :
 noncomputable def Subpresheaf.sheafifyLift (f : G.toPresheaf ⟶ F') (h : Presieve.IsSheaf J F') :
     (G.sheafify J).toPresheaf ⟶ F'
     where
-  app U s := (h _ s.Prop).amalgamate _ ((G.family_of_elements_compatible ↑s).compPresheafMap f)
+  app U s := (h _ s.IProp).amalgamate _ ((G.family_of_elements_compatible ↑s).compPresheafMap f)
   naturality' := by
     intro U V i
     ext s
-    apply (h _ ((subpresheaf.sheafify J G).toPresheaf.map i s).Prop).IsSeparatedFor.ext
+    apply (h _ ((subpresheaf.sheafify J G).toPresheaf.map i s).IProp).IsSeparatedFor.ext
     intro W j hj
     refine' (presieve.is_sheaf_for.valid_glue _ _ _ hj).trans _
     dsimp
@@ -323,7 +323,7 @@ theorem Subpresheaf.to_sheafifyLift (f : G.toPresheaf ⟶ F') (h : Presieve.IsSh
     Subpresheaf.homOfLe (G.le_sheafify J) ≫ G.sheafifyLift f h = f :=
   by
   ext U s
-  apply (h _ ((subpresheaf.hom_of_le (G.le_sheafify J)).app U s).Prop).IsSeparatedFor.ext
+  apply (h _ ((subpresheaf.hom_of_le (G.le_sheafify J)).app U s).IProp).IsSeparatedFor.ext
   intro V i hi
   have := elementwise_of f.naturality
   exact (presieve.is_sheaf_for.valid_glue _ _ _ hi).trans (this _ _)

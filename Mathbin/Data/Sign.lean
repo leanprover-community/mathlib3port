@@ -576,7 +576,7 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
   by
   refine'
     ⟨Σ a : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a =>
-      SignType.sign (f a.1), fun a => a.1, fun a => a.1.Prop, _, _⟩
+      SignType.sign (f a.1), fun a => a.1, fun a => a.1.IProp, _, _⟩
   · simp [@sum_attach _ _ _ _ fun a => (f a).natAbs]
   · intro x hx
     simp [sum_sigma, hx, ← Int.sign_eq_sign, Int.sign_mul_abs, mul_comm |f _|,

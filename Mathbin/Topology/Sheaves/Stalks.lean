@@ -359,7 +359,7 @@ noncomputable def stalkSpecializes (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
 #print TopCat.Presheaf.germ_stalkSpecializes /-
 @[simp, reassoc, elementwise]
 theorem germ_stalkSpecializes (F : X.Presheaf C) {U : Opens X} {y : U} {x : X} (h : x ⤳ y) :
-    F.germ y ≫ F.stalkSpecializes h = F.germ (⟨x, h.mem_open U.IsOpen y.Prop⟩ : U) :=
+    F.germ y ≫ F.stalkSpecializes h = F.germ (⟨x, h.mem_open U.IsOpen y.IProp⟩ : U) :=
   colimit.ι_desc _ _
 #align Top.presheaf.germ_stalk_specializes TopCat.Presheaf.germ_stalkSpecializes
 -/

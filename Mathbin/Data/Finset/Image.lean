@@ -107,7 +107,7 @@ theorem forall_mem_map {f : α ↪ β} {s : Finset α} {p : ∀ a, a ∈ s.map f
 
 #print Finset.apply_coe_mem_map /-
 theorem apply_coe_mem_map (f : α ↪ β) (s : Finset α) (x : s) : f x ∈ s.map f :=
-  mem_map_of_mem f x.Prop
+  mem_map_of_mem f x.IProp
 #align finset.apply_coe_mem_map Finset.apply_coe_mem_map
 -/
 

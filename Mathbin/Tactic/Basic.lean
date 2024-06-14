@@ -12,7 +12,7 @@ import Tactic.Find
 import Tactic.Finish
 import Tactic.Generalizes
 import Tactic.GeneralizeProofs
-import Tactic.Itauto
+import Tactic.ITauto
 import Tactic.Lift
 import Mathbin.Tactic.Lint.Default
 import Tactic.Localized

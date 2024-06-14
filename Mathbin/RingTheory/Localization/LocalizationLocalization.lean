@@ -208,7 +208,7 @@ variable (S)
 of `M⁻¹S` acting on `N⁻¹S`. -/
 noncomputable def localizationAlgebraOfSubmonoidLe (M N : Submonoid R) (h : M ≤ N)
     [IsLocalization M S] [IsLocalization N T] : Algebra S T :=
-  (IsLocalization.lift fun y => (map_units T ⟨↑y, h y.Prop⟩ : _) : S →+* T).toAlgebra
+  (IsLocalization.lift fun y => (map_units T ⟨↑y, h y.IProp⟩ : _) : S →+* T).toAlgebra
 #align is_localization.localization_algebra_of_submonoid_le IsLocalization.localizationAlgebraOfSubmonoidLe
 -/
 
@@ -281,7 +281,7 @@ theorem isLocalization_of_is_exists_mul_mem (M N : Submonoid R) [IsLocalization 
     surj := fun z => by obtain ⟨⟨y, s⟩, e⟩ := IsLocalization.surj M z; exact ⟨⟨y, _, h s.prop⟩, e⟩
     eq_iff_exists := fun x₁ x₂ => by
       rw [IsLocalization.eq_iff_exists M]
-      refine' ⟨fun ⟨x, hx⟩ => ⟨⟨_, h x.Prop⟩, hx⟩, _⟩
+      refine' ⟨fun ⟨x, hx⟩ => ⟨⟨_, h x.IProp⟩, hx⟩, _⟩
       rintro ⟨x, h⟩
       obtain ⟨m, hm⟩ := h' x
       refine' ⟨⟨_, hm⟩, _⟩

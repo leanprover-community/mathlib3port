@@ -121,7 +121,7 @@ instance : Coe (FiniteMeasure Ω) (MeasureTheory.Measure Ω) :=
 
 #print MeasureTheory.FiniteMeasure.isFiniteMeasure /-
 instance isFiniteMeasure (μ : FiniteMeasure Ω) : IsFiniteMeasure (μ : Measure Ω) :=
-  μ.Prop
+  μ.IProp
 #align measure_theory.finite_measure.is_finite_measure MeasureTheory.FiniteMeasure.isFiniteMeasure
 -/
 

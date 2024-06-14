@@ -307,7 +307,7 @@ theorem norm_mul_coe_unitary (A : E) (U : unitary E) : ‖A * U‖ = ‖A‖ :=
   calc
     _ = ‖((U : E)⋆ * A⋆)⋆‖ := by simp only [star_star, star_mul]
     _ = ‖(U : E)⋆ * A⋆‖ := by rw [norm_star]
-    _ = ‖A⋆‖ := (norm_mem_unitary_mul (star A) (unitary.star_mem U.Prop))
+    _ = ‖A⋆‖ := (norm_mem_unitary_mul (star A) (unitary.star_mem U.IProp))
     _ = ‖A‖ := norm_star _
 #align cstar_ring.norm_mul_coe_unitary CstarRing.norm_mul_coe_unitary
 -/
@@ -337,7 +337,7 @@ theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing 
 #print selfAdjoint.nnnorm_pow_two_pow /-
 theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] (x : selfAdjoint E)
     (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n :=
-  x.Prop.nnnorm_pow_two_pow _
+  x.IProp.nnnorm_pow_two_pow _
 #align self_adjoint.nnnorm_pow_two_pow selfAdjoint.nnnorm_pow_two_pow
 -/
 

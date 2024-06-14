@@ -525,7 +525,7 @@ namespace RayVector
 
 /-- Negating a nonzero vector. -/
 instance {R : Type _} : Neg (RayVector R M) :=
-  ⟨fun v => ⟨-v, neg_ne_zero.2 v.Prop⟩⟩
+  ⟨fun v => ⟨-v, neg_ne_zero.2 v.IProp⟩⟩
 
 #print RayVector.coe_neg /-
 /-- Negating a nonzero vector commutes with coercion to the underlying module. -/

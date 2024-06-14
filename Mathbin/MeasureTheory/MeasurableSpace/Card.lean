@@ -177,7 +177,7 @@ theorem generateMeasurable_eq_rec (s : Set (Set α)) :
     · convert generate_measurable.empty
     · exact generate_measurable.compl u (H k hk u hu)
     · apply generate_measurable.union _ fun n => _
-      obtain ⟨-, ⟨⟨k, hk⟩, rfl⟩, hf⟩ := (f n).Prop
+      obtain ⟨-, ⟨⟨k, hk⟩, rfl⟩, hf⟩ := (f n).IProp
       exact H k hk _ hf
 #align measurable_space.generate_measurable_eq_rec MeasurableSpace.generateMeasurable_eq_rec
 -/

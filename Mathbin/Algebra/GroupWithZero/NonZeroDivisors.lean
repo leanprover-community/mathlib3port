@@ -59,7 +59,7 @@ theorem mul_right_mem_nonZeroDivisors_eq_zero_iff {x r : M} (hr : r ∈ M⁰) : 
 #print mul_right_coe_nonZeroDivisors_eq_zero_iff /-
 @[simp]
 theorem mul_right_coe_nonZeroDivisors_eq_zero_iff {x : M} {c : M⁰} : x * c = 0 ↔ x = 0 :=
-  mul_right_mem_nonZeroDivisors_eq_zero_iff c.Prop
+  mul_right_mem_nonZeroDivisors_eq_zero_iff c.IProp
 #align mul_right_coe_non_zero_divisors_eq_zero_iff mul_right_coe_nonZeroDivisors_eq_zero_iff
 -/
 
@@ -72,7 +72,7 @@ theorem mul_left_mem_nonZeroDivisors_eq_zero_iff {r x : M₁} (hr : r ∈ M₁�
 #print mul_left_coe_nonZeroDivisors_eq_zero_iff /-
 @[simp]
 theorem mul_left_coe_nonZeroDivisors_eq_zero_iff {c : M₁⁰} {x : M₁} : (c : M₁) * x = 0 ↔ x = 0 :=
-  mul_left_mem_nonZeroDivisors_eq_zero_iff c.Prop
+  mul_left_mem_nonZeroDivisors_eq_zero_iff c.IProp
 #align mul_left_coe_non_zero_divisors_eq_zero_iff mul_left_coe_nonZeroDivisors_eq_zero_iff
 -/
 
@@ -86,7 +86,7 @@ theorem mul_cancel_right_mem_nonZeroDivisors {x y r : R} (hr : r ∈ R⁰) : x *
 
 #print mul_cancel_right_coe_nonZeroDivisors /-
 theorem mul_cancel_right_coe_nonZeroDivisors {x y : R} {c : R⁰} : x * c = y * c ↔ x = y :=
-  mul_cancel_right_mem_nonZeroDivisors c.Prop
+  mul_cancel_right_mem_nonZeroDivisors c.IProp
 #align mul_cancel_right_coe_non_zero_divisor mul_cancel_right_coe_nonZeroDivisors
 -/
 
@@ -99,7 +99,7 @@ theorem mul_cancel_left_mem_nonZeroDivisors {x y r : R'} (hr : r ∈ R'⁰) : r 
 
 #print mul_cancel_left_coe_nonZeroDivisors /-
 theorem mul_cancel_left_coe_nonZeroDivisors {x y : R'} {c : R'⁰} : (c : R') * x = c * y ↔ x = y :=
-  mul_cancel_left_mem_nonZeroDivisors c.Prop
+  mul_cancel_left_mem_nonZeroDivisors c.IProp
 #align mul_cancel_left_coe_non_zero_divisor mul_cancel_left_coe_nonZeroDivisors
 -/
 

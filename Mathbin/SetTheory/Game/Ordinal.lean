@@ -90,7 +90,7 @@ noncomputable def toLeftMovesToPGame {o : Ordinal} : Set.Iio o ≃ o.toPGame.Lef
 @[simp]
 theorem toLeftMovesToPGame_symm_lt {o : Ordinal} (i : o.toPGame.LeftMoves) :
     ↑(toLeftMovesToPGame.symm i) < o :=
-  (toLeftMovesToPGame.symm i).Prop
+  (toLeftMovesToPGame.symm i).IProp
 #align ordinal.to_left_moves_to_pgame_symm_lt Ordinal.toLeftMovesToPGame_symm_lt
 -/
 

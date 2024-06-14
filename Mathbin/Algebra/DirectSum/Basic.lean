@@ -259,7 +259,7 @@ variable (β)
 /-- `set_to_set β S T h` is the natural homomorphism `⨁ (i : S), β i → ⨁ (i : T), β i`,
 where `h : S ⊆ T`. -/
 def setToSet (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, β i) →+ ⨁ i : T, β i :=
-  toAddMonoid fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.Prop⟩
+  toAddMonoid fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.IProp⟩
 #align direct_sum.set_to_set DirectSum.setToSet
 -/
 

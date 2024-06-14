@@ -949,7 +949,7 @@ theorem isLocalization_of_base_ringEquiv [IsLocalization M S] (h : R ≃+* P) :
     change (∃ c : M, h (c * h.symm x) = h (c * h.symm y)) ↔ _
     simp only [RingEquiv.apply_symm_apply, RingEquiv.map_mul]
     exact
-      ⟨fun ⟨c, e⟩ => ⟨⟨_, _, c.Prop, rfl⟩, e⟩, fun ⟨⟨_, c, h, e₁⟩, e₂⟩ => ⟨⟨_, h⟩, e₁.symm ▸ e₂⟩⟩
+      ⟨fun ⟨c, e⟩ => ⟨⟨_, _, c.IProp, rfl⟩, e⟩, fun ⟨⟨_, c, h, e₁⟩, e₂⟩ => ⟨⟨_, h⟩, e₁.symm ▸ e₂⟩⟩
 #align is_localization.is_localization_of_base_ring_equiv IsLocalization.isLocalization_of_base_ringEquiv
 -/
 

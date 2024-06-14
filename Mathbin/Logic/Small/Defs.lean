@@ -128,7 +128,7 @@ theorem small_of_surjective {α : Type v} {β : Type w} [Small.{u} α] {f : α �
 
 #print small_subset /-
 theorem small_subset {α : Type v} {s t : Set α} (hts : t ⊆ s) [Small.{u} s] : Small.{u} t :=
-  let f : t → s := fun x => ⟨x, hts x.Prop⟩
+  let f : t → s := fun x => ⟨x, hts x.IProp⟩
   @small_of_injective _ _ _ f fun x y hxy => Subtype.ext (Subtype.mk.inj hxy)
 #align small_subset small_subset
 -/

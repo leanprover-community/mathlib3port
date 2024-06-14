@@ -711,7 +711,7 @@ values are retained. This is the `order_iso` version of `fin.cast_le`. -/
 def Fin.castLEOrderIso {n m : ℕ} (h : n ≤ m) : Fin n ≃o { i : Fin m // (i : ℕ) < n }
     where
   toFun i := ⟨Fin.castLEOrderEmb h i, by simp⟩
-  invFun i := ⟨i, i.Prop⟩
+  invFun i := ⟨i, i.IProp⟩
   left_inv _ := by simp
   right_inv _ := by simp
   map_rel_iff' _ _ := by simp

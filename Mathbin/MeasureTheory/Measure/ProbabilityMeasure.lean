@@ -121,7 +121,7 @@ instance : CoeFun (ProbabilityMeasure Ω) fun _ => Set Ω → ℝ≥0 :=
   ⟨fun μ s => (μ s).toNNReal⟩
 
 instance (μ : ProbabilityMeasure Ω) : IsProbabilityMeasure (μ : Measure Ω) :=
-  μ.Prop
+  μ.IProp
 
 #print MeasureTheory.ProbabilityMeasure.coeFn_def /-
 theorem coeFn_def (ν : ProbabilityMeasure Ω) :
@@ -146,7 +146,7 @@ theorem toMeasure_injective : Function.Injective (coe : ProbabilityMeasure Ω �
 #print MeasureTheory.ProbabilityMeasure.coeFn_univ /-
 @[simp]
 theorem coeFn_univ (ν : ProbabilityMeasure Ω) : ν univ = 1 :=
-  congr_arg ENNReal.toNNReal ν.Prop.measure_univ
+  congr_arg ENNReal.toNNReal ν.IProp.measure_univ
 #align measure_theory.probability_measure.coe_fn_univ MeasureTheory.ProbabilityMeasure.coeFn_univ
 -/
 

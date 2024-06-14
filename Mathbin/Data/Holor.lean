@@ -335,7 +335,7 @@ summing up. -/
 @[simp]
 theorem sum_unitVec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
     ∑ i in (Finset.range d).attach,
-        unitVec d i ⊗ slice x i (Nat.succ_le_of_lt (Finset.mem_range.1 i.Prop)) =
+        unitVec d i ⊗ slice x i (Nat.succ_le_of_lt (Finset.mem_range.1 i.IProp)) =
       x :=
   by
   apply slice_eq _ _ _

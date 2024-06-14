@@ -375,7 +375,7 @@ become zero in the process. -/
 theorem gramSchmidt_orthonormal' (f : ι → E) :
     Orthonormal 𝕜 fun i : {i | gramSchmidtNormed 𝕜 f i ≠ 0} => gramSchmidtNormed 𝕜 f i :=
   by
-  refine' ⟨fun i => gramSchmidtNormed_unit_length' i.Prop, _⟩
+  refine' ⟨fun i => gramSchmidtNormed_unit_length' i.IProp, _⟩
   rintro i j (hij : ¬_)
   rw [Subtype.ext_iff] at hij
   simp [gramSchmidtNormed, inner_smul_left, inner_smul_right, gramSchmidt_orthogonal 𝕜 f hij]

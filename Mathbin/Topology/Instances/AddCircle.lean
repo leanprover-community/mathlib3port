@@ -523,7 +523,7 @@ satisfies `0 ≤ m < n`. -/
 def setAddOrderOfEquiv {n : ℕ} (hn : 0 < n) :
     {u : AddCircle p | addOrderOf u = n} ≃ {m | m < n ∧ m.gcd n = 1} :=
   Equiv.symm <|
-    Equiv.ofBijective (fun m => ⟨↑((m : 𝕜) / n * p), addOrderOf_div_of_gcd_eq_one hn m.Prop.2⟩)
+    Equiv.ofBijective (fun m => ⟨↑((m : 𝕜) / n * p), addOrderOf_div_of_gcd_eq_one hn m.IProp.2⟩)
       (by
         refine' ⟨fun m₁ m₂ h => Subtype.ext _, fun u => _⟩
         · simp_rw [Subtype.ext_iff, Subtype.coe_mk] at h

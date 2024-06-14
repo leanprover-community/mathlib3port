@@ -1056,9 +1056,9 @@ variable {K : Type u} [DivisionRing K]
 instance : Field (center K) :=
   { (center K).Nontrivial,
     center.commRing with
-    inv := fun a => ⟨a⁻¹, Set.inv_mem_center₀ a.Prop⟩
+    inv := fun a => ⟨a⁻¹, Set.inv_mem_center₀ a.IProp⟩
     mul_inv_cancel := fun ⟨a, ha⟩ h => Subtype.ext <| mul_inv_cancel <| Subtype.coe_injective.Ne h
-    div := fun a b => ⟨a / b, Set.div_mem_center₀ a.Prop b.Prop⟩
+    div := fun a b => ⟨a / b, Set.div_mem_center₀ a.IProp b.IProp⟩
     div_eq_hMul_inv := fun a b => Subtype.ext <| div_eq_mul_inv _ _
     inv_zero := Subtype.ext inv_zero }
 
@@ -1698,7 +1698,7 @@ def ofLeftInverse {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) :
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := RingHom.mem_range.mp x.Prop
+        let ⟨x', hx'⟩ := RingHom.mem_range.mp x.IProp
         show f (g x) = x by rw [← hx', h x'] }
 #align ring_equiv.of_left_inverse RingEquiv.ofLeftInverse
 -/

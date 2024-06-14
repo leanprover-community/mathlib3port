@@ -136,7 +136,7 @@ instance : OrdConnected (ordConnectedComponent s x) :=
 /-- Projection from `s : set α` to `α` sending each order connected component of `s` to a single
 point of this component. -/
 noncomputable def ordConnectedProj (s : Set α) : s → α := fun x : s =>
-  (nonempty_ordConnectedComponent.2 x.Prop).some
+  (nonempty_ordConnectedComponent.2 x.IProp).some
 #align set.ord_connected_proj Set.ordConnectedProj
 -/
 

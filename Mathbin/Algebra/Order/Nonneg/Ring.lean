@@ -172,7 +172,7 @@ protected theorem coe_add [AddZeroClass α] [Preorder α] [CovariantClass α α 
 #print Nonneg.nsmul /-
 instance nsmul [AddMonoid α] [Preorder α] [CovariantClass α α (· + ·) (· ≤ ·)] :
     SMul ℕ { x : α // 0 ≤ x } :=
-  ⟨fun n x => ⟨n • x, nsmul_nonneg x.Prop n⟩⟩
+  ⟨fun n x => ⟨n • x, nsmul_nonneg x.IProp n⟩⟩
 #align nonneg.has_nsmul Nonneg.nsmul
 -/
 

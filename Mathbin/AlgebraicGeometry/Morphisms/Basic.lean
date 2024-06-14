@@ -139,7 +139,7 @@ theorem AffineTargetMorphismProperty.respectsIso_mk {P : AffineTargetMorphismPro
 /-- For a `P : affine_target_morphism_property`, `target_affine_locally P` holds for
 `f : X ⟶ Y` whenever `P` holds for the restriction of `f` on every affine open subset of `Y`. -/
 def targetAffineLocally (P : AffineTargetMorphismProperty) : MorphismProperty Scheme :=
-  fun {X Y : Scheme} (f : X ⟶ Y) => ∀ U : Y.affineOpens, @P (f ∣_ U) U.Prop
+  fun {X Y : Scheme} (f : X ⟶ Y) => ∀ U : Y.affineOpens, @P (f ∣_ U) U.IProp
 #align algebraic_geometry.target_affine_locally AlgebraicGeometry.targetAffineLocally
 -/
 

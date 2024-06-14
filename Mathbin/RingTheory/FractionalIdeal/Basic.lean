@@ -131,7 +131,7 @@ instance : Coe (FractionalIdeal S P) (Submodule R P) :=
 
 #print FractionalIdeal.isFractional /-
 protected theorem isFractional (I : FractionalIdeal S P) : IsFractional S (I : Submodule R P) :=
-  I.Prop
+  I.IProp
 #align fractional_ideal.is_fractional FractionalIdeal.isFractional
 -/
 
@@ -1752,7 +1752,7 @@ theorem spanSingleton_mul_coeIdeal_eq_coeIdeal {I J : Ideal R₁} {z : K} :
       Ideal.span {((IsLocalization.sec R₁⁰ z).1 : R₁)} * I =
         Ideal.span {(IsLocalization.sec R₁⁰ z).2} * J :=
   by-- `erw` to deal with the distinction between `y` and `⟨y.1, y.2⟩`
-  erw [← mk'_mul_coe_ideal_eq_coe_ideal K (IsLocalization.sec R₁⁰ z).2.Prop,
+  erw [← mk'_mul_coe_ideal_eq_coe_ideal K (IsLocalization.sec R₁⁰ z).2.IProp,
     IsLocalization.mk'_sec K z]
 #align fractional_ideal.span_singleton_mul_coe_ideal_eq_coe_ideal FractionalIdeal.spanSingleton_mul_coeIdeal_eq_coeIdeal
 -/

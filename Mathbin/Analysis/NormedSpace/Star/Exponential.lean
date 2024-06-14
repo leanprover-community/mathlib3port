@@ -37,7 +37,7 @@ over ℂ. -/
 @[simps]
 noncomputable def selfAdjoint.expUnitary (a : selfAdjoint A) : unitary A :=
   ⟨NormedSpace.exp ℂ (I • a),
-    NormedSpace.exp_mem_unitary_of_mem_skewAdjoint _ (a.Prop.smul_mem_skewAdjoint conj_I)⟩
+    NormedSpace.exp_mem_unitary_of_mem_skewAdjoint _ (a.IProp.smul_mem_skewAdjoint conj_I)⟩
 #align self_adjoint.exp_unitary selfAdjoint.expUnitary
 -/
 

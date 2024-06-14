@@ -126,7 +126,7 @@ instance hasOne : One (SpecialLinearGroup n R) :=
 -/
 
 instance : Pow (SpecialLinearGroup n R) ℕ
-    where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
+    where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.IProp.symm ▸ one_pow _⟩
 
 instance : Inhabited (SpecialLinearGroup n R) :=
   ⟨1⟩

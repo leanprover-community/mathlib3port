@@ -269,14 +269,14 @@ namespace Submodule
 #print Submodule.smul_torsionBy /-
 @[simp]
 theorem smul_torsionBy (x : torsionBy R M a) : a • x = 0 :=
-  Subtype.ext x.Prop
+  Subtype.ext x.IProp
 #align submodule.smul_torsion_by Submodule.smul_torsionBy
 -/
 
 #print Submodule.smul_coe_torsionBy /-
 @[simp]
 theorem smul_coe_torsionBy (x : torsionBy R M a) : a • (x : M) = 0 :=
-  x.Prop
+  x.IProp
 #align submodule.smul_coe_torsion_by Submodule.smul_coe_torsionBy
 -/
 
@@ -741,7 +741,7 @@ variable (R M)
 #print Module.isTorsionBySet_annihilator_top /-
 theorem Module.isTorsionBySet_annihilator_top :
     Module.IsTorsionBySet R M (⊤ : Submodule R M).annihilator := fun x ha =>
-  mem_annihilator.mp ha.Prop x mem_top
+  mem_annihilator.mp ha.IProp x mem_top
 #align module.is_torsion_by_set_annihilator_top Module.isTorsionBySet_annihilator_top
 -/
 
@@ -752,7 +752,7 @@ theorem Submodule.annihilator_top_inter_nonZeroDivisors [Module.Finite R M]
     (hM : Module.IsTorsion R M) : ((⊤ : Submodule R M).annihilator : Set R) ∩ R⁰ ≠ ∅ :=
   by
   obtain ⟨S, hS⟩ := ‹Module.Finite R M›.out
-  refine' Set.Nonempty.ne_empty ⟨_, _, (∏ x in S, (@hM x).some : R⁰).Prop⟩
+  refine' Set.Nonempty.ne_empty ⟨_, _, (∏ x in S, (@hM x).some : R⁰).IProp⟩
   rw [Submonoid.coe_finset_prod, SetLike.mem_coe, ← hS, mem_annihilator_span]
   intro n
   letI := Classical.decEq M

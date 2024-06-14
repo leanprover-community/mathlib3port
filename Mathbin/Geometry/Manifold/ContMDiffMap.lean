@@ -67,13 +67,13 @@ instance instFunLike : DFunLike C^n⟮I, M; I', M'⟯ M fun _ => M'
 
 #print ContMDiffMap.contMDiff /-
 protected theorem contMDiff (f : C^n⟮I, M; I', M'⟯) : ContMDiff I I' n f :=
-  f.Prop
+  f.IProp
 #align cont_mdiff_map.cont_mdiff ContMDiffMap.contMDiff
 -/
 
 #print ContMDiffMap.smooth /-
 protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
-  f.Prop
+  f.IProp
 #align cont_mdiff_map.smooth ContMDiffMap.smooth
 -/
 

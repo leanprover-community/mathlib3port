@@ -329,8 +329,8 @@ theorem wellFounded_gt_exact_sequence {β γ : Type _} [Preorder β] [PartialOrd
 @[simps]
 def infIccOrderIsoIccSup (a b : α) : Set.Icc (a ⊓ b) a ≃o Set.Icc b (a ⊔ b)
     where
-  toFun x := ⟨x ⊔ b, ⟨le_sup_right, sup_le_sup_right x.Prop.2 b⟩⟩
-  invFun x := ⟨a ⊓ x, ⟨inf_le_inf_left a x.Prop.1, inf_le_left⟩⟩
+  toFun x := ⟨x ⊔ b, ⟨le_sup_right, sup_le_sup_right x.IProp.2 b⟩⟩
+  invFun x := ⟨a ⊓ x, ⟨inf_le_inf_left a x.IProp.1, inf_le_left⟩⟩
   left_inv x :=
     Subtype.ext
       (by

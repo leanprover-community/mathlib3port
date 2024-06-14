@@ -177,12 +177,12 @@ def asWideQuiver : Quiver C :=
 @[simps to_category_comp_coe, simps (config := lemmasOnly) inv_coe]
 instance coe : Groupoid S.objs where
   Hom a b := S.arrows a.val b.val
-  id a := ⟨𝟙 a.val, id_mem_of_nonempty_isotropy S a.val a.Prop⟩
-  comp a b c p q := ⟨p.val ≫ q.val, S.mul p.Prop q.Prop⟩
+  id a := ⟨𝟙 a.val, id_mem_of_nonempty_isotropy S a.val a.IProp⟩
+  comp a b c p q := ⟨p.val ≫ q.val, S.mul p.IProp q.IProp⟩
   id_comp' := fun a b ⟨p, hp⟩ => by simp only [category.id_comp]
   comp_id' := fun a b ⟨p, hp⟩ => by simp only [category.comp_id]
   assoc' := fun a b c d ⟨p, hp⟩ ⟨q, hq⟩ ⟨r, hr⟩ => by simp only [category.assoc]
-  inv a b p := ⟨inv p.val, S.inv p.Prop⟩
+  inv a b p := ⟨inv p.val, S.inv p.IProp⟩
   inv_comp' := fun a b ⟨p, hp⟩ => by simp only [inv_comp]
   comp_inv' := fun a b ⟨p, hp⟩ => by simp only [comp_inv]
 #align category_theory.subgroupoid.coe CategoryTheory.Subgroupoid.coe
@@ -310,8 +310,8 @@ theorem le_objs {S T : Subgroupoid C} (h : S ≤ T) : S.objs ⊆ T.objs := fun s
 /-- The functor associated to the embedding of subgroupoids -/
 def inclusion {S T : Subgroupoid C} (h : S ≤ T) : S.objs ⥤ T.objs
     where
-  obj s := ⟨s.val, le_objs h s.Prop⟩
-  map s t f := ⟨f.val, @h ⟨s, t, f.val⟩ f.Prop⟩
+  obj s := ⟨s.val, le_objs h s.IProp⟩
+  map s t f := ⟨f.val, @h ⟨s, t, f.val⟩ f.IProp⟩
   map_id' _ := rfl
   map_comp' _ _ _ _ _ := rfl
 #align category_theory.subgroupoid.inclusion CategoryTheory.Subgroupoid.inclusion

@@ -405,7 +405,7 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
           simp only [h.2, and_true_iff] <;>
             exact Or.symm (lt_or_eq_of_le ((@lt_succ_iff_le _ _ _ ⟨m, h.2⟩ _).1 h.1)),
           fun h =>
-          h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h =>
+          h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).IProp⟩) fun h =>
             ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
     simp only [to_fun_aux_eq, of_nat, range_succ] at ih ⊢
     conv =>

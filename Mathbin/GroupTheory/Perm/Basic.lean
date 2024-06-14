@@ -632,11 +632,11 @@ protected def subtypeEquivSubtypePerm (p : α → Prop) [DecidablePred p] :
   toFun f := ⟨f.ofSubtype, fun a => f.ofSubtype_apply_of_not_mem⟩
   invFun f :=
     (f : Perm α).subtypePerm fun a =>
-      ⟨Decidable.not_imp_not.1 fun hfa => f.val.Injective (f.Prop _ hfa) ▸ hfa,
-        Decidable.not_imp_not.1 fun ha hfa => ha <| f.Prop a ha ▸ hfa⟩
+      ⟨Decidable.not_imp_not.1 fun hfa => f.val.Injective (f.IProp _ hfa) ▸ hfa,
+        Decidable.not_imp_not.1 fun ha hfa => ha <| f.IProp a ha ▸ hfa⟩
   left_inv := Equiv.Perm.subtypePerm_ofSubtype
   right_inv f :=
-    Subtype.ext (Equiv.Perm.ofSubtype_subtypePerm _ fun a => Not.decidable_imp_symm <| f.Prop a)
+    Subtype.ext (Equiv.Perm.ofSubtype_subtypePerm _ fun a => Not.decidable_imp_symm <| f.IProp a)
 #align equiv.perm.subtype_equiv_subtype_perm Equiv.Perm.subtypeEquivSubtypePerm
 -/
 

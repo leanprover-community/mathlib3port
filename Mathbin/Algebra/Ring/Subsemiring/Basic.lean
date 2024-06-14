@@ -1668,7 +1668,7 @@ def ofLeftInverseS {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) 
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := RingHom.mem_rangeS.mp x.Prop
+        let ⟨x', hx'⟩ := RingHom.mem_rangeS.mp x.IProp
         show f (g x) = x by rw [← hx', h x'] }
 #align ring_equiv.sof_left_inverse RingEquiv.ofLeftInverseS
 -/

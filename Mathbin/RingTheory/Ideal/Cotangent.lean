@@ -116,7 +116,7 @@ theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentEl
     exact fun e =>
       ⟨fun x y =>
         Quotient.inductionOn₂' x y fun x y =>
-          I.to_cotangent_eq.mpr <| ((pow_two I).trans e).symm ▸ I.sub_mem x.Prop y.Prop⟩
+          I.to_cotangent_eq.mpr <| ((pow_two I).trans e).symm ▸ I.sub_mem x.IProp y.IProp⟩
 #align ideal.cotangent_subsingleton_iff Ideal.cotangent_subsingleton_iff
 -/
 

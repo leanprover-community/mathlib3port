@@ -236,7 +236,7 @@ theorem toLp_coeFn (f : Lp E p μ) (hf : Memℒp f p μ) : hf.toLp f = f := by c
 
 #print MeasureTheory.Lp.snorm_lt_top /-
 theorem snorm_lt_top (f : Lp E p μ) : snorm f p μ < ∞ :=
-  f.Prop
+  f.IProp
 #align measure_theory.Lp.snorm_lt_top MeasureTheory.Lp.snorm_lt_top
 -/
 
@@ -262,7 +262,7 @@ protected theorem aestronglyMeasurable (f : Lp E p μ) : AEStronglyMeasurable f 
 
 #print MeasureTheory.Lp.memℒp /-
 protected theorem memℒp (f : Lp E p μ) : Memℒp f p μ :=
-  ⟨Lp.aestronglyMeasurable f, f.Prop⟩
+  ⟨Lp.aestronglyMeasurable f, f.IProp⟩
 #align measure_theory.Lp.mem_ℒp MeasureTheory.Lp.memℒp
 -/
 

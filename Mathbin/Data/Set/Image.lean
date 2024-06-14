@@ -765,8 +765,8 @@ theorem prod_quotient_preimage_eq_image [s : Setoid α] (g : Quotient s → β) 
 #print Set.exists_image_iff /-
 theorem exists_image_iff (f : α → β) (x : Set α) (P : β → Prop) :
     (∃ a : f '' x, P a) ↔ ∃ a : x, P (f a) :=
-  ⟨fun ⟨a, h⟩ => ⟨⟨_, a.Prop.choose_spec.1⟩, a.Prop.choose_spec.2.symm ▸ h⟩, fun ⟨a, h⟩ =>
-    ⟨⟨_, _, a.Prop, rfl⟩, h⟩⟩
+  ⟨fun ⟨a, h⟩ => ⟨⟨_, a.IProp.choose_spec.1⟩, a.IProp.choose_spec.2.symm ▸ h⟩, fun ⟨a, h⟩ =>
+    ⟨⟨_, _, a.IProp, rfl⟩, h⟩⟩
 #align set.exists_image_iff Set.exists_image_iff
 -/
 

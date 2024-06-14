@@ -148,7 +148,7 @@ def subtypeOrEquiv (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) :
 #print subtypeOrEquiv_symm_inl /-
 @[simp]
 theorem subtypeOrEquiv_symm_inl (p q : α → Prop) [DecidablePred p] (h : Disjoint p q)
-    (x : { x // p x }) : (subtypeOrEquiv p q h).symm (Sum.inl x) = ⟨x, Or.inl x.Prop⟩ :=
+    (x : { x // p x }) : (subtypeOrEquiv p q h).symm (Sum.inl x) = ⟨x, Or.inl x.IProp⟩ :=
   rfl
 #align subtype_or_equiv_symm_inl subtypeOrEquiv_symm_inl
 -/
@@ -156,7 +156,7 @@ theorem subtypeOrEquiv_symm_inl (p q : α → Prop) [DecidablePred p] (h : Disjo
 #print subtypeOrEquiv_symm_inr /-
 @[simp]
 theorem subtypeOrEquiv_symm_inr (p q : α → Prop) [DecidablePred p] (h : Disjoint p q)
-    (x : { x // q x }) : (subtypeOrEquiv p q h).symm (Sum.inr x) = ⟨x, Or.inr x.Prop⟩ :=
+    (x : { x // q x }) : (subtypeOrEquiv p q h).symm (Sum.inr x) = ⟨x, Or.inr x.IProp⟩ :=
   rfl
 #align subtype_or_equiv_symm_inr subtypeOrEquiv_symm_inr
 -/

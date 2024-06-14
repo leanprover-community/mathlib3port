@@ -448,9 +448,9 @@ This isomorphism is named to match the very similar `zsqrtd.lift`. -/
 @[simps (config := { simpRhs := true })]
 def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A)
     where
-  toFun I' := liftAux I' I'.Prop
+  toFun I' := liftAux I' I'.IProp
   invFun F := ⟨F I, by rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩
-  left_inv I' := Subtype.ext <| liftAux_apply_I I' I'.Prop
+  left_inv I' := Subtype.ext <| liftAux_apply_I I' I'.IProp
   right_inv F := algHom_ext <| liftAux_apply_I _ _
 #align complex.lift Complex.lift
 -/

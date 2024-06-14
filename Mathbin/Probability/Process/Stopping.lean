@@ -1040,7 +1040,7 @@ theorem progMeasurable_min_stopping_time [MetrizableSpace ι] (hτ : IsStoppingT
       exact h_meas_fst _
     ext1 ω
     rw [min_eq_left]
-    have hx_fst_le : ↑(ω : Set.Iic i × Ω).fst ≤ i := (ω : Set.Iic i × Ω).fst.Prop
+    have hx_fst_le : ↑(ω : Set.Iic i × Ω).fst ≤ i := (ω : Set.Iic i × Ω).fst.IProp
     refine' hx_fst_le.trans (le_of_lt _)
     convert ω.prop
     simp only [not_le, Set.mem_compl_iff, Set.mem_setOf_eq]

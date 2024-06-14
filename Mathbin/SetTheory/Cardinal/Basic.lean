@@ -1123,7 +1123,7 @@ theorem bddAbove_iff_small {s : Set Cardinal.{u}} : BddAbove s ↔ Small.{u} s :
     ext x
     refine' ⟨_, fun hx => ⟨e ⟨x, hx⟩, _⟩⟩
     · rintro ⟨a, rfl⟩
-      exact (e.symm a).Prop
+      exact (e.symm a).IProp
     · simp_rw [Subtype.val_eq_coe, Equiv.symm_apply_apply]; rfl⟩
 #align cardinal.bdd_above_iff_small Cardinal.bddAbove_iff_small
 -/

@@ -434,7 +434,7 @@ theorem set_lintegral_iInf_gt_preCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure
     refine' set_lintegral_mono_ae measurable_pre_cdf _ _
     · exact measurable_iInf fun _ => measurable_pre_cdf
     · filter_upwards [monotone_pre_cdf] with a ha_mono
-      exact fun _ => le_iInf fun r => ha_mono (le_of_lt r.Prop)
+      exact fun _ => le_iInf fun r => ha_mono (le_of_lt r.IProp)
 #align probability_theory.set_lintegral_infi_gt_pre_cdf ProbabilityTheory.set_lintegral_iInf_gt_preCDF
 
 #print ProbabilityTheory.preCDF_le_one /-

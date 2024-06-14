@@ -104,7 +104,7 @@ variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i)
     where
   toFun i := {f i}
-  support' := f.support'.map fun s => ⟨s, fun i => (s.Prop i).imp id (congr_arg _)⟩
+  support' := f.support'.map fun s => ⟨s, fun i => (s.IProp i).imp id (congr_arg _)⟩
 #align dfinsupp.singleton DFinsupp.singleton
 -/
 

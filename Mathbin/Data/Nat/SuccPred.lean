@@ -93,7 +93,7 @@ end Nat
 #print Fin.coe_covBy_iff /-
 @[simp, norm_cast]
 theorem Fin.coe_covBy_iff {n : ℕ} {a b : Fin n} : (a : ℕ) ⋖ b ↔ a ⋖ b :=
-  and_congr_right' ⟨fun h c hc => h hc, fun h c ha hb => @h ⟨c, hb.trans b.Prop⟩ ha hb⟩
+  and_congr_right' ⟨fun h c hc => h hc, fun h c ha hb => @h ⟨c, hb.trans b.IProp⟩ ha hb⟩
 #align fin.coe_covby_iff Fin.coe_covBy_iff
 -/
 

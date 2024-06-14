@@ -346,7 +346,7 @@ protected theorem prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbed
 @[simps]
 def subtypeEmb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }) :
     { x // x ∈ closure (e '' {x | p x}) } :=
-  ⟨e x, subset_closure <| mem_image_of_mem e x.Prop⟩
+  ⟨e x, subset_closure <| mem_image_of_mem e x.IProp⟩
 #align dense_embedding.subtype_emb DenseEmbedding.subtypeEmb
 -/
 

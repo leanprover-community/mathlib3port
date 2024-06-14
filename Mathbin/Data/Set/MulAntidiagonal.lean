@@ -76,8 +76,8 @@ variable [CancelCommMonoid α] {s t : Set α} {a : α} {x y : mulAntidiagonal s 
 #print Set.MulAntidiagonal.fst_eq_fst_iff_snd_eq_snd /-
 @[to_additive]
 theorem fst_eq_fst_iff_snd_eq_snd : (x : α × α).1 = (y : α × α).1 ↔ (x : α × α).2 = (y : α × α).2 :=
-  ⟨fun h => mul_left_cancel (y.Prop.2.2.trans <| by rw [← h]; exact x.2.2.2.symm).symm, fun h =>
-    mul_right_cancel (y.Prop.2.2.trans <| by rw [← h]; exact x.2.2.2.symm).symm⟩
+  ⟨fun h => mul_left_cancel (y.IProp.2.2.trans <| by rw [← h]; exact x.2.2.2.symm).symm, fun h =>
+    mul_right_cancel (y.IProp.2.2.trans <| by rw [← h]; exact x.2.2.2.symm).symm⟩
 #align set.mul_antidiagonal.fst_eq_fst_iff_snd_eq_snd Set.MulAntidiagonal.fst_eq_fst_iff_snd_eq_snd
 #align set.add_antidiagonal.fst_eq_fst_iff_snd_eq_snd Set.AddAntidiagonal.fst_eq_fst_iff_snd_eq_snd
 -/

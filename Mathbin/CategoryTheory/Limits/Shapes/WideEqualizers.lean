@@ -437,9 +437,9 @@ def Trident.IsLimit.homIso [Nonempty J] {t : Trident f} (ht : IsLimit t) (Z : C)
     (Z ⟶ t.pt) ≃ { h : Z ⟶ X // ∀ j₁ j₂, h ≫ f j₁ = h ≫ f j₂ }
     where
   toFun k := ⟨k ≫ t.ι, by simp⟩
-  invFun h := (Trident.IsLimit.lift' ht _ h.Prop).1
-  left_inv k := Trident.IsLimit.hom_ext ht (Trident.IsLimit.lift' _ _ _).Prop
-  right_inv h := Subtype.ext (Trident.IsLimit.lift' ht _ _).Prop
+  invFun h := (Trident.IsLimit.lift' ht _ h.IProp).1
+  left_inv k := Trident.IsLimit.hom_ext ht (Trident.IsLimit.lift' _ _ _).IProp
+  right_inv h := Subtype.ext (Trident.IsLimit.lift' ht _ _).IProp
 #align category_theory.limits.trident.is_limit.hom_iso CategoryTheory.Limits.Trident.IsLimit.homIso
 -/
 
@@ -463,9 +463,9 @@ def Cotrident.IsColimit.homIso [Nonempty J] {t : Cotrident f} (ht : IsColimit t)
     (t.pt ⟶ Z) ≃ { h : Y ⟶ Z // ∀ j₁ j₂, f j₁ ≫ h = f j₂ ≫ h }
     where
   toFun k := ⟨t.π ≫ k, by simp⟩
-  invFun h := (Cotrident.IsColimit.desc' ht _ h.Prop).1
-  left_inv k := Cotrident.IsColimit.hom_ext ht (Cotrident.IsColimit.desc' _ _ _).Prop
-  right_inv h := Subtype.ext (Cotrident.IsColimit.desc' ht _ _).Prop
+  invFun h := (Cotrident.IsColimit.desc' ht _ h.IProp).1
+  left_inv k := Cotrident.IsColimit.hom_ext ht (Cotrident.IsColimit.desc' _ _ _).IProp
+  right_inv h := Subtype.ext (Cotrident.IsColimit.desc' ht _ _).IProp
 #align category_theory.limits.cotrident.is_colimit.hom_iso CategoryTheory.Limits.Cotrident.IsColimit.homIso
 -/
 

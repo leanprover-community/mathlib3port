@@ -2028,7 +2028,7 @@ theorem map_pmap {p : α → Prop} (g : β → γ) (f : ∀ a, p a → β) (s) :
 
 #print Multiset.pmap_eq_map_attach /-
 theorem pmap_eq_map_attach {p : α → Prop} (f : ∀ a, p a → β) (s) :
-    ∀ H, pmap f s H = s.attach.map fun x => f x (H _ x.Prop) :=
+    ∀ H, pmap f s H = s.attach.map fun x => f x (H _ x.IProp) :=
   Quot.inductionOn s fun l H => congr_arg coe <| pmap_eq_map_attach f l H
 #align multiset.pmap_eq_map_attach Multiset.pmap_eq_map_attach
 -/

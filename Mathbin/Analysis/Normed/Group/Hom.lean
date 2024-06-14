@@ -1113,7 +1113,7 @@ theorem ι_comp_lift (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ)
 def liftEquiv :
     { φ : NormedAddGroupHom V₁ V // f.comp φ = g.comp φ } ≃ NormedAddGroupHom V₁ (f.equalizer g)
     where
-  toFun φ := lift φ φ.Prop
+  toFun φ := lift φ φ.IProp
   invFun ψ := ⟨(ι f g).comp ψ, by rw [← comp_assoc, ← comp_assoc, comp_ι_eq]⟩
   left_inv φ := by simp
   right_inv ψ := by ext; rfl

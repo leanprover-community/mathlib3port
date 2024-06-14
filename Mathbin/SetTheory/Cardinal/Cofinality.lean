@@ -267,7 +267,7 @@ theorem cof_eq_sInf_lsub (o : Ordinal.{u}) :
       (cof_type_le fun a => _).trans
         (@mk_le_of_injective _ _
           (fun s : typein ((· < ·) : o.out.α → o.out.α → Prop) ⁻¹' Set.range f =>
-            Classical.choose s.Prop)
+            Classical.choose s.IProp)
           fun s t hst => by
           let H := congr_arg f hst
           rwa [Classical.choose_spec s.prop, Classical.choose_spec t.prop, typein_inj,
@@ -726,7 +726,7 @@ theorem exists_fundamental_sequence (a : Ordinal.{u}) : ∃ f, IsFundamentalSequ
   let hrr' : r' ↪r r := Subrel.relEmbedding _ _
   haveI := hrr'.is_well_order
   refine'
-    ⟨_, _, hrr'.ordinal_type_le.trans _, fun i j _ h _ => (enum r' j h).Prop _ _,
+    ⟨_, _, hrr'.ordinal_type_le.trans _, fun i j _ h _ => (enum r' j h).IProp _ _,
       le_antisymm (blsub_le fun i hi => lsub_le_iff.1 hf.le _) _⟩
   · rw [← hι, hr]
   · change r (hrr'.1 _) (hrr'.1 _)

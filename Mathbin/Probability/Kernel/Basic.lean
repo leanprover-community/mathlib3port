@@ -253,7 +253,7 @@ theorem ext_fun_iff {η : kernel α β} :
 
 #print ProbabilityTheory.kernel.measurable /-
 protected theorem measurable (κ : kernel α β) : Measurable κ :=
-  κ.Prop
+  κ.IProp
 #align probability_theory.kernel.measurable ProbabilityTheory.kernel.measurable
 -/
 

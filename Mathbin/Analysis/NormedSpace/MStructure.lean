@@ -189,7 +189,7 @@ theorem join [FaithfulSMul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : IsL
 -/
 
 instance : HasCompl { f : M // IsLprojection X f } :=
-  ⟨fun P => ⟨1 - P, P.Prop.Lcomplement⟩⟩
+  ⟨fun P => ⟨1 - P, P.IProp.Lcomplement⟩⟩
 
 #print IsLprojection.coe_compl /-
 @[simp]
@@ -199,7 +199,7 @@ theorem coe_compl (P : { P : M // IsLprojection X P }) : ↑(Pᶜ) = (1 : M) - �
 -/
 
 instance [FaithfulSMul M X] : Inf { P : M // IsLprojection X P } :=
-  ⟨fun P Q => ⟨P * Q, P.Prop.mul Q.Prop⟩⟩
+  ⟨fun P Q => ⟨P * Q, P.IProp.mul Q.IProp⟩⟩
 
 #print IsLprojection.coe_inf /-
 @[simp]
@@ -210,7 +210,7 @@ theorem coe_inf [FaithfulSMul M X] (P Q : { P : M // IsLprojection X P }) :
 -/
 
 instance [FaithfulSMul M X] : Sup { P : M // IsLprojection X P } :=
-  ⟨fun P Q => ⟨P + Q - P * Q, P.Prop.join Q.Prop⟩⟩
+  ⟨fun P Q => ⟨P + Q - P * Q, P.IProp.join Q.IProp⟩⟩
 
 #print IsLprojection.coe_sup /-
 @[simp]
@@ -258,7 +258,7 @@ theorem coe_zero : ↑(0 : { P : M // IsLprojection X P }) = (0 : M) :=
 -/
 
 instance : One { P : M // IsLprojection X P } :=
-  ⟨⟨1, sub_zero (1 : M) ▸ (0 : { P : M // IsLprojection X P }).Prop.Lcomplement⟩⟩
+  ⟨⟨1, sub_zero (1 : M) ▸ (0 : { P : M // IsLprojection X P }).IProp.Lcomplement⟩⟩
 
 #print IsLprojection.coe_one /-
 @[simp]
@@ -306,11 +306,11 @@ theorem mul_compl_self {P : { P : M // IsLprojection X P }} : (↑P : M) * ↑(P
 theorem distrib_lattice_lemma [FaithfulSMul M X] {P Q R : { P : M // IsLprojection X P }} :
     ((↑P : M) + ↑(Pᶜ) * R) * (↑P + ↑Q * ↑R * ↑(Pᶜ)) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
   rw [add_mul, mul_add, mul_add, mul_assoc (↑(Pᶜ)) (↑R) (↑Q * ↑R * ↑(Pᶜ)), ←
-    mul_assoc (↑R) (↑Q * ↑R) ↑(Pᶜ), ← coe_inf Q, (Pᶜ.Prop.Commute R.prop).Eq,
-    ((Q ⊓ R).Prop.Commute Pᶜ.Prop).Eq, (R.prop.commute (Q ⊓ R).Prop).Eq, coe_inf Q, mul_assoc ↑Q, ←
-    mul_assoc, mul_assoc ↑R, (Pᶜ.Prop.Commute P.prop).Eq, mul_compl_self, MulZeroClass.zero_mul,
+    mul_assoc (↑R) (↑Q * ↑R) ↑(Pᶜ), ← coe_inf Q, (Pᶜ.IProp.Commute R.prop).Eq,
+    ((Q ⊓ R).IProp.Commute Pᶜ.IProp).Eq, (R.prop.commute (Q ⊓ R).IProp).Eq, coe_inf Q, mul_assoc ↑Q,
+    ← mul_assoc, mul_assoc ↑R, (Pᶜ.IProp.Commute P.prop).Eq, mul_compl_self, MulZeroClass.zero_mul,
     MulZeroClass.mul_zero, zero_add, add_zero, ← mul_assoc, P.prop.proj.eq, R.prop.proj.eq, ←
-    coe_inf Q, mul_assoc, ((Q ⊓ R).Prop.Commute Pᶜ.Prop).Eq, ← mul_assoc, Pᶜ.Prop.proj.Eq]
+    coe_inf Q, mul_assoc, ((Q ⊓ R).IProp.Commute Pᶜ.IProp).Eq, ← mul_assoc, Pᶜ.IProp.proj.Eq]
 #align is_Lprojection.distrib_lattice_lemma IsLprojection.distrib_lattice_lemma
 -/
 
@@ -342,13 +342,13 @@ instance [FaithfulSMul M X] : DistribLattice { P : M // IsLprojection X P } :=
       by
       have e₁ : ↑((P ⊔ Q) ⊓ (P ⊔ R)) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
         rw [coe_inf, coe_sup, coe_sup, ← add_sub, ← add_sub, ← compl_mul, ← compl_mul, add_mul,
-          mul_add, (Pᶜ.Prop.Commute Q.prop).Eq, mul_add, ← mul_assoc, mul_assoc ↑Q,
-          (Pᶜ.Prop.Commute P.prop).Eq, mul_compl_self, MulZeroClass.zero_mul, MulZeroClass.mul_zero,
-          zero_add, add_zero, ← mul_assoc, mul_assoc ↑Q, P.prop.proj.eq, Pᶜ.Prop.proj.Eq, mul_assoc,
-          (Pᶜ.Prop.Commute R.prop).Eq, ← mul_assoc]
+          mul_add, (Pᶜ.IProp.Commute Q.prop).Eq, mul_add, ← mul_assoc, mul_assoc ↑Q,
+          (Pᶜ.IProp.Commute P.prop).Eq, mul_compl_self, MulZeroClass.zero_mul,
+          MulZeroClass.mul_zero, zero_add, add_zero, ← mul_assoc, mul_assoc ↑Q, P.prop.proj.eq,
+          Pᶜ.IProp.proj.Eq, mul_assoc, (Pᶜ.IProp.Commute R.prop).Eq, ← mul_assoc]
       have e₂ : ↑((P ⊔ Q) ⊓ (P ⊔ R)) * ↑(P ⊔ Q ⊓ R) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
         rw [coe_inf, coe_sup, coe_sup, coe_sup, ← add_sub, ← add_sub, ← add_sub, ← compl_mul, ←
-          compl_mul, ← compl_mul, (Pᶜ.Prop.Commute (Q ⊓ R).Prop).Eq, coe_inf, mul_assoc,
+          compl_mul, ← compl_mul, (Pᶜ.IProp.Commute (Q ⊓ R).IProp).Eq, coe_inf, mul_assoc,
           distrib_lattice_lemma, (Q.prop.commute R.prop).Eq, distrib_lattice_lemma]
       rw [le_def, e₁, coe_inf, e₂] }
 
