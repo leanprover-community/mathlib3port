@@ -264,24 +264,24 @@ instance forget₂_faithful (C : Type u) (D : Type u') [Category.{v} C] [Concret
 #align category_theory.forget₂_faithful CategoryTheory.forget₂_faithful
 -/
 
-#print CategoryTheory.forget₂_preservesMonomorphisms /-
-instance forget₂_preservesMonomorphisms (C : Type u) (D : Type u') [Category.{v} C]
-    [ConcreteCategory.{w} C] [Category.{v'} D] [ConcreteCategory.{w} D] [HasForget₂ C D]
-    [(forget C).PreservesMonomorphisms] : (forget₂ C D).PreservesMonomorphisms :=
+#print CategoryTheory.ConcreteCategory.forget₂_preservesMonomorphisms /-
+instance CategoryTheory.ConcreteCategory.forget₂_preservesMonomorphisms (C : Type u) (D : Type u')
+    [Category.{v} C] [ConcreteCategory.{w} C] [Category.{v'} D] [ConcreteCategory.{w} D]
+    [HasForget₂ C D] [(forget C).PreservesMonomorphisms] : (forget₂ C D).PreservesMonomorphisms :=
   have : (forget₂ C D ⋙ forget D).PreservesMonomorphisms := by simp only [has_forget₂.forget_comp];
     infer_instance
   functor.preserves_monomorphisms_of_preserves_of_reflects _ (forget D)
-#align category_theory.forget₂_preserves_monomorphisms CategoryTheory.forget₂_preservesMonomorphisms
+#align category_theory.forget₂_preserves_monomorphisms CategoryTheory.ConcreteCategory.forget₂_preservesMonomorphisms
 -/
 
-#print CategoryTheory.forget₂_preservesEpimorphisms /-
-instance forget₂_preservesEpimorphisms (C : Type u) (D : Type u') [Category.{v} C]
-    [ConcreteCategory.{w} C] [Category.{v'} D] [ConcreteCategory.{w} D] [HasForget₂ C D]
-    [(forget C).PreservesEpimorphisms] : (forget₂ C D).PreservesEpimorphisms :=
+#print CategoryTheory.ConcreteCategory.forget₂_preservesEpimorphisms /-
+instance CategoryTheory.ConcreteCategory.forget₂_preservesEpimorphisms (C : Type u) (D : Type u')
+    [Category.{v} C] [ConcreteCategory.{w} C] [Category.{v'} D] [ConcreteCategory.{w} D]
+    [HasForget₂ C D] [(forget C).PreservesEpimorphisms] : (forget₂ C D).PreservesEpimorphisms :=
   have : (forget₂ C D ⋙ forget D).PreservesEpimorphisms := by simp only [has_forget₂.forget_comp];
     infer_instance
   functor.preserves_epimorphisms_of_preserves_of_reflects _ (forget D)
-#align category_theory.forget₂_preserves_epimorphisms CategoryTheory.forget₂_preservesEpimorphisms
+#align category_theory.forget₂_preserves_epimorphisms CategoryTheory.ConcreteCategory.forget₂_preservesEpimorphisms
 -/
 
 #print CategoryTheory.InducedCategory.concreteCategory /-
