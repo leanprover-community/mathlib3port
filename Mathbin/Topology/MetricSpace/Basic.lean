@@ -1565,12 +1565,14 @@ end Metric
 
 open Metric
 
-#print Metric.uniformity_basis_edist /-
+/- warning: pseudo_metric.uniformity_basis_edist clashes with uniformity_basis_edist -> uniformity_basis_edist
+Case conversion may be inaccurate. Consider using '#align pseudo_metric.uniformity_basis_edist uniformity_basis_edistₓ'. -/
+#print uniformity_basis_edist /-
 /-Instantiate a pseudometric space as a pseudoemetric space. Before we can state the instance,
 we need to show that the uniform structure coming from the edistance and the
 distance coincide. -/
 /-- Expressing the uniformity in terms of `edist` -/
-protected theorem Metric.uniformity_basis_edist :
+protected theorem uniformity_basis_edist :
     (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => {p | edist p.1 p.2 < ε} :=
   ⟨by
     intro t
@@ -1583,12 +1585,12 @@ protected theorem Metric.uniformity_basis_edist :
       rw [ENNReal.ofReal_pos] at ε0'
       refine' ⟨ε', ε0', fun a b h => Hε (lt_trans _ hε)⟩
       rwa [edist_dist, ENNReal.ofReal_lt_ofReal_iff ε0']⟩
-#align pseudo_metric.uniformity_basis_edist Metric.uniformity_basis_edist
+#align pseudo_metric.uniformity_basis_edist uniformity_basis_edist
 -/
 
 #print Metric.uniformity_edist /-
 theorem Metric.uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 {p : α × α | edist p.1 p.2 < ε} :=
-  Metric.uniformity_basis_edist.eq_biInf
+  uniformity_basis_edist.eq_biInf
 #align metric.uniformity_edist Metric.uniformity_edist
 -/
 

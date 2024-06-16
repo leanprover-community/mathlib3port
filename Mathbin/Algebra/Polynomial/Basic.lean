@@ -589,18 +589,14 @@ theorem smul_C {S} [SMulZeroClass S R] (s : S) (r : R) : s • C r = C (s • r)
 #align polynomial.smul_C Polynomial.smul_C
 -/
 
-#print Polynomial.C_bit0 /-
 @[simp]
-theorem C_bit0 : C (bit0 a) = bit0 (C a) :=
+theorem c_bit0 : C (bit0 a) = bit0 (C a) :=
   C_add
-#align polynomial.C_bit0 Polynomial.C_bit0
--/
+#align polynomial.C_bit0 Polynomial.c_bit0
 
-#print Polynomial.C_bit1 /-
 @[simp]
-theorem C_bit1 : C (bit1 a) = bit1 (C a) := by simp [bit1, C_bit0]
-#align polynomial.C_bit1 Polynomial.C_bit1
--/
+theorem c_bit1 : C (bit1 a) = bit1 (C a) := by simp [bit1, C_bit0]
+#align polynomial.C_bit1 Polynomial.c_bit1
 
 #print Polynomial.C_pow /-
 theorem C_pow : C (a ^ n) = C a ^ n :=

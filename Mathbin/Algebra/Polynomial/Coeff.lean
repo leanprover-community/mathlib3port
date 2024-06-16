@@ -51,11 +51,9 @@ theorem coeff_add (p q : R[X]) (n : ℕ) : coeff (p + q) n = coeff p n + coeff q
 #align polynomial.coeff_add Polynomial.coeff_add
 -/
 
-#print Polynomial.coeff_bit0 /-
 @[simp]
 theorem coeff_bit0 (p : R[X]) (n : ℕ) : coeff (bit0 p) n = bit0 (coeff p n) := by simp [bit0]
 #align polynomial.coeff_bit0 Polynomial.coeff_bit0
--/
 
 #print Polynomial.coeff_smul /-
 @[simp]
@@ -415,18 +413,14 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : C r ∣ φ ↔ ∀ i, r ∣ φ
 #align polynomial.C_dvd_iff_dvd_coeff Polynomial.C_dvd_iff_dvd_coeff
 -/
 
-#print Polynomial.coeff_bit0_mul /-
-theorem coeff_bit0_mul (P Q : R[X]) (n : ℕ) : coeff (bit0 P * Q) n = 2 * coeff (P * Q) n := by
+theorem coeff_bit0_hMul (P Q : R[X]) (n : ℕ) : coeff (bit0 P * Q) n = 2 * coeff (P * Q) n := by
   simp [bit0, add_mul]
-#align polynomial.coeff_bit0_mul Polynomial.coeff_bit0_mul
--/
+#align polynomial.coeff_bit0_mul Polynomial.coeff_bit0_hMul
 
-#print Polynomial.coeff_bit1_mul /-
-theorem coeff_bit1_mul (P Q : R[X]) (n : ℕ) :
+theorem coeff_bit1_hMul (P Q : R[X]) (n : ℕ) :
     coeff (bit1 P * Q) n = 2 * coeff (P * Q) n + coeff Q n := by
   simp [bit1, add_mul, coeff_bit0_mul]
-#align polynomial.coeff_bit1_mul Polynomial.coeff_bit1_mul
--/
+#align polynomial.coeff_bit1_mul Polynomial.coeff_bit1_hMul
 
 #print Polynomial.smul_eq_C_mul /-
 theorem smul_eq_C_mul (a : R) : a • p = C a * p := by simp [ext_iff]

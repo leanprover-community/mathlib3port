@@ -281,7 +281,7 @@ theorem toList_injective : Function.Injective (@RelSeries.toList X _ _) :=
 
 #print RelSeries.toList_chain' /-
 theorem toList_chain' (s : CompositionSeries X) : List.Chain' IsMaximal s.toList :=
-  List.chain'_iff_nthLe.2
+  List.chain'_iff_get.2
     (by
       intro i hi
       simp only [to_list, List.nthLe_ofFn']
@@ -323,7 +323,7 @@ def fromListChain' (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) :
       (by
         conv_rhs => rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt (List.length_pos_of_ne_nil hl))]
         exact i.2)
-  step' := fun ⟨i, hi⟩ => List.chain'_iff_nthLe.1 hc i hi
+  step' := fun ⟨i, hi⟩ => List.chain'_iff_get.1 hc i hi
 #align composition_series.of_list RelSeries.fromListChain'
 -/
 

@@ -1088,12 +1088,10 @@ theorem disjoint_nhdsWithin_of_mem_discrete {s : Set α} [DiscreteTopology s] {x
 #align disjoint_nhds_within_of_mem_discrete disjoint_nhdsWithin_of_mem_discrete
 -/
 
-#print TopologicalSpace.subset_trans /-
 /-- Let `X` be a topological space and let `s, t ⊆ X` be two subsets.  If there is an inclusion
 `t ⊆ s`, then the topological space structure on `t` induced by `X` is the same as the one
 obtained by the induced topological space structure on `s`. -/
-theorem TopologicalSpace.subset_trans {X : Type _} [tX : TopologicalSpace X] {s t : Set X}
-    (ts : t ⊆ s) :
+theorem embedding_inclusion {X : Type _} [tX : TopologicalSpace X] {s t : Set X} (ts : t ⊆ s) :
     (Subtype.topologicalSpace : TopologicalSpace t) =
       (Subtype.topologicalSpace : TopologicalSpace s).induced (Set.inclusion ts) :=
   by
@@ -1101,8 +1099,7 @@ theorem TopologicalSpace.subset_trans {X : Type _} [tX : TopologicalSpace X] {s 
     tX.induced ((coe : s → X) ∘ Set.inclusion ts) =
       TopologicalSpace.induced (Set.inclusion ts) (tX.induced _)
   rw [← induced_compose]
-#align topological_space.subset_trans TopologicalSpace.subset_trans
--/
+#align topological_space.subset_trans embedding_inclusionₓ
 
 #print T2Space /-
 /-- A T₂ space, also known as a Hausdorff space, is one in which for every

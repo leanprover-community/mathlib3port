@@ -1670,10 +1670,9 @@ theorem Filter.Eventually.exists_Ioo_subset [NoMaxOrder α] [NoMinOrder α] {a :
 #align filter.eventually.exists_Ioo_subset Filter.Eventually.exists_Ioo_subset
 -/
 
-#print countable_of_isolated_right' /-
 /-- The set of points which are isolated on the right is countable when the space is
 second-countable. -/
-theorem countable_of_isolated_right' [SecondCountableTopology α] :
+theorem countable_setOf_covBy_right [SecondCountableTopology α] :
     Set.Countable {x : α | ∃ y, x < y ∧ Ioo x y = ∅} :=
   by
   nontriviality α
@@ -1730,8 +1729,7 @@ theorem countable_of_isolated_right' [SecondCountableTopology α] :
   suffices H : Ioc (z x) x = Ioo (z x) (y x)
   · rw [H]; exact isOpen_Ioo
   exact subset.antisymm (Ioc_subset_Ioo_right (hy x hx.1)) fun u hu => ⟨hu.1, Hy _ _ hx.1 hu.2⟩
-#align countable_of_isolated_right countable_of_isolated_right'
--/
+#align countable_of_isolated_right countable_setOf_covBy_rightₓ
 
 #print countable_of_isolated_left' /-
 /-- The set of points which are isolated on the left is countable when the space is
@@ -1739,7 +1737,7 @@ second-countable. -/
 theorem countable_of_isolated_left' [SecondCountableTopology α] :
     Set.Countable {x : α | ∃ y, y < x ∧ Ioo y x = ∅} :=
   by
-  convert @countable_of_isolated_right' αᵒᵈ _ _ _ _
+  convert @countable_setOf_covBy_right αᵒᵈ _ _ _ _
   have : ∀ x y : α, Ioo x y = {z | z < y ∧ x < z} := by simp_rw [and_comm, Ioo];
     simp only [eq_self_iff_true, forall₂_true_iff]
   simp_rw [this]
@@ -1765,7 +1763,7 @@ theorem Set.PairwiseDisjoint.countable_of_Ioo [SecondCountableTopology α] {y : 
     by_cases h'x : (Ioo x (y x)).Nonempty
     · exact Or.inl ⟨hx, h'x⟩
     · exact Or.inr ⟨y x, h' x hx, not_nonempty_iff_eq_empty.1 h'x⟩
-  exact countable.mono this (t_count.union countable_of_isolated_right')
+  exact countable.mono this (t_count.union countable_setOf_covBy_right)
 #align set.pairwise_disjoint.countable_of_Ioo Set.PairwiseDisjoint.countable_of_Ioo
 -/
 
@@ -2392,18 +2390,13 @@ theorem nhds_basis_Ioo_pos_of_pos [NoMinOrder α] [NoMaxOrder α] {a : α} (ha :
 
 end LinearOrderedAddCommGroup
 
-#print preimage_neg /-
-theorem preimage_neg [AddGroup α] : preimage (Neg.neg : α → α) = image (Neg.neg : α → α) :=
+theorem Set.image_neg [AddGroup α] : preimage (Neg.neg : α → α) = image (Neg.neg : α → α) :=
   (image_eq_preimage_of_inverse neg_neg neg_neg).symm
-#align preimage_neg preimage_neg
--/
+#align preimage_neg Set.image_negₓ
 
-#print Filter.map_neg_eq_comap_neg /-
-theorem Filter.map_neg_eq_comap_neg [AddGroup α] :
-    map (Neg.neg : α → α) = comap (Neg.neg : α → α) :=
+theorem Filter.map_neg [AddGroup α] : map (Neg.neg : α → α) = comap (Neg.neg : α → α) :=
   funext fun f => map_eq_comap_of_inverse (funext neg_neg) (funext neg_neg)
-#align filter.map_neg_eq_comap_neg Filter.map_neg_eq_comap_neg
--/
+#align filter.map_neg_eq_comap_neg Filter.map_negₓ
 
 section OrderTopology
 

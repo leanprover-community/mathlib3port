@@ -197,8 +197,7 @@ protected theorem Chain.rel [IsTrans α R] (hl : l.Chain R a) (hb : b ∈ l) : R
 #align list.chain.rel List.Chain.rel
 -/
 
-#print List.chain_iff_nthLe /-
-theorem chain_iff_nthLe {R} :
+theorem chain_iff_get {R} :
     ∀ {a : α} {l : List α},
       Chain R a l ↔
         (∀ h : 0 < length l, R a (nthLe l 0 h)) ∧
@@ -223,8 +222,7 @@ theorem chain_iff_nthLe {R} :
     · apply h 0
     intro i w; convert h (i + 1) _ using 1
     exact lt_pred_iff.mp w
-#align list.chain_iff_nth_le List.chain_iff_nthLe
--/
+#align list.chain_iff_nth_le List.chain_iff_getₓ
 
 #print List.Chain'.imp /-
 theorem Chain'.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {l : List α} (p : Chain' R l) :
@@ -465,8 +463,7 @@ theorem chain'_reverse : ∀ {l}, Chain' R (reverse l) ↔ Chain' (flip R) l
 #align list.chain'_reverse List.chain'_reverse
 -/
 
-#print List.chain'_iff_nthLe /-
-theorem chain'_iff_nthLe {R} :
+theorem chain'_iff_get {R} :
     ∀ {l : List α},
       Chain' R l ↔
         ∀ (i) (h : i < length l - 1),
@@ -478,8 +475,7 @@ theorem chain'_iff_nthLe {R} :
     simp only [length, nth_le, add_tsub_cancel_right, add_lt_add_iff_right, tsub_pos_iff_lt,
       one_lt_succ_succ, true_imp_iff]
     rfl
-#align list.chain'_iff_nth_le List.chain'_iff_nthLe
--/
+#align list.chain'_iff_nth_le List.chain'_iff_getₓ
 
 #print List.Chain'.append_overlap /-
 /-- If `l₁ l₂` and `l₃` are lists and `l₁ ++ l₂` and `l₂ ++ l₃` both satisfy

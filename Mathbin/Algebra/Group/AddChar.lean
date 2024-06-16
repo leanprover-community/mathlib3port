@@ -282,19 +282,19 @@ theorem to_mulShift_inj_of_isPrimitive {ψ : AddChar R R'} (hψ : IsPrimitive ψ
 #align add_char.to_mul_shift_inj_of_is_primitive AddChar.to_mulShift_inj_of_isPrimitive
 -/
 
-#print AddChar.IsNontrivial.isPrimitive /-
+#print AddChar.IsPrimitive.of_ne_one /-
 -- `add_comm_group.equiv_direct_sum_zmod_of_fintype`
 -- gives the structure theorem for finite abelian groups.
 -- This could be used to show that the map above is a bijection.
 -- We leave this for a later occasion.
 /-- When `R` is a field `F`, then a nontrivial additive character is primitive -/
-theorem IsNontrivial.isPrimitive {F : Type u} [Field F] {ψ : AddChar F R'} (hψ : IsNontrivial ψ) :
+theorem IsPrimitive.of_ne_one {F : Type u} [Field F] {ψ : AddChar F R'} (hψ : IsNontrivial ψ) :
     IsPrimitive ψ := by
   intro a ha
   cases' hψ with x h
   use a⁻¹ * x
   rwa [mul_shift_apply, mul_inv_cancel_left₀ ha]
-#align add_char.is_nontrivial.is_primitive AddChar.IsNontrivial.isPrimitive
+#align add_char.is_nontrivial.is_primitive AddChar.IsPrimitive.of_ne_one
 -/
 
 #print AddChar.PrimitiveAddChar /-
@@ -372,9 +372,9 @@ theorem zmodChar_apply' {n : ℕ+} {ζ : C} (hζ : ζ ^ ↑n = 1) (a : ℕ) : zm
 
 end ZmodCharDef
 
-#print AddChar.zmod_char_isNontrivial_iff /-
+#print AddChar.zmod_char_ne_one_iff /-
 /-- An additive character on `zmod n` is nontrivial iff it takes a value `≠ 1` on `1`. -/
-theorem zmod_char_isNontrivial_iff (n : ℕ+) (ψ : AddChar (ZMod n) C) : IsNontrivial ψ ↔ ψ 1 ≠ 1 :=
+theorem zmod_char_ne_one_iff (n : ℕ+) (ψ : AddChar (ZMod n) C) : IsNontrivial ψ ↔ ψ 1 ≠ 1 :=
   by
   refine' ⟨_, fun h => ⟨1, h⟩⟩
   contrapose!
@@ -382,7 +382,7 @@ theorem zmod_char_isNontrivial_iff (n : ℕ+) (ψ : AddChar (ZMod n) C) : IsNont
   have ha₁ : a = a.val • 1 := by rw [nsmul_eq_mul, mul_one]; exact (ZMod.natCast_zmod_val a).symm
   rw [ha₁, map_nsmul_pow, h₁, one_pow] at ha
   exact ha rfl
-#align add_char.zmod_char_is_nontrivial_iff AddChar.zmod_char_isNontrivial_iff
+#align add_char.zmod_char_is_nontrivial_iff AddChar.zmod_char_ne_one_iff
 -/
 
 #print AddChar.IsPrimitive.zmod_char_eq_one_iff /-
@@ -476,10 +476,10 @@ open scoped BigOperators
 
 variable [Fintype R]
 
-#print AddChar.sum_eq_zero_of_isNontrivial /-
+#print AddChar.sum_eq_zero_of_ne_one /-
 /-- The sum over the values of a nontrivial additive character vanishes if the target ring
 is a domain. -/
-theorem sum_eq_zero_of_isNontrivial [IsDomain R'] {ψ : AddChar R R'} (hψ : IsNontrivial ψ) :
+theorem sum_eq_zero_of_ne_one [IsDomain R'] {ψ : AddChar R R'} (hψ : IsNontrivial ψ) :
     ∑ a, ψ a = 0 := by
   rcases hψ with ⟨b, hb⟩
   have h₁ : ∑ a : R, ψ (b + a) = ∑ a : R, ψ a :=
@@ -488,18 +488,18 @@ theorem sum_eq_zero_of_isNontrivial [IsDomain R'] {ψ : AddChar R R'} (hψ : IsN
   have h₂ : ∑ a : R, ψ a = finset.univ.sum ⇑ψ := rfl
   rw [← Finset.mul_sum, h₂] at h₁
   exact eq_zero_of_mul_eq_self_left hb h₁
-#align add_char.sum_eq_zero_of_is_nontrivial AddChar.sum_eq_zero_of_isNontrivial
+#align add_char.sum_eq_zero_of_is_nontrivial AddChar.sum_eq_zero_of_ne_one
 -/
 
-#print AddChar.sum_eq_card_of_is_trivial /-
+#print AddChar.sum_eq_card_of_eq_one /-
 /-- The sum over the values of the trivial additive character is the cardinality of the source. -/
-theorem sum_eq_card_of_is_trivial {ψ : AddChar R R'} (hψ : ¬IsNontrivial ψ) :
+theorem sum_eq_card_of_eq_one {ψ : AddChar R R'} (hψ : ¬IsNontrivial ψ) :
     ∑ a, ψ a = Fintype.card R := by
   simp only [is_nontrivial] at hψ
   push_neg at hψ
   simp only [hψ, Finset.sum_const, Nat.smul_one_eq_cast]
   rfl
-#align add_char.sum_eq_card_of_is_trivial AddChar.sum_eq_card_of_is_trivial
+#align add_char.sum_eq_card_of_is_trivial AddChar.sum_eq_card_of_eq_one
 -/
 
 #print AddChar.sum_mulShift /-

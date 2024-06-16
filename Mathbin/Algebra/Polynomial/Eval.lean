@@ -119,18 +119,14 @@ theorem eval₂_one : (1 : R[X]).eval₂ f x = 1 := by rw [← C_1, eval₂_C, f
 #align polynomial.eval₂_one Polynomial.eval₂_one
 -/
 
-#print Polynomial.eval₂_bit0 /-
 @[simp]
 theorem eval₂_bit0 : (bit0 p).eval₂ f x = bit0 (p.eval₂ f x) := by rw [bit0, eval₂_add, bit0]
 #align polynomial.eval₂_bit0 Polynomial.eval₂_bit0
--/
 
-#print Polynomial.eval₂_bit1 /-
 @[simp]
 theorem eval₂_bit1 : (bit1 p).eval₂ f x = bit1 (p.eval₂ f x) := by
   rw [bit1, eval₂_add, eval₂_bit0, eval₂_one, bit1]
 #align polynomial.eval₂_bit1 Polynomial.eval₂_bit1
--/
 
 #print Polynomial.eval₂_smul /-
 @[simp]
@@ -491,19 +487,15 @@ theorem eval_one : (1 : R[X]).eval x = 1 :=
 #align polynomial.eval_one Polynomial.eval_one
 -/
 
-#print Polynomial.eval_bit0 /-
 @[simp]
 theorem eval_bit0 : (bit0 p).eval x = bit0 (p.eval x) :=
   eval₂_bit0 _ _
 #align polynomial.eval_bit0 Polynomial.eval_bit0
--/
 
-#print Polynomial.eval_bit1 /-
 @[simp]
 theorem eval_bit1 : (bit1 p).eval x = bit1 (p.eval x) :=
   eval₂_bit1 _ _
 #align polynomial.eval_bit1 Polynomial.eval_bit1
--/
 
 #print Polynomial.eval_smul /-
 @[simp]
