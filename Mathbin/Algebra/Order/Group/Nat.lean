@@ -538,9 +538,8 @@ theorem eq_zero_of_le_half (h : n ≤ n / 2) : n = 0 :=
 #align nat.eq_zero_of_le_half Nat.eq_zero_of_le_half
 -/
 
-#print Nat.mul_div_mul_comm_of_dvd_dvd /-
-theorem mul_div_mul_comm_of_dvd_dvd (hmk : k ∣ m) (hnl : l ∣ n) :
-    m * n / (k * l) = m / k * (n / l) :=
+#print Nat.mul_div_mul_comm /-
+theorem mul_div_mul_comm (hmk : k ∣ m) (hnl : l ∣ n) : m * n / (k * l) = m / k * (n / l) :=
   by
   rcases k.eq_zero_or_pos with (rfl | hk0); · simp
   rcases l.eq_zero_or_pos with (rfl | hl0); · simp
@@ -548,7 +547,7 @@ theorem mul_div_mul_comm_of_dvd_dvd (hmk : k ∣ m) (hnl : l ∣ n) :
   obtain ⟨_, rfl⟩ := hnl
   rw [mul_mul_mul_comm, Nat.mul_div_cancel_left _ hk0, Nat.mul_div_cancel_left _ hl0,
     Nat.mul_div_cancel_left _ (mul_pos hk0 hl0)]
-#align nat.mul_div_mul_comm_of_dvd_dvd Nat.mul_div_mul_comm_of_dvd_dvd
+#align nat.mul_div_mul_comm_of_dvd_dvd Nat.mul_div_mul_comm
 -/
 
 #print Nat.le_half_of_half_lt_sub /-
