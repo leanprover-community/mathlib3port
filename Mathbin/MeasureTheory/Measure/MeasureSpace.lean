@@ -2553,11 +2553,11 @@ theorem restrict_sum (μ : ι → Measure α) {s : Set α} (hs : MeasurableSet s
 #align measure_theory.measure.restrict_sum MeasureTheory.Measure.restrict_sum
 -/
 
-#print MeasureTheory.Measure.sum_of_empty /-
+#print MeasureTheory.Measure.sum_of_isEmpty /-
 @[simp]
-theorem sum_of_empty [IsEmpty ι] (μ : ι → Measure α) : sum μ = 0 := by
+theorem sum_of_isEmpty [IsEmpty ι] (μ : ι → Measure α) : sum μ = 0 := by
   rw [← measure_univ_eq_zero, sum_apply _ MeasurableSet.univ, tsum_empty]
-#align measure_theory.measure.sum_of_empty MeasureTheory.Measure.sum_of_empty
+#align measure_theory.measure.sum_of_empty MeasureTheory.Measure.sum_of_isEmpty
 -/
 
 #print MeasureTheory.Measure.sum_add_sum_compl /-

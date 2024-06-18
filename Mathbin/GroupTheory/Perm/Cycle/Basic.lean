@@ -1493,13 +1493,13 @@ theorem two_le_card_support_cycleOf_iff : 2 ≤ card (cycleOf f x).support ↔ f
 #align equiv.perm.two_le_card_support_cycle_of_iff Equiv.Perm.two_le_card_support_cycleOf_iff
 -/
 
-#print Equiv.Perm.card_support_cycleOf_pos_iff /-
+#print Equiv.Perm.support_cycleOf_nonempty /-
 @[simp]
-theorem card_support_cycleOf_pos_iff : 0 < card (cycleOf f x).support ↔ f x ≠ x :=
+theorem support_cycleOf_nonempty : 0 < card (cycleOf f x).support ↔ f x ≠ x :=
   by
   rw [← two_le_card_support_cycle_of_iff, ← Nat.succ_le_iff]
   exact ⟨fun h => Or.resolve_left h.eq_or_lt (card_support_ne_one _).symm, zero_lt_two.trans_le⟩
-#align equiv.perm.card_support_cycle_of_pos_iff Equiv.Perm.card_support_cycleOf_pos_iff
+#align equiv.perm.card_support_cycle_of_pos_iff Equiv.Perm.support_cycleOf_nonempty
 -/
 
 #print Equiv.Perm.pow_mod_orderOf_cycleOf_apply /-

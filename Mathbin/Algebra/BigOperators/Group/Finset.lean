@@ -301,12 +301,12 @@ theorem prod_empty : ∏ x in ∅, f x = 1 :=
 #align finset.sum_empty Finset.sum_empty
 -/
 
-#print Finset.prod_of_empty /-
+#print Finset.prod_of_isEmpty /-
 @[to_additive]
-theorem prod_of_empty [IsEmpty α] (s : Finset α) : ∏ i in s, f i = 1 := by
+theorem prod_of_isEmpty [IsEmpty α] (s : Finset α) : ∏ i in s, f i = 1 := by
   rw [eq_empty_of_is_empty s, prod_empty]
-#align finset.prod_of_empty Finset.prod_of_empty
-#align finset.sum_of_empty Finset.sum_of_empty
+#align finset.prod_of_empty Finset.prod_of_isEmpty
+#align finset.sum_of_empty Finset.sum_of_isEmpty
 -/
 
 #print Finset.prod_cons /-
@@ -2381,7 +2381,7 @@ theorem prod_unique {α β : Type _} [CommMonoid β] [Unique α] [Fintype α] (f
 @[to_additive]
 theorem prod_empty {α β : Type _} [CommMonoid β] [IsEmpty α] [Fintype α] (f : α → β) :
     ∏ x : α, f x = 1 :=
-  Finset.prod_of_empty _
+  Finset.prod_of_isEmpty _
 #align fintype.prod_empty Fintype.prod_empty
 #align fintype.sum_empty Fintype.sum_empty
 -/
