@@ -280,17 +280,17 @@ theorem quadraticChar_isQuadratic : (quadraticChar F).IsQuadratic :=
 
 variable {F}
 
-#print quadraticChar_isNontrivial /-
+#print quadraticChar_ne_one /-
 /-- The quadratic character is nontrivial as a multiplicative character
 when the domain has odd characteristic. -/
-theorem quadraticChar_isNontrivial (hF : ringChar F ≠ 2) : (quadraticChar F).IsNontrivial :=
+theorem quadraticChar_ne_one (hF : ringChar F ≠ 2) : (quadraticChar F).IsNontrivial :=
   by
   rcases quadraticChar_exists_neg_one hF with ⟨a, ha⟩
   have hu : IsUnit a := by by_contra hf; rw [map_nonunit _ hf] at ha; norm_num at ha
   refine' ⟨hu.unit, (_ : quadraticChar F a ≠ 1)⟩
   rw [ha]
   norm_num
-#align quadratic_char_is_nontrivial quadraticChar_isNontrivial
+#align quadratic_char_is_nontrivial quadraticChar_ne_one
 -/
 
 #print quadraticChar_card_sqrts /-
@@ -337,7 +337,7 @@ open scoped BigOperators
 #print quadraticChar_sum_zero /-
 /-- The sum over the values of the quadratic character is zero when the characteristic is odd. -/
 theorem quadraticChar_sum_zero (hF : ringChar F ≠ 2) : ∑ a : F, quadraticChar F a = 0 :=
-  IsNontrivial.sum_eq_zero (quadraticChar_isNontrivial hF)
+  MulChar.sum_eq_zero_of_ne_one (quadraticChar_ne_one hF)
 #align quadratic_char_sum_zero quadraticChar_sum_zero
 -/
 

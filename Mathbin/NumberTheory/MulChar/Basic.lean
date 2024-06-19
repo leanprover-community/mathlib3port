@@ -612,17 +612,17 @@ theorem IsQuadratic.pow_odd {χ : MulChar R R'} (hχ : χ.IsQuadratic) {n : ℕ}
 
 open scoped BigOperators
 
-#print MulChar.IsNontrivial.sum_eq_zero /-
+#print MulChar.sum_eq_zero_of_ne_one /-
 /-- The sum over all values of a nontrivial multiplicative character on a finite ring is zero
 (when the target is a domain). -/
-theorem IsNontrivial.sum_eq_zero [Fintype R] [IsDomain R'] {χ : MulChar R R'}
+theorem MulChar.sum_eq_zero_of_ne_one [Fintype R] [IsDomain R'] {χ : MulChar R R'}
     (hχ : χ.IsNontrivial) : ∑ a, χ a = 0 :=
   by
   rcases hχ with ⟨b, hb⟩
   refine' eq_zero_of_mul_eq_self_left hb _
   simp only [Finset.mul_sum, ← map_mul]
   exact Fintype.sum_bijective _ (Units.mulLeft_bijective b) _ _ fun x => rfl
-#align mul_char.is_nontrivial.sum_eq_zero MulChar.IsNontrivial.sum_eq_zero
+#align mul_char.is_nontrivial.sum_eq_zero MulChar.sum_eq_zero_of_ne_one
 -/
 
 #print MulChar.sum_one_eq_card_units /-

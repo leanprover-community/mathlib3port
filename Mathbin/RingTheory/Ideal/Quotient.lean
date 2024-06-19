@@ -6,7 +6,7 @@ Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
 import Algebra.Ring.Fin
 import Algebra.Ring.Prod
 import LinearAlgebra.Quotient
-import RingTheory.Congruence
+import RingTheory.Congruence.Basic
 import RingTheory.Ideal.Basic
 import Tactic.FinCases
 

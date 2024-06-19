@@ -2582,7 +2582,7 @@ import RingTheory.Bezout
 import RingTheory.ChainOfDivisors
 import RingTheory.ClassGroup
 import RingTheory.Complex
-import RingTheory.Congruence
+import RingTheory.Congruence.Basic
 import RingTheory.Coprime.Basic
 import RingTheory.Coprime.Ideal
 import RingTheory.Coprime.Lemmas

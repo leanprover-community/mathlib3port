@@ -771,11 +771,9 @@ instance [IsDomain R] [NormalizedGCDMonoid R] : IsDomain W.CoordinateRing :=
     simpa only [span_singleton_prime W.polynomial_ne_zero, ← irreducible_iff_prime] using
       W.irreducible_polynomial
 
-#print WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field /-
-instance WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field {F : Type u}
-    [Field F] (W : WeierstrassCurve F) : IsDomain W.CoordinateRing := by classical infer_instance
-#align weierstrass_curve.coordinate_ring.is_domain_of_field WeierstrassCurve.Affine.CoordinateRing.instIsDomainCoordinateRing_of_Field
--/
+instance WeierstrassCurve.Affine.CoordinateRing.isDomain_of_field {F : Type u} [Field F]
+    (W : WeierstrassCurve F) : IsDomain W.CoordinateRing := by classical infer_instance
+#align weierstrass_curve.coordinate_ring.is_domain_of_field WeierstrassCurve.Affine.CoordinateRing.isDomain_of_field
 
 variable (x : R) (y : R[X])
 
@@ -844,11 +842,11 @@ noncomputable def WeierstrassCurve.Affine.CoordinateRing.XYIdeal (x : R) (y : R[
 noncomputable instance : Algebra R[X] W.CoordinateRing :=
   Quotient.algebra R[X]
 
-#print WeierstrassCurve.Affine.CoordinateRing.instAlgebraCoordinateRing' /-
-noncomputable instance WeierstrassCurve.Affine.CoordinateRing.instAlgebraCoordinateRing' :
+#print WeierstrassCurve.Affine.CoordinateRing.instAlgebra /-
+noncomputable instance WeierstrassCurve.Affine.CoordinateRing.instAlgebra :
     Algebra R W.CoordinateRing :=
   Quotient.algebra R
-#align weierstrass_curve.coordinate_ring.algebra' WeierstrassCurve.Affine.CoordinateRing.instAlgebraCoordinateRing'
+#align weierstrass_curve.coordinate_ring.algebra' WeierstrassCurve.Affine.CoordinateRing.instAlgebra
 -/
 
 instance : IsScalarTower R R[X] W.CoordinateRing :=
