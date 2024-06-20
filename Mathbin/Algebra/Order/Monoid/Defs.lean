@@ -92,11 +92,9 @@ theorem Mul.to_covariantClass_right (M : Type _) [Mul M] [PartialOrder M]
 
 end OrderedInstances
 
-#print bit0_pos /-
 theorem bit0_pos [OrderedAddCommMonoid α] {a : α} (h : 0 < a) : 0 < bit0 a :=
   add_pos' h h
 #align bit0_pos bit0_pos
--/
 
 #print LinearOrderedAddCommMonoid /-
 /-- A linearly ordered additive commutative monoid. -/

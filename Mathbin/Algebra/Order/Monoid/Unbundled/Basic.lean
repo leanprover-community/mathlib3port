@@ -1881,18 +1881,14 @@ section Bit
 
 variable [Add α] [Preorder α]
 
-#print bit0_mono /-
 theorem bit0_mono [CovariantClass α α (· + ·) (· ≤ ·)] [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
     Monotone (bit0 : α → α) := fun a b h => add_le_add h h
 #align bit0_mono bit0_mono
--/
 
-#print bit0_strictMono /-
 theorem bit0_strictMono [CovariantClass α α (· + ·) (· < ·)]
     [CovariantClass α α (swap (· + ·)) (· < ·)] : StrictMono (bit0 : α → α) := fun a b h =>
   add_lt_add h h
 #align bit0_strict_mono bit0_strictMono
--/
 
 end Bit
 

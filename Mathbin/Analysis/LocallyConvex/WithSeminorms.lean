@@ -221,7 +221,7 @@ protected def moduleFilterBasis : ModuleFilterBasis 𝕜 E
     where
   toAddGroupFilterBasis := p.AddGroupFilterBasis
   smul' := p.basisSets_smul
-  smul_left' := p.basisSets_smul_left
+  smul_left := p.basisSets_smul_left
   smul_right' := p.basisSets_smul_right
 #align seminorm_family.module_filter_basis SeminormFamily.moduleFilterBasis
 -/

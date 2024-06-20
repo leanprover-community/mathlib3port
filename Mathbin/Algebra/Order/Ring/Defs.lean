@@ -268,10 +268,8 @@ instance (priority := 200) OrderedSemiring.toMulPosMono : MulPosMono α :=
 #align ordered_semiring.to_mul_pos_mono OrderedSemiring.toMulPosMono
 -/
 
-#print bit1_mono /-
 theorem bit1_mono : Monotone (bit1 : α → α) := fun a b h => add_le_add_right (bit0_mono h) _
 #align bit1_mono bit1_mono
--/
 
 #print pow_nonneg /-
 @[simp]
@@ -344,16 +342,12 @@ theorem Monotone.mul (hf : Monotone f) (hg : Monotone g) (hf₀ : ∀ x, 0 ≤ f
 
 end Monotone
 
-#print bit1_pos /-
 theorem bit1_pos [Nontrivial α] (h : 0 ≤ a) : 0 < bit1 a :=
   zero_lt_one.trans_le <| bit1_zero.symm.trans_le <| bit1_mono h
 #align bit1_pos bit1_pos
--/
 
-#print bit1_pos' /-
 theorem bit1_pos' (h : 0 < a) : 0 < bit1 a := by nontriviality; exact bit1_pos h.le
 #align bit1_pos' bit1_pos'
--/
 
 #print mul_le_one /-
 theorem mul_le_one (ha : a ≤ 1) (hb' : 0 ≤ b) (hb : b ≤ 1) : a * b ≤ 1 :=
@@ -1103,63 +1097,47 @@ theorem add_le_mul' (a2 : 2 ≤ a) (b2 : 2 ≤ b) : a + b ≤ b * a :=
 
 section
 
-#print bit0_le_bit0 /-
 @[simp]
 theorem bit0_le_bit0 : bit0 a ≤ bit0 b ↔ a ≤ b := by
   rw [bit0, bit0, ← two_mul, ← two_mul, mul_le_mul_left (zero_lt_two : 0 < (2 : α))]
 #align bit0_le_bit0 bit0_le_bit0
--/
 
-#print bit0_lt_bit0 /-
 @[simp]
 theorem bit0_lt_bit0 : bit0 a < bit0 b ↔ a < b := by
   rw [bit0, bit0, ← two_mul, ← two_mul, mul_lt_mul_left (zero_lt_two : 0 < (2 : α))]
 #align bit0_lt_bit0 bit0_lt_bit0
--/
 
-#print bit1_le_bit1 /-
 @[simp]
 theorem bit1_le_bit1 : bit1 a ≤ bit1 b ↔ a ≤ b :=
   (add_le_add_iff_right 1).trans bit0_le_bit0
 #align bit1_le_bit1 bit1_le_bit1
--/
 
-#print bit1_lt_bit1 /-
 @[simp]
 theorem bit1_lt_bit1 : bit1 a < bit1 b ↔ a < b :=
   (add_lt_add_iff_right 1).trans bit0_lt_bit0
 #align bit1_lt_bit1 bit1_lt_bit1
--/
 
-#print one_le_bit1 /-
 @[simp]
 theorem one_le_bit1 : (1 : α) ≤ bit1 a ↔ 0 ≤ a := by
   rw [bit1, le_add_iff_nonneg_left, bit0, ← two_mul,
     mul_nonneg_iff_of_pos_left (zero_lt_two : 0 < (2 : α))]
 #align one_le_bit1 one_le_bit1
--/
 
-#print one_lt_bit1 /-
 @[simp]
 theorem one_lt_bit1 : (1 : α) < bit1 a ↔ 0 < a := by
   rw [bit1, lt_add_iff_pos_left, bit0, ← two_mul,
     mul_pos_iff_of_pos_left (zero_lt_two : 0 < (2 : α))]
 #align one_lt_bit1 one_lt_bit1
--/
 
-#print zero_le_bit0 /-
 @[simp]
 theorem zero_le_bit0 : (0 : α) ≤ bit0 a ↔ 0 ≤ a := by
   rw [bit0, ← two_mul, mul_nonneg_iff_of_pos_left (zero_lt_two : 0 < (2 : α))]
 #align zero_le_bit0 zero_le_bit0
--/
 
-#print zero_lt_bit0 /-
 @[simp]
 theorem zero_lt_bit0 : (0 : α) < bit0 a ↔ 0 < a := by
   rw [bit0, ← two_mul, mul_pos_iff_of_pos_left (zero_lt_two : 0 < (2 : α))]
 #align zero_lt_bit0 zero_lt_bit0
--/
 
 end
 

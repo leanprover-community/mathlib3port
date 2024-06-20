@@ -78,13 +78,11 @@ theorem mul_mem_center [Semigroup M] {a b : M} (ha : a ∈ Set.center M) (hb : b
 #align set.add_mem_add_center Set.add_mem_addCenter
 -/
 
-#print Set.inv_mem_center /-
 @[simp, to_additive neg_mem_add_center]
 theorem inv_mem_center [Group M] {a : M} (ha : a ∈ Set.center M) : a⁻¹ ∈ Set.center M := fun g => by
   rw [← inv_inj, mul_inv_rev, inv_inv, ← ha, mul_inv_rev, inv_inv]
-#align set.inv_mem_center Set.inv_mem_center
-#align set.neg_mem_add_center Set.neg_mem_addCenter
--/
+#align set.inv_mem_center Set.inv_mem_centerₓ
+#align set.neg_mem_add_center Set.neg_mem_addCenterₓ
 
 #print Set.add_mem_center /-
 @[simp]
@@ -122,36 +120,37 @@ theorem center_units_eq [GroupWithZero M] : Set.center Mˣ = (coe : Mˣ → M) �
 #align set.center_units_eq Set.center_units_eq
 -/
 
-#print Set.inv_mem_center₀ /-
+/- warning: set.inv_mem_center₀ clashes with set.inv_mem_center -> Set.inv_mem_centerₓ
+Case conversion may be inaccurate. Consider using '#align set.inv_mem_center₀ Set.inv_mem_centerₓₓ'. -/
+#print Set.inv_mem_centerₓ /-
 @[simp]
-theorem inv_mem_center₀ [GroupWithZero M] {a : M} (ha : a ∈ Set.center M) : a⁻¹ ∈ Set.center M :=
+theorem inv_mem_center [GroupWithZero M] {a : M} (ha : a ∈ Set.center M) : a⁻¹ ∈ Set.center M :=
   by
   obtain rfl | ha0 := eq_or_ne a 0
   · rw [inv_zero]; exact zero_mem_center M
   rcases IsUnit.mk0 _ ha0 with ⟨a, rfl⟩
   rw [← Units.val_inv_eq_inv_val]
   exact center_units_subset (inv_mem_center (subset_center_units ha))
-#align set.inv_mem_center₀ Set.inv_mem_center₀
+#align set.inv_mem_center₀ Set.inv_mem_centerₓ
 -/
 
-#print Set.div_mem_center /-
 @[simp, to_additive sub_mem_add_center]
 theorem div_mem_center [Group M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) :
     a / b ∈ Set.center M := by
   rw [div_eq_mul_inv]
   exact mul_mem_center ha (inv_mem_center hb)
-#align set.div_mem_center Set.div_mem_center
-#align set.sub_mem_add_center Set.sub_mem_addCenter
--/
+#align set.div_mem_center Set.div_mem_centerₓ
+#align set.sub_mem_add_center Set.sub_mem_addCenterₓ
 
-#print Set.div_mem_center₀ /-
+/- warning: set.div_mem_center₀ clashes with set.div_mem_center -> Set.div_mem_centerₓ
+Case conversion may be inaccurate. Consider using '#align set.div_mem_center₀ Set.div_mem_centerₓₓ'. -/
+#print Set.div_mem_centerₓ /-
 @[simp]
-theorem div_mem_center₀ [GroupWithZero M] {a b : M} (ha : a ∈ Set.center M)
-    (hb : b ∈ Set.center M) : a / b ∈ Set.center M :=
-  by
+theorem div_mem_center [GroupWithZero M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) :
+    a / b ∈ Set.center M := by
   rw [div_eq_mul_inv]
   exact mul_mem_center ha (inv_mem_center₀ hb)
-#align set.div_mem_center₀ Set.div_mem_center₀
+#align set.div_mem_center₀ Set.div_mem_centerₓ
 -/
 
 variable (M)

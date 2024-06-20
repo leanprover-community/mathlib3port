@@ -393,7 +393,7 @@ end RingFilterBasis
 structure ModuleFilterBasis (R M : Type _) [CommRing R] [TopologicalSpace R] [AddCommGroup M]
     [Module R M] extends AddGroupFilterBasis M where
   smul' : ∀ {U}, U ∈ sets → ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ sets, V • W ⊆ U
-  smul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ • x) ⁻¹' U
+  smul_left : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ • x) ⁻¹' U
   smul_right' : ∀ (m₀ : M) {U}, U ∈ sets → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U
 #align module_filter_basis ModuleFilterBasis
 -/
@@ -417,7 +417,7 @@ theorem smul {U : Set M} (hU : U ∈ B) : ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ B, V
 
 #print ModuleFilterBasis.smul_left /-
 theorem smul_left (x₀ : R) {U : Set M} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x₀ • x) ⁻¹' U :=
-  B.smul_left' x₀ hU
+  B.smul_left x₀ hU
 #align module_filter_basis.smul_left ModuleFilterBasis.smul_left
 -/
 
@@ -439,7 +439,7 @@ instance [DiscreteTopology R] : Inhabited (ModuleFilterBasis R M) :=
         use univ, univ_mem, {0}, rfl
         rintro a ⟨x, m, -, hm, rfl⟩
         simp [mem_singleton_iff.1 hm, h]
-      smul_left' := by
+      smul_left := by
         rintro x₀ U (h : U ∈ {{(0 : M)}})
         rw [mem_singleton_iff] at h
         use{0}, rfl
@@ -529,7 +529,7 @@ def ofBases {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (BR : Ring
       intro U U_in
       rcases smul U_in with ⟨V, V_in, W, W_in, H⟩
       exact ⟨V, BR.to_add_group_filter_basis.mem_nhds_zero V_in, W, W_in, H⟩
-    smul_left' := smul_left
+    smul_left := smul_left
     smul_right' := by
       intro m₀ U U_in
       rcases smul_right m₀ U_in with ⟨V, V_in, H⟩

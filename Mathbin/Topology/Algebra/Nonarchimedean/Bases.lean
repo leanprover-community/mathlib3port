@@ -286,7 +286,7 @@ def toModuleFilterBasis : ModuleFilterBasis R M
     use univ, univ_mem, B i, i, rfl
     rintro _ ⟨a, m, -, hm, rfl⟩
     exact (B i).smul_mem _ hm
-  smul_left' := by
+  smul_left := by
     rintro x₀ _ ⟨i, rfl⟩
     use B i, i, rfl
     intro m

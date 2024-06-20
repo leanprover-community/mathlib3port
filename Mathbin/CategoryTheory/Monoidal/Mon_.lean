@@ -99,10 +99,10 @@ theorem mul_one_hom {Z : C} (f : Z ⟶ M.pt) : (f ⊗ M.one) ≫ M.mul = (ρ_ Z)
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Mon_.assoc_flip /-
-theorem assoc_flip :
+#print Mon_.mul_assoc_flip /-
+theorem mul_assoc_flip :
     (𝟙 M.pt ⊗ M.mul) ≫ M.mul = (α_ M.pt M.pt M.pt).inv ≫ (M.mul ⊗ 𝟙 M.pt) ≫ M.mul := by simp
-#align Mon_.assoc_flip Mon_.assoc_flip
+#align Mon_.assoc_flip Mon_.mul_assoc_flip
 -/
 
 #print Mon_.Hom /-

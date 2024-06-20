@@ -386,11 +386,9 @@ instance (priority := 10) of_gt' {M} [CanonicallyOrderedAddCommMonoid M] [One M]
 #align ne_zero.of_gt' NeZero.of_gt'
 -/
 
-#print NeZero.bit0 /-
 instance bit0 {M} [CanonicallyOrderedAddCommMonoid M] {x : M} [NeZero x] : NeZero (bit0 x) :=
   of_pos <| bit0_pos <| NeZero.pos x
 #align ne_zero.bit0 NeZero.bit0
--/
 
 end NeZero
 

@@ -342,12 +342,14 @@ theorem HasCompactSupport.smul_right (hf : HasCompactSupport f) : HasCompactSupp
 #align has_compact_support.smul_right HasCompactSupport.smul_right
 -/
 
-#print HasCompactSupport.smul_left' /-
-theorem HasCompactSupport.smul_left' (hf : HasCompactSupport f') : HasCompactSupport (f • f') :=
+/- warning: has_compact_support.smul_left' clashes with has_compact_support.smul_left -> HasCompactSupport.smul_left
+Case conversion may be inaccurate. Consider using '#align has_compact_support.smul_left' HasCompactSupport.smul_leftₓ'. -/
+#print HasCompactSupport.smul_left /-
+theorem HasCompactSupport.smul_left (hf : HasCompactSupport f') : HasCompactSupport (f • f') :=
   by
   rw [hasCompactSupport_iff_eventuallyEq] at hf ⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, smul_zero]
-#align has_compact_support.smul_left' HasCompactSupport.smul_left'
+#align has_compact_support.smul_left' HasCompactSupport.smul_left
 -/
 
 end SMulWithZero

@@ -107,6 +107,7 @@ private theorem aux₁
     | positivity
     | measurability
 
+#print IsUpperSet.null_frontier /-
 theorem IsUpperSet.null_frontier (hs : IsUpperSet s) : volume (frontier s) = 0 :=
   by
   refine'
@@ -120,7 +121,9 @@ theorem IsUpperSet.null_frontier (hs : IsUpperSet s) : volume (frontier s) = 0 :
         hs.compl.exists_subset_ball <| frontier_subset_closure <| by rwa [frontier_compl]
   · exact aux₀ fun _ => hs.exists_subset_ball <| frontier_subset_closure hx
 #align is_upper_set.null_frontier IsUpperSet.null_frontier
+-/
 
+#print IsLowerSet.null_frontier /-
 theorem IsLowerSet.null_frontier (hs : IsLowerSet s) : volume (frontier s) = 0 :=
   by
   refine'
@@ -134,7 +137,9 @@ theorem IsLowerSet.null_frontier (hs : IsLowerSet s) : volume (frontier s) = 0 :
         hs.compl.exists_subset_ball <| frontier_subset_closure <| by rwa [frontier_compl]
   · exact aux₀ fun _ => hs.exists_subset_ball <| frontier_subset_closure hx
 #align is_lower_set.null_frontier IsLowerSet.null_frontier
+-/
 
+#print Set.OrdConnected.null_frontier /-
 theorem Set.OrdConnected.null_frontier (hs : s.OrdConnected) : volume (frontier s) = 0 :=
   by
   rw [← hs.upper_closure_inter_lower_closure]
@@ -146,11 +151,15 @@ theorem Set.OrdConnected.null_frontier (hs : s.OrdConnected) : volume (frontier 
         (measure_union_le _ _).trans_eq _)
   rw [(UpperSet.upper _).null_frontier, (LowerSet.lower _).null_frontier, zero_add, bot_eq_zero]
 #align set.ord_connected.null_frontier Set.OrdConnected.null_frontier
+-/
 
+#print Set.OrdConnected.nullMeasurableSet /-
 protected theorem Set.OrdConnected.nullMeasurableSet (hs : s.OrdConnected) : NullMeasurableSet s :=
   nullMeasurableSet_of_null_frontier hs.null_frontier
 #align set.ord_connected.null_measurable_set Set.OrdConnected.nullMeasurableSet
+-/
 
+#print IsAntichain.volume_eq_zero /-
 theorem IsAntichain.volume_eq_zero [Nonempty ι] (hs : IsAntichain (· ≤ ·) s) : volume s = 0 :=
   le_bot_iff.1 <|
     (volume.mono <| by
@@ -158,4 +167,5 @@ theorem IsAntichain.volume_eq_zero [Nonempty ι] (hs : IsAntichain (· ≤ ·) s
           exact subset_closure).trans_eq
       hs.OrdConnected.null_frontier
 #align is_antichain.volume_eq_zero IsAntichain.volume_eq_zero
+-/
 
