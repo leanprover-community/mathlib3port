@@ -68,7 +68,7 @@ theorem isSeparator_iff_faithful_preadditiveCoyoneda (G : C) :
   by
   rw [is_separator_iff_faithful_coyoneda_obj, ← whiskering_preadditive_coyoneda, functor.comp_obj,
     whiskering_right_obj_obj]
-  exact ⟨fun h => faithful.of_comp _ (forget AddCommGroupCat), fun h => faithful.comp _ _⟩
+  exact ⟨fun h => faithful.of_comp _ (forget AddCommGrp), fun h => faithful.comp _ _⟩
 #align category_theory.is_separator_iff_faithful_preadditive_coyoneda CategoryTheory.isSeparator_iff_faithful_preadditiveCoyoneda
 -/
 
@@ -77,7 +77,7 @@ theorem isSeparator_iff_faithful_preadditiveCoyonedaObj (G : C) :
     IsSeparator G ↔ CategoryTheory.Functor.Faithful (preadditiveCoyonedaObj (op G)) :=
   by
   rw [is_separator_iff_faithful_preadditive_coyoneda, preadditive_coyoneda_obj_2]
-  exact ⟨fun h => faithful.of_comp _ (forget₂ _ AddCommGroupCat.{v}), fun h => faithful.comp _ _⟩
+  exact ⟨fun h => faithful.of_comp _ (forget₂ _ AddCommGrp.{v}), fun h => faithful.comp _ _⟩
 #align category_theory.is_separator_iff_faithful_preadditive_coyoneda_obj CategoryTheory.isSeparator_iff_faithful_preadditiveCoyonedaObj
 -/
 
@@ -87,7 +87,7 @@ theorem isCoseparator_iff_faithful_preadditiveYoneda (G : C) :
   by
   rw [is_coseparator_iff_faithful_yoneda_obj, ← whiskering_preadditive_yoneda, functor.comp_obj,
     whiskering_right_obj_obj]
-  exact ⟨fun h => faithful.of_comp _ (forget AddCommGroupCat), fun h => faithful.comp _ _⟩
+  exact ⟨fun h => faithful.of_comp _ (forget AddCommGrp), fun h => faithful.comp _ _⟩
 #align category_theory.is_coseparator_iff_faithful_preadditive_yoneda CategoryTheory.isCoseparator_iff_faithful_preadditiveYoneda
 -/
 
@@ -96,7 +96,7 @@ theorem isCoseparator_iff_faithful_preadditiveYonedaObj (G : C) :
     IsCoseparator G ↔ CategoryTheory.Functor.Faithful (preadditiveYonedaObj G) :=
   by
   rw [is_coseparator_iff_faithful_preadditive_yoneda, preadditive_yoneda_obj_2]
-  exact ⟨fun h => faithful.of_comp _ (forget₂ _ AddCommGroupCat.{v}), fun h => faithful.comp _ _⟩
+  exact ⟨fun h => faithful.of_comp _ (forget₂ _ AddCommGrp.{v}), fun h => faithful.comp _ _⟩
 #align category_theory.is_coseparator_iff_faithful_preadditive_yoneda_obj CategoryTheory.isCoseparator_iff_faithful_preadditiveYonedaObj
 -/
 

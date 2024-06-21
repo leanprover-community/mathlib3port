@@ -117,90 +117,90 @@ theorem coe_of (R : Type u) [Mul R] : (MagmaCat.of R : Type u) = R :=
 
 end MagmaCat
 
-#print SemigroupCat /-
+#print Semigrp /-
 /-- The category of semigroups and semigroup morphisms. -/
-@[to_additive AddSemigroupCat]
-def SemigroupCat : Type (u + 1) :=
+@[to_additive AddSemigrp]
+def Semigrp : Type (u + 1) :=
   Bundled Semigroup
-#align Semigroup SemigroupCat
-#align AddSemigroup AddSemigroupCat
+#align Semigroup Semigrp
+#align AddSemigroup AddSemigrp
 -/
 
 /-- The category of additive semigroups and semigroup morphisms. -/
-add_decl_doc AddSemigroupCat
+add_decl_doc AddSemigrp
 
-namespace SemigroupCat
+namespace Semigrp
 
 @[to_additive]
 instance : BundledHom.ParentProjection Semigroup.toHasMul :=
   ⟨⟩
 
-deriving instance LargeCategory, ConcreteCategory for SemigroupCat
+deriving instance LargeCategory, ConcreteCategory for Semigrp
 
-attribute [to_additive] SemigroupCat.largeCategory SemigroupCat.concreteCategory
+attribute [to_additive] Semigrp.largeCategory Semigrp.concreteCategory
 
 @[to_additive]
-instance : CoeSort SemigroupCat (Type _) :=
+instance : CoeSort Semigrp (Type _) :=
   Bundled.hasCoeToSort
 
-#print SemigroupCat.of /-
+#print Semigrp.of /-
 /-- Construct a bundled `Semigroup` from the underlying type and typeclass. -/
 @[to_additive]
-def of (M : Type u) [Semigroup M] : SemigroupCat :=
+def of (M : Type u) [Semigroup M] : Semigrp :=
   Bundled.of M
-#align Semigroup.of SemigroupCat.of
-#align AddSemigroup.of AddSemigroupCat.of
+#align Semigroup.of Semigrp.of
+#align AddSemigroup.of AddSemigrp.of
 -/
 
 /-- Construct a bundled `AddSemigroup` from the underlying type and typeclass. -/
-add_decl_doc AddSemigroupCat.of
+add_decl_doc AddSemigrp.of
 
-#print SemigroupCat.ofHom /-
+#print Semigrp.ofHom /-
 /-- Typecheck a `mul_hom` as a morphism in `Semigroup`. -/
 @[to_additive]
 def ofHom {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y) : of X ⟶ of Y :=
   f
-#align Semigroup.of_hom SemigroupCat.ofHom
-#align AddSemigroup.of_hom AddSemigroupCat.ofHom
+#align Semigroup.of_hom Semigrp.ofHom
+#align AddSemigroup.of_hom AddSemigrp.ofHom
 -/
 
 /-- Typecheck a `add_hom` as a morphism in `AddSemigroup`. -/
-add_decl_doc AddSemigroupCat.ofHom
+add_decl_doc AddSemigrp.ofHom
 
-#print SemigroupCat.ofHom_apply /-
+#print Semigrp.ofHom_apply /-
 @[simp, to_additive]
 theorem ofHom_apply {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y) (x : X) :
     ofHom f x = f x :=
   rfl
-#align Semigroup.of_hom_apply SemigroupCat.ofHom_apply
-#align AddSemigroup.of_hom_apply AddSemigroupCat.ofHom_apply
+#align Semigroup.of_hom_apply Semigrp.ofHom_apply
+#align AddSemigroup.of_hom_apply AddSemigrp.ofHom_apply
 -/
 
 @[to_additive]
-instance : Inhabited SemigroupCat :=
-  ⟨SemigroupCat.of PEmpty⟩
+instance : Inhabited Semigrp :=
+  ⟨Semigrp.of PEmpty⟩
 
 @[to_additive]
-instance (M : SemigroupCat) : Semigroup M :=
+instance (M : Semigrp) : Semigroup M :=
   M.str
 
-#print SemigroupCat.coe_of /-
+#print Semigrp.coe_of /-
 @[simp, to_additive]
-theorem coe_of (R : Type u) [Semigroup R] : (SemigroupCat.of R : Type u) = R :=
+theorem coe_of (R : Type u) [Semigroup R] : (Semigrp.of R : Type u) = R :=
   rfl
-#align Semigroup.coe_of SemigroupCat.coe_of
-#align AddSemigroup.coe_of AddSemigroupCat.coe_of
+#align Semigroup.coe_of Semigrp.coe_of
+#align AddSemigroup.coe_of AddSemigrp.coe_of
 -/
 
-#print SemigroupCat.hasForgetToMagmaCat /-
+#print Semigrp.hasForgetToMagmaCat /-
 @[to_additive has_forget_to_AddMagma]
-instance hasForgetToMagmaCat : HasForget₂ SemigroupCat MagmaCat :=
+instance hasForgetToMagmaCat : HasForget₂ Semigrp MagmaCat :=
   BundledHom.forget₂ _ _
-#align Semigroup.has_forget_to_Magma SemigroupCat.hasForgetToMagmaCat
-#align AddSemigroup.has_forget_to_AddMagma AddSemigroupCat.hasForgetToAddMagmaCat
+#align Semigroup.has_forget_to_Magma Semigrp.hasForgetToMagmaCat
+#align AddSemigroup.has_forget_to_AddMagma AddSemigrp.hasForgetToAddMagmaCat
 -/
 
-end SemigroupCat
+end Semigrp
 
 variable {X Y : Type u}
 
@@ -227,17 +227,17 @@ section
 
 variable [Semigroup X] [Semigroup Y]
 
-#print MulEquiv.toSemigroupCatIso /-
+#print MulEquiv.toSemigrpIso /-
 /-- Build an isomorphism in the category `Semigroup` from a `mul_equiv` between `semigroup`s. -/
-@[to_additive AddEquiv.toAddSemigroupCatIso
+@[to_additive AddEquiv.toAddSemigrpIso
       "Build an isomorphism in the category\n`AddSemigroup` from an `add_equiv` between `add_semigroup`s.",
   simps]
-def MulEquiv.toSemigroupCatIso (e : X ≃* Y) : SemigroupCat.of X ≅ SemigroupCat.of Y
+def MulEquiv.toSemigrpIso (e : X ≃* Y) : Semigrp.of X ≅ Semigrp.of Y
     where
   Hom := e.toMulHom
   inv := e.symm.toMulHom
-#align mul_equiv.to_Semigroup_iso MulEquiv.toSemigroupCatIso
-#align add_equiv.to_AddSemigroup_iso AddEquiv.toAddSemigroupCatIso
+#align mul_equiv.to_Semigroup_iso MulEquiv.toSemigrpIso
+#align add_equiv.to_AddSemigroup_iso AddEquiv.toAddSemigrpIso
 -/
 
 end
@@ -259,18 +259,18 @@ def magmaCatIsoToMulEquiv {X Y : MagmaCat} (i : X ≅ Y) : X ≃* Y
 #align category_theory.iso.AddMagma_iso_to_add_equiv CategoryTheory.Iso.addMagmaCatIsoToAddEquiv
 -/
 
-#print CategoryTheory.Iso.semigroupCatIsoToMulEquiv /-
+#print CategoryTheory.Iso.semigrpIsoToMulEquiv /-
 /-- Build a `mul_equiv` from an isomorphism in the category `Semigroup`. -/
 @[to_additive "Build an `add_equiv` from an isomorphism in the category\n`AddSemigroup`."]
-def semigroupCatIsoToMulEquiv {X Y : SemigroupCat} (i : X ≅ Y) : X ≃* Y
+def semigrpIsoToMulEquiv {X Y : Semigrp} (i : X ≅ Y) : X ≃* Y
     where
   toFun := i.Hom
   invFun := i.inv
   left_inv x := by simp
   right_inv y := by simp
   map_mul' := by simp
-#align category_theory.iso.Semigroup_iso_to_mul_equiv CategoryTheory.Iso.semigroupCatIsoToMulEquiv
-#align category_theory.iso.Semigroup_iso_to_add_equiv CategoryTheory.Iso.addSemigroupCatIsoToAddEquiv
+#align category_theory.iso.Semigroup_iso_to_mul_equiv CategoryTheory.Iso.semigrpIsoToMulEquiv
+#align category_theory.iso.Semigroup_iso_to_add_equiv CategoryTheory.Iso.addSemigrpIsoToAddEquiv
 -/
 
 end CategoryTheory.Iso
@@ -288,18 +288,18 @@ def mulEquivIsoMagmaIso {X Y : Type u} [Mul X] [Mul Y] : X ≃* Y ≅ MagmaCat.o
 #align add_equiv_iso_AddMagma_iso addEquivIsoAddMagmaIso
 -/
 
-#print mulEquivIsoSemigroupCatIso /-
+#print mulEquivIsoSemigrpIso /-
 /-- multiplicative equivalences between `semigroup`s are the same as (isomorphic to) isomorphisms
 in `Semigroup` -/
-@[to_additive addEquivIsoAddSemigroupCatIso
+@[to_additive addEquivIsoAddSemigrpIso
       "additive equivalences between `add_semigroup`s are\nthe same as (isomorphic to) isomorphisms in `AddSemigroup`"]
-def mulEquivIsoSemigroupCatIso {X Y : Type u} [Semigroup X] [Semigroup Y] :
-    X ≃* Y ≅ SemigroupCat.of X ≅ SemigroupCat.of Y
+def mulEquivIsoSemigrpIso {X Y : Type u} [Semigroup X] [Semigroup Y] :
+    X ≃* Y ≅ Semigrp.of X ≅ Semigrp.of Y
     where
-  Hom e := e.toSemigroupCatIso
-  inv i := i.semigroupCatIsoToMulEquiv
-#align mul_equiv_iso_Semigroup_iso mulEquivIsoSemigroupCatIso
-#align add_equiv_iso_AddSemigroup_iso addEquivIsoAddSemigroupCatIso
+  Hom e := e.toSemigrpIso
+  inv i := i.semigrpIsoToMulEquiv
+#align mul_equiv_iso_Semigroup_iso mulEquivIsoSemigrpIso
+#align add_equiv_iso_AddSemigroup_iso addEquivIsoAddSemigrpIso
 -/
 
 #print MagmaCat.forgetReflectsIsos /-
@@ -315,17 +315,17 @@ instance MagmaCat.forgetReflectsIsos :
 #align AddMagma.forget_reflects_isos AddMagmaCat.forgetReflectsIsos
 -/
 
-#print SemigroupCat.forgetReflectsIsos /-
+#print Semigrp.forgetReflectsIsos /-
 @[to_additive]
-instance SemigroupCat.forgetReflectsIsos :
-    CategoryTheory.Functor.ReflectsIsomorphisms (forget SemigroupCat.{u})
+instance Semigrp.forgetReflectsIsos :
+    CategoryTheory.Functor.ReflectsIsomorphisms (forget Semigrp.{u})
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget SemigroupCat).map f)
+    let i := as_iso ((forget Semigrp).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Semigroup_iso).1⟩
-#align Semigroup.forget_reflects_isos SemigroupCat.forgetReflectsIsos
-#align AddSemigroup.forget_reflects_isos AddSemigroupCat.forgetReflectsIsos
+#align Semigroup.forget_reflects_isos Semigrp.forgetReflectsIsos
+#align AddSemigroup.forget_reflects_isos AddSemigrp.forgetReflectsIsos
 -/
 
 /-!
@@ -335,6 +335,6 @@ reflect isomorphisms.
 -/
 
 
-example : CategoryTheory.Functor.ReflectsIsomorphisms (forget₂ SemigroupCat MagmaCat) := by
+example : CategoryTheory.Functor.ReflectsIsomorphisms (forget₂ Semigrp MagmaCat) := by
   infer_instance
 

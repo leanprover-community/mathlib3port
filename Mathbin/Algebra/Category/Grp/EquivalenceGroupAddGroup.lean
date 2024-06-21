@@ -3,7 +3,7 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import Algebra.Category.GroupCat.Basic
+import Algebra.Category.Grp.Basic
 import Algebra.Group.Equiv.TypeTags
 
 #align_import algebra.category.Group.equivalence_Group_AddGroup from "leanprover-community/mathlib"@"781cb2eed038c4caf53bdbd8d20a95e5822d77df"
@@ -24,75 +24,73 @@ This file contains two equivalences:
 
 open CategoryTheory
 
-namespace GroupCat
+namespace Grp
 
-#print GroupCat.toAddGroupCat /-
+#print Grp.toAddGrp /-
 /-- The functor `Group ⥤ AddGroup` by sending `X ↦ additive X` and `f ↦ f`.
 -/
 @[simps]
-def toAddGroupCat : GroupCat ⥤ AddGroupCat
-    where
-  obj X := AddGroupCat.of (Additive X)
+def toAddGrp : Grp ⥤ AddGrp where
+  obj X := AddGrp.of (Additive X)
   map X Y := MonoidHom.toAdditive
-#align Group.to_AddGroup GroupCat.toAddGroupCat
+#align Group.to_AddGroup Grp.toAddGrp
 -/
 
-end GroupCat
+end Grp
 
-namespace CommGroupCat
+namespace CommGrp
 
-#print CommGroupCat.toAddCommGroupCat /-
+#print CommGrp.toAddCommGrp /-
 /-- The functor `CommGroup ⥤ AddCommGroup` by sending `X ↦ additive X` and `f ↦ f`.
 -/
 @[simps]
-def toAddCommGroupCat : CommGroupCat ⥤ AddCommGroupCat
+def toAddCommGrp : CommGrp ⥤ AddCommGrp
     where
-  obj X := AddCommGroupCat.of (Additive X)
+  obj X := AddCommGrp.of (Additive X)
   map X Y := MonoidHom.toAdditive
-#align CommGroup.to_AddCommGroup CommGroupCat.toAddCommGroupCat
+#align CommGroup.to_AddCommGroup CommGrp.toAddCommGrp
 -/
 
-end CommGroupCat
+end CommGrp
 
-namespace AddGroupCat
+namespace AddGrp
 
-#print AddGroupCat.toGroupCat /-
+#print AddGrp.toGrp /-
 /-- The functor `AddGroup ⥤ Group` by sending `X ↦ multiplicative Y` and `f ↦ f`.
 -/
 @[simps]
-def toGroupCat : AddGroupCat ⥤ GroupCat
-    where
-  obj X := GroupCat.of (Multiplicative X)
+def toGrp : AddGrp ⥤ Grp where
+  obj X := Grp.of (Multiplicative X)
   map X Y := AddMonoidHom.toMultiplicative
-#align AddGroup.to_Group AddGroupCat.toGroupCat
+#align AddGroup.to_Group AddGrp.toGrp
 -/
 
-end AddGroupCat
+end AddGrp
 
-namespace AddCommGroupCat
+namespace AddCommGrp
 
-#print AddCommGroupCat.toCommGroupCat /-
+#print AddCommGrp.toCommGrp /-
 /-- The functor `AddCommGroup ⥤ CommGroup` by sending `X ↦ multiplicative Y` and `f ↦ f`.
 -/
 @[simps]
-def toCommGroupCat : AddCommGroupCat ⥤ CommGroupCat
+def toCommGrp : AddCommGrp ⥤ CommGrp
     where
-  obj X := CommGroupCat.of (Multiplicative X)
+  obj X := CommGrp.of (Multiplicative X)
   map X Y := AddMonoidHom.toMultiplicative
-#align AddCommGroup.to_CommGroup AddCommGroupCat.toCommGroupCat
+#align AddCommGroup.to_CommGroup AddCommGrp.toCommGrp
 -/
 
-end AddCommGroupCat
+end AddCommGrp
 
 #print groupAddGroupEquivalence /-
 /-- The equivalence of categories between `Group` and `AddGroup`
 -/
 @[simps]
-def groupAddGroupEquivalence : GroupCat ≌ AddGroupCat :=
-  Equivalence.mk GroupCat.toAddGroupCat AddGroupCat.toGroupCat
-    (NatIso.ofComponents (fun X => MulEquiv.toGroupCatIso (MulEquiv.multiplicativeAdditive X))
+def groupAddGroupEquivalence : Grp ≌ AddGrp :=
+  Equivalence.mk Grp.toAddGrp AddGrp.toGrp
+    (NatIso.ofComponents (fun X => MulEquiv.toGrpIso (MulEquiv.multiplicativeAdditive X))
       fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => AddEquiv.toAddGroupCatIso (AddEquiv.additiveMultiplicative X))
+    (NatIso.ofComponents (fun X => AddEquiv.toAddGrpIso (AddEquiv.additiveMultiplicative X))
       fun X Y f => rfl)
 #align Group_AddGroup_equivalence groupAddGroupEquivalence
 -/
@@ -101,12 +99,12 @@ def groupAddGroupEquivalence : GroupCat ≌ AddGroupCat :=
 /-- The equivalence of categories between `CommGroup` and `AddCommGroup`.
 -/
 @[simps]
-def commGroupAddCommGroupEquivalence : CommGroupCat ≌ AddCommGroupCat :=
-  Equivalence.mk CommGroupCat.toAddCommGroupCat AddCommGroupCat.toCommGroupCat
-    (NatIso.ofComponents (fun X => MulEquiv.toCommGroupCatIso (MulEquiv.multiplicativeAdditive X))
+def commGroupAddCommGroupEquivalence : CommGrp ≌ AddCommGrp :=
+  Equivalence.mk CommGrp.toAddCommGrp AddCommGrp.toCommGrp
+    (NatIso.ofComponents (fun X => MulEquiv.toCommGrpIso (MulEquiv.multiplicativeAdditive X))
       fun X Y f => rfl)
-    (NatIso.ofComponents
-      (fun X => AddEquiv.toAddCommGroupCatIso (AddEquiv.additiveMultiplicative X)) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => AddEquiv.toAddCommGrpIso (AddEquiv.additiveMultiplicative X))
+      fun X Y f => rfl)
 #align CommGroup_AddCommGroup_equivalence commGroupAddCommGroupEquivalence
 -/
 

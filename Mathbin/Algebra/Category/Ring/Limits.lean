@@ -5,7 +5,7 @@ Authors: Scott Morrison
 -/
 import Algebra.Ring.Pi
 import Algebra.Category.Ring.Basic
-import Algebra.Category.GroupCat.Limits
+import Algebra.Category.Grp.Limits
 import Algebra.Ring.Subring.Basic
 
 #align_import algebra.category.Ring.limits from "leanprover-community/mathlib"@"0b7c740e25651db0ba63648fbae9f9d6f941e31b"
@@ -343,9 +343,8 @@ instance ringObj (F : J ⥤ RingCat.{max v u}) (j) : Ring ((F ⋙ forget RingCat
 -/
 def sectionsSubring (F : J ⥤ RingCat.{max v u}) : Subring (∀ j, F.obj j) :=
   {
-    AddGroupCat.sectionsAddSubgroup
-      (F ⋙
-        forget₂ RingCat AddCommGroupCat.{max v u} ⋙ forget₂ AddCommGroupCat AddGroupCat.{max v u}),
+    AddGrp.sectionsAddSubgroup
+      (F ⋙ forget₂ RingCat AddCommGrp.{max v u} ⋙ forget₂ AddCommGrp AddGrp.{max v u}),
     SemiRingCat.sectionsSubsemiring (F ⋙ forget₂ RingCat SemiRingCat.{max v u}) with
     carrier := (F ⋙ forget RingCat).sections }
 #align Ring.sections_subring RingCat.sectionsSubring
@@ -430,8 +429,8 @@ instance forget₂SemiRingPreservesLimits : PreservesLimits (forget₂ RingCat S
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ RingCat.{max v u}) :
-    IsLimit ((forget₂ RingCat AddCommGroupCat).mapCone (limitCone F)) := by
-  apply AddCommGroupCat.limitConeIsLimit (F ⋙ forget₂ RingCat AddCommGroupCat.{max v u})
+    IsLimit ((forget₂ RingCat AddCommGrp).mapCone (limitCone F)) := by
+  apply AddCommGrp.limitConeIsLimit (F ⋙ forget₂ RingCat AddCommGrp.{max v u})
 #align Ring.forget₂_AddCommGroup_preserves_limits_aux RingCat.forget₂AddCommGroupPreservesLimitsAux
 -/
 
@@ -439,7 +438,7 @@ def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ RingCat.{max v u}) :
 /-- The forgetful functor from rings to additive commutative groups preserves all limits.
 -/
 instance forget₂AddCommGroupPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ RingCat AddCommGroupCat.{max v u})
+    PreservesLimitsOfSize.{v, v} (forget₂ RingCat AddCommGrp.{max v u})
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
@@ -449,8 +448,7 @@ instance forget₂AddCommGroupPreservesLimitsOfSize :
 -/
 
 #print RingCat.forget₂AddCommGroupPreservesLimits /-
-instance forget₂AddCommGroupPreservesLimits :
-    PreservesLimits (forget₂ RingCat AddCommGroupCat.{u}) :=
+instance forget₂AddCommGroupPreservesLimits : PreservesLimits (forget₂ RingCat AddCommGrp.{u}) :=
   RingCat.forget₂AddCommGroupPreservesLimitsOfSize.{u, u}
 #align Ring.forget₂_AddCommGroup_preserves_limits RingCat.forget₂AddCommGroupPreservesLimits
 -/

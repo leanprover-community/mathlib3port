@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Algebra.Category.GroupCat.Basic
+import Algebra.Category.Grp.Basic
 import CategoryTheory.SingleObj
 import CategoryTheory.Limits.FunctorCategory
 import CategoryTheory.Limits.Preserves.Basic
@@ -75,7 +75,7 @@ theorem ρ_one {G : MonCat.{u}} (A : Action V G) : A.ρ 1 = 𝟙 A.V := by rw [M
 #print Action.ρAut /-
 /-- When a group acts, we can lift the action to the group of automorphisms. -/
 @[simps]
-def ρAut {G : GroupCat.{u}} (A : Action V (MonCat.of G)) : G ⟶ GroupCat.of (Aut A.V)
+def ρAut {G : Grp.{u}} (A : Action V (MonCat.of G)) : G ⟶ Grp.of (Aut A.V)
     where
   toFun g :=
     { Hom := A.ρ g
@@ -99,14 +99,13 @@ instance inhabited' : Inhabited (Action (Type u) G) :=
 
 #print Action.trivial /-
 /-- The trivial representation of a group. -/
-def trivial : Action AddCommGroupCat G
-    where
-  V := AddCommGroupCat.of PUnit
+def trivial : Action AddCommGrp G where
+  V := AddCommGrp.of PUnit
   ρ := 1
 #align Action.trivial Action.trivial
 -/
 
-instance : Inhabited (Action AddCommGroupCat G) :=
+instance : Inhabited (Action AddCommGrp G) :=
   ⟨trivial G⟩
 
 end
@@ -774,7 +773,7 @@ theorem functorCategoryMonoidalEquivalence.inverse_map {A B : SingleObj G ⥤ V}
 #align Action.functor_category_monoidal_equivalence.inverse_map Action.functorCategoryMonoidalEquivalence.inverse_map
 -/
 
-variable (H : GroupCat.{u})
+variable (H : Grp.{u})
 
 instance [RightRigidCategory V] : RightRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) := by
   change right_rigid_category (single_obj H ⥤ V); infer_instance

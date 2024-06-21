@@ -3,7 +3,7 @@ Copyright (c) 2019 Robert A. Spencer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert A. Spencer, Markus Himmel
 -/
-import Algebra.Category.GroupCat.Preadditive
+import Algebra.Category.Grp.Preadditive
 import CategoryTheory.Linear.Basic
 import CategoryTheory.Elementwise
 import Algebra.Module.Submodule.Ker
@@ -108,9 +108,9 @@ instance moduleConcreteCategory : ConcreteCategory.{v} (ModuleCat.{v} R)
 -/
 
 #print ModuleCat.hasForgetToAddCommGroup /-
-instance hasForgetToAddCommGroup : HasForget₂ (ModuleCat R) AddCommGroupCat
+instance hasForgetToAddCommGroup : HasForget₂ (ModuleCat R) AddCommGrp
     where forget₂ :=
-    { obj := fun M => AddCommGroupCat.of M
+    { obj := fun M => AddCommGrp.of M
       map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
 #align Module.has_forget_to_AddCommGroup ModuleCat.hasForgetToAddCommGroup
 -/
@@ -128,7 +128,7 @@ def of (X : Type v) [AddCommGroup X] [Module R X] : ModuleCat R :=
 #print ModuleCat.forget₂_obj /-
 @[simp]
 theorem forget₂_obj (X : ModuleCat R) :
-    (forget₂ (ModuleCat R) AddCommGroupCat).obj X = AddCommGroupCat.of X :=
+    (forget₂ (ModuleCat R) AddCommGrp).obj X = AddCommGrp.of X :=
   rfl
 #align Module.forget₂_obj ModuleCat.forget₂_obj
 -/
@@ -136,7 +136,7 @@ theorem forget₂_obj (X : ModuleCat R) :
 #print ModuleCat.forget₂_obj_moduleCat_of /-
 @[simp]
 theorem forget₂_obj_moduleCat_of (X : Type v) [AddCommGroup X] [Module R X] :
-    (forget₂ (ModuleCat R) AddCommGroupCat).obj (of R X) = AddCommGroupCat.of X :=
+    (forget₂ (ModuleCat R) AddCommGrp).obj (of R X) = AddCommGrp.of X :=
   rfl
 #align Module.forget₂_obj_Module_of ModuleCat.forget₂_obj_moduleCat_of
 -/
@@ -144,7 +144,7 @@ theorem forget₂_obj_moduleCat_of (X : Type v) [AddCommGroup X] [Module R X] :
 #print ModuleCat.forget₂_map /-
 @[simp]
 theorem forget₂_map (X Y : ModuleCat R) (f : X ⟶ Y) :
-    (forget₂ (ModuleCat R) AddCommGroupCat).map f = LinearMap.toAddMonoidHom f :=
+    (forget₂ (ModuleCat R) AddCommGrp).map f = LinearMap.toAddMonoidHom f :=
   rfl
 #align Module.forget₂_map ModuleCat.forget₂_map
 -/
@@ -361,10 +361,9 @@ instance : Preadditive (ModuleCat.{v} R)
   add_comp P Q R f f' g := show (f + f') ≫ g = f ≫ g + f' ≫ g by ext; simp
   comp_add P Q R f g g' := show f ≫ (g + g') = f ≫ g + f ≫ g' by ext; simp
 
-#print ModuleCat.forget₂_addCommGroupCat_additive /-
-instance forget₂_addCommGroupCat_additive : (forget₂ (ModuleCat.{v} R) AddCommGroupCat).Additive
-    where
-#align Module.forget₂_AddCommGroup_additive ModuleCat.forget₂_addCommGroupCat_additive
+#print ModuleCat.forget₂_addCommGrp_additive /-
+instance forget₂_addCommGrp_additive : (forget₂ (ModuleCat.{v} R) AddCommGrp).Additive where
+#align Module.forget₂_AddCommGroup_additive ModuleCat.forget₂_addCommGrp_additive
 -/
 
 section

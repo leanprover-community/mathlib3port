@@ -98,12 +98,13 @@ theorem Functor.essImage.unit_isIso [Reflective i] {A : C} (h : A ∈ i.essImage
 #align category_theory.functor.ess_image.unit_is_iso CategoryTheory.Functor.essImage.unit_isIso
 -/
 
-#print CategoryTheory.mem_essImage_of_unit_isIso /-
+#print CategoryTheory.Adjunction.mem_essImage_of_unit_isIso /-
 /-- If `η_A` is an isomorphism, then `A` is in the essential image of `i`. -/
-theorem mem_essImage_of_unit_isIso [CategoryTheory.Functor.IsRightAdjoint i] (A : C)
-    [IsIso ((ofIsRightAdjoint i).Unit.app A)] : A ∈ i.essImage :=
+theorem CategoryTheory.Adjunction.mem_essImage_of_unit_isIso
+    [CategoryTheory.Functor.IsRightAdjoint i] (A : C) [IsIso ((ofIsRightAdjoint i).Unit.app A)] :
+    A ∈ i.essImage :=
   ⟨(CategoryTheory.Functor.leftAdjoint i).obj A, ⟨(asIso ((ofIsRightAdjoint i).Unit.app A)).symm⟩⟩
-#align category_theory.mem_ess_image_of_unit_is_iso CategoryTheory.mem_essImage_of_unit_isIso
+#align category_theory.mem_ess_image_of_unit_is_iso CategoryTheory.Adjunction.mem_essImage_of_unit_isIso
 -/
 
 #print CategoryTheory.mem_essImage_of_unit_isSplitMono /-

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Algebra.Category.ModuleCat.Basic
-import Algebra.Category.GroupCat.Limits
+import Algebra.Category.Grp.Limits
 import Algebra.DirectLimit
 
 #align_import algebra.category.Module.limits from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
@@ -53,11 +53,11 @@ instance moduleObj (F : J ⥤ ModuleCat.{max v w} R) (j) :
 -/
 def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.obj j) :=
   {
-    AddGroupCat.sectionsAddSubgroup
+    AddGrp.sectionsAddSubgroup
       (F ⋙
-        forget₂ (ModuleCat R) AddCommGroupCat.{max v w} ⋙
-          forget₂ AddCommGroupCat
-            AddGroupCat.{max v
+        forget₂ (ModuleCat R) AddCommGrp.{max v w} ⋙
+          forget₂ AddCommGrp
+            AddGrp.{max v
                 w}) with
     carrier := (F ⋙ forget (ModuleCat R)).sections
     smul_mem' := fun r s sh j j' f =>
@@ -165,8 +165,8 @@ instance hasLimits : HasLimits (ModuleCat.{w} R) :=
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ ModuleCat.{max v w} R) :
-    IsLimit ((forget₂ (ModuleCat R) AddCommGroupCat).mapCone (limitCone F)) :=
-  AddCommGroupCat.limitConeIsLimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v w})
+    IsLimit ((forget₂ (ModuleCat R) AddCommGrp).mapCone (limitCone F)) :=
+  AddCommGrp.limitConeIsLimit (F ⋙ forget₂ (ModuleCat R) AddCommGrp.{max v w})
 #align Module.forget₂_AddCommGroup_preserves_limits_aux ModuleCat.forget₂AddCommGroupPreservesLimitsAux
 -/
 
@@ -174,7 +174,7 @@ def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ ModuleCat.{max v w} R) :
 /-- The forgetful functor from R-modules to abelian groups preserves all limits.
 -/
 instance forget₂AddCommGroupPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget₂ (ModuleCat R) AddCommGroupCat.{max v w})
+    PreservesLimitsOfSize.{v, v} (forget₂ (ModuleCat R) AddCommGrp.{max v w})
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
@@ -185,7 +185,7 @@ instance forget₂AddCommGroupPreservesLimitsOfSize :
 
 #print ModuleCat.forget₂AddCommGroupPreservesLimits /-
 instance forget₂AddCommGroupPreservesLimits :
-    PreservesLimits (forget₂ (ModuleCat R) AddCommGroupCat.{w}) :=
+    PreservesLimits (forget₂ (ModuleCat R) AddCommGrp.{w}) :=
   ModuleCat.forget₂AddCommGroupPreservesLimitsOfSize.{w, w}
 #align Module.forget₂_AddCommGroup_preserves_limits ModuleCat.forget₂AddCommGroupPreservesLimits
 -/

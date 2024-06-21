@@ -3,7 +3,7 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Algebra.Category.GroupCat.Basic
+import Algebra.Category.Grp.Basic
 import CategoryTheory.Preadditive.Basic
 
 #align_import algebra.category.Group.preadditive from "leanprover-community/mathlib"@"31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"
@@ -20,12 +20,12 @@ open CategoryTheory
 
 universe u
 
-namespace AddCommGroupCat
+namespace AddCommGrp
 
-instance : Preadditive AddCommGroupCat
+instance : Preadditive AddCommGrp
     where
   add_comp P Q R f f' g := show (f + f') ≫ g = f ≫ g + f' ≫ g by ext; simp
   comp_add P Q R f g g' := show f ≫ (g + g') = f ≫ g + f ≫ g' by ext; simp
 
-end AddCommGroupCat
+end AddCommGrp
 

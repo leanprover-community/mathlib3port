@@ -76,7 +76,7 @@ def Scheme.isoSpec (X : Scheme) [IsAffine X] : X ≅ Scheme.Spec.obj (op <| Sche
 Also see `AffineScheme.of` for a typclass version. -/
 @[simps]
 def AffineScheme.mk (X : Scheme) (h : IsAffine X) : AffineScheme :=
-  ⟨X, @mem_essImage_of_unit_isIso _ _ _ _ h.1⟩
+  ⟨X, @CategoryTheory.Adjunction.mem_essImage_of_unit_isIso _ _ _ _ h.1⟩
 #align algebraic_geometry.AffineScheme.mk AlgebraicGeometry.AffineScheme.mk
 -/
 
@@ -98,7 +98,8 @@ def AffineScheme.ofHom {X Y : Scheme} [IsAffine X] [IsAffine Y] (f : X ⟶ Y) :
 
 #print AlgebraicGeometry.mem_Spec_essImage /-
 theorem mem_Spec_essImage (X : Scheme) : X ∈ Scheme.Spec.essImage ↔ IsAffine X :=
-  ⟨fun h => ⟨Functor.essImage.unit_isIso h⟩, fun h => @mem_essImage_of_unit_isIso _ _ _ X h.1⟩
+  ⟨fun h => ⟨Functor.essImage.unit_isIso h⟩, fun h =>
+    @CategoryTheory.Adjunction.mem_essImage_of_unit_isIso _ _ _ X h.1⟩
 #align algebraic_geometry.mem_Spec_ess_image AlgebraicGeometry.mem_Spec_essImage
 -/
 

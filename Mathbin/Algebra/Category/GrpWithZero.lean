@@ -22,32 +22,32 @@ universe u
 
 open CategoryTheory Order
 
-#print GroupWithZeroCat /-
+#print GrpWithZero /-
 /-- The category of groups with zero. -/
-def GroupWithZeroCat :=
+def GrpWithZero :=
   Bundled GroupWithZero
-#align GroupWithZero GroupWithZeroCat
+#align GroupWithZero GrpWithZero
 -/
 
-namespace GroupWithZeroCat
+namespace GrpWithZero
 
-instance : CoeSort GroupWithZeroCat (Type _) :=
+instance : CoeSort GrpWithZero (Type _) :=
   Bundled.hasCoeToSort
 
-instance (X : GroupWithZeroCat) : GroupWithZero X :=
+instance (X : GrpWithZero) : GroupWithZero X :=
   X.str
 
-#print GroupWithZeroCat.of /-
+#print GrpWithZero.of /-
 /-- Construct a bundled `GroupWithZero` from a `group_with_zero`. -/
-def of (α : Type _) [GroupWithZero α] : GroupWithZeroCat :=
+def of (α : Type _) [GroupWithZero α] : GrpWithZero :=
   Bundled.of α
-#align GroupWithZero.of GroupWithZeroCat.of
+#align GroupWithZero.of GrpWithZero.of
 -/
 
-instance : Inhabited GroupWithZeroCat :=
+instance : Inhabited GrpWithZero :=
   ⟨of (WithZero PUnit)⟩
 
-instance : LargeCategory.{u} GroupWithZeroCat
+instance : LargeCategory.{u} GrpWithZero
     where
   Hom X Y := MonoidWithZeroHom X Y
   id X := MonoidWithZeroHom.id X
@@ -56,38 +56,38 @@ instance : LargeCategory.{u} GroupWithZeroCat
   comp_id' X Y := MonoidWithZeroHom.id_comp
   assoc' W X Y Z _ _ _ := MonoidWithZeroHom.comp_assoc _ _ _
 
-instance : ConcreteCategory GroupWithZeroCat
+instance : ConcreteCategory GrpWithZero
     where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
   forget_faithful := ⟨fun X Y f g h => DFunLike.coe_injective h⟩
 
-#print GroupWithZeroCat.hasForgetToBipointed /-
-instance hasForgetToBipointed : HasForget₂ GroupWithZeroCat Bipointed
+#print GrpWithZero.hasForgetToBipointed /-
+instance hasForgetToBipointed : HasForget₂ GrpWithZero Bipointed
     where forget₂ :=
     { obj := fun X => ⟨X, 0, 1⟩
       map := fun X Y f => ⟨f, f.map_zero', f.map_one'⟩ }
-#align GroupWithZero.has_forget_to_Bipointed GroupWithZeroCat.hasForgetToBipointed
+#align GroupWithZero.has_forget_to_Bipointed GrpWithZero.hasForgetToBipointed
 -/
 
-#print GroupWithZeroCat.hasForgetToMon /-
-instance hasForgetToMon : HasForget₂ GroupWithZeroCat MonCat
+#print GrpWithZero.hasForgetToMon /-
+instance hasForgetToMon : HasForget₂ GrpWithZero MonCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => MonoidWithZeroHom.toMonoidHom }
-#align GroupWithZero.has_forget_to_Mon GroupWithZeroCat.hasForgetToMon
+#align GroupWithZero.has_forget_to_Mon GrpWithZero.hasForgetToMon
 -/
 
-#print GroupWithZeroCat.Iso.mk /-
+#print GrpWithZero.Iso.mk /-
 /-- Constructs an isomorphism of groups with zero from a group isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : GroupWithZeroCat.{u}} (e : α ≃* β) : α ≅ β
+def Iso.mk {α β : GrpWithZero.{u}} (e : α ≃* β) : α ≅ β
     where
   Hom := e
   inv := e.symm
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
-#align GroupWithZero.iso.mk GroupWithZeroCat.Iso.mk
+#align GroupWithZero.iso.mk GrpWithZero.Iso.mk
 -/
 
-end GroupWithZeroCat
+end GrpWithZero
 

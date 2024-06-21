@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import RingTheory.QuotientNilpotent
-import RingTheory.Kaehler
+import RingTheory.Kaehler.Basic
 
 #align_import ring_theory.etale from "leanprover-community/mathlib"@"2fe465deb81bcd7ccafa065bb686888a82f15372"
 

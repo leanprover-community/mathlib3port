@@ -3,7 +3,7 @@ Copyright (c) 2018 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Yury Kudryashov
 -/
-import Algebra.Category.GroupCat.Basic
+import Algebra.Category.Grp.Basic
 import CategoryTheory.ConcreteCategory.ReflectsIso
 import CategoryTheory.Elementwise
 import Algebra.Ring.Equiv
@@ -168,13 +168,13 @@ instance hasForgetToSemiRingCat : HasForget₂ RingCat SemiRingCat :=
 #align Ring.has_forget_to_SemiRing RingCat.hasForgetToSemiRingCat
 -/
 
-#print RingCat.hasForgetToAddCommGroupCat /-
-instance hasForgetToAddCommGroupCat : HasForget₂ RingCat AddCommGroupCat
+#print RingCat.hasForgetToAddCommGrp /-
+instance hasForgetToAddCommGrp : HasForget₂ RingCat AddCommGrp
     where-- can't use bundled_hom.mk_has_forget₂, since AddCommGroup is an induced category
   forget₂ :=
-    { obj := fun R => AddCommGroupCat.of R
+    { obj := fun R => AddCommGrp.of R
       map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
-#align Ring.has_forget_to_AddCommGroup RingCat.hasForgetToAddCommGroupCat
+#align Ring.has_forget_to_AddCommGroup RingCat.hasForgetToAddCommGrp
 -/
 
 end RingCat
@@ -451,6 +451,6 @@ theorem CommRingCat.ringHom_comp_eq_comp {R S T : Type _} [CommRing R] [CommRing
 -- which can cause typeclass loops:
 attribute [local instance] reflects_isomorphisms_forget₂
 
-example : CategoryTheory.Functor.ReflectsIsomorphisms (forget₂ RingCat AddCommGroupCat) := by
+example : CategoryTheory.Functor.ReflectsIsomorphisms (forget₂ RingCat AddCommGrp) := by
   infer_instance
 

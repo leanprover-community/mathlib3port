@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import MeasureTheory.Measure.NullMeasurable
-import MeasureTheory.MeasurableSpace.Basic
+import MeasureTheory.MeasurableSpace.Instances
 import Topology.Algebra.Order.LiminfLimsup
 
 #align_import measure_theory.measure.measure_space from "leanprover-community/mathlib"@"343e80208d29d2d15f8050b929aa50fe4ce71b55"

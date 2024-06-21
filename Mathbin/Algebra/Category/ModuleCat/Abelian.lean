@@ -107,7 +107,7 @@ instance forgetReflectsLimitsOfSize :
 
 #print ModuleCat.forget₂ReflectsLimitsOfSize /-
 instance forget₂ReflectsLimitsOfSize :
-    ReflectsLimitsOfSize.{v, v} (forget₂ (ModuleCat.{max v w} R) AddCommGroupCat.{max v w}) :=
+    ReflectsLimitsOfSize.{v, v} (forget₂ (ModuleCat.{max v w} R) AddCommGrp.{max v w}) :=
   reflectsLimitsOfReflectsIsomorphisms
 #align Module.forget₂_reflects_limits_of_size ModuleCat.forget₂ReflectsLimitsOfSize
 -/
@@ -119,7 +119,7 @@ instance forgetReflectsLimits : ReflectsLimits (forget (ModuleCat.{v} R)) :=
 -/
 
 #print ModuleCat.forget₂ReflectsLimits /-
-instance forget₂ReflectsLimits : ReflectsLimits (forget₂ (ModuleCat.{v} R) AddCommGroupCat.{v}) :=
+instance forget₂ReflectsLimits : ReflectsLimits (forget₂ (ModuleCat.{v} R) AddCommGrp.{v}) :=
   ModuleCat.forget₂ReflectsLimitsOfSize.{v, v}
 #align Module.forget₂_reflects_limits ModuleCat.forget₂ReflectsLimits
 -/

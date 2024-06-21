@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
 import Algebra.Category.MonCat.Basic
-import Algebra.Category.SemigroupCat.Basic
+import Algebra.Category.Semigrp.Basic
 import Algebra.Group.WithOne.Basic
 import Algebra.FreeMonoid.Basic
 
@@ -34,7 +34,7 @@ open CategoryTheory
 /-- The functor of adjoining a neutral element `one` to a semigroup.
  -/
 @[to_additive "The functor of adjoining a neutral element `zero` to a semigroup", simps]
-def MonCat.adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u}
+def MonCat.adjoinOne : Semigrp.{u} ⥤ MonCat.{u}
     where
   obj S := MonCat.of (WithOne S)
   map X Y := WithOne.map
@@ -46,9 +46,9 @@ def MonCat.adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u}
 
 #print MonCat.hasForgetToSemigroup /-
 @[to_additive AddMonCat.hasForgetToAddSemigroup]
-instance MonCat.hasForgetToSemigroup : HasForget₂ MonCat SemigroupCat
+instance MonCat.hasForgetToSemigroup : HasForget₂ MonCat Semigrp
     where forget₂ :=
-    { obj := fun M => SemigroupCat.of M
+    { obj := fun M => Semigrp.of M
       map := fun M N => MonoidHom.toMulHom }
 #align has_forget_to_Semigroup MonCat.hasForgetToSemigroup
 #align has_forget_to_AddSemigroup AddMonCat.hasForgetToAddSemigroup
@@ -57,7 +57,7 @@ instance MonCat.hasForgetToSemigroup : HasForget₂ MonCat SemigroupCat
 #print MonCat.adjoinOneAdj /-
 /-- The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/
 @[to_additive "The adjoin_one-forgetful adjunction from `AddSemigroup` to `AddMon`"]
-def MonCat.adjoinOneAdj : MonCat.adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
+def MonCat.adjoinOneAdj : MonCat.adjoinOne ⊣ forget₂ MonCat.{u} Semigrp.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun S M => WithOne.lift.symm
       homEquiv_naturality_left_symm := by

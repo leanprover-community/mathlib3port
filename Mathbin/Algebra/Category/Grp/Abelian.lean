@@ -3,9 +3,9 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
-import Algebra.Category.GroupCat.ZModuleEquivalence
-import Algebra.Category.GroupCat.Limits
-import Algebra.Category.GroupCat.Colimits
+import Algebra.Category.Grp.ZModuleEquivalence
+import Algebra.Category.Grp.Limits
+import Algebra.Category.Grp.Colimits
 import Algebra.Category.ModuleCat.Abelian
 import CategoryTheory.Abelian.Basic
 
@@ -27,32 +27,32 @@ universe u
 
 noncomputable section
 
-namespace AddCommGroupCat
+namespace AddCommGrp
 
 section
 
-variable {X Y : AddCommGroupCat.{u}} (f : X ⟶ Y)
+variable {X Y : AddCommGrp.{u}} (f : X ⟶ Y)
 
-#print AddCommGroupCat.normalMono /-
+#print AddCommGrp.normalMono /-
 /-- In the category of abelian groups, every monomorphism is normal. -/
 def normalMono (hf : Mono f) : NormalMono f :=
-  equivalenceReflectsNormalMono (forget₂ (ModuleCat.{u} ℤ) AddCommGroupCat.{u}).inv <|
+  equivalenceReflectsNormalMono (forget₂ (ModuleCat.{u} ℤ) AddCommGrp.{u}).inv <|
     ModuleCat.normalMono _ inferInstance
-#align AddCommGroup.normal_mono AddCommGroupCat.normalMono
+#align AddCommGroup.normal_mono AddCommGrp.normalMono
 -/
 
-#print AddCommGroupCat.normalEpi /-
+#print AddCommGrp.normalEpi /-
 /-- In the category of abelian groups, every epimorphism is normal. -/
 def normalEpi (hf : Epi f) : NormalEpi f :=
-  equivalenceReflectsNormalEpi (forget₂ (ModuleCat.{u} ℤ) AddCommGroupCat.{u}).inv <|
+  equivalenceReflectsNormalEpi (forget₂ (ModuleCat.{u} ℤ) AddCommGrp.{u}).inv <|
     ModuleCat.normalEpi _ inferInstance
-#align AddCommGroup.normal_epi AddCommGroupCat.normalEpi
+#align AddCommGroup.normal_epi AddCommGrp.normalEpi
 -/
 
 end
 
 /-- The category of abelian groups is abelian. -/
-instance : Abelian AddCommGroupCat.{u}
+instance : Abelian AddCommGrp.{u}
     where
   HasFiniteProducts := ⟨by infer_instance⟩
   normalMonoOfMono X Y := normalMono
@@ -60,5 +60,5 @@ instance : Abelian AddCommGroupCat.{u}
   add_comp := by intros; simp only [preadditive.add_comp]
   comp_add := by intros; simp only [preadditive.comp_add]
 
-end AddCommGroupCat
+end AddCommGrp
 
