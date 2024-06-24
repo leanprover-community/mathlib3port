@@ -226,7 +226,7 @@ theorem affineLocally_iff_affineOpens_le (hP : RingHom.RespectsIso @P) {X Y : Sc
       convert V.2
       infer_instance
   · intro H V
-    specialize H ⟨_, V.2.imageIsOpenImmersion (X.of_restrict _)⟩ (Subtype.coe_image_subset _ _)
+    specialize H ⟨_, V.2.image_of_isOpenImmersion (X.of_restrict _)⟩ (Subtype.coe_image_subset _ _)
     erw [← X.presheaf.map_comp]
     rw [← hP.cancel_right_is_iso _ (X.presheaf.map (eq_to_hom _)), category.assoc, ←
       X.presheaf.map_comp]
@@ -247,12 +247,12 @@ theorem scheme_restrict_basicOpen_of_localizationPreserves (h₁ : RingHom.Respe
               U.1.OpenEmbedding ≫
             f ∣_ Y.basicOpen r).op) :=
   by
-  specialize H ⟨_, U.2.imageIsOpenImmersion (X.of_restrict _)⟩
+  specialize H ⟨_, U.2.image_of_isOpenImmersion (X.of_restrict _)⟩
   convert (h₁.of_restrict_morphism_restrict_iff _ _ _ _ _).mpr _ using 1
   pick_goal 5
   · exact h₂.away r H
   · infer_instance
-  · exact U.2.imageIsOpenImmersion _
+  · exact U.2.image_of_isOpenImmersion _
   · ext1; exact (Set.preimage_image_eq _ Subtype.coe_injective).symm
 #align algebraic_geometry.Scheme_restrict_basic_open_of_localization_preserves AlgebraicGeometry.scheme_restrict_basicOpen_of_localizationPreserves
 -/
@@ -282,7 +282,7 @@ theorem sourceAffineLocally_isLocal (h₁ : RingHom.RespectsIso @P)
       intro V hV
       rw [Scheme.preimage_basic_open] at hV
       subst hV
-      exact U.2.mapRestrictBasicOpen (Scheme.Γ.map f.op r.1)
+      exact U.2.ιOpens_preimage (Scheme.Γ.map f.op r.1)
 #align algebraic_geometry.source_affine_locally_is_local AlgebraicGeometry.sourceAffineLocally_isLocal
 -/
 
@@ -505,7 +505,7 @@ theorem isLocal_sourceAffineLocally : (sourceAffineLocally @P).IsLocal :=
 
 #print RingHom.PropertyIsLocal.is_local_affineLocally /-
 theorem is_local_affineLocally : PropertyIsLocalAtTarget (affineLocally @P) :=
-  hP.isLocal_sourceAffineLocally.targetAffineLocallyIsLocal
+  hP.isLocal_sourceAffineLocally.targetAffineLocally_isLocal
 #align ring_hom.property_is_local.is_local_affine_locally RingHom.PropertyIsLocal.is_local_affineLocally
 -/
 

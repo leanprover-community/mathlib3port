@@ -180,11 +180,11 @@ structure AffineTargetMorphismProperty.IsLocal (P : AffineTargetMorphismProperty
   RespectsIso : P.toProperty.RespectsIso
   toBasicOpen :
     ∀ {X Y : Scheme} [IsAffine Y] (f : X ⟶ Y) (r : Y.Presheaf.obj <| op ⊤),
-      P f → @P (f ∣_ Y.basic_open r) ((top_is_affine_open Y).basicOpenIsAffine _)
+      P f → @P (f ∣_ Y.basic_open r) ((top_is_affine_open Y).basicOpen _)
   of_basicOpen_cover :
     ∀ {X Y : Scheme} [IsAffine Y] (f : X ⟶ Y) (s : Finset (Y.Presheaf.obj <| op ⊤))
       (hs : Ideal.span (s : Set (Y.Presheaf.obj <| op ⊤)) = ⊤),
-      (∀ r : s, @P (f ∣_ Y.basic_open r.1) ((top_is_affine_open Y).basicOpenIsAffine _)) → P f
+      (∀ r : s, @P (f ∣_ Y.basic_open r.1) ((top_is_affine_open Y).basicOpen _)) → P f
 #align algebraic_geometry.affine_target_morphism_property.is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal
 -/
 
@@ -293,7 +293,7 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
   refine' ⟨hP, _, _⟩
   · introv h
     skip
-    haveI : is_affine _ := (top_is_affine_open Y).basicOpenIsAffine r
+    haveI : is_affine _ := (top_is_affine_open Y).basicOpen r
     delta morphism_restrict
     rw [affine_cancel_left_is_iso hP]
     refine' @H f ⟨Scheme.open_cover_of_is_iso (𝟙 Y), _, _⟩ (Y.of_restrict _) _inst _
@@ -306,10 +306,10 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
     have := H f ⟨Y.open_cover_of_supr_eq_top _ hs, _, _⟩ (𝟙 _)
     rwa [← category.comp_id pullback.snd, ← pullback.condition, affine_cancel_left_is_iso hP] at
       this
-    · intro i; exact (top_is_affine_open Y).basicOpenIsAffine _
+    · intro i; exact (top_is_affine_open Y).basicOpen _
     · rintro (i : s)
       specialize hs' i
-      haveI : is_affine _ := (top_is_affine_open Y).basicOpenIsAffine i.1
+      haveI : is_affine _ := (top_is_affine_open Y).basicOpen i.1
       delta morphism_restrict at hs'
       rwa [affine_cancel_left_is_iso hP] at hs'
 #align algebraic_geometry.affine_target_morphism_property.is_local_of_open_cover_imply AlgebraicGeometry.AffineTargetMorphismProperty.isLocalOfOpenCoverImply
@@ -357,8 +357,8 @@ structure PropertyIsLocalAtTarget (P : MorphismProperty Scheme) : Prop where
 #align algebraic_geometry.property_is_local_at_target AlgebraicGeometry.PropertyIsLocalAtTarget
 -/
 
-#print AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal /-
-theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal
+#print AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocally_isLocal /-
+theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocally_isLocal
     {P : AffineTargetMorphismProperty} (hP : P.IsLocal) :
     PropertyIsLocalAtTarget (targetAffineLocally P) :=
   by
@@ -390,7 +390,7 @@ theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal
       rw [← affine_cancel_left_is_iso hP.1 e] at h𝒰
       convert h𝒰
       simp
-#align algebraic_geometry.affine_target_morphism_property.is_local.target_affine_locally_is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal
+#align algebraic_geometry.affine_target_morphism_property.is_local.target_affine_locally_is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocally_isLocal
 -/
 
 #print AlgebraicGeometry.PropertyIsLocalAtTarget.openCover_TFAE /-
@@ -462,8 +462,8 @@ def StableUnderBaseChange (P : AffineTargetMorphismProperty) : Prop :=
 #align algebraic_geometry.affine_target_morphism_property.stable_under_base_change AlgebraicGeometry.AffineTargetMorphismProperty.StableUnderBaseChange
 -/
 
-#print AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocallyPullbackFstOfRightOfStableUnderBaseChange /-
-theorem IsLocal.targetAffineLocallyPullbackFstOfRightOfStableUnderBaseChange
+#print AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocally_pullback_fst_of_right_of_stableUnderBaseChange /-
+theorem IsLocal.targetAffineLocally_pullback_fst_of_right_of_stableUnderBaseChange
     {P : AffineTargetMorphismProperty} (hP : P.IsLocal) (hP' : P.StableUnderBaseChange)
     {X Y S : Scheme} (f : X ⟶ S) (g : Y ⟶ S) [IsAffine S] (H : P g) :
     targetAffineLocally P (pullback.fst : pullback f g ⟶ X) :=
@@ -475,7 +475,7 @@ theorem IsLocal.targetAffineLocallyPullbackFstOfRightOfStableUnderBaseChange
   have : e.hom ≫ pullback.fst = pullback.snd := by simp
   rw [← this, affine_cancel_left_is_iso hP.1]
   apply hP' <;> assumption
-#align algebraic_geometry.affine_target_morphism_property.is_local.target_affine_locally_pullback_fst_of_right_of_stable_under_base_change AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocallyPullbackFstOfRightOfStableUnderBaseChange
+#align algebraic_geometry.affine_target_morphism_property.is_local.target_affine_locally_pullback_fst_of_right_of_stable_under_base_change AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocally_pullback_fst_of_right_of_stableUnderBaseChange
 -/
 
 #print AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.stableUnderBaseChange /-
@@ -539,10 +539,11 @@ theorem AffineTargetMorphismProperty.diagonal_respectsIso (P : AffineTargetMorph
 #align algebraic_geometry.affine_target_morphism_property.diagonal_respects_iso AlgebraicGeometry.AffineTargetMorphismProperty.diagonal_respectsIso
 -/
 
-#print AlgebraicGeometry.diagonalTargetAffineLocallyOfOpenCover /-
-theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty) (hP : P.IsLocal)
-    {X Y : Scheme.{u}} (f : X ⟶ Y) (𝒰 : Scheme.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)]
-    (𝒰' : ∀ i, Scheme.OpenCover.{u} (pullback f (𝒰.map i))) [∀ i j, IsAffine ((𝒰' i).obj j)]
+#print AlgebraicGeometry.diagonal_targetAffineLocally_of_openCover /-
+theorem diagonal_targetAffineLocally_of_openCover (P : AffineTargetMorphismProperty)
+    (hP : P.IsLocal) {X Y : Scheme.{u}} (f : X ⟶ Y) (𝒰 : Scheme.OpenCover.{u} Y)
+    [∀ i, IsAffine (𝒰.obj i)] (𝒰' : ∀ i, Scheme.OpenCover.{u} (pullback f (𝒰.map i)))
+    [∀ i j, IsAffine ((𝒰' i).obj j)]
     (h𝒰' : ∀ i j k, P (pullback.mapDesc ((𝒰' i).map j) ((𝒰' i).map k) pullback.snd)) :
     (targetAffineLocally P).diagonal f :=
   by
@@ -566,11 +567,11 @@ theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty
       apply pullback.hom_ext <;>
         simp only [category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_fst_assoc,
           pullback.lift_snd_assoc]
-#align algebraic_geometry.diagonal_target_affine_locally_of_open_cover AlgebraicGeometry.diagonalTargetAffineLocallyOfOpenCover
+#align algebraic_geometry.diagonal_target_affine_locally_of_open_cover AlgebraicGeometry.diagonal_targetAffineLocally_of_openCover
 -/
 
-#print AlgebraicGeometry.AffineTargetMorphismProperty.diagonalOfTargetAffineLocally /-
-theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
+#print AlgebraicGeometry.AffineTargetMorphismProperty.diagonal_of_targetAffineLocally /-
+theorem AffineTargetMorphismProperty.diagonal_of_targetAffineLocally
     (P : AffineTargetMorphismProperty) (hP : P.IsLocal) {X Y U : Scheme.{u}} (f : X ⟶ Y) (g : U ⟶ Y)
     [IsAffine U] [IsOpenImmersionCat g] (H : (targetAffineLocally P).diagonal f) :
     P.diagonal (pullback.snd : pullback f g ⟶ _) :=
@@ -591,7 +592,7 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
       simp only [category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_fst_assoc,
         pullback.lift_snd_assoc, category.comp_id, pullback_diagonal_map_iso_hom_fst,
         pullback_diagonal_map_iso_hom_snd]
-#align algebraic_geometry.affine_target_morphism_property.diagonal_of_target_affine_locally AlgebraicGeometry.AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
+#align algebraic_geometry.affine_target_morphism_property.diagonal_of_target_affine_locally AlgebraicGeometry.AffineTargetMorphismProperty.diagonal_of_targetAffineLocally
 -/
 
 #print AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.diagonal_affine_openCover_TFAE /-
@@ -647,8 +648,8 @@ theorem diagonal_targetAffineLocally_eq_targetAffineLocally (P : AffineTargetMor
 #align algebraic_geometry.diagonal_target_affine_locally_eq_target_affine_locally AlgebraicGeometry.diagonal_targetAffineLocally_eq_targetAffineLocally
 -/
 
-#print AlgebraicGeometry.universallyIsLocalAtTarget /-
-theorem universallyIsLocalAtTarget (P : MorphismProperty Scheme)
+#print AlgebraicGeometry.universally_isLocalAtTarget /-
+theorem universally_isLocalAtTarget (P : MorphismProperty Scheme)
     (hP :
       ∀ {X Y : Scheme.{u}} (f : X ⟶ Y) (𝒰 : Scheme.OpenCover.{u} Y),
         (∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) → P f) :
@@ -667,23 +668,23 @@ theorem universallyIsLocalAtTarget (P : MorphismProperty Scheme)
   refine' (is_pullback.of_right _ (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback _ _)).flip
   rw [pullback.lift_fst, ← pullback.condition]
   exact (is_pullback.of_has_pullback _ _).paste_horiz H.flip
-#align algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universallyIsLocalAtTarget
+#align algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universally_isLocalAtTarget
 -/
 
-#print AlgebraicGeometry.universallyIsLocalAtTargetOfMorphismRestrict /-
-theorem universallyIsLocalAtTargetOfMorphismRestrict (P : MorphismProperty Scheme)
+#print AlgebraicGeometry.universally_isLocalAtTarget_of_morphismRestrict /-
+theorem universally_isLocalAtTarget_of_morphismRestrict (P : MorphismProperty Scheme)
     (hP₁ : P.RespectsIso)
     (hP₂ :
       ∀ {X Y : Scheme.{u}} (f : X ⟶ Y) {ι : Type u} (U : ι → Opens Y.carrier) (hU : iSup U = ⊤),
         (∀ i, P (f ∣_ U i)) → P f) :
     PropertyIsLocalAtTarget P.universally :=
-  universallyIsLocalAtTarget P
+  universally_isLocalAtTarget P
     (by
       intro X Y f 𝒰 h𝒰
       apply hP₂ f (fun i : 𝒰.J => (𝒰.map i).opensRange) 𝒰.supr_opens_range
       simp_rw [hP₁.arrow_mk_iso_iff (morphism_restrict_opens_range f _)]
       exact h𝒰)
-#align algebraic_geometry.universally_is_local_at_target_of_morphism_restrict AlgebraicGeometry.universallyIsLocalAtTargetOfMorphismRestrict
+#align algebraic_geometry.universally_is_local_at_target_of_morphism_restrict AlgebraicGeometry.universally_isLocalAtTarget_of_morphismRestrict
 -/
 
 #print AlgebraicGeometry.MorphismProperty.topologically /-

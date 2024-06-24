@@ -340,12 +340,13 @@ theorem Spec_Γ_naturality {R S : CommRingCat} (f : R ⟶ S) :
 #align algebraic_geometry.Spec_Γ_naturality AlgebraicGeometry.Spec_Γ_naturality
 -/
 
-#print AlgebraicGeometry.SpecΓIdentity /-
+#print AlgebraicGeometry.LocallyRingedSpace.SpecΓIdentity /-
 /-- The counit (`Spec_Γ_identity.inv.op`) of the adjunction `Γ ⊣ Spec` is an isomorphism. -/
 @[simps hom_app inv_app]
-def SpecΓIdentity : Spec.toLocallyRingedSpace.rightOp ⋙ Γ ≅ 𝟭 _ :=
+def AlgebraicGeometry.LocallyRingedSpace.SpecΓIdentity :
+    Spec.toLocallyRingedSpace.rightOp ⋙ Γ ≅ 𝟭 _ :=
   Iso.symm <| NatIso.ofComponents (fun R => asIso (toSpecΓ R) : _) fun _ _ => Spec_Γ_naturality
-#align algebraic_geometry.Spec_Γ_identity AlgebraicGeometry.SpecΓIdentity
+#align algebraic_geometry.Spec_Γ_identity AlgebraicGeometry.LocallyRingedSpace.SpecΓIdentity
 -/
 
 end SpecΓ

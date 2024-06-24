@@ -395,7 +395,9 @@ end Scheme
 
 #print AlgebraicGeometry.basicOpen_eq_of_affine /-
 theorem basicOpen_eq_of_affine {R : CommRingCat} (f : R) :
-    (Scheme.Spec.obj <| op R).basicOpen ((SpecΓIdentity.app R).inv f) = PrimeSpectrum.basicOpen f :=
+    (Scheme.Spec.obj <| op R).basicOpen
+        ((AlgebraicGeometry.LocallyRingedSpace.SpecΓIdentity.app R).inv f) =
+      PrimeSpectrum.basicOpen f :=
   by
   ext
   erw [Scheme.mem_basic_open_top]
@@ -413,7 +415,8 @@ theorem basicOpen_eq_of_affine {R : CommRingCat} (f : R) :
 @[simp]
 theorem basicOpen_eq_of_affine' {R : CommRingCat}
     (f : (Spec.toSheafedSpace.obj (op R)).Presheaf.obj (op ⊤)) :
-    (Scheme.Spec.obj <| op R).basicOpen f = PrimeSpectrum.basicOpen ((SpecΓIdentity.app R).Hom f) :=
+    (Scheme.Spec.obj <| op R).basicOpen f =
+      PrimeSpectrum.basicOpen ((AlgebraicGeometry.LocallyRingedSpace.SpecΓIdentity.app R).Hom f) :=
   by
   convert basic_open_eq_of_affine ((Spec_Γ_identity.app R).Hom f)
   exact (iso.hom_inv_id_apply _ _).symm

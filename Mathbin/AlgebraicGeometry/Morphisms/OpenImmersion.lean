@@ -59,8 +59,8 @@ theorem isOpenImmersion_respectsIso : MorphismProperty.RespectsIso @IsOpenImmers
 #align algebraic_geometry.is_open_immersion_respects_iso AlgebraicGeometry.isOpenImmersion_respectsIso
 -/
 
-#print AlgebraicGeometry.isOpenImmersion_is_local_at_target /-
-theorem isOpenImmersion_is_local_at_target : PropertyIsLocalAtTarget @IsOpenImmersionCat :=
+#print AlgebraicGeometry.isOpenImmersion_isLocalAtTarget /-
+theorem isOpenImmersion_isLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersionCat :=
   by
   constructor
   · exact is_open_immersion_respects_iso
@@ -86,7 +86,7 @@ theorem isOpenImmersion_is_local_at_target : PropertyIsLocalAtTarget @IsOpenImme
               (morphism_restrict_opens_range f (𝒰.map _))).mpr
           (H _)
       infer_instance
-#align algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersion_is_local_at_target
+#align algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersion_isLocalAtTarget
 -/
 
 #print AlgebraicGeometry.IsOpenImmersion.openCover_TFAE /-
@@ -102,14 +102,14 @@ theorem IsOpenImmersion.openCover_TFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
           IsOpenImmersionCat (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤),
           ∀ i, IsOpenImmersionCat (f ∣_ U i)] :=
-  isOpenImmersion_is_local_at_target.openCover_TFAE f
+  isOpenImmersion_isLocalAtTarget.openCover_TFAE f
 #align algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersion.openCover_TFAE
 -/
 
 #print AlgebraicGeometry.IsOpenImmersion.openCover_iff /-
 theorem IsOpenImmersion.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y) (f : X ⟶ Y) :
     IsOpenImmersionCat f ↔ ∀ i, IsOpenImmersionCat (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  isOpenImmersion_is_local_at_target.openCover_iff f 𝒰
+  isOpenImmersion_isLocalAtTarget.openCover_iff f 𝒰
 #align algebraic_geometry.is_open_immersion.open_cover_iff AlgebraicGeometry.IsOpenImmersion.openCover_iff
 -/
 

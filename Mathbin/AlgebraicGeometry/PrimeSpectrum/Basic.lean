@@ -337,11 +337,11 @@ theorem zeroLocus_empty : zeroLocus (∅ : Set R) = Set.univ :=
 #align prime_spectrum.zero_locus_empty PrimeSpectrum.zeroLocus_empty
 -/
 
-#print PrimeSpectrum.vanishingIdeal_univ /-
+#print PrimeSpectrum.vanishingIdeal_empty /-
 @[simp]
-theorem vanishingIdeal_univ : vanishingIdeal (∅ : Set (PrimeSpectrum R)) = ⊤ := by
+theorem vanishingIdeal_empty : vanishingIdeal (∅ : Set (PrimeSpectrum R)) = ⊤ := by
   simpa using (gc R).u_top
-#align prime_spectrum.vanishing_ideal_univ PrimeSpectrum.vanishingIdeal_univ
+#align prime_spectrum.vanishing_ideal_univ PrimeSpectrum.vanishingIdeal_empty
 -/
 
 #print PrimeSpectrum.zeroLocus_empty_of_one_mem /-

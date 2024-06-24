@@ -219,11 +219,11 @@ theorem QuasiSeparated.affine_openCover_TFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
 #align algebraic_geometry.quasi_separated.affine_open_cover_tfae AlgebraicGeometry.QuasiSeparated.affine_openCover_TFAE
 -/
 
-#print AlgebraicGeometry.QuasiSeparated.is_local_at_target /-
-theorem QuasiSeparated.is_local_at_target : PropertyIsLocalAtTarget @QuasiSeparated :=
+#print AlgebraicGeometry.QuasiSeparated.isLocalAtTarget /-
+theorem QuasiSeparated.isLocalAtTarget : PropertyIsLocalAtTarget @QuasiSeparated :=
   quasiSeparated_eq_affineProperty_diagonal.symm ▸
-    QuasiCompact.affineProperty_isLocal.diagonal.targetAffineLocallyIsLocal
-#align algebraic_geometry.quasi_separated.is_local_at_target AlgebraicGeometry.QuasiSeparated.is_local_at_target
+    QuasiCompact.affineProperty_isLocal.diagonal.targetAffineLocally_isLocal
+#align algebraic_geometry.quasi_separated.is_local_at_target AlgebraicGeometry.QuasiSeparated.isLocalAtTarget
 -/
 
 #print AlgebraicGeometry.QuasiSeparated.openCover_TFAE /-
@@ -239,7 +239,7 @@ theorem QuasiSeparated.openCover_TFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
           QuasiSeparated (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤),
           ∀ i, QuasiSeparated (f ∣_ U i)] :=
-  QuasiSeparated.is_local_at_target.openCover_TFAE f
+  QuasiSeparated.isLocalAtTarget.openCover_TFAE f
 #align algebraic_geometry.quasi_separated.open_cover_tfae AlgebraicGeometry.QuasiSeparated.openCover_TFAE
 -/
 
@@ -272,7 +272,7 @@ theorem QuasiSeparated.affine_openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.Op
 #print AlgebraicGeometry.QuasiSeparated.openCover_iff /-
 theorem QuasiSeparated.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y) (f : X ⟶ Y) :
     QuasiSeparated f ↔ ∀ i, QuasiSeparated (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  QuasiSeparated.is_local_at_target.openCover_iff f 𝒰
+  QuasiSeparated.isLocalAtTarget.openCover_iff f 𝒰
 #align algebraic_geometry.quasi_separated.open_cover_iff AlgebraicGeometry.QuasiSeparated.openCover_iff
 -/
 
@@ -314,7 +314,7 @@ instance quasiSeparatedSpace_of_isAffine (X : Scheme) [IsAffine X] :
     intro i' hi'
     change IsCompact (X.basic_open i ⊓ X.basic_open i').1
     rw [← Scheme.basic_open_mul]
-    exact ((top_is_affine_open _).basicOpenIsAffine _).IsCompact
+    exact ((top_is_affine_open _).basicOpen _).IsCompact
 #align algebraic_geometry.quasi_separated_space_of_is_affine AlgebraicGeometry.quasiSeparatedSpace_of_isAffine
 -/
 
