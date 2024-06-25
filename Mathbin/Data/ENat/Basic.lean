@@ -86,27 +86,27 @@ instance canLift : CanLift ℕ∞ ℕ coe fun n => n ≠ ⊤ :=
 #align enat.can_lift ENat.canLift
 -/
 
-#print ENat.toNat /-
+#print ENat.toNatHom /-
 /-- Conversion of `ℕ∞` to `ℕ` sending `∞` to `0`. -/
-def toNat : MonoidWithZeroHom ℕ∞ ℕ
+def toNatHom : MonoidWithZeroHom ℕ∞ ℕ
     where
   toFun := WithTop.untop' 0
   map_one' := rfl
   map_zero' := rfl
   map_mul' := WithTop.untop'_zero_mul
-#align enat.to_nat ENat.toNat
+#align enat.to_nat ENat.toNatHom
 -/
 
 #print ENat.toNat_coe /-
 @[simp]
-theorem toNat_coe (n : ℕ) : toNat n = n :=
+theorem toNat_coe (n : ℕ) : toNatHom n = n :=
   rfl
 #align enat.to_nat_coe ENat.toNat_coe
 -/
 
 #print ENat.toNat_top /-
 @[simp]
-theorem toNat_top : toNat ⊤ = 0 :=
+theorem toNat_top : toNatHom ⊤ = 0 :=
   rfl
 #align enat.to_nat_top ENat.toNat_top
 -/
@@ -122,19 +122,19 @@ alias ⟨_, coe_to_nat⟩ := coe_to_nat_eq_self
 #align enat.coe_to_nat ENat.coe_toNat
 
 #print ENat.coe_toNat_le_self /-
-theorem coe_toNat_le_self (n : ℕ∞) : ↑(toNat n) ≤ n :=
+theorem coe_toNat_le_self (n : ℕ∞) : ↑(toNatHom n) ≤ n :=
   WithTop.recTopCoe le_top (fun k => le_rfl) n
 #align enat.coe_to_nat_le_self ENat.coe_toNat_le_self
 -/
 
 #print ENat.toNat_add /-
-theorem toNat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) : toNat (m + n) = toNat m + toNat n := by
-  lift m to ℕ using hm; lift n to ℕ using hn; rfl
+theorem toNat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) :
+    toNatHom (m + n) = toNatHom m + toNatHom n := by lift m to ℕ using hm; lift n to ℕ using hn; rfl
 #align enat.to_nat_add ENat.toNat_add
 -/
 
 #print ENat.toNat_sub /-
-theorem toNat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = toNat m - toNat n :=
+theorem toNat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNatHom (m - n) = toNatHom m - toNatHom n :=
   by
   lift n to ℕ using hn
   induction m using WithTop.recTopCoe
