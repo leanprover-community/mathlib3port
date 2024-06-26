@@ -182,33 +182,25 @@ def multicospan : WalkingMulticospan I.fstTo I.sndTo ⥤ C
 #align category_theory.limits.multicospan_index.multicospan CategoryTheory.Limits.MulticospanIndex.multicospan
 -/
 
-#print CategoryTheory.Limits.MulticospanIndex.multicospan_obj_left /-
 @[simp]
 theorem multicospan_obj_left (a) : I.multicospan.obj (WalkingMulticospan.left a) = I.left a :=
   rfl
 #align category_theory.limits.multicospan_index.multicospan_obj_left CategoryTheory.Limits.MulticospanIndex.multicospan_obj_left
--/
 
-#print CategoryTheory.Limits.MulticospanIndex.multicospan_obj_right /-
 @[simp]
 theorem multicospan_obj_right (b) : I.multicospan.obj (WalkingMulticospan.right b) = I.right b :=
   rfl
 #align category_theory.limits.multicospan_index.multicospan_obj_right CategoryTheory.Limits.MulticospanIndex.multicospan_obj_right
--/
 
-#print CategoryTheory.Limits.MulticospanIndex.multicospan_map_fst /-
 @[simp]
 theorem multicospan_map_fst (b) : I.multicospan.map (WalkingMulticospan.Hom.fst b) = I.fst b :=
   rfl
 #align category_theory.limits.multicospan_index.multicospan_map_fst CategoryTheory.Limits.MulticospanIndex.multicospan_map_fst
--/
 
-#print CategoryTheory.Limits.MulticospanIndex.multicospan_map_snd /-
 @[simp]
 theorem multicospan_map_snd (b) : I.multicospan.map (WalkingMulticospan.Hom.snd b) = I.snd b :=
   rfl
 #align category_theory.limits.multicospan_index.multicospan_map_snd CategoryTheory.Limits.MulticospanIndex.multicospan_map_snd
--/
 
 variable [HasProduct I.left] [HasProduct I.right]
 

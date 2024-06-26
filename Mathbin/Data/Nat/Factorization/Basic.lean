@@ -980,7 +980,7 @@ def recOnPrimePow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1)
         exact hp.factorization_pos_of_dvd (Nat.succ_ne_zero _) (min_fac_dvd _)
       convert h ((k + 2) / p ^ t) p t hp _ _ _
       · rw [Nat.mul_div_cancel' hpt]
-      · rw [Nat.dvd_div_iff hpt, ← pow_succ, ht]
+      · rw [Nat.dvd_div_iff_mul_dvd hpt, ← pow_succ, ht]
         exact pow_succ_factorization_not_dvd (k + 1).succ_ne_zero hp
       · exact htp
       · apply hk _ (Nat.div_lt_of_lt_mul _)

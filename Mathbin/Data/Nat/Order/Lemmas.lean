@@ -221,11 +221,11 @@ theorem dvd_div_of_mul_dvd {a b c : ℕ} (h : a * b ∣ c) : b ∣ c / a :=
 #align nat.dvd_div_of_mul_dvd Nat.dvd_div_of_mul_dvd
 -/
 
-#print Nat.dvd_div_iff /-
+#print Nat.dvd_div_iff_mul_dvd /-
 @[simp]
-theorem dvd_div_iff {a b c : ℕ} (hbc : c ∣ b) : a ∣ b / c ↔ c * a ∣ b :=
+theorem dvd_div_iff_mul_dvd {a b c : ℕ} (hbc : c ∣ b) : a ∣ b / c ↔ c * a ∣ b :=
   ⟨fun h => mul_dvd_of_dvd_div hbc h, fun h => dvd_div_of_mul_dvd h⟩
-#align nat.dvd_div_iff Nat.dvd_div_iff
+#align nat.dvd_div_iff Nat.dvd_div_iff_mul_dvd
 -/
 
 #print Nat.div_div_div_eq_div /-

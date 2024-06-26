@@ -233,7 +233,7 @@ variable [HasLimits C]
 #print AlgebraicGeometry.PresheafedSpace.GlueData.ι_image_preimage_eq /-
 theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).carrier) :
     (Opens.map (𝖣.ι j).base).obj ((D.ι_openEmbedding i).IsOpenMap.Functor.obj U) =
-      (D.f_open j i).openFunctor.obj
+      (D.f_open j i).opensFunctor.obj
         ((Opens.map (𝖣.t j i).base).obj ((Opens.map (𝖣.f i j).base).obj U)) :=
   by
   ext1

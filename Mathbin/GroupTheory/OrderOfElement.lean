@@ -364,7 +364,7 @@ theorem orderOf_eq_of_pow_and_pow_div_prime (hn : 0 < n) (hx : x ^ n = 1)
     exact Dvd.intro_left (orderOf x * b) ha.symm
   -- Use the minimum prime factor of `a` as `p`.
   refine' hd a.min_fac (Nat.minFac_prime h) a_min_fac_dvd_p_sub_one _
-  rw [← orderOf_dvd_iff_pow_eq_one, Nat.dvd_div_iff a_min_fac_dvd_p_sub_one, ha, mul_comm,
+  rw [← orderOf_dvd_iff_pow_eq_one, Nat.dvd_div_iff_mul_dvd a_min_fac_dvd_p_sub_one, ha, mul_comm,
     Nat.mul_dvd_mul_iff_left (IsOfFinOrder.orderOf_pos _)]
   · exact Nat.minFac_dvd a
   · rw [isOfFinOrder_iff_pow_eq_one]

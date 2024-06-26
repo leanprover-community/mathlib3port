@@ -940,10 +940,10 @@ theorem symm_bijective : Function.Bijective (symm : (A ≃⋆ₐ[R] B) → B ≃
 -/
 
 @[simp]
-theorem mk_coe' (e : A ≃⋆ₐ[R] B) (f h₁ h₂ h₃ h₄ h₅ h₆) :
+theorem mk_coe (e : A ≃⋆ₐ[R] B) (f h₁ h₂ h₃ h₄ h₅ h₆) :
     (⟨f, e, h₁, h₂, h₃, h₄, h₅, h₆⟩ : B ≃⋆ₐ[R] A) = e.symm :=
   symm_bijective.Injective <| ext fun x => rfl
-#align star_alg_equiv.mk_coe' StarAlgEquiv.mk_coe'ₓ
+#align star_alg_equiv.mk_coe' StarAlgEquiv.mk_coeₓ
 
 @[simp]
 theorem symm_mk (f f') (h₁ h₂ h₃ h₄ h₅ h₆) :

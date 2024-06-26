@@ -42,7 +42,7 @@ variable {X Y : Scheme.{u}} (f : X ⟶ Y)
 class LocallyOfFiniteType (f : X ⟶ Y) : Prop where
   finiteType_of_affine_subset :
     ∀ (U : Y.affineOpens) (V : X.affineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1),
-      (f.appLe e).FiniteType
+      (f.appLE e).FiniteType
 #align algebraic_geometry.locally_of_finite_type AlgebraicGeometry.LocallyOfFiniteType
 -/
 
@@ -55,11 +55,11 @@ theorem locallyOfFiniteType_eq : @LocallyOfFiniteType = affineLocally @RingHom.F
 #align algebraic_geometry.locally_of_finite_type_eq AlgebraicGeometry.locallyOfFiniteType_eq
 -/
 
-#print AlgebraicGeometry.locallyOfFiniteTypeOfIsOpenImmersion /-
-instance (priority := 900) locallyOfFiniteTypeOfIsOpenImmersion {X Y : Scheme} (f : X ⟶ Y)
+#print AlgebraicGeometry.locallyOfFiniteType_of_isOpenImmersion /-
+instance (priority := 900) locallyOfFiniteType_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y)
     [IsOpenImmersionCat f] : LocallyOfFiniteType f :=
   locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affineLocally_of_isOpenImmersion f
-#align algebraic_geometry.locally_of_finite_type_of_is_open_immersion AlgebraicGeometry.locallyOfFiniteTypeOfIsOpenImmersion
+#align algebraic_geometry.locally_of_finite_type_of_is_open_immersion AlgebraicGeometry.locallyOfFiniteType_of_isOpenImmersion
 -/
 
 #print AlgebraicGeometry.locallyOfFiniteType_isStableUnderComposition /-
@@ -69,15 +69,15 @@ theorem locallyOfFiniteType_isStableUnderComposition :
 #align algebraic_geometry.locally_of_finite_type_stable_under_composition AlgebraicGeometry.locallyOfFiniteType_isStableUnderComposition
 -/
 
-#print AlgebraicGeometry.locallyOfFiniteTypeComp /-
-instance locallyOfFiniteTypeComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
+#print AlgebraicGeometry.locallyOfFiniteType_comp /-
+instance locallyOfFiniteType_comp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
     [hf : LocallyOfFiniteType f] [hg : LocallyOfFiniteType g] : LocallyOfFiniteType (f ≫ g) :=
   locallyOfFiniteType_isStableUnderComposition f g hf hg
-#align algebraic_geometry.locally_of_finite_type_comp AlgebraicGeometry.locallyOfFiniteTypeComp
+#align algebraic_geometry.locally_of_finite_type_comp AlgebraicGeometry.locallyOfFiniteType_comp
 -/
 
-#print AlgebraicGeometry.locallyOfFiniteTypeOfComp /-
-theorem locallyOfFiniteTypeOfComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
+#print AlgebraicGeometry.locallyOfFiniteType_of_comp /-
+theorem locallyOfFiniteType_of_comp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
     [hf : LocallyOfFiniteType (f ≫ g)] : LocallyOfFiniteType f :=
   by
   revert hf
@@ -85,7 +85,7 @@ theorem locallyOfFiniteTypeOfComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
   apply ring_hom.finite_type_is_local.affine_locally_of_comp
   introv H
   exact RingHom.FiniteType.of_comp_finiteType H
-#align algebraic_geometry.locally_of_finite_type_of_comp AlgebraicGeometry.locallyOfFiniteTypeOfComp
+#align algebraic_geometry.locally_of_finite_type_of_comp AlgebraicGeometry.locallyOfFiniteType_of_comp
 -/
 
 #print AlgebraicGeometry.LocallyOfFiniteType.affine_openCover_iff /-

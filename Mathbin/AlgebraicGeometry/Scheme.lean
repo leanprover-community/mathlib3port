@@ -138,12 +138,12 @@ theorem comp_val_base {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) :
 #align algebraic_geometry.Scheme.comp_val_base AlgebraicGeometry.Scheme.comp_val_base
 -/
 
-#print AlgebraicGeometry.Scheme.comp_val_c_app /-
+#print AlgebraicGeometry.Scheme.comp_app /-
 @[reassoc, simp]
-theorem comp_val_c_app {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
+theorem comp_app {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
     (f ≫ g).val.c.app U = g.val.c.app U ≫ f.val.c.app _ :=
   rfl
-#align algebraic_geometry.Scheme.comp_val_c_app AlgebraicGeometry.Scheme.comp_val_c_app
+#align algebraic_geometry.Scheme.comp_val_c_app AlgebraicGeometry.Scheme.comp_app
 -/
 
 #print AlgebraicGeometry.Scheme.congr_app /-
@@ -170,9 +170,9 @@ instance is_locallyRingedSpace_iso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] :
 #align algebraic_geometry.Scheme.is_LocallyRingedSpace_iso AlgebraicGeometry.Scheme.is_locallyRingedSpace_iso
 -/
 
-#print AlgebraicGeometry.Scheme.inv_val_c_app /-
+#print AlgebraicGeometry.Scheme.inv_app /-
 @[simp]
-theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrier) :
+theorem inv_app {X Y : Scheme} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrier) :
     (inv f).val.c.app (op U) =
       X.Presheaf.map
           (eqToHom <| by rw [is_iso.hom_inv_id]; ext1; rfl :
@@ -184,56 +184,55 @@ theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrie
   rw [Scheme.congr_app (is_iso.hom_inv_id f), Scheme.id_app, ← functor.map_comp, eq_to_hom_trans,
     eq_to_hom_op]
   rfl
-#align algebraic_geometry.Scheme.inv_val_c_app AlgebraicGeometry.Scheme.inv_val_c_app
+#align algebraic_geometry.Scheme.inv_val_c_app AlgebraicGeometry.Scheme.inv_app
 -/
 
-#print AlgebraicGeometry.Scheme.Hom.appLe /-
+#print AlgebraicGeometry.Scheme.Hom.appLE /-
 /-- Given a morphism of schemes `f : X ⟶ Y`, and open sets `U ⊆ Y`, `V ⊆ f ⁻¹' U`,
 this is the induced map `Γ(Y, U) ⟶ Γ(X, V)`. -/
-abbrev Hom.appLe {X Y : Scheme} (f : X ⟶ Y) {V : Opens X.carrier} {U : Opens Y.carrier}
+abbrev Hom.appLE {X Y : Scheme} (f : X ⟶ Y) {V : Opens X.carrier} {U : Opens Y.carrier}
     (e : V ≤ (Opens.map f.1.base).obj U) : Y.Presheaf.obj (op U) ⟶ X.Presheaf.obj (op V) :=
   f.1.c.app (op U) ≫ X.Presheaf.map (homOfLE e).op
-#align algebraic_geometry.Scheme.hom.app_le AlgebraicGeometry.Scheme.Hom.appLe
+#align algebraic_geometry.Scheme.hom.app_le AlgebraicGeometry.Scheme.Hom.appLE
 -/
 
-#print AlgebraicGeometry.Scheme.specObj /-
+#print AlgebraicGeometry.Spec /-
 /-- The spectrum of a commutative ring, as a scheme.
 -/
-def specObj (R : CommRingCat) : Scheme
+def AlgebraicGeometry.Spec (R : CommRingCat) : Scheme
     where
   local_affine x := ⟨⟨⊤, trivial⟩, R, ⟨(Spec.toLocallyRingedSpace.obj (op R)).restrictTopIso⟩⟩
   toLocallyRingedSpace := Spec.locallyRingedSpaceObj R
-#align algebraic_geometry.Scheme.Spec_obj AlgebraicGeometry.Scheme.specObj
+#align algebraic_geometry.Scheme.Spec_obj AlgebraicGeometry.Spec
 -/
 
-#print AlgebraicGeometry.Scheme.specObj_toLocallyRingedSpace /-
+#print AlgebraicGeometry.Spec_toLocallyRingedSpace /-
 @[simp]
-theorem specObj_toLocallyRingedSpace (R : CommRingCat) :
-    (specObj R).toLocallyRingedSpace = Spec.locallyRingedSpaceObj R :=
+theorem AlgebraicGeometry.Spec_toLocallyRingedSpace (R : CommRingCat) :
+    (AlgebraicGeometry.Spec R).toLocallyRingedSpace = Spec.locallyRingedSpaceObj R :=
   rfl
-#align algebraic_geometry.Scheme.Spec_obj_to_LocallyRingedSpace AlgebraicGeometry.Scheme.specObj_toLocallyRingedSpace
+#align algebraic_geometry.Scheme.Spec_obj_to_LocallyRingedSpace AlgebraicGeometry.Spec_toLocallyRingedSpace
 -/
 
-#print AlgebraicGeometry.Scheme.specMap /-
+#print AlgebraicGeometry.Spec.map /-
 /-- The induced map of a ring homomorphism on the ring spectra, as a morphism of schemes.
 -/
-def specMap {R S : CommRingCat} (f : R ⟶ S) : specObj S ⟶ specObj R :=
+def map {R S : CommRingCat} (f : R ⟶ S) : AlgebraicGeometry.Spec S ⟶ AlgebraicGeometry.Spec R :=
   (Spec.locallyRingedSpaceMap f : Spec.locallyRingedSpaceObj S ⟶ Spec.locallyRingedSpaceObj R)
-#align algebraic_geometry.Scheme.Spec_map AlgebraicGeometry.Scheme.specMap
+#align algebraic_geometry.Scheme.Spec_map AlgebraicGeometry.Spec.map
 -/
 
-#print AlgebraicGeometry.Scheme.specMap_id /-
+#print AlgebraicGeometry.Spec.map_id /-
 @[simp]
-theorem specMap_id (R : CommRingCat) : specMap (𝟙 R) = 𝟙 (specObj R) :=
+theorem map_id (R : CommRingCat) : map (𝟙 R) = 𝟙 (AlgebraicGeometry.Spec R) :=
   Spec.locallyRingedSpaceMap_id R
-#align algebraic_geometry.Scheme.Spec_map_id AlgebraicGeometry.Scheme.specMap_id
+#align algebraic_geometry.Scheme.Spec_map_id AlgebraicGeometry.Spec.map_id
 -/
 
-#print AlgebraicGeometry.Scheme.specMap_comp /-
-theorem specMap_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :
-    specMap (f ≫ g) = specMap g ≫ specMap f :=
+#print AlgebraicGeometry.Spec.map_comp /-
+theorem map_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) : map (f ≫ g) = map g ≫ map f :=
   Spec.locallyRingedSpaceMap_comp f g
-#align algebraic_geometry.Scheme.Spec_map_comp AlgebraicGeometry.Scheme.specMap_comp
+#align algebraic_geometry.Scheme.Spec_map_comp AlgebraicGeometry.Spec.map_comp
 -/
 
 #print AlgebraicGeometry.Scheme.Spec /-
@@ -243,9 +242,10 @@ theorem specMap_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :
 /-- The spectrum, as a contravariant functor from commutative rings to schemes.
 -/
 @[simps (config := { attrs := [] })]
-def Spec : CommRingCatᵒᵖ ⥤ Scheme where
-  obj R := specObj (unop R)
-  map R S f := specMap f.unop
+def Spec : CommRingCatᵒᵖ ⥤ Scheme
+    where
+  obj R := AlgebraicGeometry.Spec (unop R)
+  map R S f := map f.unop
   map_id' R := by rw [unop_id, Spec_map_id]
   map_comp' R S T f g := by rw [unop_comp, Spec_map_comp]
 #align algebraic_geometry.Scheme.Spec AlgebraicGeometry.Scheme.Spec

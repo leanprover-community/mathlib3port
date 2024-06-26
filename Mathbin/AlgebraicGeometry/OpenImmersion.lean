@@ -694,7 +694,7 @@ def isoOfRangeEq [IsOpenImmersionCat g] (e : Set.range f.1.base = Set.range g.1.
 /-- The functor `opens X ⥤ opens Y` associated with an open immersion `f : X ⟶ Y`. -/
 abbrev AlgebraicGeometry.Scheme.Hom.opensFunctor {X Y : Scheme} (f : X ⟶ Y)
     [H : IsOpenImmersionCat f] : Opens X.carrier ⥤ Opens Y.carrier :=
-  H.openFunctor
+  H.opensFunctor
 #align algebraic_geometry.Scheme.hom.opens_functor AlgebraicGeometry.Scheme.Hom.opensFunctor
 -/
 
@@ -1120,8 +1120,8 @@ theorem image_morphismRestrict_preimage {X Y : Scheme} (f : X ⟶ Y) (U : Opens 
 #align algebraic_geometry.image_morphism_restrict_preimage AlgebraicGeometry.image_morphismRestrict_preimage
 -/
 
-#print AlgebraicGeometry.morphismRestrict_c_app /-
-theorem morphismRestrict_c_app {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.carrier) (V : Opens U) :
+#print AlgebraicGeometry.morphismRestrict_app /-
+theorem morphismRestrict_app {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.carrier) (V : Opens U) :
     (f ∣_ U).1.c.app (op V) =
       f.1.c.app (op (U.OpenEmbedding.IsOpenMap.Functor.obj V)) ≫
         X.Presheaf.map (eqToHom (image_morphismRestrict_preimage f U V)).op :=
@@ -1139,7 +1139,7 @@ theorem morphismRestrict_c_app {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.carrier
   congr 1
   erw [← X.presheaf.map_comp, ← X.presheaf.map_comp]
   congr 1
-#align algebraic_geometry.morphism_restrict_c_app AlgebraicGeometry.morphismRestrict_c_app
+#align algebraic_geometry.morphism_restrict_c_app AlgebraicGeometry.morphismRestrict_app
 -/
 
 #print AlgebraicGeometry.Γ_map_morphismRestrict /-

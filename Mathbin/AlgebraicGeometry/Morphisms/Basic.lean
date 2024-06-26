@@ -143,12 +143,12 @@ def targetAffineLocally (P : AffineTargetMorphismProperty) : MorphismProperty Sc
 #align algebraic_geometry.target_affine_locally AlgebraicGeometry.targetAffineLocally
 -/
 
-#print AlgebraicGeometry.IsAffineOpen.map_isIso /-
-theorem IsAffineOpen.map_isIso {X Y : Scheme} {U : Opens Y.carrier} (hU : IsAffineOpen U)
+#print AlgebraicGeometry.IsAffineOpen.preimage_of_isIso /-
+theorem IsAffineOpen.preimage_of_isIso {X Y : Scheme} {U : Opens Y.carrier} (hU : IsAffineOpen U)
     (f : X ⟶ Y) [IsIso f] : IsAffineOpen ((Opens.map f.1.base).obj U) :=
   haveI : is_affine _ := hU
   is_affine_of_iso (f ∣_ U)
-#align algebraic_geometry.is_affine_open.map_is_iso AlgebraicGeometry.IsAffineOpen.map_isIso
+#align algebraic_geometry.is_affine_open.map_is_iso AlgebraicGeometry.IsAffineOpen.preimage_of_isIso
 -/
 
 #print AlgebraicGeometry.targetAffineLocally_respectsIso /-
@@ -188,8 +188,8 @@ structure AffineTargetMorphismProperty.IsLocal (P : AffineTargetMorphismProperty
 #align algebraic_geometry.affine_target_morphism_property.is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal
 -/
 
-#print AlgebraicGeometry.targetAffineLocallyOfOpenCover /-
-theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
+#print AlgebraicGeometry.targetAffineLocally_of_openCover /-
+theorem targetAffineLocally_of_openCover {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
     {X Y : Scheme} (f : X ⟶ Y) (𝒰 : Y.OpenCover) [∀ i, IsAffine (𝒰.obj i)]
     (h𝒰 : ∀ i, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) : targetAffineLocally P f :=
   by
@@ -229,7 +229,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
   · rintro ⟨_, i, rfl⟩
     simp_rw [← P.to_property_apply] at h𝒰 ⊢
     exact (hP.1.arrow_mk_iso_iff (morphism_restrict_opens_range f _)).mpr (h𝒰 i)
-#align algebraic_geometry.target_affine_locally_of_open_cover AlgebraicGeometry.targetAffineLocallyOfOpenCover
+#align algebraic_geometry.target_affine_locally_of_open_cover AlgebraicGeometry.targetAffineLocally_of_openCover
 -/
 
 #print AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.affine_openCover_TFAE /-

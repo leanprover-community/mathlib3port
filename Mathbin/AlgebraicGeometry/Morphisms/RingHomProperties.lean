@@ -201,7 +201,7 @@ theorem affineLocally_respectsIso (h : RingHom.RespectsIso @P) : (affineLocally 
 theorem affineLocally_iff_affineOpens_le (hP : RingHom.RespectsIso @P) {X Y : Scheme} (f : X ⟶ Y) :
     affineLocally (@P) f ↔
       ∀ (U : Y.affineOpens) (V : X.affineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1),
-        P (f.appLe e) :=
+        P (f.appLE e) :=
   by
   apply forall_congr'
   intro U
@@ -282,7 +282,7 @@ theorem sourceAffineLocally_isLocal (h₁ : RingHom.RespectsIso @P)
       intro V hV
       rw [Scheme.preimage_basic_open] at hV
       subst hV
-      exact U.2.ιOpens_preimage (Scheme.Γ.map f.op r.1)
+      exact U.2.ιOpens_basicOpen_preimage (Scheme.Γ.map f.op r.1)
 #align algebraic_geometry.source_affine_locally_is_local AlgebraicGeometry.sourceAffineLocally_isLocal
 -/
 

@@ -1409,10 +1409,13 @@ theorem deleteEdges (s : Set (Sym2 V)) : G.deleteEdges s = G \ fromEdgeSet s := 
 #align simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.deleteEdges
 -/
 
+#print SimpleGraph.deleteEdges_eq_self /-
 @[simp]
-theorem deleteEdges_eq {s : Set (Sym2 V)} : G.deleteEdges s = G ↔ Disjoint G.edgeSetEmbedding s :=
-  by rw [delete_edges_eq_sdiff_from_edge_set, sdiff_eq_left, disjoint_from_edge_set]
-#align simple_graph.delete_edges_eq SimpleGraph.deleteEdges_eq
+theorem deleteEdges_eq_self {s : Set (Sym2 V)} :
+    G.deleteEdges s = G ↔ Disjoint G.edgeSetEmbedding s := by
+  rw [delete_edges_eq_sdiff_from_edge_set, sdiff_eq_left, disjoint_from_edge_set]
+#align simple_graph.delete_edges_eq SimpleGraph.deleteEdges_eq_self
+-/
 
 /- warning: simple_graph.compl_eq_delete_edges clashes with simple_graph.delete_edges -> SimpleGraph.deleteEdges
 Case conversion may be inaccurate. Consider using '#align simple_graph.compl_eq_delete_edges SimpleGraph.deleteEdgesₓ'. -/

@@ -105,11 +105,11 @@ section
 
 variable {X Y : PresheafedSpace.{v} C} {f : X ⟶ Y} (H : is_open_immersion f)
 
-#print AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.openFunctor /-
+#print AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.opensFunctor /-
 /-- The functor `opens X ⥤ opens Y` associated with an open immersion `f : X ⟶ Y`. -/
-abbrev openFunctor :=
+abbrev opensFunctor :=
   H.base_open.IsOpenMap.Functor
-#align algebraic_geometry.PresheafedSpace.is_open_immersion.open_functor AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.openFunctor
+#align algebraic_geometry.PresheafedSpace.is_open_immersion.open_functor AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.opensFunctor
 -/
 
 #print AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.isoRestrict /-
@@ -197,9 +197,9 @@ instance comp {Z : PresheafedSpace C} (f : X ⟶ Y) [hf : is_open_immersion f] (
 #print AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.invApp /-
 /-- For an open immersion `f : X ⟶ Y` and an open set `U ⊆ X`, we have the map `X(U) ⟶ Y(U)`. -/
 noncomputable def invApp (U : Opens X) :
-    X.Presheaf.obj (op U) ⟶ Y.Presheaf.obj (op (H.openFunctor.obj U)) :=
+    X.Presheaf.obj (op U) ⟶ Y.Presheaf.obj (op (H.opensFunctor.obj U)) :=
   X.Presheaf.map (eqToHom (by simp [opens.map, Set.preimage_image_eq _ H.base_open.inj])) ≫
-    inv (f.c.app (op (H.openFunctor.obj U)))
+    inv (f.c.app (op (H.opensFunctor.obj U)))
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.inv_app AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.invApp
 -/
 
@@ -207,7 +207,7 @@ noncomputable def invApp (U : Opens X) :
 @[simp, reassoc]
 theorem inv_naturality {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) :
     X.Presheaf.map i ≫ H.invApp (unop V) =
-      H.invApp (unop U) ≫ Y.Presheaf.map (H.openFunctor.op.map i) :=
+      H.invApp (unop U) ≫ Y.Presheaf.map (H.opensFunctor.op.map i) :=
   by
   simp only [inv_app, ← category.assoc]
   rw [is_iso.comp_inv_eq]
@@ -222,7 +222,7 @@ instance (U : Opens X) : IsIso (H.invApp U) := by delta inv_app; infer_instance
 #print AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.inv_invApp /-
 theorem inv_invApp (U : Opens X) :
     inv (H.invApp U) =
-      f.c.app (op (H.openFunctor.obj U)) ≫
+      f.c.app (op (H.opensFunctor.obj U)) ≫
         X.Presheaf.map (eqToHom (by simp [opens.map, Set.preimage_image_eq _ H.base_open.inj])) :=
   by
   rw [← cancel_epi (H.inv_app U)]
@@ -235,7 +235,7 @@ theorem inv_invApp (U : Opens X) :
 #print AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.invApp_app /-
 @[simp, reassoc, elementwise]
 theorem invApp_app (U : Opens X) :
-    H.invApp U ≫ f.c.app (op (H.openFunctor.obj U)) =
+    H.invApp U ≫ f.c.app (op (H.opensFunctor.obj U)) =
       X.Presheaf.map (eqToHom (by simp [opens.map, Set.preimage_image_eq _ H.base_open.inj])) :=
   by rw [inv_app, category.assoc, is_iso.inv_hom_id, category.comp_id]
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.inv_app_app AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.invApp_app
@@ -247,7 +247,7 @@ theorem app_invApp (U : Opens Y) :
     f.c.app (op U) ≫ H.invApp ((Opens.map f.base).obj U) =
       Y.Presheaf.map
         ((homOfLE (Set.image_preimage_subset f.base U)).op :
-          op U ⟶ op (H.openFunctor.obj ((Opens.map f.base).obj U))) :=
+          op U ⟶ op (H.opensFunctor.obj ((Opens.map f.base).obj U))) :=
   by erw [← category.assoc]; rw [is_iso.comp_inv_eq, f.c.naturality]; congr
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.app_inv_app AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.app_invApp
 -/

@@ -545,13 +545,11 @@ def Arrow.map {S T : J.cover X} (I : S.arrow) (f : S ⟶ T) : T.arrow :=
 #align category_theory.grothendieck_topology.cover.arrow.map CategoryTheory.GrothendieckTopology.Cover.Arrow.map
 -/
 
-#print CategoryTheory.GrothendieckTopology.Cover.Relation.map /-
 /-- Map a `relation` along a refinement `S ⟶ T`. -/
 @[simps]
 def Relation.map {S T : J.cover X} (I : S.Relation) (f : S ⟶ T) : T.Relation :=
   ⟨_, _, _, I.g₁, I.g₂, I.f₁, I.f₂, f.le _ I.h₁, f.le _ I.h₂, I.w⟩
 #align category_theory.grothendieck_topology.cover.relation.map CategoryTheory.GrothendieckTopology.Cover.Relation.map
--/
 
 #print CategoryTheory.GrothendieckTopology.Cover.Relation.fst /-
 /-- The first `arrow` associated to a `relation`.
@@ -571,21 +569,17 @@ def Relation.snd {S : J.cover X} (I : S.Relation) : S.arrow :=
 #align category_theory.grothendieck_topology.cover.relation.snd CategoryTheory.GrothendieckTopology.Cover.Relation.snd
 -/
 
-#print CategoryTheory.GrothendieckTopology.Cover.Relation.map_fst /-
 @[simp]
 theorem Relation.map_fst {S T : J.cover X} (I : S.Relation) (f : S ⟶ T) :
     I.fst.map f = (I.map f).fst :=
   rfl
 #align category_theory.grothendieck_topology.cover.relation.map_fst CategoryTheory.GrothendieckTopology.Cover.Relation.map_fst
--/
 
-#print CategoryTheory.GrothendieckTopology.Cover.Relation.map_snd /-
 @[simp]
 theorem Relation.map_snd {S T : J.cover X} (I : S.Relation) (f : S ⟶ T) :
     I.snd.map f = (I.map f).snd :=
   rfl
 #align category_theory.grothendieck_topology.cover.relation.map_snd CategoryTheory.GrothendieckTopology.Cover.Relation.map_snd
--/
 
 #print CategoryTheory.GrothendieckTopology.Cover.pullback /-
 /-- Pull back a cover along a morphism. -/
@@ -602,29 +596,23 @@ def Arrow.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).arrow) : S.arro
 #align category_theory.grothendieck_topology.cover.arrow.base CategoryTheory.GrothendieckTopology.Cover.Arrow.base
 -/
 
-#print CategoryTheory.GrothendieckTopology.Cover.Relation.base /-
 /-- A relation of `S.pullback f` gives rise to a relation of `S`. -/
 @[simps]
 def Relation.base {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) : S.Relation :=
   ⟨_, _, _, I.g₁, I.g₂, I.f₁ ≫ f, I.f₂ ≫ f, I.h₁, I.h₂, by simp [reassoc_of I.w]⟩
 #align category_theory.grothendieck_topology.cover.relation.base CategoryTheory.GrothendieckTopology.Cover.Relation.base
--/
 
-#print CategoryTheory.GrothendieckTopology.Cover.Relation.base_fst /-
 @[simp]
 theorem Relation.base_fst {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) :
     I.fst.base = I.base.fst :=
   rfl
 #align category_theory.grothendieck_topology.cover.relation.base_fst CategoryTheory.GrothendieckTopology.Cover.Relation.base_fst
--/
 
-#print CategoryTheory.GrothendieckTopology.Cover.Relation.base_snd /-
 @[simp]
 theorem Relation.base_snd {f : Y ⟶ X} {S : J.cover X} (I : (S.pullback f).Relation) :
     I.snd.base = I.base.snd :=
   rfl
 #align category_theory.grothendieck_topology.cover.relation.base_snd CategoryTheory.GrothendieckTopology.Cover.Relation.base_snd
--/
 
 #print CategoryTheory.GrothendieckTopology.Cover.coe_pullback /-
 @[simp]

@@ -313,7 +313,7 @@ theorem IsAffineOpen.image_of_isOpenImmersion {X Y : Scheme} {U : Opens X.carrie
 #print AlgebraicGeometry.Scheme.Hom.isAffineOpen_iff_of_isOpenImmersion /-
 theorem AlgebraicGeometry.Scheme.Hom.isAffineOpen_iff_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y)
     [H : IsOpenImmersionCat f] (U : Opens X.carrier) :
-    IsAffineOpen (H.openFunctor.obj U) ↔ IsAffineOpen U :=
+    IsAffineOpen (H.opensFunctor.obj U) ↔ IsAffineOpen U :=
   by
   refine' ⟨fun hU => @is_affine_of_iso _ _ hU, fun hU => hU.image_of_isOpenImmersion f⟩
   refine' (is_open_immersion.iso_of_range_eq (X.of_restrict _ ≫ f) (Y.of_restrict _) _).Hom
@@ -437,9 +437,9 @@ theorem IsAffineOpen.basicOpen {X : Scheme} {U : Opens X.carrier} (hU : IsAffine
 #align algebraic_geometry.is_affine_open.basic_open_is_affine AlgebraicGeometry.IsAffineOpen.basicOpen
 -/
 
-#print AlgebraicGeometry.IsAffineOpen.ιOpens_preimage /-
-theorem IsAffineOpen.ιOpens_preimage {X : Scheme} (r : X.Presheaf.obj (op ⊤)) {U : Opens X.carrier}
-    (hU : IsAffineOpen U) :
+#print AlgebraicGeometry.IsAffineOpen.ιOpens_basicOpen_preimage /-
+theorem IsAffineOpen.ιOpens_basicOpen_preimage {X : Scheme} (r : X.Presheaf.obj (op ⊤))
+    {U : Opens X.carrier} (hU : IsAffineOpen U) :
     IsAffineOpen ((Opens.map (X.of_restrict (X.basicOpen r).OpenEmbedding).1.base).obj U) :=
   by
   apply
@@ -449,7 +449,7 @@ theorem IsAffineOpen.ιOpens_preimage {X : Scheme} (r : X.Presheaf.obj (op ⊤))
   erw [opens.functor_obj_map_obj, opens.open_embedding_obj_top, inf_comm, ←
     Scheme.basic_open_res _ _ (hom_of_le le_top).op]
   exact hU.basic_open_is_affine _
-#align algebraic_geometry.is_affine_open.map_restrict_basic_open AlgebraicGeometry.IsAffineOpen.ιOpens_preimage
+#align algebraic_geometry.is_affine_open.map_restrict_basic_open AlgebraicGeometry.IsAffineOpen.ιOpens_basicOpen_preimage
 -/
 
 #print AlgebraicGeometry.Scheme.map_PrimeSpectrum_basicOpen_of_affine /-

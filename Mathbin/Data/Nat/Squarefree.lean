@@ -218,9 +218,11 @@ theorem minSqFacAux_has_prop :
       refine' fun dk => prime_def_min_fac.2 ⟨k2, le_antisymm (min_fac_le k0) _⟩
       exact ih _ (min_fac_prime (ne_of_gt k2)) (dvd_trans (min_fac_dvd _) dk)
     split_ifs with dk dkk
-    · exact ⟨pk dk, (Nat.dvd_div_iff dk).1 dkk, fun p pp d => ih p pp (dvd_trans ⟨_, rfl⟩ d)⟩
+    ·
+      exact
+        ⟨pk dk, (Nat.dvd_div_iff_mul_dvd dk).1 dkk, fun p pp d => ih p pp (dvd_trans ⟨_, rfl⟩ d)⟩
     · specialize IH (n / k) (div_dvd_of_dvd dk) dkk
-      exact min_sq_fac_prop_div _ (pk dk) dk (mt (Nat.dvd_div_iff dk).2 dkk) IH
+      exact min_sq_fac_prop_div _ (pk dk) dk (mt (Nat.dvd_div_iff_mul_dvd dk).2 dkk) IH
     · exact IH n (dvd_refl _) dk
 termination_by x => WellFounded.wrap (measure_wf fun ⟨n, k⟩ => Nat.sqrt n + 2 - k) x
 #align nat.min_sq_fac_aux_has_prop Nat.minSqFacAux_has_prop
@@ -492,7 +494,7 @@ theorem squarefreeHelper_3 (n n' k k' c : ℕ) (e : k + 1 = k') (hn' : bit1 n' *
     refine' Nat.prime_def_minFac.2 ⟨k2, le_antisymm (Nat.minFac_le k0') _⟩
     exact ih _ (Nat.minFac_prime (ne_of_gt k2)) (dvd_trans (Nat.minFac_dvd _) dk)
   have dkk' : ¬bit1 k ∣ bit1 n' := by rw [Nat.dvd_iff_mod_eq_zero, hc]; exact ne_of_gt c0
-  have dkk : ¬bit1 k * bit1 k ∣ bit1 n := by rwa [← Nat.dvd_div_iff dk, this]
+  have dkk : ¬bit1 k * bit1 k ∣ bit1 n := by rwa [← Nat.dvd_div_iff_mul_dvd dk, this]
   refine' @Nat.minSqFacProp_div _ _ pk dk dkk none _
   rw [this]; refine' H (Nat.succ_pos _) fun p pp dp => _
   refine' (squarefree_helper_0 k0 pp (ih p pp <| dvd_trans dp dn')).resolve_right fun e => _
