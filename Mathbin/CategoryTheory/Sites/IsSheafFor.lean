@@ -604,11 +604,11 @@ theorem isSheafFor_iff_yonedaSheafCondition {P : Cᵒᵖ ⥤ Type v₁} :
   by
   rw [is_sheaf_for, yoneda_sheaf_condition]
   simp_rw [extension_iff_amalgamation]
-  rw [Equiv.forall_congr_left' nat_trans_equiv_compatible_family]
+  rw [Equiv.forall_congr_left nat_trans_equiv_compatible_family]
   rw [Subtype.forall]
   apply forall₂_congr
   intro x hx
-  rw [Equiv.exists_unique_congr_left _]
+  rw [Equiv.existsUnique_congr_right _]
   simp
 #align category_theory.presieve.is_sheaf_for_iff_yoneda_sheaf_condition CategoryTheory.Presieve.isSheafFor_iff_yonedaSheafCondition
 -/
@@ -1036,7 +1036,7 @@ theorem equalizer_sheaf_condition :
     Presieve.IsSheafFor P S ↔ Nonempty (IsLimit (Fork.ofι _ (w P S))) :=
   by
   rw [types.type_equalizer_iff_unique, ←
-    Equiv.forall_congr_left (first_obj_eq_family P S).toEquiv.symm]
+    Equiv.forall_congr_right (first_obj_eq_family P S).toEquiv.symm]
   simp_rw [← compatible_iff]
   simp only [inv_hom_id_apply, iso.to_equiv_symm_fun]
   apply forall₂_congr
@@ -1133,7 +1133,7 @@ See <https://stacks.math.columbia.edu/tag/00VM>.
 theorem sheaf_condition : R.IsSheafFor P ↔ Nonempty (IsLimit (Fork.ofι _ (w P R))) :=
   by
   rw [types.type_equalizer_iff_unique]
-  erw [← Equiv.forall_congr_left (first_obj_eq_family P R).toEquiv.symm]
+  erw [← Equiv.forall_congr_right (first_obj_eq_family P R).toEquiv.symm]
   simp_rw [← compatible_iff, ← iso.to_equiv_fun, Equiv.apply_symm_apply]
   apply forall₂_congr
   intro x hx

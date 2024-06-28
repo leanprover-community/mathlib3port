@@ -358,7 +358,7 @@ theorem lcm_eq_zero_iff {x y : R} : lcm x y = 0 ↔ x = 0 ∨ y = 0 :=
   by
   constructor
   · intro hxy; rw [lcm, mul_div_assoc _ (gcd_dvd_right _ _), mul_eq_zero] at hxy
-    apply or_of_or_of_imp_right hxy; intro hy
+    apply Or.imp_right hxy; intro hy
     by_cases hgxy : gcd x y = 0
     · rw [EuclideanDomain.gcd_eq_zero_iff] at hgxy; exact hgxy.2
     · rcases gcd_dvd x y with ⟨⟨r, hr⟩, ⟨s, hs⟩⟩

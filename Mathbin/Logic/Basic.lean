@@ -1048,22 +1048,22 @@ theorem Or.rotate : a ∨ b ∨ c → b ∨ c ∨ a :=
 #align or.rotate Or.rotate
 -/
 
-#print or_of_or_of_imp_of_imp /-
-theorem or_of_or_of_imp_of_imp (h₁ : a ∨ b) (h₂ : a → c) (h₃ : b → d) : c ∨ d :=
+#print Or.imp /-
+theorem Or.imp (h₁ : a ∨ b) (h₂ : a → c) (h₃ : b → d) : c ∨ d :=
   Or.imp h₂ h₃ h₁
-#align or_of_or_of_imp_of_imp or_of_or_of_imp_of_imp
+#align or_of_or_of_imp_of_imp Or.imp
 -/
 
-#print or_of_or_of_imp_left /-
-theorem or_of_or_of_imp_left (h₁ : a ∨ c) (h : a → b) : b ∨ c :=
+#print Or.imp_left /-
+theorem Or.imp_left (h₁ : a ∨ c) (h : a → b) : b ∨ c :=
   Or.imp_left h h₁
-#align or_of_or_of_imp_left or_of_or_of_imp_left
+#align or_of_or_of_imp_left Or.imp_left
 -/
 
-#print or_of_or_of_imp_right /-
-theorem or_of_or_of_imp_right (h₁ : c ∨ a) (h : a → b) : c ∨ b :=
+#print Or.imp_right /-
+theorem Or.imp_right (h₁ : c ∨ a) (h : a → b) : c ∨ b :=
   Or.imp_right h h₁
-#align or_of_or_of_imp_right or_of_or_of_imp_right
+#align or_of_or_of_imp_right Or.imp_right
 -/
 
 #print Or.elim3 /-

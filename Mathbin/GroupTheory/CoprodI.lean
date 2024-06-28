@@ -996,7 +996,7 @@ theorem Monoid.CoprodI.lift_injective_of_ping_pong : Function.Injective (Monoid.
   by
   classical
   apply (injective_iff_map_eq_one (lift f)).mpr
-  rw [(Monoid.CoprodI.Word.equiv : _ ≃ word H).forall_congr_left']
+  rw [(Monoid.CoprodI.Word.equiv : _ ≃ word H).forall_congr_left]
   · intro w Heq
     dsimp [word.equiv] at *
     · rw [empty_of_word_prod_eq_one f hcard X hXnonempty hXdisj hpp Heq]

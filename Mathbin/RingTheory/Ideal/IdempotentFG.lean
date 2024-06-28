@@ -45,7 +45,7 @@ theorem isIdempotentElem_iff_eq_bot_or_top {R : Type _} [CommRing R] [IsDomain R
   · intro H
     obtain ⟨e, he, rfl⟩ := (I.is_idempotent_elem_iff_of_fg h).mp H
     simp only [Ideal.submodule_span_eq, Ideal.span_singleton_eq_bot]
-    apply or_of_or_of_imp_of_imp (is_idempotent_elem.iff_eq_zero_or_one.mp he) id
+    apply Or.imp (is_idempotent_elem.iff_eq_zero_or_one.mp he) id
     rintro rfl
     simp
   · rintro (rfl | rfl) <;> simp [IsIdempotentElem]

@@ -729,7 +729,7 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) (s₁ s₂) (p
   rw [h, h'] at h₁
   obtain rfl : a₀ = a₁ := bisim.head h₁
   apply ps_ih _ _ _ h₁
-  rw [← h, ← h']; apply or_of_or_of_imp_of_imp hh is_path_cons' is_path_cons'
+  rw [← h, ← h']; apply Or.imp hh is_path_cons' is_path_cons'
 #align pfunctor.M.nth_of_bisim PFunctor.M.nth_of_bisim
 -/
 

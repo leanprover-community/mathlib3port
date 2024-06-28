@@ -1203,8 +1203,8 @@ def sigmaAssoc {α : Type _} {β : α → Type _} (γ : ∀ a : α, β a → Typ
 
 end
 
-#print Equiv.exists_unique_congr /-
-protected theorem exists_unique_congr {p : α → Prop} {q : β → Prop} (f : α ≃ β)
+#print Equiv.existsUnique_congr /-
+protected theorem existsUnique_congr {p : α → Prop} {q : β → Prop} (f : α ≃ β)
     (h : ∀ {x}, p x ↔ q (f x)) : (∃! x, p x) ↔ ∃! y, q y :=
   by
   constructor
@@ -1212,21 +1212,21 @@ protected theorem exists_unique_congr {p : α → Prop} {q : β → Prop} (f : �
     exact ⟨f a, h.1 ha₁, fun b hb => f.symm_apply_eq.1 (ha₂ (f.symm b) (h.2 (by simpa using hb)))⟩
   · rintro ⟨b, hb₁, hb₂⟩
     exact ⟨f.symm b, h.2 (by simpa using hb₁), fun y hy => (eq_symm_apply f).2 (hb₂ _ (h.1 hy))⟩
-#align equiv.exists_unique_congr Equiv.exists_unique_congr
+#align equiv.exists_unique_congr Equiv.existsUnique_congr
 -/
 
-#print Equiv.exists_unique_congr_left' /-
-protected theorem exists_unique_congr_left' {p : α → Prop} (f : α ≃ β) :
+#print Equiv.existsUnique_congr_left /-
+protected theorem existsUnique_congr_left {p : α → Prop} (f : α ≃ β) :
     (∃! x, p x) ↔ ∃! y, p (f.symm y) :=
-  Equiv.exists_unique_congr f fun x => by simp
-#align equiv.exists_unique_congr_left' Equiv.exists_unique_congr_left'
+  Equiv.existsUnique_congr f fun x => by simp
+#align equiv.exists_unique_congr_left' Equiv.existsUnique_congr_left
 -/
 
-#print Equiv.exists_unique_congr_left /-
-protected theorem exists_unique_congr_left {p : β → Prop} (f : α ≃ β) :
+#print Equiv.existsUnique_congr_right /-
+protected theorem existsUnique_congr_right {p : β → Prop} (f : α ≃ β) :
     (∃! x, p (f x)) ↔ ∃! y, p y :=
-  (Equiv.exists_unique_congr_left' f.symm).symm
-#align equiv.exists_unique_congr_left Equiv.exists_unique_congr_left
+  (Equiv.existsUnique_congr_left f.symm).symm
+#align equiv.exists_unique_congr_left Equiv.existsUnique_congr_right
 -/
 
 #print Equiv.forall_congr /-
@@ -1298,16 +1298,16 @@ protected theorem forall₃_congr' {p : α₁ → β₁ → γ₁ → Prop} {q :
 #align equiv.forall₃_congr' Equiv.forall₃_congr'
 -/
 
-#print Equiv.forall_congr_left' /-
-protected theorem forall_congr_left' {p : α → Prop} (f : α ≃ β) : (∀ x, p x) ↔ ∀ y, p (f.symm y) :=
+#print Equiv.forall_congr_left /-
+protected theorem forall_congr_left {p : α → Prop} (f : α ≃ β) : (∀ x, p x) ↔ ∀ y, p (f.symm y) :=
   Equiv.forall_congr f fun x => by simp
-#align equiv.forall_congr_left' Equiv.forall_congr_left'
+#align equiv.forall_congr_left' Equiv.forall_congr_left
 -/
 
-#print Equiv.forall_congr_left /-
-protected theorem forall_congr_left {p : β → Prop} (f : α ≃ β) : (∀ x, p (f x)) ↔ ∀ y, p y :=
-  (Equiv.forall_congr_left' f.symm).symm
-#align equiv.forall_congr_left Equiv.forall_congr_left
+#print Equiv.forall_congr_right /-
+protected theorem forall_congr_right {p : β → Prop} (f : α ≃ β) : (∀ x, p (f x)) ↔ ∀ y, p y :=
+  (Equiv.forall_congr_left f.symm).symm
+#align equiv.forall_congr_left Equiv.forall_congr_right
 -/
 
 #print Equiv.exists_congr_left /-

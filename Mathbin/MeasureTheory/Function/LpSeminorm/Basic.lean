@@ -1964,8 +1964,8 @@ theorem snorm_const_smul (c : 𝕜) (f : α → F) : snorm (c • f) p μ = (‖
 
 end NormedSpace
 
-#print MeasureTheory.snorm_indicator_ge_of_bdd_below /-
-theorem snorm_indicator_ge_of_bdd_below (hp : p ≠ 0) (hp' : p ≠ ∞) {f : α → F} (C : ℝ≥0) {s : Set α}
+#print MeasureTheory.le_snorm_of_bddBelow /-
+theorem le_snorm_of_bddBelow (hp : p ≠ 0) (hp' : p ≠ ∞) {f : α → F} (C : ℝ≥0) {s : Set α}
     (hs : MeasurableSet s) (hf : ∀ᵐ x ∂μ, x ∈ s → C ≤ ‖s.indicator f x‖₊) :
     C • μ s ^ (1 / p.toReal) ≤ snorm (s.indicator f) p μ :=
   by
@@ -1981,7 +1981,7 @@ theorem snorm_indicator_ge_of_bdd_below (hp : p ≠ 0) (hp' : p ≠ ∞) {f : α
   · simp only [Set.indicator_of_mem hxs] at hx ⊢
     exact ENNReal.rpow_le_rpow (ENNReal.coe_le_coe.2 (hx hxs)) ENNReal.toReal_nonneg
   · simp [Set.indicator_of_not_mem hxs]
-#align measure_theory.snorm_indicator_ge_of_bdd_below MeasureTheory.snorm_indicator_ge_of_bdd_below
+#align measure_theory.snorm_indicator_ge_of_bdd_below MeasureTheory.le_snorm_of_bddBelow
 -/
 
 section RCLike

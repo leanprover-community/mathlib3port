@@ -202,10 +202,14 @@ variable [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄] [RingHomCompTriple σ₁
 
 variable (f : M →ₛₗ[σ₁₂] M₂) (g : M₂ →ₛₗ[σ₂₃] M₃)
 
+/- warning: linear_map.map_sum clashes with linear_equiv.map_sum -> map_sumₓ
+Case conversion may be inaccurate. Consider using '#align linear_map.map_sum map_sumₓₓ'. -/
+#print map_sumₓ /-
 @[simp]
 theorem map_sum {ι : Type _} {t : Finset ι} {g : ι → M} : f (∑ i in t, g i) = ∑ i in t, f (g i) :=
   f.toAddMonoidHom.map_sum _ _
 #align linear_map.map_sum map_sumₓ
+-/
 
 #print LinearMap.comp_assoc /-
 theorem comp_assoc (h : M₃ →ₛₗ[σ₃₄] M₄) :
@@ -2305,14 +2309,10 @@ variable {re₁₂ : RingHomInvPair σ₁₂ σ₂₁} {re₂₁ : RingHomInvPai
 
 variable (e e' : M ≃ₛₗ[σ₁₂] M₂)
 
-/- warning: linear_equiv.map_sum clashes with linear_map.map_sum -> map_sumₓ
-Case conversion may be inaccurate. Consider using '#align linear_equiv.map_sum map_sumₓₓ'. -/
-#print map_sumₓ /-
 @[simp]
 theorem map_sum {s : Finset ι} (u : ι → M) : e (∑ i in s, u i) = ∑ i in s, e (u i) :=
   e.toLinearMap.map_sum
 #align linear_equiv.map_sum map_sumₓ
--/
 
 #print LinearEquiv.map_eq_comap /-
 theorem map_eq_comap {p : Submodule R M} :

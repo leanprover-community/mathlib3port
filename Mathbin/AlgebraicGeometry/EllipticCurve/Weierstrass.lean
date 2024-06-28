@@ -491,24 +491,25 @@ theorem WeierstrassCurve.Affine.irreducible_polynomial [IsDomain R] : Irreducibl
 -/
 
 /- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3243647861.eval_simp -/
-#print WeierstrassCurve.Affine.eval_polynomial /-
+#print WeierstrassCurve.Affine.evalEval_polynomial /-
 @[simp]
-theorem WeierstrassCurve.Affine.eval_polynomial (x y : R) :
+theorem WeierstrassCurve.Affine.evalEval_polynomial (x y : R) :
     (W.Polynomial.eval <| C y).eval x =
       y ^ 2 + W.a₁ * x * y + W.a₃ * y - (x ^ 3 + W.a₂ * x ^ 2 + W.a₄ * x + W.a₆) :=
   by simp only [WeierstrassCurve.Affine.polynomial];
   run_tac
     eval_simp;
   rw [add_mul, ← add_assoc]
-#align weierstrass_curve.eval_polynomial WeierstrassCurve.Affine.eval_polynomial
+#align weierstrass_curve.eval_polynomial WeierstrassCurve.Affine.evalEval_polynomial
 -/
 
-#print WeierstrassCurve.Affine.eval_polynomial_zero /-
+#print WeierstrassCurve.Affine.evalEval_polynomial_zero /-
 @[simp]
-theorem WeierstrassCurve.Affine.eval_polynomial_zero : (W.Polynomial.eval 0).eval 0 = -W.a₆ := by
+theorem WeierstrassCurve.Affine.evalEval_polynomial_zero : (W.Polynomial.eval 0).eval 0 = -W.a₆ :=
+  by
   simp only [← C_0, eval_polynomial, zero_add, zero_sub, MulZeroClass.mul_zero,
     zero_pow (Nat.zero_lt_succ _)]
-#align weierstrass_curve.eval_polynomial_zero WeierstrassCurve.Affine.eval_polynomial_zero
+#align weierstrass_curve.eval_polynomial_zero WeierstrassCurve.Affine.evalEval_polynomial_zero
 -/
 
 #print WeierstrassCurve.Affine.Equation /-
@@ -594,22 +595,23 @@ noncomputable def WeierstrassCurve.Affine.polynomialX : R[X][Y] :=
 -/
 
 /- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3243647861.eval_simp -/
-#print WeierstrassCurve.Affine.eval_polynomialX /-
+#print WeierstrassCurve.Affine.evalEval_polynomialX /-
 @[simp]
-theorem WeierstrassCurve.Affine.eval_polynomialX (x y : R) :
+theorem WeierstrassCurve.Affine.evalEval_polynomialX (x y : R) :
     (W.polynomialX.eval <| C y).eval x = W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄) := by
   simp only [polynomial_X];
   run_tac
     eval_simp
-#align weierstrass_curve.eval_polynomial_X WeierstrassCurve.Affine.eval_polynomialX
+#align weierstrass_curve.eval_polynomial_X WeierstrassCurve.Affine.evalEval_polynomialX
 -/
 
-#print WeierstrassCurve.Affine.eval_polynomialX_zero /-
+#print WeierstrassCurve.Affine.evalEval_polynomialX_zero /-
 @[simp]
-theorem WeierstrassCurve.Affine.eval_polynomialX_zero : (W.polynomialX.eval 0).eval 0 = -W.a₄ := by
+theorem WeierstrassCurve.Affine.evalEval_polynomialX_zero : (W.polynomialX.eval 0).eval 0 = -W.a₄ :=
+  by
   simp only [← C_0, eval_polynomial_X, zero_add, zero_sub, MulZeroClass.mul_zero,
     zero_pow zero_lt_two]
-#align weierstrass_curve.eval_polynomial_X_zero WeierstrassCurve.Affine.eval_polynomialX_zero
+#align weierstrass_curve.eval_polynomial_X_zero WeierstrassCurve.Affine.evalEval_polynomialX_zero
 -/
 
 #print WeierstrassCurve.Affine.polynomialY /-
@@ -622,21 +624,21 @@ noncomputable def WeierstrassCurve.Affine.polynomialY : R[X][Y] :=
 -/
 
 /- ././././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3243647861.eval_simp -/
-#print WeierstrassCurve.Affine.eval_polynomialY /-
+#print WeierstrassCurve.Affine.evalEval_polynomialY /-
 @[simp]
-theorem WeierstrassCurve.Affine.eval_polynomialY (x y : R) :
+theorem WeierstrassCurve.Affine.evalEval_polynomialY (x y : R) :
     (W.polynomialY.eval <| C y).eval x = 2 * y + W.a₁ * x + W.a₃ := by simp only [polynomial_Y];
   run_tac
     eval_simp;
   rw [← add_assoc]
-#align weierstrass_curve.eval_polynomial_Y WeierstrassCurve.Affine.eval_polynomialY
+#align weierstrass_curve.eval_polynomial_Y WeierstrassCurve.Affine.evalEval_polynomialY
 -/
 
-#print WeierstrassCurve.Affine.eval_polynomialY_zero /-
+#print WeierstrassCurve.Affine.evalEval_polynomialY_zero /-
 @[simp]
-theorem WeierstrassCurve.Affine.eval_polynomialY_zero : (W.polynomialY.eval 0).eval 0 = W.a₃ := by
-  simp only [← C_0, eval_polynomial_Y, zero_add, MulZeroClass.mul_zero]
-#align weierstrass_curve.eval_polynomial_Y_zero WeierstrassCurve.Affine.eval_polynomialY_zero
+theorem WeierstrassCurve.Affine.evalEval_polynomialY_zero : (W.polynomialY.eval 0).eval 0 = W.a₃ :=
+  by simp only [← C_0, eval_polynomial_Y, zero_add, MulZeroClass.mul_zero]
+#align weierstrass_curve.eval_polynomial_Y_zero WeierstrassCurve.Affine.evalEval_polynomialY_zero
 -/
 
 #print WeierstrassCurve.Affine.Nonsingular /-
