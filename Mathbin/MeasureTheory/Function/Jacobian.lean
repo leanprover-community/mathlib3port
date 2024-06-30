@@ -798,7 +798,7 @@ theorem aemeasurable_fderivWithin (hs : MeasurableSet s)
   -- define a measurable function `g` which coincides with `A n` on `t n`.
   obtain ⟨g, g_meas, hg⟩ :
     ∃ g : E → E →L[ℝ] E, Measurable g ∧ ∀ (n : ℕ) (x : E), x ∈ t n → g x = A n :=
-    exists_measurable_piecewise_nat t t_meas t_disj (fun n x => A n) fun n => measurable_const
+    exists_measurable_piecewise t t_meas t_disj (fun n x => A n) fun n => measurable_const
   refine' ⟨g, g_meas.ae_measurable, _⟩
   -- reduce to checking that `f'` and `g` are close on almost all of `s ∩ t n`, for all `n`.
   suffices H : ∀ᵐ x : E ∂Sum fun n => μ.restrict (s ∩ t n), dist (g x) (f' x) ≤ ε

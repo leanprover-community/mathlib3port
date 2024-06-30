@@ -180,7 +180,9 @@ instance : ContinuousSub ℝ≥0 :=
 
 instance : HasContinuousInv₀ ℝ≥0 :=
   ⟨fun x hx =>
-    tendsto_coe.1 <| (Real.tendsto_inv <| NNReal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
+    tendsto_coe.1 <|
+      (HasContinuousInv₀.continuousAt_inv₀ <| NNReal.coe_ne_zero.2 hx).comp
+        continuous_coe.ContinuousAt⟩
 
 instance [TopologicalSpace α] [MulAction ℝ α] [ContinuousSMul ℝ α] : ContinuousSMul ℝ≥0 α
     where continuous_smul := (continuous_induced_dom.comp continuous_fst).smul continuous_snd

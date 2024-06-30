@@ -119,29 +119,33 @@ theorem Real.uniformContinuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
 #align real.uniform_continuous_abs Real.uniformContinuous_abs
 -/
 
-#print Real.tendsto_inv /-
-theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
+#print HasContinuousInv₀.continuousAt_inv₀ /-
+theorem HasContinuousInv₀.continuousAt_inv₀ {r : ℝ} (r0 : r ≠ 0) :
+    Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
   rw [← abs_pos] at r0 <;>
     exact
       tendsto_of_uniformContinuous_subtype
         (Real.uniformContinuous_inv {x | |r| / 2 < |x|} (half_pos r0) fun x h => le_of_lt h)
         (IsOpen.mem_nhds ((isOpen_lt' (|r| / 2)).Preimage continuous_abs) (half_lt_self r0))
-#align real.tendsto_inv Real.tendsto_inv
+#align real.tendsto_inv HasContinuousInv₀.continuousAt_inv₀
 -/
 
 #print Real.continuous_inv /-
 theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val⁻¹ :=
   continuous_iff_continuousAt.mpr fun ⟨r, hr⟩ =>
-    Tendsto.comp (Real.tendsto_inv hr) (continuous_iff_continuousAt.mp continuous_subtype_val _)
+    Tendsto.comp (HasContinuousInv₀.continuousAt_inv₀ hr)
+      (continuous_iff_continuousAt.mp continuous_subtype_val _)
 #align real.continuous_inv Real.continuous_inv
 -/
 
-#print Real.Continuous.inv /-
-theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f a ≠ 0)
-    (hf : Continuous f) : Continuous fun a => (f a)⁻¹ :=
+/- warning: real.continuous.inv clashes with continuous.inv₀ -> Continuous.inv₀
+Case conversion may be inaccurate. Consider using '#align real.continuous.inv Continuous.inv₀ₓ'. -/
+#print Continuous.inv₀ /-
+theorem Continuous.inv₀ [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f a ≠ 0) (hf : Continuous f) :
+    Continuous fun a => (f a)⁻¹ :=
   show Continuous ((Inv.inv ∘ @Subtype.val ℝ fun r => r ≠ 0) ∘ fun a => ⟨f a, h a⟩) from
     Real.continuous_inv.comp (hf.subtype_mk _)
-#align real.continuous.inv Real.Continuous.inv
+#align real.continuous.inv Continuous.inv₀
 -/
 
 #print Real.uniformContinuous_const_mul /-
@@ -162,9 +166,11 @@ theorem Real.uniformContinuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
 #align real.uniform_continuous_mul Real.uniformContinuous_mul
 -/
 
+/- warning: real.continuous_mul clashes with continuous_mul -> continuous_mul
+Case conversion may be inaccurate. Consider using '#align real.continuous_mul continuous_mulₓ'. -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Real.continuous_mul /-
-protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
+#print continuous_mul /-
+protected theorem continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
   continuous_iff_continuousAt.2 fun ⟨a₁, a₂⟩ =>
     tendsto_of_uniformContinuous_subtype
       (Real.uniformContinuous_mul ({x | |x| < |a₁| + 1} ×ˢ {x | |x| < |a₂| + 1}) fun x => id)
@@ -172,11 +178,11 @@ protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p
         (((isOpen_gt' (|a₁| + 1)).Preimage continuous_abs).Prod
           ((isOpen_gt' (|a₂| + 1)).Preimage continuous_abs))
         ⟨lt_add_one |a₁|, lt_add_one |a₂|⟩)
-#align real.continuous_mul Real.continuous_mul
+#align real.continuous_mul continuous_mul
 -/
 
 instance : TopologicalRing ℝ :=
-  { Real.topologicalAddGroup with continuous_hMul := Real.continuous_mul }
+  { Real.topologicalAddGroup with continuous_hMul := continuous_mul }
 
 instance : CompleteSpace ℝ := by
   apply complete_of_cauchy_seq_tendsto
@@ -246,8 +252,10 @@ section Periodic
 
 namespace Function
 
-#print Function.Periodic.compact_of_continuous' /-
-theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
+/- warning: function.periodic.compact_of_continuous' clashes with function.periodic.compact_of_continuous -> Function.Periodic.compact_of_continuous
+Case conversion may be inaccurate. Consider using '#align function.periodic.compact_of_continuous' Function.Periodic.compact_of_continuousₓ'. -/
+#print Function.Periodic.compact_of_continuous /-
+theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
     (hc : 0 < c) (hf : Continuous f) : IsCompact (range f) :=
   by
   convert is_compact_Icc.image hf
@@ -256,7 +264,7 @@ theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {
   rintro ⟨y, h1⟩
   obtain ⟨z, hz, h2⟩ := hp.exists_mem_Ico₀ hc y
   exact ⟨z, mem_Icc_of_Ico hz, h2.symm.trans h1⟩
-#align function.periodic.compact_of_continuous' Function.Periodic.compact_of_continuous'
+#align function.periodic.compact_of_continuous' Function.Periodic.compact_of_continuous
 -/
 
 #print Function.Periodic.compact_of_continuous /-

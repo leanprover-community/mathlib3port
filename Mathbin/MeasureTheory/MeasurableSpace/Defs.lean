@@ -124,11 +124,13 @@ theorem MeasurableSet.congr {s t : Set α} (hs : MeasurableSet s) (h : s = t) : 
 #align measurable_set.congr MeasurableSet.congr
 -/
 
-#print MeasurableSet.biUnion_decode₂ /-
-theorem MeasurableSet.biUnion_decode₂ [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b))
-    (n : ℕ) : MeasurableSet (⋃ b ∈ decode₂ β n, f b) :=
+/- warning: measurable_set.bUnion_decode₂ clashes with measurable_set.Union -> MeasurableSet.iUnion
+Case conversion may be inaccurate. Consider using '#align measurable_set.bUnion_decode₂ MeasurableSet.iUnionₓ'. -/
+#print MeasurableSet.iUnion /-
+theorem MeasurableSet.iUnion [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b)) (n : ℕ) :
+    MeasurableSet (⋃ b ∈ decode₂ β n, f b) :=
   Encodable.iUnion_decode₂_cases MeasurableSet.empty h
-#align measurable_set.bUnion_decode₂ MeasurableSet.biUnion_decode₂
+#align measurable_set.bUnion_decode₂ MeasurableSet.iUnion
 -/
 
 #print MeasurableSet.iUnion /-
@@ -136,7 +138,7 @@ theorem MeasurableSet.iUnion [Countable ι] ⦃f : ι → Set α⦄ (h : ∀ b, 
     MeasurableSet (⋃ b, f b) := by
   cases nonempty_encodable (PLift ι)
   rw [← Union_plift_down, ← Encodable.iUnion_decode₂]
-  exact ‹MeasurableSpace α›.measurable_set_iUnion _ (MeasurableSet.biUnion_decode₂ fun _ => h _)
+  exact ‹MeasurableSpace α›.measurable_set_iUnion _ (MeasurableSet.iUnion fun _ => h _)
 #align measurable_set.Union MeasurableSet.iUnion
 -/
 

@@ -171,11 +171,13 @@ protected theorem iUnion {ι : Sort _} [Countable ι] {s : ι → Set α}
 #align measure_theory.null_measurable_set.Union MeasureTheory.NullMeasurableSet.iUnion
 -/
 
-#print MeasureTheory.NullMeasurableSet.biUnion_decode₂ /-
-protected theorem biUnion_decode₂ [Encodable ι] ⦃f : ι → Set α⦄ (h : ∀ i, NullMeasurableSet (f i) μ)
+/- warning: measure_theory.null_measurable_set.bUnion_decode₂ clashes with measure_theory.null_measurable_set.Union -> MeasureTheory.NullMeasurableSet.iUnion
+Case conversion may be inaccurate. Consider using '#align measure_theory.null_measurable_set.bUnion_decode₂ MeasureTheory.NullMeasurableSet.iUnionₓ'. -/
+#print MeasureTheory.NullMeasurableSet.iUnion /-
+protected theorem iUnion [Encodable ι] ⦃f : ι → Set α⦄ (h : ∀ i, NullMeasurableSet (f i) μ)
     (n : ℕ) : NullMeasurableSet (⋃ b ∈ Encodable.decode₂ ι n, f b) μ :=
-  MeasurableSet.biUnion_decode₂ h n
-#align measure_theory.null_measurable_set.bUnion_decode₂ MeasureTheory.NullMeasurableSet.biUnion_decode₂
+  MeasurableSet.iUnion h n
+#align measure_theory.null_measurable_set.bUnion_decode₂ MeasureTheory.NullMeasurableSet.iUnion
 -/
 
 #print MeasureTheory.NullMeasurableSet.biUnion /-

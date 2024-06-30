@@ -2901,11 +2901,13 @@ namespace Classical
 
 attribute [local instance] prop_decidable
 
-#print not_ball /-
-theorem not_ball {α : Sort _} {p : α → Prop} {P : ∀ x : α, p x → Prop} :
+/- warning: classical.not_ball clashes with not_ball -> not_forall₂
+Case conversion may be inaccurate. Consider using '#align classical.not_ball not_forall₂ₓ'. -/
+#print not_forall₂ /-
+theorem not_forall₂ {α : Sort _} {p : α → Prop} {P : ∀ x : α, p x → Prop} :
     (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
   not_forall₂
-#align classical.not_ball not_ball
+#align classical.not_ball not_forall₂
 -/
 
 end Classical

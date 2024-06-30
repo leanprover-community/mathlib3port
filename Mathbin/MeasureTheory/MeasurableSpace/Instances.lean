@@ -984,10 +984,10 @@ theorem Measurable.find {m : MeasurableSpace α} {f : ℕ → α → β} {p : �
 #align measurable.find Measurable.find
 -/
 
-#print exists_measurable_piecewise_nat /-
+#print exists_measurable_piecewise /-
 /-- Given countably many disjoint measurable sets `t n` and countably many measurable
 functions `g n`, one can construct a measurable function that coincides with `g n` on `t n`. -/
-theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Set β)
+theorem exists_measurable_piecewise {m : MeasurableSpace α} (t : ℕ → Set β)
     (t_meas : ∀ n, MeasurableSet (t n)) (t_disj : Pairwise (Disjoint on t)) (g : ℕ → β → α)
     (hg : ∀ n, Measurable (g n)) : ∃ f : β → α, Measurable f ∧ ∀ n x, x ∈ t n → f x = g n x := by
   classical
@@ -1012,7 +1012,7 @@ theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Se
   congr
   by_contra h
   exact (t_disj (Ne.symm h)).le_bot ⟨hx, this⟩
-#align exists_measurable_piecewise_nat exists_measurable_piecewise_nat
+#align exists_measurable_piecewise_nat exists_measurable_piecewise
 -/
 
 end Prod

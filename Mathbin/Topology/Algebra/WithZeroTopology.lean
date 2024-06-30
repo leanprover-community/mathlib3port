@@ -224,9 +224,9 @@ protected theorem orderClosedTopology : OrderClosedTopology Γ₀ :=
 
 attribute [scoped instance] WithZeroTopology.orderClosedTopology
 
-#print WithZeroTopology.t3Space /-
+#print WithZeroTopology.t5Space /-
 /-- The topology on a linearly ordered group with zero element adjoined is T₃. -/
-theorem t3Space : T3Space Γ₀ :=
+theorem t5Space : T3Space Γ₀ :=
   {
     to_regularSpace :=
       RegularSpace.of_lift'_closure fun γ =>
@@ -239,10 +239,10 @@ theorem t3Space : T3Space Γ₀ :=
           exact
             has_basis_nhds_zero.lift'_closure_eq_self fun x hx =>
               is_closed_iff.2 <| Or.inl <| zero_lt_iff.2 hx }
-#align with_zero_topology.t3_space WithZeroTopology.t3Space
+#align with_zero_topology.t3_space WithZeroTopology.t5Space
 -/
 
-attribute [scoped instance] WithZeroTopology.t3Space
+attribute [scoped instance] WithZeroTopology.t5Space
 
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/

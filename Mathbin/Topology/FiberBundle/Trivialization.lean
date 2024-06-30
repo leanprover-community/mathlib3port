@@ -704,10 +704,10 @@ theorem coe_mem_source : ↑y ∈ e'.source ↔ b ∈ e'.baseSet :=
 #align trivialization.coe_mem_source Trivialization.coe_mem_source
 -/
 
-#print Trivialization.open_target' /-
-theorem open_target' : IsOpen e'.target := by rw [e'.target_eq];
+#print PartialHomeomorph.open_target /-
+theorem open_target : IsOpen e'.target := by rw [e'.target_eq];
   exact e'.open_base_set.prod isOpen_univ
-#align trivialization.open_target Trivialization.open_target'
+#align trivialization.open_target PartialHomeomorph.open_target
 -/
 
 #print Trivialization.coe_coe_fst /-

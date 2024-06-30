@@ -430,17 +430,19 @@ theorem continuousAt_add {p : EReal × EReal} (h : p.1 ≠ ⊤ ∨ p.2 ≠ ⊥) 
 /-! ### Negation-/
 
 
-#print EReal.negHomeo /-
+/- warning: ereal.neg_homeo clashes with homeomorph.neg -> Homeomorph.neg
+Case conversion may be inaccurate. Consider using '#align ereal.neg_homeo Homeomorph.negₓ'. -/
+#print Homeomorph.neg /-
 /-- Negation on `ereal` as a homeomorphism -/
-def negHomeo : EReal ≃ₜ EReal :=
+def neg : EReal ≃ₜ EReal :=
   negOrderIso.toHomeomorph
-#align ereal.neg_homeo EReal.negHomeo
+#align ereal.neg_homeo Homeomorph.neg
 -/
 
-#print EReal.continuous_neg /-
+#print ContinuousNeg.continuous_neg /-
 theorem continuous_neg : Continuous fun x : EReal => -x :=
-  negHomeo.Continuous
-#align ereal.continuous_neg EReal.continuous_neg
+  neg.Continuous
+#align ereal.continuous_neg ContinuousNeg.continuous_neg
 -/
 
 end EReal

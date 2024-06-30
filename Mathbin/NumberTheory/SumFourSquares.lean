@@ -50,8 +50,8 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
 #align int.sq_add_sq_of_two_mul_sq_add_sq Int.sq_add_sq_of_two_mul_sq_add_sq
 -/
 
-#print Int.exists_sq_add_sq_add_one_eq_k /-
-theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
+#print Int.exists_sq_add_sq_add_one_eq_mul /-
+theorem exists_sq_add_sq_add_one_eq_mul (p : ℕ) [hp : Fact p.Prime] :
     ∃ (a b : ℤ) (k : ℕ), a ^ 2 + b ^ 2 + 1 = k * p ∧ k < p :=
   hp.1.eq_two_or_odd.elim (fun hp2 => hp2.symm ▸ ⟨1, 0, 1, rfl, by decide⟩) fun hp1 =>
     let ⟨a, b, hab⟩ := ZMod.sq_add_sq p (-1)
@@ -83,7 +83,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
                     (mul_pos (by decide) (Nat.div_pos hp.1.two_le (by decide))))
           _ = p * p := by conv_rhs => rw [← Nat.mod_add_div p 2]; ring)
         (show 0 ≤ p from Nat.zero_le _)⟩
-#align int.exists_sq_add_sq_add_one_eq_k Int.exists_sq_add_sq_add_one_eq_k
+#align int.exists_sq_add_sq_add_one_eq_k Int.exists_sq_add_sq_add_one_eq_mul
 -/
 
 end Int
@@ -132,7 +132,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
 private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
     ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = p :=
   have hm : ∃ m < p, 0 < m ∧ ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p :=
-    let ⟨a, b, k, hk⟩ := exists_sq_add_sq_add_one_eq_k p
+    let ⟨a, b, k, hk⟩ := exists_sq_add_sq_add_one_eq_mul p
     ⟨k, hk.2,
       Nat.pos_of_ne_zero fun hk0 =>
         by

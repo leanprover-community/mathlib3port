@@ -265,7 +265,6 @@ section StoneCech
   point of γ. -/
 variable (α : Type u) [TopologicalSpace α]
 
-#print stoneCechSetoid /-
 instance stoneCechSetoid : Setoid (Ultrafilter α)
     where
   R x y :=
@@ -276,7 +275,6 @@ instance stoneCechSetoid : Setoid (Ultrafilter α)
     ⟨fun x γ tγ h₁ h₂ f hf => rfl, fun x y xy γ tγ h₁ h₂ f hf => (xy γ f hf).symm,
       fun x y z xy yz γ tγ h₁ h₂ f hf => (xy γ f hf).trans (yz γ f hf)⟩
 #align stone_cech_setoid stoneCechSetoid
--/
 
 #print StoneCech /-
 /-- The Stone-Čech compactification of a topological space. -/
@@ -348,7 +346,6 @@ theorem stoneCech_hom_ext {g₁ g₂ : StoneCech α → γ'} (h₁ : Continuous 
 
 end Extension
 
-#print convergent_eqv_pure /-
 theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x) : u ≈ pure x :=
   fun γ tγ h₁ h₂ f hf => by
   skip
@@ -356,7 +353,6 @@ theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x)
   all_goals refine' ultrafilter_extend_eq_iff.mpr (le_trans (map_mono _) (hf.tendsto _))
   · apply pure_le_nhds; · exact ux
 #align convergent_eqv_pure convergent_eqv_pure
--/
 
 #print continuous_stoneCechUnit /-
 theorem continuous_stoneCechUnit : Continuous (stoneCechUnit : α → StoneCech α) :=
@@ -369,7 +365,6 @@ theorem continuous_stoneCechUnit : Continuous (stoneCechUnit : α → StoneCech 
 #align continuous_stone_cech_unit continuous_stoneCechUnit
 -/
 
-#print StoneCech.t2Space /-
 instance StoneCech.t2Space : T2Space (StoneCech α) :=
   by
   rw [t2_iff_ultrafilter]
@@ -383,13 +378,10 @@ instance StoneCech.t2Space : T2Space (StoneCech α) :=
     ((continuous_stoneCechExtend hf).Tendsto _).mono_left gz
   exact tendsto_nhds_unique (limUnder x gx) (limUnder y gy)
 #align stone_cech.t2_space StoneCech.t2Space
--/
 
-#print StoneCech.compactSpace /-
 instance StoneCech.compactSpace : CompactSpace (StoneCech α) :=
   Quotient.compactSpace
 #align stone_cech.compact_space StoneCech.compactSpace
--/
 
 end StoneCech
 

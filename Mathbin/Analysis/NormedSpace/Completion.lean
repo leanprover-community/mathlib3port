@@ -108,8 +108,7 @@ instance [SeminormedRing A] : NormedRing (Completion A) :=
       ·
         exact
           isClosed_le (Continuous.comp continuous_norm continuous_mul)
-            (Continuous.comp Real.continuous_mul
-              (Continuous.prod_map continuous_norm continuous_norm))
+            (Continuous.comp continuous_mul (Continuous.prod_map continuous_norm continuous_norm))
       · intro x y
         simp only [← coe_mul, norm_coe]; exact norm_mul_le x y }
 

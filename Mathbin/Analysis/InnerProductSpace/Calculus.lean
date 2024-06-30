@@ -492,8 +492,8 @@ theorem Homeomorph.contDiff_unitBall : ContDiff ℝ n fun x : E => (Homeomorph.u
 #align cont_diff_homeomorph_unit_ball Homeomorph.contDiff_unitBall
 -/
 
-#print Homeomorph.contDiffOn_unitBall_symm /-
-theorem Homeomorph.contDiffOn_unitBall_symm {f : E → E}
+#print PartialHomeomorph.contDiffOn_univUnitBall_symm /-
+theorem PartialHomeomorph.contDiffOn_univUnitBall_symm {f : E → E}
     (h : ∀ (y) (hy : y ∈ ball (0 : E) 1), f y = Homeomorph.unitBall.symm ⟨y, hy⟩) :
     ContDiffOn ℝ n f <| ball 0 1 := by
   intro y hy
@@ -513,7 +513,7 @@ theorem Homeomorph.contDiffOn_unitBall_symm {f : E → E}
   refine' ContDiffAt.inv _ (real.sqrt_ne_zero'.mpr h)
   refine' ContDiffAt.comp _ (cont_diff_at_sqrt h.ne.symm) _
   exact cont_diff_at_const.sub (contDiff_norm_sq ℝ).ContDiffAt
-#align cont_diff_on_homeomorph_unit_ball_symm Homeomorph.contDiffOn_unitBall_symm
+#align cont_diff_on_homeomorph_unit_ball_symm PartialHomeomorph.contDiffOn_univUnitBall_symm
 -/
 
 end DiffeomorphUnitBall
