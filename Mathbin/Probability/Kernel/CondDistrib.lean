@@ -206,22 +206,22 @@ theorem MeasureTheory.Integrable.integral_condDistrib (hX : AEMeasurable X μ)
 
 end Integrability
 
-#print ProbabilityTheory.set_lintegral_preimage_condDistrib /-
-theorem set_lintegral_preimage_condDistrib (hX : Measurable X) (hY : AEMeasurable Y μ)
+#print ProbabilityTheory.setLIntegral_preimage_condDistrib /-
+theorem setLIntegral_preimage_condDistrib (hX : Measurable X) (hY : AEMeasurable Y μ)
     (hs : MeasurableSet s) (ht : MeasurableSet t) :
     ∫⁻ a in X ⁻¹' t, condDistrib Y X μ (X a) s ∂μ = μ (X ⁻¹' t ∩ Y ⁻¹' s) := by
   rw [lintegral_comp (kernel.measurable_coe _ hs) hX, cond_distrib, ← measure.restrict_map hX ht, ←
     measure.fst_map_prod_mk₀ hX.ae_measurable hY, set_lintegral_cond_kernel_eq_measure_prod _ ht hs,
     measure.map_apply_of_ae_measurable (hX.ae_measurable.prod_mk hY) (ht.prod hs), mk_preimage_prod]
-#align probability_theory.set_lintegral_preimage_cond_distrib ProbabilityTheory.set_lintegral_preimage_condDistrib
+#align probability_theory.set_lintegral_preimage_cond_distrib ProbabilityTheory.setLIntegral_preimage_condDistrib
 -/
 
-#print ProbabilityTheory.set_lintegral_condDistrib_of_measurableSet /-
-theorem set_lintegral_condDistrib_of_measurableSet (hX : Measurable X) (hY : AEMeasurable Y μ)
+#print ProbabilityTheory.setLIntegral_condDistrib_of_measurableSet /-
+theorem setLIntegral_condDistrib_of_measurableSet (hX : Measurable X) (hY : AEMeasurable Y μ)
     (hs : MeasurableSet s) {t : Set α} (ht : measurable_set[mβ.comap X] t) :
     ∫⁻ a in t, condDistrib Y X μ (X a) s ∂μ = μ (t ∩ Y ⁻¹' s) := by obtain ⟨t', ht', rfl⟩ := ht;
   rw [set_lintegral_preimage_cond_distrib hX hY hs ht']
-#align probability_theory.set_lintegral_cond_distrib_of_measurable_set ProbabilityTheory.set_lintegral_condDistrib_of_measurableSet
+#align probability_theory.set_lintegral_cond_distrib_of_measurable_set ProbabilityTheory.setLIntegral_condDistrib_of_measurableSet
 -/
 
 #print ProbabilityTheory.condDistrib_ae_eq_condexp /-

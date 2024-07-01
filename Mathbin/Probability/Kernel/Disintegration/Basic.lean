@@ -443,8 +443,8 @@ theorem MeasureTheory.Measure.lintegral_condKernel_mem {s : Set (α × Ω)} (hs 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print MeasureTheory.Measure.set_lintegral_condKernel_eq_measure_prod /-
-theorem MeasureTheory.Measure.set_lintegral_condKernel_eq_measure_prod {s : Set α}
+#print MeasureTheory.Measure.setLIntegral_condKernel_eq_measure_prod /-
+theorem MeasureTheory.Measure.setLIntegral_condKernel_eq_measure_prod {s : Set α}
     (hs : MeasurableSet s) {t : Set Ω} (ht : MeasurableSet t) :
     ∫⁻ a in s, ρ.condKernel a t ∂ρ.fst = ρ (s ×ˢ t) :=
   by
@@ -462,7 +462,7 @@ theorem MeasureTheory.Measure.set_lintegral_condKernel_eq_measure_prod {s : Set 
   split_ifs with hx
   · simp only [hx, if_true, true_and_iff, set_of_mem_eq]
   · simp only [hx, if_false, false_and_iff, set_of_false, measure_empty]
-#align probability_theory.set_lintegral_cond_kernel_eq_measure_prod MeasureTheory.Measure.set_lintegral_condKernel_eq_measure_prod
+#align probability_theory.set_lintegral_cond_kernel_eq_measure_prod MeasureTheory.Measure.setLIntegral_condKernel_eq_measure_prod
 -/
 
 #print MeasureTheory.Measure.lintegral_condKernel /-
@@ -476,8 +476,8 @@ theorem MeasureTheory.Measure.lintegral_condKernel {f : α × Ω → ℝ≥0∞}
 -/
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print MeasureTheory.Measure.set_lintegral_condKernel /-
-theorem MeasureTheory.Measure.set_lintegral_condKernel {f : α × Ω → ℝ≥0∞} (hf : Measurable f)
+#print MeasureTheory.Measure.setLIntegral_condKernel /-
+theorem MeasureTheory.Measure.setLIntegral_condKernel {f : α × Ω → ℝ≥0∞} (hf : Measurable f)
     {s : Set α} (hs : MeasurableSet s) {t : Set Ω} (ht : MeasurableSet t) :
     ∫⁻ a in s, ∫⁻ ω in t, f (a, ω) ∂ρ.condKernel a ∂ρ.fst = ∫⁻ x in s ×ˢ t, f x ∂ρ :=
   by
@@ -485,25 +485,25 @@ theorem MeasureTheory.Measure.set_lintegral_condKernel {f : α × Ω → ℝ≥0
   simp_rw [← kernel.restrict_apply _ (hs.prod ht), ← kernel.comp_prod_restrict,
     kernel.lintegral_comp_prod _ _ _ hf, kernel.restrict_apply, kernel.const_apply,
     kernel.prod_mk_left_apply]
-#align probability_theory.set_lintegral_cond_kernel MeasureTheory.Measure.set_lintegral_condKernel
+#align probability_theory.set_lintegral_cond_kernel MeasureTheory.Measure.setLIntegral_condKernel
 -/
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print MeasureTheory.Measure.set_lintegral_condKernel_univ_right /-
-theorem MeasureTheory.Measure.set_lintegral_condKernel_univ_right {f : α × Ω → ℝ≥0∞}
+#print MeasureTheory.Measure.setLIntegral_condKernel_univ_right /-
+theorem MeasureTheory.Measure.setLIntegral_condKernel_univ_right {f : α × Ω → ℝ≥0∞}
     (hf : Measurable f) {s : Set α} (hs : MeasurableSet s) :
     ∫⁻ a in s, ∫⁻ ω, f (a, ω) ∂ρ.condKernel a ∂ρ.fst = ∫⁻ x in s ×ˢ univ, f x ∂ρ := by
   rw [← set_lintegral_cond_kernel ρ hf hs MeasurableSet.univ]; simp_rw [measure.restrict_univ]
-#align probability_theory.set_lintegral_cond_kernel_univ_right MeasureTheory.Measure.set_lintegral_condKernel_univ_right
+#align probability_theory.set_lintegral_cond_kernel_univ_right MeasureTheory.Measure.setLIntegral_condKernel_univ_right
 -/
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print MeasureTheory.Measure.set_lintegral_condKernel_univ_left /-
-theorem MeasureTheory.Measure.set_lintegral_condKernel_univ_left {f : α × Ω → ℝ≥0∞}
+#print MeasureTheory.Measure.setLIntegral_condKernel_univ_left /-
+theorem MeasureTheory.Measure.setLIntegral_condKernel_univ_left {f : α × Ω → ℝ≥0∞}
     (hf : Measurable f) {t : Set Ω} (ht : MeasurableSet t) :
     ∫⁻ a, ∫⁻ ω in t, f (a, ω) ∂ρ.condKernel a ∂ρ.fst = ∫⁻ x in univ ×ˢ t, f x ∂ρ := by
   rw [← set_lintegral_cond_kernel ρ hf MeasurableSet.univ ht]; simp_rw [measure.restrict_univ]
-#align probability_theory.set_lintegral_cond_kernel_univ_left MeasureTheory.Measure.set_lintegral_condKernel_univ_left
+#align probability_theory.set_lintegral_cond_kernel_univ_left MeasureTheory.Measure.setLIntegral_condKernel_univ_left
 -/
 
 section IntegralCondKernel

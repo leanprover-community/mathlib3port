@@ -485,34 +485,34 @@ theorem lintegral_compProd₀ (κ : kernel α β) [IsSFiniteKernel κ] (η : ker
 -/
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.kernel.set_lintegral_compProd /-
-theorem set_lintegral_compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
+#print ProbabilityTheory.kernel.setLIntegral_compProd /-
+theorem setLIntegral_compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
     [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f) {s : Set β} {t : Set γ}
     (hs : MeasurableSet s) (ht : MeasurableSet t) :
     ∫⁻ z in s ×ˢ t, f z ∂(κ ⊗ₖ η) a = ∫⁻ x in s, ∫⁻ y in t, f (x, y) ∂η (a, x) ∂κ a := by
   simp_rw [← kernel.restrict_apply (κ ⊗ₖ η) (hs.prod ht), ← comp_prod_restrict,
     lintegral_comp_prod _ _ _ hf, kernel.restrict_apply]
-#align probability_theory.kernel.set_lintegral_comp_prod ProbabilityTheory.kernel.set_lintegral_compProd
+#align probability_theory.kernel.set_lintegral_comp_prod ProbabilityTheory.kernel.setLIntegral_compProd
 -/
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.kernel.set_lintegral_compProd_univ_right /-
-theorem set_lintegral_compProd_univ_right (κ : kernel α β) [IsSFiniteKernel κ]
-    (η : kernel (α × β) γ) [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f)
-    {s : Set β} (hs : MeasurableSet s) :
+#print ProbabilityTheory.kernel.setLIntegral_compProd_univ_right /-
+theorem setLIntegral_compProd_univ_right (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
+    [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f) {s : Set β}
+    (hs : MeasurableSet s) :
     ∫⁻ z in s ×ˢ Set.univ, f z ∂(κ ⊗ₖ η) a = ∫⁻ x in s, ∫⁻ y, f (x, y) ∂η (a, x) ∂κ a := by
   simp_rw [set_lintegral_comp_prod κ η a hf hs MeasurableSet.univ, measure.restrict_univ]
-#align probability_theory.kernel.set_lintegral_comp_prod_univ_right ProbabilityTheory.kernel.set_lintegral_compProd_univ_right
+#align probability_theory.kernel.set_lintegral_comp_prod_univ_right ProbabilityTheory.kernel.setLIntegral_compProd_univ_right
 -/
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.kernel.set_lintegral_compProd_univ_left /-
-theorem set_lintegral_compProd_univ_left (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
+#print ProbabilityTheory.kernel.setLIntegral_compProd_univ_left /-
+theorem setLIntegral_compProd_univ_left (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
     [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f) {t : Set γ}
     (ht : MeasurableSet t) :
     ∫⁻ z in Set.univ ×ˢ t, f z ∂(κ ⊗ₖ η) a = ∫⁻ x, ∫⁻ y in t, f (x, y) ∂η (a, x) ∂κ a := by
   simp_rw [set_lintegral_comp_prod κ η a hf MeasurableSet.univ ht, measure.restrict_univ]
-#align probability_theory.kernel.set_lintegral_comp_prod_univ_left ProbabilityTheory.kernel.set_lintegral_compProd_univ_left
+#align probability_theory.kernel.set_lintegral_comp_prod_univ_left ProbabilityTheory.kernel.setLIntegral_compProd_univ_left
 -/
 
 end Lintegral

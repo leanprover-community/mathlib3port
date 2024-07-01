@@ -392,14 +392,14 @@ theorem condexpL2_indicator_eq_toSpanSingleton_comp (hm : m ≤ m0) (hs : Measur
 
 variable {𝕜}
 
-#print MeasureTheory.set_lintegral_nnnorm_condexpL2_indicator_le /-
-theorem set_lintegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : MeasurableSet s)
+#print MeasureTheory.setLIntegral_nnnorm_condexpL2_indicator_le /-
+theorem setLIntegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : MeasurableSet s)
     (hμs : μ s ≠ ∞) (x : E') {t : Set α} (ht : measurable_set[m] t) (hμt : μ t ≠ ∞) :
     ∫⁻ a in t, ‖condexpL2 𝕜 hm (indicatorConstLp 2 hs hμs x) a‖₊ ∂μ ≤ μ (s ∩ t) * ‖x‖₊ :=
   calc
     ∫⁻ a in t, ‖condexpL2 𝕜 hm (indicatorConstLp 2 hs hμs x) a‖₊ ∂μ =
         ∫⁻ a in t, ‖condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a • x‖₊ ∂μ :=
-      set_lintegral_congr_fun (hm t ht)
+      setLIntegral_congr_fun (hm t ht)
         ((condexpL2_indicator_ae_eq_smul 𝕜 hm hs hμs x).mono fun a ha hat => by rw [ha])
     _ = (∫⁻ a in t, ‖condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a‖₊ ∂μ) * ‖x‖₊ :=
       by
@@ -408,7 +408,7 @@ theorem set_lintegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : Measur
       exact (Lp.strongly_measurable _).ennnorm
     _ ≤ μ (s ∩ t) * ‖x‖₊ :=
       mul_le_mul_right' (lintegral_nnnorm_condexpL2_indicator_le_real hs hμs ht hμt) _
-#align measure_theory.set_lintegral_nnnorm_condexp_L2_indicator_le MeasureTheory.set_lintegral_nnnorm_condexpL2_indicator_le
+#align measure_theory.set_lintegral_nnnorm_condexp_L2_indicator_le MeasureTheory.setLIntegral_nnnorm_condexpL2_indicator_le
 -/
 
 #print MeasureTheory.lintegral_nnnorm_condexpL2_indicator_le /-
@@ -504,14 +504,14 @@ theorem condexpIndSMul_ae_eq_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs :
 #align measure_theory.condexp_ind_smul_ae_eq_smul MeasureTheory.condexpIndSMul_ae_eq_smul
 -/
 
-#print MeasureTheory.set_lintegral_nnnorm_condexpIndSMul_le /-
-theorem set_lintegral_nnnorm_condexpIndSMul_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
+#print MeasureTheory.setLIntegral_nnnorm_condexpIndSMul_le /-
+theorem setLIntegral_nnnorm_condexpIndSMul_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
     (x : G) {t : Set α} (ht : measurable_set[m] t) (hμt : μ t ≠ ∞) :
     ∫⁻ a in t, ‖condexpIndSMul hm hs hμs x a‖₊ ∂μ ≤ μ (s ∩ t) * ‖x‖₊ :=
   calc
     ∫⁻ a in t, ‖condexpIndSMul hm hs hμs x a‖₊ ∂μ =
         ∫⁻ a in t, ‖condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a • x‖₊ ∂μ :=
-      set_lintegral_congr_fun (hm t ht)
+      setLIntegral_congr_fun (hm t ht)
         ((condexpIndSMul_ae_eq_smul hm hs hμs x).mono fun a ha hat => by rw [ha])
     _ = (∫⁻ a in t, ‖condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a‖₊ ∂μ) * ‖x‖₊ :=
       by
@@ -520,7 +520,7 @@ theorem set_lintegral_nnnorm_condexpIndSMul_le (hm : m ≤ m0) (hs : MeasurableS
       exact (Lp.strongly_measurable _).ennnorm
     _ ≤ μ (s ∩ t) * ‖x‖₊ :=
       mul_le_mul_right' (lintegral_nnnorm_condexpL2_indicator_le_real hs hμs ht hμt) _
-#align measure_theory.set_lintegral_nnnorm_condexp_ind_smul_le MeasureTheory.set_lintegral_nnnorm_condexpIndSMul_le
+#align measure_theory.set_lintegral_nnnorm_condexp_ind_smul_le MeasureTheory.setLIntegral_nnnorm_condexpIndSMul_le
 -/
 
 #print MeasureTheory.lintegral_nnnorm_condexpIndSMul_le /-

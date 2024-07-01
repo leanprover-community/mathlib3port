@@ -239,7 +239,7 @@ theorem ofReal_setIntegral_one_of_measure_ne_top {α : Type _} {m : MeasurableSp
       by
       rw [of_real_integral_norm_eq_lintegral_nnnorm (integrable_on_const.2 (Or.inr hs.lt_top))]
       simp only [nnnorm_one, ENNReal.coe_one]
-    _ = μ s := set_lintegral_one _
+    _ = μ s := setLIntegral_one _
 #align measure_theory.of_real_set_integral_one_of_measure_ne_top MeasureTheory.ofReal_setIntegral_one_of_measure_ne_top
 -/
 

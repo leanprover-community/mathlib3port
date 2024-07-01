@@ -142,12 +142,12 @@ theorem map_eq_withDensity_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Me
 #align measure_theory.map_eq_with_density_pdf MeasureTheory.map_eq_withDensity_pdf
 -/
 
-#print MeasureTheory.map_eq_set_lintegral_pdf /-
-theorem map_eq_set_lintegral_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
+#print MeasureTheory.map_eq_setLIntegral_pdf /-
+theorem map_eq_setLIntegral_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
     (μ : Measure E := by exact MeasureTheory.MeasureSpace.volume) [hX : HasPDF X ℙ μ] {s : Set E}
     (hs : MeasurableSet s) : Measure.map X ℙ s = ∫⁻ x in s, pdf X ℙ μ x ∂μ := by
   rw [← with_density_apply _ hs, map_eq_with_density_pdf X ℙ μ]
-#align measure_theory.map_eq_set_lintegral_pdf MeasureTheory.map_eq_set_lintegral_pdf
+#align measure_theory.map_eq_set_lintegral_pdf MeasureTheory.map_eq_setLIntegral_pdf
 -/
 
 namespace Pdf

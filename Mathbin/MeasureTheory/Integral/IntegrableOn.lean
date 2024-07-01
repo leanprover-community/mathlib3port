@@ -489,11 +489,11 @@ theorem Integrable.lintegral_lt_top {f : α → ℝ} (hf : Integrable f μ) :
 #align measure_theory.integrable.lintegral_lt_top MeasureTheory.Integrable.lintegral_lt_top
 -/
 
-#print MeasureTheory.IntegrableOn.set_lintegral_lt_top /-
-theorem IntegrableOn.set_lintegral_lt_top {f : α → ℝ} {s : Set α} (hf : IntegrableOn f s μ) :
+#print MeasureTheory.IntegrableOn.setLIntegral_lt_top /-
+theorem IntegrableOn.setLIntegral_lt_top {f : α → ℝ} {s : Set α} (hf : IntegrableOn f s μ) :
     ∫⁻ x in s, ENNReal.ofReal (f x) ∂μ < ∞ :=
   Integrable.lintegral_lt_top hf
-#align measure_theory.integrable_on.set_lintegral_lt_top MeasureTheory.IntegrableOn.set_lintegral_lt_top
+#align measure_theory.integrable_on.set_lintegral_lt_top MeasureTheory.IntegrableOn.setLIntegral_lt_top
 -/
 
 #print MeasureTheory.IntegrableAtFilter /-

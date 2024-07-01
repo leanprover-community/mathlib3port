@@ -486,21 +486,21 @@ theorem lintegral_deterministic {f : β → ℝ≥0∞} {g : α → β} {a : α}
 #align probability_theory.kernel.lintegral_deterministic ProbabilityTheory.kernel.lintegral_deterministic
 -/
 
-#print ProbabilityTheory.kernel.set_lintegral_deterministic' /-
-theorem set_lintegral_deterministic' {f : β → ℝ≥0∞} {g : α → β} {a : α} (hg : Measurable g)
+#print ProbabilityTheory.kernel.setLIntegral_deterministic' /-
+theorem setLIntegral_deterministic' {f : β → ℝ≥0∞} {g : α → β} {a : α} (hg : Measurable g)
     (hf : Measurable f) {s : Set β} (hs : MeasurableSet s) [Decidable (g a ∈ s)] :
     ∫⁻ x in s, f x ∂kernel.deterministic g hg a = if g a ∈ s then f (g a) else 0 := by
   rw [kernel.deterministic_apply, set_lintegral_dirac' hf hs]
-#align probability_theory.kernel.set_lintegral_deterministic' ProbabilityTheory.kernel.set_lintegral_deterministic'
+#align probability_theory.kernel.set_lintegral_deterministic' ProbabilityTheory.kernel.setLIntegral_deterministic'
 -/
 
-#print ProbabilityTheory.kernel.set_lintegral_deterministic /-
+#print ProbabilityTheory.kernel.setLIntegral_deterministic /-
 @[simp]
-theorem set_lintegral_deterministic {f : β → ℝ≥0∞} {g : α → β} {a : α} (hg : Measurable g)
+theorem setLIntegral_deterministic {f : β → ℝ≥0∞} {g : α → β} {a : α} (hg : Measurable g)
     [MeasurableSingletonClass β] (s : Set β) [Decidable (g a ∈ s)] :
     ∫⁻ x in s, f x ∂kernel.deterministic g hg a = if g a ∈ s then f (g a) else 0 := by
   rw [kernel.deterministic_apply, set_lintegral_dirac f s]
-#align probability_theory.kernel.set_lintegral_deterministic ProbabilityTheory.kernel.set_lintegral_deterministic
+#align probability_theory.kernel.set_lintegral_deterministic ProbabilityTheory.kernel.setLIntegral_deterministic
 -/
 
 #print ProbabilityTheory.kernel.integral_deterministic' /-
@@ -579,11 +579,11 @@ theorem lintegral_const {f : β → ℝ≥0∞} {μ : Measure β} {a : α} :
 #align probability_theory.kernel.lintegral_const ProbabilityTheory.kernel.lintegral_const
 -/
 
-#print ProbabilityTheory.kernel.set_lintegral_const /-
+#print ProbabilityTheory.kernel.setLIntegral_const /-
 @[simp]
-theorem set_lintegral_const {f : β → ℝ≥0∞} {μ : Measure β} {a : α} {s : Set β} :
+theorem setLIntegral_const {f : β → ℝ≥0∞} {μ : Measure β} {a : α} {s : Set β} :
     ∫⁻ x in s, f x ∂kernel.const α μ a = ∫⁻ x in s, f x ∂μ := by rw [kernel.const_apply]
-#align probability_theory.kernel.set_lintegral_const ProbabilityTheory.kernel.set_lintegral_const
+#align probability_theory.kernel.set_lintegral_const ProbabilityTheory.kernel.setLIntegral_const
 -/
 
 #print ProbabilityTheory.kernel.integral_const /-
@@ -659,12 +659,12 @@ theorem lintegral_restrict (κ : kernel α β) (hs : MeasurableSet s) (a : α) (
 #align probability_theory.kernel.lintegral_restrict ProbabilityTheory.kernel.lintegral_restrict
 -/
 
-#print ProbabilityTheory.kernel.set_lintegral_restrict /-
+#print ProbabilityTheory.kernel.setLIntegral_restrict /-
 @[simp]
-theorem set_lintegral_restrict (κ : kernel α β) (hs : MeasurableSet s) (a : α) (f : β → ℝ≥0∞)
+theorem setLIntegral_restrict (κ : kernel α β) (hs : MeasurableSet s) (a : α) (f : β → ℝ≥0∞)
     (t : Set β) : ∫⁻ b in t, f b ∂kernel.restrict κ hs a = ∫⁻ b in t ∩ s, f b ∂κ a := by
   rw [restrict_apply, measure.restrict_restrict' hs]
-#align probability_theory.kernel.set_lintegral_restrict ProbabilityTheory.kernel.set_lintegral_restrict
+#align probability_theory.kernel.set_lintegral_restrict ProbabilityTheory.kernel.setLIntegral_restrict
 -/
 
 #print ProbabilityTheory.kernel.setIntegral_restrict /-
@@ -842,12 +842,12 @@ theorem lintegral_piecewise (a : α) (g : β → ℝ≥0∞) :
 #align probability_theory.kernel.lintegral_piecewise ProbabilityTheory.kernel.lintegral_piecewise
 -/
 
-#print ProbabilityTheory.kernel.set_lintegral_piecewise /-
-theorem set_lintegral_piecewise (a : α) (g : β → ℝ≥0∞) (t : Set β) :
+#print ProbabilityTheory.kernel.setLIntegral_piecewise /-
+theorem setLIntegral_piecewise (a : α) (g : β → ℝ≥0∞) (t : Set β) :
     ∫⁻ b in t, g b ∂piecewise hs κ η a =
       if a ∈ s then ∫⁻ b in t, g b ∂κ a else ∫⁻ b in t, g b ∂η a :=
   by simp_rw [piecewise_apply]; split_ifs <;> rfl
-#align probability_theory.kernel.set_lintegral_piecewise ProbabilityTheory.kernel.set_lintegral_piecewise
+#align probability_theory.kernel.set_lintegral_piecewise ProbabilityTheory.kernel.setLIntegral_piecewise
 -/
 
 #print ProbabilityTheory.kernel.integral_piecewise /-

@@ -214,11 +214,11 @@ theorem Measurable.lintegral_kernel_prod_right'' {f : β × γ → ℝ≥0∞} (
 #align measurable.lintegral_kernel_prod_right'' Measurable.lintegral_kernel_prod_right''
 -/
 
-#print Measurable.set_lintegral_kernel_prod_right /-
-theorem Measurable.set_lintegral_kernel_prod_right {f : α → β → ℝ≥0∞} (hf : Measurable (uncurry f))
+#print Measurable.setLIntegral_kernel_prod_right /-
+theorem Measurable.setLIntegral_kernel_prod_right {f : α → β → ℝ≥0∞} (hf : Measurable (uncurry f))
     {s : Set β} (hs : MeasurableSet s) : Measurable fun a => ∫⁻ b in s, f a b ∂κ a := by
   simp_rw [← lintegral_restrict κ hs]; exact hf.lintegral_kernel_prod_right
-#align measurable.set_lintegral_kernel_prod_right Measurable.set_lintegral_kernel_prod_right
+#align measurable.set_lintegral_kernel_prod_right Measurable.setLIntegral_kernel_prod_right
 -/
 
 #print Measurable.lintegral_kernel_prod_left' /-
@@ -235,11 +235,11 @@ theorem Measurable.lintegral_kernel_prod_left {f : β → α → ℝ≥0∞} (hf
 #align measurable.lintegral_kernel_prod_left Measurable.lintegral_kernel_prod_left
 -/
 
-#print Measurable.set_lintegral_kernel_prod_left /-
-theorem Measurable.set_lintegral_kernel_prod_left {f : β → α → ℝ≥0∞} (hf : Measurable (uncurry f))
+#print Measurable.setLIntegral_kernel_prod_left /-
+theorem Measurable.setLIntegral_kernel_prod_left {f : β → α → ℝ≥0∞} (hf : Measurable (uncurry f))
     {s : Set β} (hs : MeasurableSet s) : Measurable fun b => ∫⁻ a in s, f a b ∂κ b := by
   simp_rw [← lintegral_restrict κ hs]; exact hf.lintegral_kernel_prod_left
-#align measurable.set_lintegral_kernel_prod_left Measurable.set_lintegral_kernel_prod_left
+#align measurable.set_lintegral_kernel_prod_left Measurable.setLIntegral_kernel_prod_left
 -/
 
 #print Measurable.lintegral_kernel /-
@@ -249,11 +249,11 @@ theorem Measurable.lintegral_kernel {f : β → ℝ≥0∞} (hf : Measurable f) 
 #align measurable.lintegral_kernel Measurable.lintegral_kernel
 -/
 
-#print Measurable.set_lintegral_kernel /-
-theorem Measurable.set_lintegral_kernel {f : β → ℝ≥0∞} (hf : Measurable f) {s : Set β}
+#print Measurable.setLIntegral_kernel /-
+theorem Measurable.setLIntegral_kernel {f : β → ℝ≥0∞} (hf : Measurable f) {s : Set β}
     (hs : MeasurableSet s) : Measurable fun a => ∫⁻ b in s, f b ∂κ a :=
-  Measurable.set_lintegral_kernel_prod_right (hf.comp measurable_snd) hs
-#align measurable.set_lintegral_kernel Measurable.set_lintegral_kernel
+  Measurable.setLIntegral_kernel_prod_right (hf.comp measurable_snd) hs
+#align measurable.set_lintegral_kernel Measurable.setLIntegral_kernel
 -/
 
 end Lintegral

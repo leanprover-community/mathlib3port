@@ -386,8 +386,8 @@ theorem withDensity_preCDF (ρ : Measure (α × ℝ)) (r : ℚ) [IsFiniteMeasure
 #align probability_theory.with_density_pre_cdf ProbabilityTheory.withDensity_preCDF
 -/
 
-#print ProbabilityTheory.set_lintegral_preCDF_fst /-
-theorem set_lintegral_preCDF_fst (ρ : Measure (α × ℝ)) (r : ℚ) {s : Set α} (hs : MeasurableSet s)
+#print ProbabilityTheory.setLIntegral_preCDF_fst /-
+theorem setLIntegral_preCDF_fst (ρ : Measure (α × ℝ)) (r : ℚ) {s : Set α} (hs : MeasurableSet s)
     [IsFiniteMeasure ρ] : ∫⁻ x in s, preCDF ρ r x ∂ρ.fst = ρ.IicSnd r s :=
   by
   have : ∀ r, ∫⁻ x in s, pre_cdf ρ r x ∂ρ.fst = ∫⁻ x in s, (pre_cdf ρ r * 1) x ∂ρ.fst := by
@@ -398,7 +398,7 @@ theorem set_lintegral_preCDF_fst (ρ : Measure (α × ℝ)) (r : ℚ) {s : Set �
       MeasurableSet.univ, univ_inter]
   · rw [(_ : (1 : α → ℝ≥0∞) = fun _ => 1)]
     exacts [measurable_const, rfl]
-#align probability_theory.set_lintegral_pre_cdf_fst ProbabilityTheory.set_lintegral_preCDF_fst
+#align probability_theory.set_lintegral_pre_cdf_fst ProbabilityTheory.setLIntegral_preCDF_fst
 -/
 
 #print ProbabilityTheory.monotone_preCDF /-
@@ -1031,8 +1031,8 @@ theorem set_lintegral_condCDF_rat (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ProbabilityTheory.set_lintegral_condCDF /-
-theorem set_lintegral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
+#print ProbabilityTheory.setLIntegral_condCDF /-
+theorem setLIntegral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
     (hs : MeasurableSet s) : ∫⁻ a in s, ENNReal.ofReal (condCDF ρ a x) ∂ρ.fst = ρ (s ×ˢ Iic x) :=
   by
   -- We have the result for `x : ℚ` thanks to `set_lintegral_cond_cdf_rat`. We use the equality
@@ -1080,7 +1080,7 @@ theorem set_lintegral_condCDF (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x
     refine' prod_subset_prod_iff.mpr (Or.inl ⟨subset_rfl, Iic_subset_Iic.mpr _⟩)
     exact_mod_cast hij
   · exact ⟨h_nonempty.some, measure_ne_top _ _⟩
-#align probability_theory.set_lintegral_cond_cdf ProbabilityTheory.set_lintegral_condCDF
+#align probability_theory.set_lintegral_cond_cdf ProbabilityTheory.setLIntegral_condCDF
 -/
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

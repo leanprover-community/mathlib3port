@@ -179,8 +179,8 @@ section ENNReal
 
 open scoped Topology
 
-#print MeasureTheory.ae_le_of_forall_set_lintegral_le_of_sigmaFinite /-
-theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : α → ℝ≥0∞}
+#print MeasureTheory.ae_le_of_forall_setLIntegral_le_of_sigmaFinite /-
+theorem ae_le_of_forall_setLIntegral_le_of_sigmaFinite [SigmaFinite μ] {f g : α → ℝ≥0∞}
     (hf : Measurable f) (hg : Measurable g)
     (h : ∀ s, MeasurableSet s → μ s < ∞ → ∫⁻ x in s, f x ∂μ ≤ ∫⁻ x in s, g x ∂μ) : f ≤ᵐ[μ] g :=
   by
@@ -243,11 +243,11 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
     μ ({x : α | (fun x : α => f x ≤ g x) x}ᶜ) ≤ μ (⋃ n, s n) := measure_mono B
     _ ≤ ∑' n, μ (s n) := (measure_Union_le _)
     _ = 0 := by simp only [μs, tsum_zero]
-#align measure_theory.ae_le_of_forall_set_lintegral_le_of_sigma_finite MeasureTheory.ae_le_of_forall_set_lintegral_le_of_sigmaFinite
+#align measure_theory.ae_le_of_forall_set_lintegral_le_of_sigma_finite MeasureTheory.ae_le_of_forall_setLIntegral_le_of_sigmaFinite
 -/
 
-#print MeasureTheory.ae_eq_of_forall_set_lintegral_eq_of_sigmaFinite /-
-theorem ae_eq_of_forall_set_lintegral_eq_of_sigmaFinite [SigmaFinite μ] {f g : α → ℝ≥0∞}
+#print MeasureTheory.ae_eq_of_forall_setLIntegral_eq_of_sigmaFinite /-
+theorem ae_eq_of_forall_setLIntegral_eq_of_sigmaFinite [SigmaFinite μ] {f g : α → ℝ≥0∞}
     (hf : Measurable f) (hg : Measurable g)
     (h : ∀ s, MeasurableSet s → μ s < ∞ → ∫⁻ x in s, f x ∂μ = ∫⁻ x in s, g x ∂μ) : f =ᵐ[μ] g :=
   by
@@ -256,7 +256,7 @@ theorem ae_eq_of_forall_set_lintegral_eq_of_sigmaFinite [SigmaFinite μ] {f g : 
   have B : g ≤ᵐ[μ] f :=
     ae_le_of_forall_set_lintegral_le_of_sigma_finite hg hf fun s hs h's => ge_of_eq (h s hs h's)
   filter_upwards [A, B] with x using le_antisymm
-#align measure_theory.ae_eq_of_forall_set_lintegral_eq_of_sigma_finite MeasureTheory.ae_eq_of_forall_set_lintegral_eq_of_sigmaFinite
+#align measure_theory.ae_eq_of_forall_set_lintegral_eq_of_sigma_finite MeasureTheory.ae_eq_of_forall_setLIntegral_eq_of_sigmaFinite
 -/
 
 end ENNReal
@@ -628,8 +628,8 @@ end AeEqOfForallSetIntegralEq
 
 section Lintegral
 
-#print MeasureTheory.AEMeasurable.ae_eq_of_forall_set_lintegral_eq /-
-theorem AEMeasurable.ae_eq_of_forall_set_lintegral_eq {f g : α → ℝ≥0∞} (hf : AEMeasurable f μ)
+#print MeasureTheory.AEMeasurable.ae_eq_of_forall_setLIntegral_eq /-
+theorem AEMeasurable.ae_eq_of_forall_setLIntegral_eq {f g : α → ℝ≥0∞} (hf : AEMeasurable f μ)
     (hg : AEMeasurable g μ) (hfi : ∫⁻ x, f x ∂μ ≠ ∞) (hgi : ∫⁻ x, g x ∂μ ≠ ∞)
     (hfg : ∀ ⦃s⦄, MeasurableSet s → μ s < ∞ → ∫⁻ x in s, f x ∂μ = ∫⁻ x in s, g x ∂μ) : f =ᵐ[μ] g :=
   by
@@ -651,7 +651,7 @@ theorem AEMeasurable.ae_eq_of_forall_set_lintegral_eq {f g : α → ℝ≥0∞} 
   exacts [ae_of_all _ fun x => ENNReal.toReal_nonneg,
     hg.ennreal_to_real.restrict.ae_strongly_measurable, ae_of_all _ fun x => ENNReal.toReal_nonneg,
     hf.ennreal_to_real.restrict.ae_strongly_measurable]
-#align measure_theory.ae_measurable.ae_eq_of_forall_set_lintegral_eq MeasureTheory.AEMeasurable.ae_eq_of_forall_set_lintegral_eq
+#align measure_theory.ae_measurable.ae_eq_of_forall_set_lintegral_eq MeasureTheory.AEMeasurable.ae_eq_of_forall_setLIntegral_eq
 -/
 
 end Lintegral
