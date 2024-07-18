@@ -8,7 +8,7 @@ import Algebra.Ring.Prod
 import Data.Set.Finite
 import Algebra.Group.Submonoid.Membership
 import Algebra.Group.Subsemigroup.Membership
-import Algebra.Group.Centralizer
+import GroupTheory.Subsemigroup.Centralizer
 
 #align_import ring_theory.non_unital_subsemiring.basic from "leanprover-community/mathlib"@"b915e9392ecb2a861e1e766f0e1df6ac481188ca"
 

@@ -3,8 +3,8 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import LinearAlgebra.FiniteDimensional
-import RingTheory.IntegralClosure
+import LinearAlgebra.FiniteDimensional.Defs
+import RingTheory.IntegralClosure.IsIntegral.Defs
 import RingTheory.Polynomial.IntegralNormalization
 
 #align_import ring_theory.algebraic from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"

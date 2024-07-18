@@ -403,8 +403,7 @@ unsafe def tauto (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := { }) : tact
   tautology c cfg
 #align tactic.interactive.tauto tactic.interactive.tauto
 
-add_hint_tactic tauto
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic tauto -/
 /-- This tactic (with shorthand `tauto`) breaks down assumptions of the form
 `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
 and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged

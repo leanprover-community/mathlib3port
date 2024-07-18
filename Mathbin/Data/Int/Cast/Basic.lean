@@ -117,33 +117,25 @@ theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
 theorem cast_sub (m n) : ((m - n : ℤ) : R) = m - n := by simp [Int.sub_eq_add_neg, sub_eq_add_neg]
 #align int.cast_sub Int.cast_subₓ
 
-#print Int.ofNat_bit0 /-
 @[simp, norm_cast]
-theorem ofNat_bit0 (n : ℕ) : (↑(bit0 n) : ℤ) = bit0 ↑n :=
+theorem coe_nat_bit0 (n : ℕ) : (↑(bit0 n) : ℤ) = bit0 ↑n :=
   rfl
-#align int.coe_nat_bit0 Int.ofNat_bit0
--/
+#align int.coe_nat_bit0 Int.coe_nat_bit0
 
-#print Int.ofNat_bit1 /-
 @[simp, norm_cast]
-theorem ofNat_bit1 (n : ℕ) : (↑(bit1 n) : ℤ) = bit1 ↑n :=
+theorem coe_nat_bit1 (n : ℕ) : (↑(bit1 n) : ℤ) = bit1 ↑n :=
   rfl
-#align int.coe_nat_bit1 Int.ofNat_bit1
--/
+#align int.coe_nat_bit1 Int.coe_nat_bit1
 
-#print Int.cast_bit0 /-
 @[simp, norm_cast]
 theorem cast_bit0 (n : ℤ) : ((bit0 n : ℤ) : R) = bit0 n :=
   cast_add _ _
 #align int.cast_bit0 Int.cast_bit0
--/
 
-#print Int.cast_bit1 /-
 @[simp, norm_cast]
 theorem cast_bit1 (n : ℤ) : ((bit1 n : ℤ) : R) = bit1 n := by
   rw [bit1, cast_add, cast_one, cast_bit0] <;> rfl
 #align int.cast_bit1 Int.cast_bit1
--/
 
 #print Int.cast_two /-
 theorem cast_two : ((2 : ℤ) : R) = 2 := by simp

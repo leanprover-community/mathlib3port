@@ -637,17 +637,13 @@ instance : CommSemiring Cardinal.{u} where
   npow_zero := @power_zero
   npow_succ n c := show (c^n + 1) = c * (c^n) by rw [power_add, power_one, mul_comm']
 
-#print Cardinal.power_bit0 /-
 theorem power_bit0 (a b : Cardinal) : (a^bit0 b) = (a^b) * (a^b) :=
   power_add
 #align cardinal.power_bit0 Cardinal.power_bit0
--/
 
-#print Cardinal.power_bit1 /-
 theorem power_bit1 (a b : Cardinal) : (a^bit1 b) = (a^b) * (a^b) * a := by
   rw [bit1, ← power_bit0, power_add, power_one]
 #align cardinal.power_bit1 Cardinal.power_bit1
--/
 
 #print Cardinal.one_power /-
 @[simp]
@@ -729,18 +725,14 @@ theorem lift_mul (a b) : lift (a * b) = lift a * lift b :=
 #align cardinal.lift_mul Cardinal.lift_mul
 -/
 
-#print Cardinal.lift_bit0 /-
 @[simp]
 theorem lift_bit0 (a : Cardinal) : lift (bit0 a) = bit0 (lift a) :=
   lift_add a a
 #align cardinal.lift_bit0 Cardinal.lift_bit0
--/
 
-#print Cardinal.lift_bit1 /-
 @[simp]
 theorem lift_bit1 (a : Cardinal) : lift (bit1 a) = bit1 (lift a) := by simp [bit1]
 #align cardinal.lift_bit1 Cardinal.lift_bit1
--/
 
 #print Cardinal.lift_two /-
 theorem lift_two : lift.{u, v} 2 = 2 := by simp
@@ -2468,7 +2460,7 @@ theorem mk_plift_false : (#PLift False) = 0 :=
 
 #print Cardinal.mk_vector /-
 @[simp]
-theorem mk_vector (α : Type u) (n : ℕ) : (#Vector α n) = (#α) ^ℕ n :=
+theorem mk_vector (α : Type u) (n : ℕ) : (#Mathlib.Vector α n) = (#α) ^ℕ n :=
   (mk_congr (Equiv.vectorEquivFin α n)).trans <| by simp
 #align cardinal.mk_vector Cardinal.mk_vector
 -/
@@ -2476,7 +2468,7 @@ theorem mk_vector (α : Type u) (n : ℕ) : (#Vector α n) = (#α) ^ℕ n :=
 #print Cardinal.mk_list_eq_sum_pow /-
 theorem mk_list_eq_sum_pow (α : Type u) : (#List α) = sum fun n : ℕ => (#α) ^ℕ n :=
   calc
-    (#List α) = (#Σ n, Vector α n) := mk_congr (Equiv.sigmaFiberEquiv List.length).symm
+    (#List α) = (#Σ n, Mathlib.Vector α n) := mk_congr (Equiv.sigmaFiberEquiv List.length).symm
     _ = sum fun n : ℕ => (#α) ^ℕ n := by simp
 #align cardinal.mk_list_eq_sum_pow Cardinal.mk_list_eq_sum_pow
 -/

@@ -5,7 +5,7 @@ Authors: Yury Kudryashov
 -/
 import Algebra.AddTorsor
 import Topology.Algebra.Constructions
-import GroupTheory.GroupAction.Prod
+import Algebra.Group.Action.Prod
 import Topology.Algebra.ConstMulAction
 
 #align_import topology.algebra.mul_action from "leanprover-community/mathlib"@"ac34df03f74e6f797efd6991df2e3b7f7d8d33e0"

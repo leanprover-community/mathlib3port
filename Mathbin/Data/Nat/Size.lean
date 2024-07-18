@@ -101,19 +101,15 @@ theorem size_bit {b n} (h : bit b n ≠ 0) : size (bit b n) = succ (size n) :=
 #align nat.size_bit Nat.size_bit
 -/
 
-#print Nat.size_bit0 /-
 @[simp]
 theorem size_bit0 {n} (h : n ≠ 0) : size (bit0 n) = succ (size n) :=
   @size_bit false n (Nat.bit0_ne_zero h)
 #align nat.size_bit0 Nat.size_bit0
--/
 
-#print Nat.size_bit1 /-
 @[simp]
 theorem size_bit1 (n) : size (bit1 n) = succ (size n) :=
   @size_bit true n (Nat.bit1_ne_zero n)
 #align nat.size_bit1 Nat.size_bit1
--/
 
 #print Nat.size_one /-
 @[simp]

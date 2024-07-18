@@ -104,14 +104,15 @@ theorem card_filter_univ_succ (p : Fin (n + 1) → Prop) [DecidablePred p] :
 -/
 
 #print Fin.card_filter_univ_eq_vector_get_eq_count /-
-theorem card_filter_univ_eq_vector_get_eq_count [DecidableEq α] (a : α) (v : Vector α n) :
+theorem card_filter_univ_eq_vector_get_eq_count [DecidableEq α] (a : α) (v : Mathlib.Vector α n) :
     (univ.filterₓ fun i => a = v.get? i).card = v.toList.count a :=
   by
-  induction' v using Vector.inductionOn with n x xs hxs
+  induction' v using Mathlib.Vector.inductionOn with n x xs hxs
   · simp
   ·
-    simp_rw [card_filter_univ_succ', Vector.get_cons_zero, Vector.toList_cons, Function.comp,
-      Vector.get_cons_succ, hxs, List.count_cons', add_comm (ite (a = x) 1 0)]
+    simp_rw [card_filter_univ_succ', Mathlib.Vector.get_cons_zero, Mathlib.Vector.toList_cons,
+      Function.comp, Mathlib.Vector.get_cons_succ, hxs, List.count_cons',
+      add_comm (ite (a = x) 1 0)]
 #align fin.card_filter_univ_eq_vector_nth_eq_count Fin.card_filter_univ_eq_vector_get_eq_count
 -/
 

@@ -39,19 +39,15 @@ theorem boddDiv2_eq (n : ℕ) : boddDiv2 n = (bodd n, div2 n) := by
 #align nat.bodd_div2_eq Nat.boddDiv2_eq
 -/
 
-#print Nat.bodd_bit0 /-
 @[simp]
 theorem bodd_bit0 (n) : bodd (bit0 n) = false :=
   bodd_bit false n
 #align nat.bodd_bit0 Nat.bodd_bit0
--/
 
-#print Nat.bodd_bit1 /-
 @[simp]
 theorem bodd_bit1 (n) : bodd (bit1 n) = true :=
   bodd_bit true n
 #align nat.bodd_bit1 Nat.bodd_bit1
--/
 
 #print Nat.div2_bit0 /-
 @[simp]
@@ -70,7 +66,6 @@ theorem div2_bit1 (n) : div2 (bit1 n) = n :=
 /-! ### `bit0` and `bit1` -/
 
 
-#print Nat.bit0_eq_bit0 /-
 -- There is no need to prove `bit0_eq_zero : bit0 n = 0 ↔ n = 0`
 -- as this is true for any `[semiring R] [no_zero_divisors R] [char_zero R]`
 -- However the lemmas `bit0_eq_bit0`, `bit1_eq_bit1`, `bit1_eq_one`, `one_eq_bit1`
@@ -80,28 +75,21 @@ theorem div2_bit1 (n) : div2 (bit1 n) = n :=
 theorem bit0_eq_bit0 {m n : ℕ} : bit0 m = bit0 n ↔ m = n :=
   ⟨Nat.bit0_inj, fun h => by subst h⟩
 #align nat.bit0_eq_bit0 Nat.bit0_eq_bit0
--/
 
-#print Nat.bit1_eq_bit1 /-
 @[simp]
 theorem bit1_eq_bit1 {m n : ℕ} : bit1 m = bit1 n ↔ m = n :=
   ⟨Nat.bit1_inj, fun h => by subst h⟩
 #align nat.bit1_eq_bit1 Nat.bit1_eq_bit1
--/
 
-#print Nat.bit1_eq_one /-
 @[simp]
 theorem bit1_eq_one {n : ℕ} : bit1 n = 1 ↔ n = 0 :=
   ⟨@Nat.bit1_inj n 0, fun h => by subst h⟩
 #align nat.bit1_eq_one Nat.bit1_eq_one
--/
 
-#print Nat.one_eq_bit1 /-
 @[simp]
 theorem one_eq_bit1 {n : ℕ} : 1 = bit1 n ↔ n = 0 :=
   ⟨fun h => (@Nat.bit1_inj 0 n h).symm, fun h => by subst h⟩
 #align nat.one_eq_bit1 Nat.one_eq_bit1
--/
 
 #print Nat.bit_add /-
 theorem bit_add : ∀ (b : Bool) (n m : ℕ), bit b (n + m) = bit false n + bit b m
@@ -123,20 +111,14 @@ theorem bit_ne_zero (b) {n} (h : n ≠ 0) : bit b n ≠ 0 := by
 #align nat.bit_ne_zero Nat.bit_ne_zero
 -/
 
-#print Nat.bit0_mod_two /-
 theorem bit0_mod_two : bit0 n % 2 = 0 := by rw [Nat.mod_two_of_bodd]; simp
 #align nat.bit0_mod_two Nat.bit0_mod_two
--/
 
-#print Nat.bit1_mod_two /-
 theorem bit1_mod_two : bit1 n % 2 = 1 := by rw [Nat.mod_two_of_bodd]; simp
 #align nat.bit1_mod_two Nat.bit1_mod_two
--/
 
-#print Nat.pos_of_bit0_pos /-
 theorem pos_of_bit0_pos {n : ℕ} (h : 0 < bit0 n) : 0 < n := by cases n; cases h; apply succ_pos
 #align nat.pos_of_bit0_pos Nat.pos_of_bit0_pos
--/
 
 #print Nat.bitCasesOn_bit /-
 @[simp]
@@ -180,11 +162,9 @@ theorem bit_cases_on_inj {C : ℕ → Sort u} (H₁ H₂ : ∀ b n, C (bit b n))
 #align nat.bit_cases_on_inj Nat.bit_cases_on_inj
 -/
 
-#print Nat.bit0_eq_zero /-
 protected theorem bit0_eq_zero {n : ℕ} : bit0 n = 0 ↔ n = 0 :=
   ⟨Nat.eq_zero_of_add_eq_zero_left, fun h => by simp [h]⟩
 #align nat.bit0_eq_zero Nat.bit0_eq_zero
--/
 
 #print Nat.bit_eq_zero_iff /-
 theorem bit_eq_zero_iff {n : ℕ} {b : Bool} : bit b n = 0 ↔ n = 0 ∧ b = false := by constructor;

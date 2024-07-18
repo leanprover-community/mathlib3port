@@ -164,7 +164,7 @@ theorem Mathlib.Meta.NormNum.jacobiSymNat.odd_even (a b : ℕ) (r : ℤ)
   · rw [← hr, hb, jacobi_sym_nat.zero_right]
   · haveI : NeZero b := ⟨hb⟩
     -- for `jacobi_sym.mul_right`
-    rwa [bit0_eq_two_mul b, jacobi_sym_nat, jacobiSym.mul_right, ←
+    rwa [bit0_eq_two_hMul b, jacobi_sym_nat, jacobiSym.mul_right, ←
       _root_.legendre_sym.to_jacobi_sym, Nat.cast_bit1, ha, one_mul]
 #align norm_num.jacobi_sym_nat.odd_even Mathlib.Meta.NormNum.jacobiSymNat.odd_even
 -/
@@ -176,10 +176,10 @@ theorem Mathlib.Meta.NormNum.jacobiSymNat.double_even (a b : ℕ) (r : ℤ)
     Mathlib.Meta.NormNum.jacobiSymNat (bit0 (bit0 a)) (bit1 b) = r :=
   by
   have : ((2 : ℕ) : ℤ).gcd (bit1 b : ℕ) = 1 := by
-    rw [Int.gcd_natCast_natCast, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul b, Nat.succ_eq_add_one,
+    rw [Int.gcd_natCast_natCast, Nat.bit1_eq_succ_bit0, bit0_eq_two_hMul b, Nat.succ_eq_add_one,
       Nat.gcd_mul_left_add_right, Nat.gcd_one_right]
-  rwa [bit0_eq_two_mul a, bit0_eq_two_mul (2 * a), ← mul_assoc, ← pow_two, jacobi_sym_nat,
-    Nat.cast_mul, Nat.cast_pow, jacobiSym.mul_left, jacobiSym.sq_one' this, one_mul]
+  rwa [bit0_eq_two_hMul a, bit0_eq_two_hMul (2 * a), ← mul_assoc, ← pow_two, jacobi_sym_nat,
+    Nat.cast_mul, Nat.cast_pow, jacobiSym.hMul_left, jacobiSym.sq_one' this, one_mul]
 #align norm_num.jacobi_sym_nat.double_even Mathlib.Meta.NormNum.jacobiSymNat.double_even
 -/
 
@@ -193,7 +193,7 @@ theorem Mathlib.Meta.NormNum.jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ)
   by
   have hb : bit1 (bit0 (bit0 b)) % 8 = 1 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit0_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
+  rw [jacobi_sym_nat, bit0_eq_two_hMul a, Nat.cast_mul, jacobiSym.hMul_left, Nat.cast_two,
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -207,7 +207,7 @@ theorem Mathlib.Meta.NormNum.jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ)
   by
   have hb : bit1 (bit1 (bit1 b)) % 8 = 7 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit1_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
+  rw [jacobi_sym_nat, bit0_eq_two_hMul a, Nat.cast_mul, jacobiSym.hMul_left, Nat.cast_two,
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -221,7 +221,7 @@ theorem Mathlib.Meta.NormNum.jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ)
   by
   have hb : bit1 (bit1 (bit0 b)) % 8 = 3 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit0_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
+  rw [jacobi_sym_nat, bit0_eq_two_hMul a, Nat.cast_mul, jacobiSym.hMul_left, Nat.cast_two,
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -235,7 +235,7 @@ theorem Mathlib.Meta.NormNum.jacobiSymNat.even_odd₅ (a b : ℕ) (r : ℤ)
   by
   have hb : bit1 (bit0 (bit1 b)) % 8 = 5 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit1_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
+  rw [jacobi_sym_nat, bit0_eq_two_hMul a, Nat.cast_mul, jacobiSym.hMul_left, Nat.cast_two,
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr

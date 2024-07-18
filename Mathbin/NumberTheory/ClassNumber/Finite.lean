@@ -9,7 +9,7 @@ import LinearAlgebra.Matrix.AbsoluteValue
 import NumberTheory.ClassNumber.AdmissibleAbsoluteValue
 import RingTheory.ClassGroup
 import RingTheory.DedekindDomain.IntegralClosure
-import RingTheory.Norm
+import RingTheory.Norm.Defs
 
 #align_import number_theory.class_number.finite from "leanprover-community/mathlib"@"30faa0c3618ce1472bf6305ae0e3fa56affa3f95"
 
@@ -45,7 +45,7 @@ variable [Field K] [Field L]
 
 variable [Algebra R K] [IsFractionRing R K]
 
-variable [Algebra K L] [FiniteDimensional K L] [IsSeparable K L]
+variable [Algebra K L] [FiniteDimensional K L] [Algebra.IsSeparable K L]
 
 variable [algRL : Algebra R L] [IsScalarTower R K L]
 
@@ -138,7 +138,7 @@ theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T}
   simp only [Int.cast_mul, Int.cast_pow]
   apply mul_lt_mul' le_rfl
   · exact pow_lt_pow_left this (int.cast_nonneg.mpr y'_nonneg) (fintype.card_pos_iff.mpr ⟨i⟩)
-  · exact pow_nonneg (int.cast_nonneg.mpr y'_nonneg) _
+  · exact Nonneg.pow_nonneg (int.cast_nonneg.mpr y'_nonneg) _
   · exact int.cast_pos.mpr (norm_bound_pos abv bS)
   · infer_instance
 #align class_group.norm_lt ClassGroup.norm_lt

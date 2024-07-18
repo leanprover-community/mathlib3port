@@ -998,14 +998,14 @@ theorem infinite_of_mem_nhds {α} [TopologicalSpace α] [T1Space α] (x : α) [h
 #align infinite_of_mem_nhds infinite_of_mem_nhds
 -/
 
-#print discrete_of_t1_of_finite /-
-theorem discrete_of_t1_of_finite {X : Type _} [TopologicalSpace X] [T1Space X] [Finite X] :
+#print Finite.instDiscreteTopology /-
+theorem Finite.instDiscreteTopology {X : Type _} [TopologicalSpace X] [T1Space X] [Finite X] :
     DiscreteTopology X := by
   apply singletons_open_iff_discrete.mp
   intro x
   rw [← isClosed_compl_iff]
   exact (Set.toFinite _).IsClosed
-#align discrete_of_t1_of_finite discrete_of_t1_of_finite
+#align discrete_of_t1_of_finite Finite.instDiscreteTopology
 -/
 
 #print PreconnectedSpace.trivial_of_discrete /-
@@ -1023,7 +1023,7 @@ theorem IsPreconnected.infinite_of_nontrivial [T1Space α] {s : Set α} (h : IsP
     (hs : s.Nontrivial) : s.Infinite :=
   by
   refine' mt (fun hf => (subsingleton_coe s).mp _) (not_subsingleton_iff.mpr hs)
-  haveI := @discrete_of_t1_of_finite s _ _ hf.to_subtype
+  haveI := @Finite.instDiscreteTopology s _ _ hf.to_subtype
   exact @PreconnectedSpace.trivial_of_discrete _ _ (Subtype.preconnectedSpace h) _
 #align is_preconnected.infinite_of_nontrivial IsPreconnected.infinite_of_nontrivial
 -/

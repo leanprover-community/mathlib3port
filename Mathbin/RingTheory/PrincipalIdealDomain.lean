@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Morenikeji Neri
 -/
-import Algebra.EuclideanDomain.Instances
+import Algebra.EuclideanDomain.Field
 import RingTheory.UniqueFactorizationDomain
 
 #align_import ring_theory.principal_ideal_domain from "leanprover-community/mathlib"@"c085f3044fe585c575e322bfab45b3633c48d820"

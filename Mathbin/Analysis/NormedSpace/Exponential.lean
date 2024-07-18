@@ -519,7 +519,7 @@ theorem NormedSpace.expSeries_radius_eq_top : (NormedSpace.expSeries 𝕂 𝔸).
     norm_pow, NNReal.norm_eq, norm_nat_cast, mul_comm, ← mul_assoc, ← div_eq_mul_inv]
   have : ‖ContinuousMultilinearMap.mkPiAlgebraFin 𝕂 n 𝔸‖ ≤ 1 :=
     norm_mk_pi_algebra_fin_le_of_pos (Nat.pos_of_ne_zero hn)
-  exact mul_le_of_le_one_right (div_nonneg (pow_nonneg r.coe_nonneg n) n !.cast_nonneg) this
+  exact mul_le_of_le_one_right (div_nonneg (Nonneg.pow_nonneg r.coe_nonneg n) n !.cast_nonneg) this
 #align exp_series_radius_eq_top NormedSpace.expSeries_radius_eq_top
 -/
 

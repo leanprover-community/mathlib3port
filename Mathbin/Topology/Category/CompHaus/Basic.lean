@@ -36,14 +36,12 @@ universe v u
 
 open CategoryTheory
 
-#print CompHaus /-
 /-- The type of Compact Hausdorff topological spaces. -/
 structure CompHaus where
   toTop : TopCat
   [IsCompact : CompactSpace to_Top]
   [is_hausdorff : T2Space to_Top]
-#align CompHaus CompHaus
--/
+#align CompHaus CompHausₓ
 
 namespace CompHaus
 
@@ -59,22 +57,18 @@ instance {X : CompHaus} : CompactSpace X :=
 instance {X : CompHaus} : T2Space X :=
   X.is_hausdorff
 
-#print CompHaus.category /-
 instance category : Category CompHaus :=
   InducedCategory.category toTop
-#align CompHaus.category CompHaus.category
--/
+#align CompHaus.category CompHausₓ.category
 
-#print CompHaus.concreteCategory /-
 instance concreteCategory : ConcreteCategory CompHaus :=
   InducedCategory.concreteCategory _
-#align CompHaus.concrete_category CompHaus.concreteCategory
--/
+#align CompHaus.concrete_category CompHausₓ.concreteCategory
 
 @[simp]
 theorem coe_toTop {X : CompHaus} : (X.toTop : Type _) = X :=
   rfl
-#align CompHaus.coe_to_Top CompHaus.coe_toTop
+#align CompHaus.coe_to_Top CompHausₓ.coe_toTop
 
 variable (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X]
 
@@ -89,21 +83,16 @@ def of : CompHaus where
 #align CompHaus.of CompHaus.of
 -/
 
-#print CompHaus.coe_of /-
 @[simp]
 theorem coe_of : (CompHaus.of X : Type _) = X :=
   rfl
-#align CompHaus.coe_of CompHaus.coe_of
--/
+#align CompHaus.coe_of CompHausₓ.coe_of
 
-#print CompHaus.isClosedMap /-
 /-- Any continuous function on compact Hausdorff spaces is a closed map. -/
 theorem isClosedMap {X Y : CompHaus.{u}} (f : X ⟶ Y) : IsClosedMap f := fun C hC =>
   (hC.IsCompact.image f.Continuous).IsClosed
-#align CompHaus.is_closed_map CompHaus.isClosedMap
--/
+#align CompHaus.is_closed_map CompHausₓ.isClosedMap
 
-#print CompHaus.isIso_of_bijective /-
 /-- Any continuous bijection of compact Hausdorff spaces is an isomorphism. -/
 theorem isIso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
     IsIso f := by
@@ -118,17 +107,14 @@ theorem isIso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bi
     apply E.symm_apply_apply
   · ext x
     apply E.apply_symm_apply
-#align CompHaus.is_iso_of_bijective CompHaus.isIso_of_bijective
--/
+#align CompHaus.is_iso_of_bijective CompHausₓ.isIso_of_bijective
 
-#print CompHaus.isoOfBijective /-
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
 noncomputable def isoOfBijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
     X ≅ Y :=
   letI := is_iso_of_bijective _ bij
   as_iso f
-#align CompHaus.iso_of_bijective CompHaus.isoOfBijective
--/
+#align CompHaus.iso_of_bijective CompHausₓ.isoOfBijective
 
 end CompHaus
 
@@ -141,12 +127,10 @@ deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align CompHaus_to_Top compHausToTop
 -/
 
-#print CompHaus.forget_reflectsIsomorphisms /-
 instance CompHaus.forget_reflectsIsomorphisms :
     CategoryTheory.Functor.ReflectsIsomorphisms (forget CompHaus.{u}) :=
   ⟨by intro A B f hf <;> exact CompHaus.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
-#align CompHaus.forget_reflects_isomorphisms CompHaus.forget_reflectsIsomorphisms
--/
+#align CompHaus.forget_reflects_isomorphisms CompHausₓ.forget_reflectsIsomorphisms
 
 #print stoneCechObj /-
 /-- (Implementation) The object part of the compactification functor from topological spaces to
@@ -308,7 +292,6 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
 #align CompHaus.epi_iff_surjective CompHaus.epi_iff_surjective
 -/
 
-#print CompHaus.mono_iff_injective /-
 theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
   by
   constructor
@@ -321,8 +304,7 @@ theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Funct
     exact this
   · rw [← CategoryTheory.mono_iff_injective]
     apply (forget CompHaus).mono_of_mono_map
-#align CompHaus.mono_iff_injective CompHaus.mono_iff_injective
--/
+#align CompHaus.mono_iff_injective CompHausₓ.mono_iff_injective
 
 end CompHaus
 

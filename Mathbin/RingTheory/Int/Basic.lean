@@ -371,17 +371,17 @@ theorem Int.exists_prime_and_dvd {n : ℤ} (hn : n.natAbs ≠ 1) : ∃ p, Prime 
 open UniqueFactorizationMonoid
 
 #print Nat.factors_eq /-
-theorem Nat.factors_eq {n : ℕ} : normalizedFactors n = n.factors :=
+theorem Nat.factors_eq {n : ℕ} : normalizedFactors n = n.primeFactorsList :=
   by
   cases n; · simp
   rw [← Multiset.rel_eq, ← associated_eq_eq]
   apply factors_unique irreducible_of_normalized_factor _
-  · rw [Multiset.prod_coe, Nat.prod_factors n.succ_ne_zero]
+  · rw [Multiset.prod_coe, Nat.prod_primeFactorsList n.succ_ne_zero]
     apply normalized_factors_prod (Nat.succ_ne_zero _)
   · infer_instance
   · intro x hx
     rw [Nat.irreducible_iff_prime, ← Nat.prime_iff]
-    exact Nat.prime_of_mem_factors hx
+    exact Nat.prime_of_mem_primeFactorsList hx
 #align nat.factors_eq Nat.factors_eq
 -/
 
@@ -487,29 +487,29 @@ theorem span_natAbs (a : ℤ) : Ideal.span ({a.natAbs} : Set ℤ) = Ideal.span {
 #align int.span_nat_abs Int.span_natAbs
 -/
 
-#print Int.eq_pow_of_mul_eq_pow_bit1_left /-
-theorem eq_pow_of_mul_eq_pow_bit1_left {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ}
+#print Int.eq_pow_of_mul_eq_pow_odd_left /-
+theorem eq_pow_of_mul_eq_pow_odd_left {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ}
     (h : a * b = c ^ bit1 k) : ∃ d, a = d ^ bit1 k :=
   by
   obtain ⟨d, hd⟩ := exists_associated_pow_of_mul_eq_pow' hab h
   replace hd := hd.symm
   rw [associated_iff_nat_abs, nat_abs_eq_nat_abs_iff, ← neg_pow_bit1] at hd
   obtain rfl | rfl := hd <;> exact ⟨_, rfl⟩
-#align int.eq_pow_of_mul_eq_pow_bit1_left Int.eq_pow_of_mul_eq_pow_bit1_left
+#align int.eq_pow_of_mul_eq_pow_bit1_left Int.eq_pow_of_mul_eq_pow_odd_left
 -/
 
-#print Int.eq_pow_of_mul_eq_pow_bit1_right /-
-theorem eq_pow_of_mul_eq_pow_bit1_right {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ}
+#print Int.eq_pow_of_mul_eq_pow_odd_right /-
+theorem eq_pow_of_mul_eq_pow_odd_right {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ}
     (h : a * b = c ^ bit1 k) : ∃ d, b = d ^ bit1 k :=
-  eq_pow_of_mul_eq_pow_bit1_left hab.symm (by rwa [mul_comm] at h)
-#align int.eq_pow_of_mul_eq_pow_bit1_right Int.eq_pow_of_mul_eq_pow_bit1_right
+  eq_pow_of_mul_eq_pow_odd_left hab.symm (by rwa [mul_comm] at h)
+#align int.eq_pow_of_mul_eq_pow_bit1_right Int.eq_pow_of_mul_eq_pow_odd_right
 -/
 
-#print Int.eq_pow_of_mul_eq_pow_bit1 /-
-theorem eq_pow_of_mul_eq_pow_bit1 {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ}
+#print Int.eq_pow_of_mul_eq_pow_odd /-
+theorem eq_pow_of_mul_eq_pow_odd {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ}
     (h : a * b = c ^ bit1 k) : (∃ d, a = d ^ bit1 k) ∧ ∃ e, b = e ^ bit1 k :=
-  ⟨eq_pow_of_mul_eq_pow_bit1_left hab h, eq_pow_of_mul_eq_pow_bit1_right hab h⟩
-#align int.eq_pow_of_mul_eq_pow_bit1 Int.eq_pow_of_mul_eq_pow_bit1
+  ⟨eq_pow_of_mul_eq_pow_odd_left hab h, eq_pow_of_mul_eq_pow_odd_right hab h⟩
+#align int.eq_pow_of_mul_eq_pow_bit1 Int.eq_pow_of_mul_eq_pow_odd
 -/
 
 end Int

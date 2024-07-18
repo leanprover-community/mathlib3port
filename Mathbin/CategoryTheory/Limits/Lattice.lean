@@ -5,7 +5,7 @@ Authors: Scott Morrison, Justus Springer
 -/
 import Order.CompleteLattice
 import Data.Fintype.Lattice
-import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.Pullback.Cospan
 import CategoryTheory.Category.Preorder
 import CategoryTheory.Limits.Shapes.Products
 import CategoryTheory.Limits.Shapes.FiniteLimits

@@ -85,13 +85,13 @@ theorem not_mem_prime_iff_unit_in_stalk (r : Γ.obj (op X)) (x : X) :
 #align algebraic_geometry.LocallyRingedSpace.not_mem_prime_iff_unit_in_stalk AlgebraicGeometry.LocallyRingedSpace.not_mem_prime_iff_unit_in_stalk
 -/
 
-#print AlgebraicGeometry.LocallyRingedSpace.toΓSpec_preim_basicOpen_eq /-
+#print AlgebraicGeometry.LocallyRingedSpace.toΓSpec_preimage_basicOpen_eq /-
 /-- The preimage of a basic open in `Spec Γ(X)` under the unit is the basic
 open in `X` defined by the same element (they are equal as sets). -/
-theorem toΓSpec_preim_basicOpen_eq (r : Γ.obj (op X)) :
+theorem toΓSpec_preimage_basicOpen_eq (r : Γ.obj (op X)) :
     X.toΓSpecFun ⁻¹' (basicOpen r).1 = (X.toRingedSpace.basicOpen r).1 := by ext;
   erw [X.to_RingedSpace.mem_top_basic_open]; apply not_mem_prime_iff_unit_in_stalk
-#align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_preim_basic_open_eq AlgebraicGeometry.LocallyRingedSpace.toΓSpec_preim_basicOpen_eq
+#align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_preim_basic_open_eq AlgebraicGeometry.LocallyRingedSpace.toΓSpec_preimage_basicOpen_eq
 -/
 
 #print AlgebraicGeometry.LocallyRingedSpace.toΓSpec_continuous /-
@@ -128,7 +128,7 @@ abbrev toΓSpecMapBasicOpen : Opens X :=
 #print AlgebraicGeometry.LocallyRingedSpace.toΓSpecMapBasicOpen_eq /-
 /-- The preimage is the basic open in `X` defined by the same element `r`. -/
 theorem toΓSpecMapBasicOpen_eq : X.toΓSpecMapBasicOpen r = X.toRingedSpace.basicOpen r :=
-  Opens.ext (X.toΓSpec_preim_basicOpen_eq r)
+  Opens.ext (X.toΓSpec_preimage_basicOpen_eq r)
 #align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_map_basic_open_eq AlgebraicGeometry.LocallyRingedSpace.toΓSpecMapBasicOpen_eq
 -/
 

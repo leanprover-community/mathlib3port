@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Filippo A. E. Nuccio
 -/
 import Algebra.BigOperators.Finprod
-import RingTheory.IntegralClosure
+import RingTheory.IntegralClosure.IsIntegral.Defs
 import RingTheory.Localization.Integer
 import RingTheory.Localization.Submodule
 import RingTheory.Noetherian

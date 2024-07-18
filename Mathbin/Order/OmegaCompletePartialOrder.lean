@@ -74,10 +74,10 @@ variable {β γ}
 
 variable {α} {α' : Type _} {β' : Type _} [Preorder α'] [Preorder β']
 
-#print OrderHom.bind /-
+#print OrderHom.partBind /-
 /-- `part.bind` as a monotone function -/
 @[simps]
-def bind {β γ} (f : α →o Part β) (g : α →o β → Part γ) : α →o Part γ
+def partBind {β γ} (f : α →o Part β) (g : α →o β → Part γ) : α →o Part γ
     where
   toFun x := f x >>= g x
   monotone' := by
@@ -85,7 +85,7 @@ def bind {β γ} (f : α →o Part β) (g : α →o β → Part γ) : α →o Pa
     simp only [and_imp, exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, exists_imp]
     intro b hb ha
     refine' ⟨b, f.monotone h _ hb, g.monotone h _ _ ha⟩
-#align order_hom.bind OrderHom.bind
+#align order_hom.bind OrderHom.partBind
 -/
 
 end OrderHom
@@ -730,7 +730,7 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
     ωSup (c.map (f.bind g)) = ωSup (c.map f) >>= ωSup (c.map g) :=
   by
   apply eq_of_forall_ge_iff; intro x
-  simp only [ωSup_le_iff, Part.bind_le, chain.mem_map_iff, and_imp, OrderHom.bind_coe, exists_imp]
+  simp only [ωSup_le_iff, Part.bind_le, chain.mem_map_iff, and_imp, OrderHom.partBind, exists_imp]
   constructor <;> intro h'''
   · intro b hb; apply ωSup_le _ _ _
     rintro i y hy; simp only [Part.mem_ωSup] at hb
@@ -740,11 +740,11 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
     replace hy : y ∈ g (c (max i j)) b := g.mono (c.mono (le_max_left i j)) _ _ hy
     apply h''' (max i j)
     simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe,
-      Function.comp_apply, OrderHom.bind_coe]
+      Function.comp_apply, OrderHom.partBind]
     exact ⟨_, hb, hy⟩
   · intro i; intro y hy
     simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe,
-      Function.comp_apply, OrderHom.bind_coe] at hy
+      Function.comp_apply, OrderHom.partBind] at hy
     rcases hy with ⟨b, hb₀, hb₁⟩
     apply h''' b _
     · apply le_ωSup (c.map g) _ _ _ hb₁
@@ -756,7 +756,7 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
 theorem bind_continuous' {β γ : Type v} (f : α → Part β) (g : α → β → Part γ) :
     Continuous' f → Continuous' g → Continuous' fun x => f x >>= g x
   | ⟨hf, hf'⟩, ⟨hg, hg'⟩ =>
-    Continuous.of_bundled' (OrderHom.bind ⟨f, hf⟩ ⟨g, hg⟩)
+    Continuous.of_bundled' (OrderHom.partBind ⟨f, hf⟩ ⟨g, hg⟩)
       (by intro c <;> rw [ωSup_bind, ← hf', ← hg'] <;> rfl)
 #align omega_complete_partial_order.continuous_hom.bind_continuous' OmegaCompletePartialOrder.ContinuousHom.bind_continuous'
 -/
@@ -989,9 +989,9 @@ def flip {α : Type _} (f : α → β →𝒄 γ) : β →𝒄 α → γ
 /-- `part.bind` as a continuous function. -/
 @[simps (config := { rhsMd := reducible })]
 noncomputable def bind {β γ : Type v} (f : α →𝒄 Part β) (g : α →𝒄 β → Part γ) : α →𝒄 Part γ :=
-  mk (OrderHom.bind ↑f ↑g) fun c =>
+  mk (OrderHom.partBind ↑f ↑g) fun c =>
     by
-    rw [OrderHom.bind, ← OrderHom.bind, ωSup_bind, ← f.continuous, ← g.continuous]
+    rw [OrderHom.partBind, ← OrderHom.partBind, ωSup_bind, ← f.continuous, ← g.continuous]
     rfl
 #align omega_complete_partial_order.continuous_hom.bind OmegaCompletePartialOrder.ContinuousHom.bind
 -/
@@ -1002,7 +1002,7 @@ noncomputable def bind {β γ : Type v} (f : α →𝒄 Part β) (g : α →𝒄
 noncomputable def map {β γ : Type v} (f : β → γ) (g : α →𝒄 Part β) : α →𝒄 Part γ :=
   copy (fun x => f <$> g x) (bind g (const (pure ∘ f))) <| by
     ext <;>
-      simp only [map_eq_bind_pure_comp, bind_apply, OrderHom.bind_coe, const_apply,
+      simp only [map_eq_bind_pure_comp, bind_apply, OrderHom.partBind, const_apply,
         OrderHom.const_coe_coe, coe_apply]
 #align omega_complete_partial_order.continuous_hom.map OmegaCompletePartialOrder.ContinuousHom.map
 -/
@@ -1015,7 +1015,7 @@ noncomputable def seq {β γ : Type v} (f : α →𝒄 Part (β → γ)) (g : α
     (by
       ext <;>
           simp only [seq_eq_bind_map, flip, Part.bind_eq_bind, map_apply, Part.mem_bind_iff,
-            bind_apply, OrderHom.bind_coe, coe_apply, flip_apply] <;>
+            bind_apply, OrderHom.partBind, coe_apply, flip_apply] <;>
         rfl)
 #align omega_complete_partial_order.continuous_hom.seq OmegaCompletePartialOrder.ContinuousHom.seq
 -/

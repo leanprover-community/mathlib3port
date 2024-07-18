@@ -457,7 +457,8 @@ theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y 
   rcases Nat.exists_eq_succ_of_ne_zero hn with ⟨k, rfl⟩
   induction' k with k ih; · simp only [pow_one]
   let n := k.succ
-  have h1 := add_nonneg (mul_nonneg hx (pow_nonneg hy n)) (mul_nonneg hy (pow_nonneg hx n))
+  have h1 :=
+    add_nonneg (mul_nonneg hx (Nonneg.pow_nonneg hy n)) (mul_nonneg hy (Nonneg.pow_nonneg hx n))
   have h2 := add_nonneg hx hy
   calc
     x ^ n.succ + y ^ n.succ ≤ x * x ^ n + y * y ^ n + (x * y ^ n + y * x ^ n) := by
@@ -497,7 +498,7 @@ theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
 #print pow_right_mono /-
 theorem pow_right_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
   monotone_nat_of_le_succ fun n => by rw [pow_succ'];
-    exact le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h) _) h
+    exact le_mul_of_one_le_left (Nonneg.pow_nonneg (zero_le_one.trans h) _) h
 #align pow_mono pow_right_mono
 -/
 
@@ -521,7 +522,7 @@ theorem pow_le_pow_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i : ℕ, 
   | 0 => by simp
   | k + 1 => by
     rw [pow_succ', pow_succ']
-    exact mul_le_mul hab (pow_le_pow_left _) (pow_nonneg ha _) (le_trans ha hab)
+    exact mul_le_mul hab (pow_le_pow_left _) (Nonneg.pow_nonneg ha _) (le_trans ha hab)
 #align pow_le_pow_of_le_left pow_le_pow_left
 -/
 
@@ -755,11 +756,9 @@ theorem abs_pow_eq_one (a : R) {n : ℕ} (h : 0 < n) : |a ^ n| = 1 ↔ |a| = 1 :
 #align abs_pow_eq_one abs_pow_eq_one
 -/
 
-#print pow_bit0_nonneg /-
 theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n := by rw [pow_bit0];
   exact hMul_self_nonneg _
 #align pow_bit0_nonneg pow_bit0_nonneg
--/
 
 #print sq_nonneg /-
 theorem sq_nonneg (a : R) : 0 ≤ a ^ 2 :=
@@ -770,11 +769,9 @@ theorem sq_nonneg (a : R) : 0 ≤ a ^ 2 :=
 alias pow_two_nonneg := sq_nonneg
 #align pow_two_nonneg pow_two_nonneg
 
-#print pow_bit0_pos /-
 theorem pow_bit0_pos {a : R} (h : a ≠ 0) (n : ℕ) : 0 < a ^ bit0 n :=
   (pow_bit0_nonneg a n).lt_of_ne (pow_ne_zero _ h).symm
 #align pow_bit0_pos pow_bit0_pos
--/
 
 #print sq_pos_of_ne_zero /-
 theorem sq_pos_of_ne_zero (a : R) (h : a ≠ 0) : 0 < a ^ 2 :=
@@ -785,7 +782,6 @@ theorem sq_pos_of_ne_zero (a : R) (h : a ≠ 0) : 0 < a ^ 2 :=
 alias pow_two_pos_of_ne_zero := sq_pos_of_ne_zero
 #align pow_two_pos_of_ne_zero pow_two_pos_of_ne_zero
 
-#print pow_bit0_pos_iff /-
 theorem pow_bit0_pos_iff (a : R) {n : ℕ} (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a ≠ 0 :=
   by
   refine' ⟨fun h => _, fun h => pow_bit0_pos h n⟩
@@ -793,7 +789,6 @@ theorem pow_bit0_pos_iff (a : R) {n : ℕ} (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a
   rw [zero_pow (Nat.zero_lt_bit0 hn)] at h
   exact lt_irrefl _ h
 #align pow_bit0_pos_iff pow_bit0_pos_iff
--/
 
 #print sq_pos_iff /-
 theorem sq_pos_iff (a : R) : 0 < a ^ 2 ↔ a ≠ 0 :=

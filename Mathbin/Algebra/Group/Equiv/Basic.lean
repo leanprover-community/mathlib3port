@@ -213,7 +213,7 @@ theorem toEquiv_eq_coe (f : M ≃* N) : f.toEquiv = f :=
 theorem toFun_eq_coe {f : M ≃* N} : f.toFun = f :=
   rfl
 #align mul_equiv.to_fun_eq_coe MulEquiv.toFun_eq_coe
-#align add_equiv.to_fun_eq_coe AddEquiv.to_fun_eq_coe
+#align add_equiv.to_fun_eq_coe AddEquiv.toFun_eq_coe
 
 #print MulEquiv.coe_toEquiv /-
 @[simp, to_additive]

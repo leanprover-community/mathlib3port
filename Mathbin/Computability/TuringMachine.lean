@@ -1956,8 +1956,8 @@ parameter {Γ : Type _} [Inhabited Γ]
 
 #print Turing.TM1to1.exists_enc_dec /-
 theorem exists_enc_dec [Fintype Γ] :
-    ∃ (n : _) (enc : Γ → Vector Bool n) (dec : Vector Bool n → Γ),
-      enc default = Vector.replicate n false ∧ ∀ a, dec (enc a) = a :=
+    ∃ (n : _) (enc : Γ → Mathlib.Vector Bool n) (dec : Mathlib.Vector Bool n → Γ),
+      enc default = Mathlib.Vector.replicate n false ∧ ∀ a, dec (enc a) = a :=
   by
   letI := Classical.decEq Γ
   let n := Fintype.card Γ
@@ -1967,7 +1967,7 @@ theorem exists_enc_dec [Fintype Γ] :
       Bool.of_decide_true <| (congr_fun h b).trans <| Bool.decide_true rfl⟩
   let H := (F.to_embedding.trans G).trans (Equiv.vectorEquivFin _ _).symm.toEmbedding
   classical
-  let enc := H.set_value default (Vector.replicate n ff)
+  let enc := H.set_value default (Mathlib.Vector.replicate n ff)
   exact ⟨_, enc, Function.invFun enc, H.set_value_eq _ _, Function.leftInverse_invFun enc.2⟩
 #align turing.TM1to1.exists_enc_dec Turing.TM1to1.exists_enc_dec
 -/
@@ -1997,15 +1997,15 @@ local notation "cfg'" => Cfg Bool Λ' σ
 
 #print Turing.TM1to1.readAux /-
 /-- Read a vector of length `n` from the tape. -/
-def readAux : ∀ n, (Vector Bool n → stmt') → stmt'
-  | 0, f => f Vector.nil
+def readAux : ∀ n, (Mathlib.Vector Bool n → stmt') → stmt'
+  | 0, f => f Mathlib.Vector.nil
   | i + 1, f =>
     Stmt.branch (fun a s => a) (Stmt.move Dir.right <| read_aux i fun v => f (true ::ᵥ v))
       (Stmt.move Dir.right <| read_aux i fun v => f (false ::ᵥ v))
 #align turing.TM1to1.read_aux Turing.TM1to1.readAux
 -/
 
-parameter {n : ℕ} (enc : Γ → Vector Bool n) (dec : Vector Bool n → Γ)
+parameter {n : ℕ} (enc : Γ → Mathlib.Vector Bool n) (dec : Mathlib.Vector Bool n → Γ)
 
 #print Turing.TM1to1.move /-
 /-- A move left or right corresponds to `n` moves across the super-cell. -/
@@ -2072,7 +2072,8 @@ theorem supportsStmt_write {S l q} : SupportsStmt S (write l q) = SupportsStmt S
 theorem supportsStmt_read {S} :
     ∀ {f : Γ → stmt'}, (∀ a, SupportsStmt S (f a)) → SupportsStmt S (read f) :=
   suffices
-    ∀ (i) (f : Vector Bool i → stmt'), (∀ v, SupportsStmt S (f v)) → SupportsStmt S (read_aux i f)
+    ∀ (i) (f : Mathlib.Vector Bool i → stmt'),
+      (∀ v, SupportsStmt S (f v)) → SupportsStmt S (read_aux i f)
     from fun f hf => this n _ (by intro <;> simp only [supports_stmt_move, hf])
   fun i f hf => by
   induction' i with i IH; · exact hf _
@@ -2080,7 +2081,7 @@ theorem supportsStmt_read {S} :
 #align turing.TM1to1.supports_stmt_read Turing.TM1to1.supportsStmt_read
 -/
 
-parameter (enc0 : enc default = Vector.replicate n false)
+parameter (enc0 : enc default = Mathlib.Vector.replicate n false)
 
 section
 
@@ -2092,7 +2093,8 @@ def trTape' (L R : ListBlank Γ) : Tape Bool := by
   refine'
       tape.mk' (L.bind (fun x => (enc x).toList.reverse) ⟨n, _⟩)
         (R.bind (fun x => (enc x).toList) ⟨n, _⟩) <;>
-    simp only [enc0, Vector.replicate, List.reverse_replicate, Bool.default_bool, Vector.toList_mk]
+    simp only [enc0, Mathlib.Vector.replicate, List.reverse_replicate, Bool.default_bool,
+      Mathlib.Vector.toList_mk]
 #align turing.TM1to1.tr_tape' Turing.TM1to1.trTape'
 -/
 
@@ -2137,12 +2139,13 @@ theorem trTape'_move_left (L R) :
   obtain ⟨a, L, rfl⟩ := L.exists_cons
   simp only [tr_tape', list_blank.cons_bind, list_blank.head_cons, list_blank.tail_cons]
   suffices
-    ∀ {L' R' l₁ l₂} (e : Vector.toList (enc a) = List.reverseAux l₁ l₂),
+    ∀ {L' R' l₁ l₂} (e : Mathlib.Vector.toList (enc a) = List.reverseAux l₁ l₂),
       (tape.move dir.left^[l₁.length])
           (tape.mk' (list_blank.append l₁ L') (list_blank.append l₂ R')) =
-        tape.mk' L' (list_blank.append (Vector.toList (enc a)) R')
+        tape.mk' L' (list_blank.append (Mathlib.Vector.toList (enc a)) R')
     by
-    simpa only [List.length_reverse, Vector.toList_length] using this (List.reverse_reverse _).symm
+    simpa only [List.length_reverse, Mathlib.Vector.toList_length] using
+      this (List.reverse_reverse _).symm
   intros; induction' l₁ with b l₁ IH generalizing l₂
   · cases e; rfl
   simp only [List.length, List.cons_append, iterate_succ_apply]

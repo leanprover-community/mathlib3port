@@ -359,7 +359,8 @@ theorem differentiableAt_riemannZeta {s : ℂ} (hs' : s ≠ 1) : DifferentiableA
     `s = 0` also, as a hypothesis for the removable-singularity criterion. -/
   have c1 :
     ∀ (t : ℂ) (ht : t ≠ 0) (ht' : t ≠ 1),
-      DifferentiableAt ℂ (fun u : ℂ => ↑π ^ (u / 2) * completedRiemannZeta u / Gamma (u / 2)) t :=
+      DifferentiableAt ℂ
+        (fun u : ℂ => ↑π ^ (u / 2) * completedRiemannZeta u / CongruenceSubgroup.Gamma (u / 2)) t :=
     by
     intro t ht ht'
     apply DifferentiableAt.mul
@@ -370,23 +371,26 @@ theorem differentiableAt_riemannZeta {s : ℂ} (hs' : s ≠ 1) : DifferentiableA
       exact DifferentiableAt.div_const differentiableAt_id _
   -- Second claim: the limit at `s = 0` exists and is equal to `-1 / 2`.
   have c2 :
-    tendsto (fun s : ℂ => ↑π ^ (s / 2) * completedRiemannZeta s / Gamma (s / 2)) (𝓝[≠] 0)
-      (𝓝 <| -1 / 2) :=
+    tendsto (fun s : ℂ => ↑π ^ (s / 2) * completedRiemannZeta s / CongruenceSubgroup.Gamma (s / 2))
+      (𝓝[≠] 0) (𝓝 <| -1 / 2) :=
     by
     have h1 : tendsto (fun z : ℂ => (π : ℂ) ^ (z / 2)) (𝓝 0) (𝓝 1) :=
       by
       convert (continuousAt_const_cpow (of_real_ne_zero.mpr pi_pos.ne')).comp _
       · simp_rw [Function.comp_apply, zero_div, cpow_zero]
       · exact continuous_at_id.div continuousAt_const two_ne_zero
-    suffices h2 : tendsto (fun z => completedRiemannZeta z / Gamma (z / 2)) (𝓝[≠] 0) (𝓝 <| -1 / 2)
+    suffices h2 :
+      tendsto (fun z => completedRiemannZeta z / CongruenceSubgroup.Gamma (z / 2)) (𝓝[≠] 0)
+        (𝓝 <| -1 / 2)
     · convert (h1.mono_left nhdsWithin_le_nhds).mul h2
       · ext1 x; rw [mul_div]; · simp only [one_mul]
     suffices h3 :
-      tendsto (fun z => completedRiemannZeta z * (z / 2) / (z / 2 * Gamma (z / 2))) (𝓝[≠] 0)
-        (𝓝 <| -1 / 2)
+      tendsto
+        (fun z => completedRiemannZeta z * (z / 2) / (z / 2 * CongruenceSubgroup.Gamma (z / 2)))
+        (𝓝[≠] 0) (𝓝 <| -1 / 2)
     · refine' tendsto.congr' (eventually_eq_of_mem self_mem_nhdsWithin fun z hz => _) h3
       rw [← div_div, mul_div_cancel_right₀ _ (div_ne_zero hz two_ne_zero)]
-    have h4 : tendsto (fun z : ℂ => z / 2 * Gamma (z / 2)) (𝓝[≠] 0) (𝓝 1) :=
+    have h4 : tendsto (fun z : ℂ => z / 2 * CongruenceSubgroup.Gamma (z / 2)) (𝓝[≠] 0) (𝓝 1) :=
       by
       refine' tendsto_self_mul_Gamma_nhds_zero.comp _
       rw [tendsto_nhdsWithin_iff, (by simp : 𝓝 (0 : ℂ) = 𝓝 (0 / 2))]
@@ -754,20 +758,24 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
   have h_sqrt : (sqrt π : ℂ) ≠ 0 := of_real_ne_zero.mpr (sqrt_ne_zero'.mpr pi_pos)
   have h_pow : (2 : ℂ) ^ (s - 1) ≠ 0 := by rw [Ne.def, cpow_eq_zero_iff, not_and_or];
     exact Or.inl two_ne_zero
-  have h_Ga_ne1 : Gamma (s / 2) ≠ 0 :=
+  have h_Ga_ne1 : CongruenceSubgroup.Gamma (s / 2) ≠ 0 :=
     by
     rw [Ne.def, Complex.Gamma_eq_zero_iff]
     contrapose! hs
     obtain ⟨m, hm⟩ := hs
     rw [div_eq_iff (two_ne_zero' ℂ), ← Nat.cast_two, neg_mul, ← Nat.cast_mul] at hm
     exact ⟨m * 2, by rw [hm]⟩
-  have h_Ga_eq : Gamma s = Gamma (s / 2) * Gamma ((s + 1) / 2) * 2 ^ (s - 1) / sqrt π := by
+  have h_Ga_eq :
+    CongruenceSubgroup.Gamma s =
+      CongruenceSubgroup.Gamma (s / 2) * CongruenceSubgroup.Gamma ((s + 1) / 2) * 2 ^ (s - 1) /
+        sqrt π :=
+    by
     rw [add_div, Complex.Gamma_mul_Gamma_add_half, mul_div_cancel₀ _ (two_ne_zero' ℂ),
       (by ring : 1 - s = -(s - 1)), cpow_neg, ← div_eq_mul_inv, eq_div_iff h_sqrt,
       div_mul_eq_mul_div₀, div_mul_cancel₀ _ h_pow]
-  have h_Ga_ne3 : Gamma ((s + 1) / 2) ≠ 0 :=
+  have h_Ga_ne3 : CongruenceSubgroup.Gamma ((s + 1) / 2) ≠ 0 :=
     by
-    have h_Ga_aux : Gamma s ≠ 0 := Complex.Gamma_ne_zero hs
+    have h_Ga_aux : CongruenceSubgroup.Gamma s ≠ 0 := Complex.Gamma_ne_zero hs
     contrapose! h_Ga_aux
     rw [h_Ga_eq, h_Ga_aux, MulZeroClass.mul_zero, MulZeroClass.zero_mul, zero_div]
   rw [riemannZeta, Function.update_noteq (by rwa [sub_ne_zero, ne_comm] : 1 - s ≠ 0),
@@ -783,7 +791,7 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
     rw [this, Complex.Gamma_neg_nat_eq_zero, div_zero]
     have : (π : ℂ) * (1 - (1 + 2 * ↑n)) / 2 = ↑(-n : ℤ) * π := by push_cast; field_simp; ring
     rw [this, Complex.sin_int_mul_pi, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
-  have h_Ga_ne4 : Gamma ((1 - s) / 2) ≠ 0 :=
+  have h_Ga_ne4 : CongruenceSubgroup.Gamma ((1 - s) / 2) ≠ 0 :=
     by
     rw [Ne.def, Complex.Gamma_eq_zero_iff]
     contrapose! hs_pos_odd
@@ -792,7 +800,9 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
       eq_sub_iff_add_eq] at hm
     exact ⟨m, by rw [← hm, mul_comm]⟩
   -- At last the main proof
-  rw [show sin (↑π * (1 - s) / 2) = π * (Gamma ((1 - s) / 2) * Gamma (s / 2 + 1 / 2))⁻¹
+  rw [show
+      sin (↑π * (1 - s) / 2) =
+        π * (CongruenceSubgroup.Gamma ((1 - s) / 2) * CongruenceSubgroup.Gamma (s / 2 + 1 / 2))⁻¹
       by
       have := congr_arg Inv.inv (Complex.Gamma_mul_Gamma_one_sub ((1 - s) / 2)).symm
       rwa [(by ring : 1 - (1 - s) / 2 = s / 2 + 1 / 2), inv_div,
@@ -852,7 +862,7 @@ theorem riemannZeta_neg_nat_eq_bernoulli (k : ℕ) :
     rw [step1, (by norm_cast : (↑(2 * (m + 1)) : ℂ) = 2 * ↑m + 2)] at step2
     rw [step2, mul_div]
     -- now the rest is just a lengthy but elementary rearrangement
-    rw [show ((2 * (m + 1))! : ℂ) = Gamma (2 * m + 2) * (↑(2 * m + 1) + 1)
+    rw [show ((2 * (m + 1))! : ℂ) = CongruenceSubgroup.Gamma (2 * m + 2) * (↑(2 * m + 1) + 1)
         by
         rw [(by push_cast; ring : (2 * m + 2 : ℂ) = ↑(2 * m + 1) + 1),
           Complex.Gamma_nat_eq_factorial, (by ring : 2 * (m + 1) = 2 * m + 1 + 1),

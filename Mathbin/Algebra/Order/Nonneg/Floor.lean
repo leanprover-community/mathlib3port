@@ -3,7 +3,7 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Algebra.Order.Nonneg.Ring
+import Algebra.Order.Ring.Unbundled.Nonneg
 import Algebra.Order.Archimedean
 
 #align_import algebra.order.nonneg.floor from "leanprover-community/mathlib"@"b3f4f007a962e3787aa0f3b5c7942a1317f7d88e"

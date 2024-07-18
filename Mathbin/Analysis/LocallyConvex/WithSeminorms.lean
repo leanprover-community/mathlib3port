@@ -147,7 +147,7 @@ theorem basisSets_add (U) (hU : U ∈ p.basis_sets) :
   use(s.sup p).ball 0 (r / 2)
   refine' ⟨p.basis_sets_mem s (div_pos hr zero_lt_two), _⟩
   refine' Set.Subset.trans (ball_add_ball_subset (s.sup p) (r / 2) (r / 2) 0 0) _
-  rw [hU, add_zero, add_halves']
+  rw [hU, add_zero, add_halves]
 #align seminorm_family.basis_sets_add SeminormFamily.basisSets_add
 -/
 

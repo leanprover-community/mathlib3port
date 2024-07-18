@@ -5,7 +5,7 @@ Authors: Markus Himmel
 -/
 import CategoryTheory.Limits.Shapes.BinaryProducts
 import CategoryTheory.Limits.Shapes.Equalizers
-import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.Pullback.Cospan
 
 #align_import category_theory.limits.constructions.pullbacks from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
 

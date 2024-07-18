@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
 import Analysis.NormedSpace.FiniteDimension
-import Analysis.Calculus.AffineMap
+import Analysis.Calculus.AddTorsor.AffineMap
 import Analysis.Convex.Combination
 import LinearAlgebra.AffineSpace.FiniteDimensional
 

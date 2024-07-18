@@ -29,12 +29,13 @@ squarefree, multiplicity
 
 namespace Nat
 
-#print Nat.squarefree_iff_nodup_factors /-
-theorem squarefree_iff_nodup_factors {n : ℕ} (h0 : n ≠ 0) : Squarefree n ↔ n.factors.Nodup :=
+#print Nat.squarefree_iff_nodup_primeFactorsList /-
+theorem squarefree_iff_nodup_primeFactorsList {n : ℕ} (h0 : n ≠ 0) :
+    Squarefree n ↔ n.factors.Nodup :=
   by
   rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors h0, Nat.factors_eq]
   simp
-#align nat.squarefree_iff_nodup_factors Nat.squarefree_iff_nodup_factors
+#align nat.squarefree_iff_nodup_factors Nat.squarefree_iff_nodup_primeFactorsList
 -/
 
 #print Nat.squarefree_iff_prime_squarefree /-
@@ -439,9 +440,9 @@ def SquarefreeHelper (n k : ℕ) : Prop :=
 theorem squarefree_bit10 (n : ℕ) (h : SquarefreeHelper n 1) : Squarefree (bit0 (bit1 n)) :=
   by
   refine' @Nat.minSqFacProp_div _ _ Nat.prime_two two_dvd_bit0 _ none _
-  · rw [bit0_eq_two_mul (bit1 n), mul_dvd_mul_iff_left (two_ne_zero' ℕ)]
+  · rw [bit0_eq_two_hMul (bit1 n), mul_dvd_mul_iff_left (two_ne_zero' ℕ)]
     exact Nat.not_two_dvd_bit1 _
-  · rw [bit0_eq_two_mul, Nat.mul_div_right _ (by decide : 0 < 2)]
+  · rw [bit0_eq_two_hMul, Nat.mul_div_right _ (by decide : 0 < 2)]
     refine' h (by decide) fun p pp dp => Nat.succ_le_of_lt (lt_of_le_of_ne pp.two_le _)
     rintro rfl; exact Nat.not_two_dvd_bit1 _ dp
 #align tactic.norm_num.squarefree_bit10 Tactic.NormNum.squarefree_bit10
@@ -456,8 +457,8 @@ theorem squarefree_helper_0 {k} (k0 : 0 < k) {p : ℕ} (pp : Nat.Prime p) (h : b
     bit1 (k + 1) ≤ p ∨ bit1 k = p :=
   by
   rcases lt_or_eq_of_le h with ((hp : _ + 1 ≤ _) | hp)
-  · rw [bit1, bit0_eq_two_mul] at hp; change 2 * (_ + 1) ≤ _ at hp
-    rw [bit1, bit0_eq_two_mul]
+  · rw [bit1, bit0_eq_two_hMul] at hp; change 2 * (_ + 1) ≤ _ at hp
+    rw [bit1, bit0_eq_two_hMul]
     refine' Or.inl (lt_of_le_of_ne hp _); rintro rfl
     exact Nat.not_prime_mul (by decide) (lt_add_of_pos_left _ k0) pp
   · exact Or.inr hp

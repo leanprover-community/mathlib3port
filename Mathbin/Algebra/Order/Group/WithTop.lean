@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Algebra.Order.Group.Instances
-import Algebra.Order.Monoid.WithTop
+import Algebra.Order.Monoid.Unbundled.WithTop
 
 #align_import algebra.order.group.with_top from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

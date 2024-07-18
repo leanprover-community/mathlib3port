@@ -5,7 +5,7 @@ Authors: Alexander Bentkamp
 -/
 import Algebra.Algebra.Spectrum
 import LinearAlgebra.GeneralLinearGroup
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 
 #align_import linear_algebra.eigenspace.basic from "leanprover-community/mathlib"@"6b31d1eebd64eab86d5bd9936bfaada6ca8b5842"
 

@@ -7,7 +7,7 @@ import Algebra.BigOperators.Associated
 import Data.Nat.Choose.Sum
 import Data.Nat.Choose.Dvd
 import Data.Nat.Parity
-import Data.Nat.Prime
+import Data.Nat.Prime.Defs
 
 #align_import number_theory.primorial from "leanprover-community/mathlib"@"3e32bc908f617039c74c06ea9a897e30c30803c2"
 

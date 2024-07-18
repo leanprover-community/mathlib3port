@@ -58,33 +58,21 @@ add_tactic_doc
     declNames := [`tactic.hint.add_hint_tactic]
     tags := ["search"] }
 
-add_hint_tactic rfl
-
-add_hint_tactic exact by decide
-
-add_hint_tactic assumption
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic rfl -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic exact by decide -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic assumption -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic intro -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic infer_param -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic dsimp at * -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic simp at * -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic fconstructor -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic injections -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic solve_by_elim -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic unfold_coes -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic unfold_aux -/
 -- tidy does something better here: it suggests the actual "intros X Y f" string.
 -- perhaps add a wrapper?
-add_hint_tactic intro
-
-add_hint_tactic infer_param
-
-add_hint_tactic dsimp at *
-
-add_hint_tactic simp at *
-
 -- TODO hook up to squeeze_simp?
-add_hint_tactic fconstructor
-
-add_hint_tactic injections
-
-add_hint_tactic solve_by_elim
-
-add_hint_tactic unfold_coes
-
-add_hint_tactic unfold_aux
-
 end Hint
 
 /-- Report a list of tactics that can make progress against the current goal,

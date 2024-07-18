@@ -735,8 +735,7 @@ theorem dite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a : c → �
   by_cases h : c <;> simp [h]
 #align dite_cast dite_cast
 
-add_hint_tactic norm_cast at *
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic norm_cast at * -/
 /-- The `norm_cast` family of tactics is used to normalize casts inside expressions.
 It is basically a simp tactic with a specific set of lemmas to move casts
 upwards in the expression.

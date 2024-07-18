@@ -6,8 +6,8 @@ Authors: Anne Baanen, Ashvni Narayanan
 import Algebra.Order.Group.TypeTags
 import FieldTheory.RatFunc.Defs
 import RingTheory.DedekindDomain.IntegralClosure
-import RingTheory.IntegrallyClosed
-import Topology.Algebra.ValuedField
+import RingTheory.IntegralClosure.IntegrallyClosed
+import Topology.Algebra.Valued.ValuedField
 
 #align_import number_theory.function_field from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 
@@ -158,10 +158,10 @@ instance : IsFractionRing (ringOfIntegers Fq F) F :=
 instance : IsIntegrallyClosed (ringOfIntegers Fq F) :=
   integralClosure.isIntegrallyClosedOfFiniteExtension (RatFunc Fq)
 
-instance [IsSeparable (RatFunc Fq) F] : IsNoetherian Fq[X] (ringOfIntegers Fq F) :=
+instance [Algebra.IsSeparable (RatFunc Fq) F] : IsNoetherian Fq[X] (ringOfIntegers Fq F) :=
   IsIntegralClosure.isNoetherian _ (RatFunc Fq) F _
 
-instance [IsSeparable (RatFunc Fq) F] : IsDedekindDomain (ringOfIntegers Fq F) :=
+instance [Algebra.IsSeparable (RatFunc Fq) F] : IsDedekindDomain (ringOfIntegers Fq F) :=
   IsIntegralClosure.isDedekindDomain Fq[X] (RatFunc Fq) F _
 
 end RingOfIntegers

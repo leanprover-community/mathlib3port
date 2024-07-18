@@ -5,7 +5,7 @@ Authors: Johan Commelin, Eric Wieer
 -/
 import LinearAlgebra.FreeModule.Finite.Rank
 import LinearAlgebra.Matrix.ToLin
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 import LinearAlgebra.Matrix.DotProduct
 import Data.Complex.Module
 

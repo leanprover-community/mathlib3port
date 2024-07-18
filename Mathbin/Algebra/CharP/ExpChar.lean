@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach
 -/
 import Algebra.CharP.Defs
-import Data.Nat.Prime
+import Data.Nat.Prime.Defs
 
 #align_import algebra.char_p.exp_char from "leanprover-community/mathlib"@"932872382355f00112641d305ba0619305dc8642"
 

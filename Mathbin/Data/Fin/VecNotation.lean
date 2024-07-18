@@ -5,7 +5,7 @@ Authors: Anne Baanen
 -/
 import Data.Fin.Tuple.Basic
 import Data.List.Range
-import GroupTheory.GroupAction.Pi
+import Algebra.Group.Action.Pi
 import Meta.Univs
 
 #align_import data.fin.vec_notation from "leanprover-community/mathlib"@"63f84d91dd847f50bae04a01071f3a5491934e36"

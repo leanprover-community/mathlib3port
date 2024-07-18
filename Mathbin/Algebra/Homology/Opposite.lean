@@ -70,37 +70,33 @@ theorem imageToKernel_unop {X Y Z : Vᵒᵖ} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f 
 #align image_to_kernel_unop imageToKernel_unop
 -/
 
-#print homology'Op /-
 /-- Given `f, g` with `f ≫ g = 0`, the homology of `g.op, f.op` is the opposite of the homology of
 `f, g`. -/
-def homology'Op {X Y Z : V} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f ≫ g = 0) :
-    homology' g.op f.op (by rw [← op_comp, w, op_zero]) ≅ Opposite.op (homology' f g w) :=
+def homologyOp {X Y Z : V} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f ≫ g = 0) :
+    homology g.op f.op (by rw [← op_comp, w, op_zero]) ≅ Opposite.op (homology f g w) :=
   cokernelIsoOfEq (imageToKernel_op _ _ w) ≪≫
     cokernelEpiComp _ _ ≪≫
       cokernelCompIsIso _ _ ≪≫
         cokernelOpOp _ ≪≫
-          (homology'IsoKernelDesc _ _ _ ≪≫
+          (homologyIsoKernelDesc _ _ _ ≪≫
               kernelIsoOfEq
                   (by ext <;> simp only [image.fac, cokernel.π_desc, cokernel.π_desc_assoc]) ≪≫
                 kernelCompMono _ (image.ι g)).op
-#align homology_op homology'Op
--/
+#align homology_op homologyOp
 
-#print homology'Unop /-
 /-- Given morphisms `f, g` in `Vᵒᵖ` with `f ≫ g = 0`, the homology of `g.unop, f.unop` is the
 opposite of the homology of `f, g`. -/
-def homology'Unop {X Y Z : Vᵒᵖ} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f ≫ g = 0) :
-    homology' g.unop f.unop (by rw [← unop_comp, w, unop_zero]) ≅ Opposite.unop (homology' f g w) :=
+def homologyUnop {X Y Z : Vᵒᵖ} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f ≫ g = 0) :
+    homology g.unop f.unop (by rw [← unop_comp, w, unop_zero]) ≅ Opposite.unop (homology f g w) :=
   cokernelIsoOfEq (imageToKernel_unop _ _ w) ≪≫
     cokernelEpiComp _ _ ≪≫
       cokernelCompIsIso _ _ ≪≫
         cokernelUnopUnop _ ≪≫
-          (homology'IsoKernelDesc _ _ _ ≪≫
+          (homologyIsoKernelDesc _ _ _ ≪≫
               kernelIsoOfEq
                   (by ext <;> simp only [image.fac, cokernel.π_desc, cokernel.π_desc_assoc]) ≪≫
                 kernelCompMono _ (image.ι g)).unop
-#align homology_unop homology'Unop
--/
+#align homology_unop homologyUnop
 
 end
 
@@ -334,40 +330,36 @@ end
 
 variable [Abelian V] (C : HomologicalComplex V c) (i : ι)
 
-#print HomologicalComplex.homology'OpDef /-
 /-- Auxilliary tautological definition for `homology_op`. -/
-def homology'OpDef :
-    C.op.homology' i ≅
-      homology' (C.dFrom i).op (C.dTo i).op (by rw [← op_comp, C.d_to_comp_d_from i, op_zero]) :=
+def homologyOpDef :
+    C.op.homology i ≅
+      homology (C.dFrom i).op (C.dTo i).op (by rw [← op_comp, C.d_to_comp_d_from i, op_zero]) :=
   Iso.refl _
-#align homological_complex.homology_op_def HomologicalComplex.homology'OpDef
--/
+#align homological_complex.homology_op_def HomologicalComplex.homologyOpDef
 
-#print HomologicalComplex.homology'Op /-
+#print HomologicalComplex.homologyOp /-
 /-- Given a complex `C` of objects in `V`, the `i`th homology of its 'opposite' complex (with
 objects in `Vᵒᵖ`) is the opposite of the `i`th homology of `C`. -/
-def homology'Op : C.op.homology' i ≅ Opposite.op (C.homology' i) :=
-  homology'OpDef _ _ ≪≫ homology'Op _ _ _
-#align homological_complex.homology_op HomologicalComplex.homology'Op
+def homologyOp : C.op.homology i ≅ Opposite.op (C.homology i) :=
+  homologyOpDef _ _ ≪≫ homologyOp _ _ _
+#align homological_complex.homology_op HomologicalComplex.homologyOp
 -/
 
-#print HomologicalComplex.homology'UnopDef /-
 /-- Auxilliary tautological definition for `homology_unop`. -/
-def homology'UnopDef (C : HomologicalComplex Vᵒᵖ c) :
-    C.unop.homology' i ≅
-      homology' (C.dFrom i).unop (C.dTo i).unop
+def homologyUnopDef (C : HomologicalComplex Vᵒᵖ c) :
+    C.unop.homology i ≅
+      homology (C.dFrom i).unop (C.dTo i).unop
         (by rw [← unop_comp, C.d_to_comp_d_from i, unop_zero]) :=
   Iso.refl _
-#align homological_complex.homology_unop_def HomologicalComplex.homology'UnopDef
--/
+#align homological_complex.homology_unop_def HomologicalComplex.homologyUnopDef
 
-#print HomologicalComplex.homology'Unop /-
+#print HomologicalComplex.homologyUnop /-
 /-- Given a complex `C` of objects in `Vᵒᵖ`, the `i`th homology of its 'opposite' complex (with
 objects in `V`) is the opposite of the `i`th homology of `C`. -/
-def homology'Unop (C : HomologicalComplex Vᵒᵖ c) :
-    C.unop.homology' i ≅ Opposite.unop (C.homology' i) :=
-  homology'UnopDef _ _ ≪≫ homology'Unop _ _ _
-#align homological_complex.homology_unop HomologicalComplex.homology'Unop
+def homologyUnop (C : HomologicalComplex Vᵒᵖ c) :
+    C.unop.homology i ≅ Opposite.unop (C.homology i) :=
+  homologyUnopDef _ _ ≪≫ homologyUnop _ _ _
+#align homological_complex.homology_unop HomologicalComplex.homologyUnop
 -/
 
 end HomologicalComplex

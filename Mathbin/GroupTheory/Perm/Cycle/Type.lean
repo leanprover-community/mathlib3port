@@ -490,7 +490,7 @@ variable (G : Type _) [Group G] (n : ℕ)
 
 #print Equiv.Perm.vectorsProdEqOne /-
 /-- The type of vectors with terms from `G`, length `n`, and product equal to `1:G`. -/
-def vectorsProdEqOne : Set (Vector G n) :=
+def vectorsProdEqOne : Set (Mathlib.Vector G n) :=
   {v | v.toList.Prod = 1}
 #align equiv.perm.vectors_prod_eq_one Equiv.Perm.vectorsProdEqOne
 -/
@@ -498,29 +498,30 @@ def vectorsProdEqOne : Set (Vector G n) :=
 namespace VectorsProdEqOne
 
 #print Equiv.Perm.VectorsProdEqOne.mem_iff /-
-theorem mem_iff {n : ℕ} (v : Vector G n) : v ∈ vectorsProdEqOne G n ↔ v.toList.Prod = 1 :=
+theorem mem_iff {n : ℕ} (v : Mathlib.Vector G n) : v ∈ vectorsProdEqOne G n ↔ v.toList.Prod = 1 :=
   Iff.rfl
 #align equiv.perm.vectors_prod_eq_one.mem_iff Equiv.Perm.VectorsProdEqOne.mem_iff
 -/
 
 #print Equiv.Perm.VectorsProdEqOne.zero_eq /-
-theorem zero_eq : vectorsProdEqOne G 0 = {Vector.nil} :=
+theorem zero_eq : vectorsProdEqOne G 0 = {Mathlib.Vector.nil} :=
   Set.eq_singleton_iff_unique_mem.mpr ⟨Eq.refl (1 : G), fun v hv => v.eq_nil⟩
 #align equiv.perm.vectors_prod_eq_one.zero_eq Equiv.Perm.VectorsProdEqOne.zero_eq
 -/
 
 #print Equiv.Perm.VectorsProdEqOne.one_eq /-
-theorem one_eq : vectorsProdEqOne G 1 = {Vector.nil.cons 1} :=
+theorem one_eq : vectorsProdEqOne G 1 = {Mathlib.Vector.nil.cons 1} :=
   by
-  simp_rw [Set.eq_singleton_iff_unique_mem, mem_iff, Vector.toList_singleton, List.prod_singleton,
-    Vector.head_cons]
-  exact ⟨rfl, fun v hv => v.cons_head_tail.symm.trans (congr_arg₂ Vector.cons hv v.tail.eq_nil)⟩
+  simp_rw [Set.eq_singleton_iff_unique_mem, mem_iff, Mathlib.Vector.toList_singleton,
+    List.prod_singleton, Mathlib.Vector.head_cons]
+  exact
+    ⟨rfl, fun v hv => v.cons_head_tail.symm.trans (congr_arg₂ Mathlib.Vector.cons hv v.tail.eq_nil)⟩
 #align equiv.perm.vectors_prod_eq_one.one_eq Equiv.Perm.VectorsProdEqOne.one_eq
 -/
 
 #print Equiv.Perm.VectorsProdEqOne.zeroUnique /-
 instance zeroUnique : Unique (vectorsProdEqOne G 0) := by rw [zero_eq];
-  exact Set.uniqueSingleton Vector.nil
+  exact Set.uniqueSingleton Mathlib.Vector.nil
 #align equiv.perm.vectors_prod_eq_one.zero_unique Equiv.Perm.VectorsProdEqOne.zeroUnique
 -/
 
@@ -534,18 +535,19 @@ instance oneUnique : Unique (vectorsProdEqOne G 1) := by rw [one_eq];
 /-- Given a vector `v` of length `n`, make a vector of length `n + 1` whose product is `1`,
 by appending the inverse of the product of `v`. -/
 @[simps]
-def vectorEquiv : Vector G n ≃ vectorsProdEqOne G (n + 1)
+def vectorEquiv : Mathlib.Vector G n ≃ vectorsProdEqOne G (n + 1)
     where
   toFun v :=
-    ⟨v.toList.Prod⁻¹ ::ᵥ v, by rw [mem_iff, Vector.toList_cons, List.prod_cons, inv_mul_self]⟩
+    ⟨v.toList.Prod⁻¹ ::ᵥ v, by
+      rw [mem_iff, Mathlib.Vector.toList_cons, List.prod_cons, inv_mul_self]⟩
   invFun v := v.1.tail
   left_inv v := v.tail_cons v.toList.Prod⁻¹
   right_inv v :=
     Subtype.ext
-      ((congr_arg₂ Vector.cons
+      ((congr_arg₂ Mathlib.Vector.cons
             (eq_inv_of_mul_eq_one_left
                 (by
-                  rw [← List.prod_cons, ← Vector.toList_cons, v.1.cons_head!_tail]
+                  rw [← List.prod_cons, ← Mathlib.Vector.toList_cons, v.1.cons_head!_tail]
                   exact v.2)).symm
             rfl).trans
         v.1.cons_head!_tail)
@@ -555,7 +557,7 @@ def vectorEquiv : Vector G n ≃ vectorsProdEqOne G (n + 1)
 #print Equiv.Perm.VectorsProdEqOne.equivVector /-
 /-- Given a vector `v` of length `n` whose product is 1, make a vector of length `n - 1`,
 by deleting the last entry of `v`. -/
-def equivVector : vectorsProdEqOne G n ≃ Vector G (n - 1) :=
+def equivVector : vectorsProdEqOne G n ≃ Mathlib.Vector G (n - 1) :=
   ((vectorEquiv G (n - 1)).trans
       (if hn : n = 0 then
         show vectorsProdEqOne G (n - 1 + 1) ≃ vectorsProdEqOne G n by rw [hn]; apply equiv_of_unique
@@ -564,7 +566,7 @@ def equivVector : vectorsProdEqOne G n ≃ Vector G (n - 1) :=
 -/
 
 instance [Fintype G] : Fintype (vectorsProdEqOne G n) :=
-  Fintype.ofEquiv (Vector G (n - 1)) (equivVector G n).symm
+  Fintype.ofEquiv (Mathlib.Vector G (n - 1)) (equivVector G n).symm
 
 #print Equiv.Perm.VectorsProdEqOne.card /-
 theorem card [Fintype G] : Fintype.card (vectorsProdEqOne G n) = Fintype.card G ^ (n - 1) :=
@@ -625,7 +627,7 @@ theorem exists_prime_orderOf_dvd_card {G : Type _} [Group G] [Fintype G] (p : �
     Nat.rec (hf1 v).symm (fun k hk => Eq.trans (congr_arg σ hk) (hf2 k 1 v)) k
   replace hσ : σ ^ p ^ 1 = 1 := perm.ext fun v => by rw [pow_one, hσ, hf3, one_apply]
   let v₀ : vectors_prod_eq_one G p :=
-    ⟨Vector.replicate p 1, (List.prod_replicate p 1).trans (one_pow p)⟩
+    ⟨Mathlib.Vector.replicate p 1, (List.prod_replicate p 1).trans (one_pow p)⟩
   have hv₀ : σ v₀ = v₀ := Subtype.ext (Subtype.ext (List.rotate_replicate (1 : G) p 1))
   obtain ⟨v, hv1, hv2⟩ := exists_fixed_point_of_prime' Scard hσ hv₀
   refine'

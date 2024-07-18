@@ -92,8 +92,6 @@ protected theorem div_eq_zero_iff {a b : ℕ} (hb : 0 < b) : a / b = 0 ↔ a < b
 #align nat.div_eq_zero_iff Nat.div_eq_zero_iff
 -/
 
-/- warning: nat.div_eq_zero clashes with nat.div_eq_of_lt -> Nat.div_eq_of_lt
-Case conversion may be inaccurate. Consider using '#align nat.div_eq_zero Nat.div_eq_of_ltₓ'. -/
 #print Nat.div_eq_of_lt /-
 protected theorem div_eq_of_lt {a b : ℕ} (hb : a < b) : a / b = 0 :=
   (Nat.div_eq_zero_iff <| (zero_le a).trans_lt hb).mpr hb

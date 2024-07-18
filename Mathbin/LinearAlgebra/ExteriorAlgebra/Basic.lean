@@ -56,7 +56,7 @@ variable (M : Type u2) [AddCommGroup M] [Module R M]
 -/
 @[reducible]
 def ExteriorAlgebra :=
-  CliffordAlgebra (0 : QuadraticForm R M)
+  CliffordAlgebra (0 : QuadraticMap R M)
 #align exterior_algebra ExteriorAlgebra
 -/
 

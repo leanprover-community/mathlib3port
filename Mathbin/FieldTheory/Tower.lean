@@ -3,9 +3,9 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Data.Nat.Prime
+import Data.Nat.Prime.Defs
 import RingTheory.AlgebraTower
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 import LinearAlgebra.FreeModule.Finite.Matrix
 
 #align_import field_theory.tower from "leanprover-community/mathlib"@"ef55335933293309ff8c0b1d20ffffeecbe5c39f"

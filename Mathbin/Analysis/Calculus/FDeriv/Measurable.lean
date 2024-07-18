@@ -814,7 +814,7 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
           by
           apply le_of_mem_A (hn e (n e) m le_rfl m_ge).2.2
           · simp only [one_div, inv_pow, left_mem_Icc, le_add_iff_nonneg_right]
-            exact div_nonneg (inv_nonneg.2 (pow_nonneg zero_le_two _)) zero_le_two
+            exact div_nonneg (inv_nonneg.2 (Nonneg.pow_nonneg zero_le_two _)) zero_le_two
           · simp only [pow_add, tsub_le_iff_left] at h'k
             simpa only [hy.1, mem_Icc, true_and_iff, one_div, pow_one] using h'k
         _ = 4 * (1 / 2) ^ e * (1 / 2) ^ (m + 2) := by field_simp; ring

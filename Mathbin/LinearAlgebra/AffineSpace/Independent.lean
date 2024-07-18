@@ -756,7 +756,7 @@ theorem affineIndependent_of_ne_of_mem_of_mem_of_not_mem {s : AffineSubspace k P
   by
   have ha : AffineIndependent k fun x : { x : Fin 3 // x ≠ 2 } => ![p₁, p₂, p₃] x :=
     by
-    rw [← affineIndependent_equiv (finSuccAboveEquiv (2 : Fin 3)).toEquiv]
+    rw [← affineIndependent_equiv (finSuccAboveOrderIso (2 : Fin 3)).toEquiv]
     convert affineIndependent_of_ne k hp₁p₂
     ext x
     fin_cases x <;> rfl

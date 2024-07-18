@@ -3,7 +3,7 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Data.Nat.Prime
+import Data.Nat.Prime.Defs
 import Data.Rat.Defs
 import Order.WellFounded
 import Mathbin.Tactic.Linarith.Default

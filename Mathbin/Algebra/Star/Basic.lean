@@ -6,7 +6,7 @@ Authors: Scott Morrison
 import Algebra.Ring.Aut
 import Algebra.Ring.CompTypeclasses
 import Data.Rat.Cast.Defs
-import GroupTheory.GroupAction.Opposite
+import Algebra.Group.Action.Opposite
 import Data.SetLike.Basic
 
 #align_import algebra.star.basic from "leanprover-community/mathlib"@"31c24aa72e7b3e5ed97a8412470e904f82b81004"

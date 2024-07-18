@@ -806,18 +806,14 @@ theorem pow_comp {R : Type _} [CommSemiring R] (p q : R[X]) (n : ℕ) :
 #align polynomial.pow_comp Polynomial.pow_comp
 -/
 
-#print Polynomial.bit0_comp /-
 @[simp]
 theorem bit0_comp : comp (bit0 p : R[X]) q = bit0 (p.comp q) := by simp only [bit0, add_comp]
 #align polynomial.bit0_comp Polynomial.bit0_comp
--/
 
-#print Polynomial.bit1_comp /-
 @[simp]
 theorem bit1_comp : comp (bit1 p : R[X]) q = bit1 (p.comp q) := by
   simp only [bit1, add_comp, bit0_comp, one_comp]
 #align polynomial.bit1_comp Polynomial.bit1_comp
--/
 
 #print Polynomial.smul_comp /-
 @[simp]

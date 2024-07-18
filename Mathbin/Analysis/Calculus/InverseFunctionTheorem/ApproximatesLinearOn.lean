@@ -293,7 +293,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
         by
         apply mul_le_mul_of_nonneg_left _ (mul_nonneg (NNReal.coe_nonneg _) dist_nonneg)
         rw [sub_le_self_iff]
-        exact pow_nonneg (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _)) _
+        exact Nonneg.pow_nonneg (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _)) _
       _ ≤ f'symm.nnnorm * (((f'symm.nnnorm : ℝ)⁻¹ - c) * ε) :=
         by
         rw [mul_one]
@@ -575,7 +575,7 @@ theorem exists_homeomorph_extension {E : Type _} [NormedAddCommGroup E] [NormedS
   have hg : ApproximatesLinearOn g (f' : E →L[ℝ] F) univ (lipschitzExtensionConstant F * c) :=
     by
     apply LipschitzOnWith.approximatesLinearOn
-    rw [lipschitzOn_univ]
+    rw [lipschitzOnWith_univ]
     convert hu
     ext x
     simp only [add_sub_cancel_left, ContinuousLinearEquiv.coe_coe, Pi.sub_apply]

@@ -2374,16 +2374,16 @@ section CompleteLattice
 
 variable [Preorder α] [CompleteLattice β]
 
-#print monotone_sSup_of_monotone /-
-theorem monotone_sSup_of_monotone {s : Set (α → β)} (m_s : ∀ f ∈ s, Monotone f) :
-    Monotone (sSup s) := fun x y h => iSup_mono fun f => m_s f f.2 h
-#align monotone_Sup_of_monotone monotone_sSup_of_monotone
+#print Monotone.sSup /-
+theorem Monotone.sSup {s : Set (α → β)} (m_s : ∀ f ∈ s, Monotone f) : Monotone (sSup s) :=
+  fun x y h => iSup_mono fun f => m_s f f.2 h
+#align monotone_Sup_of_monotone Monotone.sSup
 -/
 
-#print monotone_sInf_of_monotone /-
-theorem monotone_sInf_of_monotone {s : Set (α → β)} (m_s : ∀ f ∈ s, Monotone f) :
-    Monotone (sInf s) := fun x y h => iInf_mono fun f => m_s f f.2 h
-#align monotone_Inf_of_monotone monotone_sInf_of_monotone
+#print Monotone.sInf /-
+theorem Monotone.sInf {s : Set (α → β)} (m_s : ∀ f ∈ s, Monotone f) : Monotone (sInf s) :=
+  fun x y h => iInf_mono fun f => m_s f f.2 h
+#align monotone_Inf_of_monotone Monotone.sInf
 -/
 
 end CompleteLattice

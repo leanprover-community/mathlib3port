@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 -/
 import Algebra.Algebra.Subalgebra.Pointwise
-import AlgebraicGeometry.PrimeSpectrum.Maximal
+import RingTheory.MaximalSpectrum
 import AlgebraicGeometry.PrimeSpectrum.Noetherian
 import Order.Hom.Basic
 import RingTheory.DedekindDomain.Basic

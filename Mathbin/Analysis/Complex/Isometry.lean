@@ -5,7 +5,7 @@ Authors: François Sunatori
 -/
 import Analysis.Complex.Circle
 import LinearAlgebra.Determinant
-import LinearAlgebra.Matrix.GeneralLinearGroup
+import LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 
 #align_import analysis.complex.isometry from "leanprover-community/mathlib"@"a87d22575d946e1e156fc1edd1e1269600a8a282"
 

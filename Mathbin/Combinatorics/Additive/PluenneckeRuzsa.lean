@@ -40,11 +40,11 @@ namespace Finset
 
 variable {α : Type _} [CommGroup α] [DecidableEq α] {A B C : Finset α}
 
-#print Finset.card_div_mul_le_card_div_mul_card_div /-
+#print Finset.ruzsa_triangle_inequality_div_div_div /-
 /-- **Ruzsa's triangle inequality**. Division version. -/
 @[to_additive card_sub_mul_le_card_sub_mul_card_sub
       "**Ruzsa's triangle inequality**. Subtraction version."]
-theorem card_div_mul_le_card_div_mul_card_div (A B C : Finset α) :
+theorem ruzsa_triangle_inequality_div_div_div (A B C : Finset α) :
     (A / C).card * B.card ≤ (A / B).card * (B / C).card :=
   by
   rw [← card_product (A / B), ← mul_one (Finset.product _ _).card]
@@ -57,49 +57,49 @@ theorem card_div_mul_le_card_div_mul_card_div (A B C : Finset α) :
   · rw [mem_bipartite_above]
     exact ⟨mk_mem_product (div_mem_div ha hb) (div_mem_div hb hc), div_mul_div_cancel' _ _ _⟩
   · exact div_right_injective (Prod.ext_iff.1 h).1
-#align finset.card_div_mul_le_card_div_mul_card_div Finset.card_div_mul_le_card_div_mul_card_div
-#align finset.card_sub_mul_le_card_sub_mul_card_sub Finset.card_sub_mul_le_card_sub_mul_card_sub
+#align finset.card_div_mul_le_card_div_mul_card_div Finset.ruzsa_triangle_inequality_div_div_div
+#align finset.card_sub_mul_le_card_sub_mul_card_sub Finset.ruzsa_triangle_inequality_sub_sub_sub
 -/
 
-#print Finset.card_div_mul_le_card_mul_mul_card_mul /-
+#print Finset.ruzsa_triangle_inequality_div_mul_mul /-
 /-- **Ruzsa's triangle inequality**. Div-mul-mul version. -/
 @[to_additive card_sub_mul_le_card_add_mul_card_add
       "**Ruzsa's triangle inequality**. Sub-add-add version."]
-theorem card_div_mul_le_card_mul_mul_card_mul (A B C : Finset α) :
+theorem ruzsa_triangle_inequality_div_mul_mul (A B C : Finset α) :
     (A / C).card * B.card ≤ (A * B).card * (B * C).card :=
   by
   rw [← div_inv_eq_mul, ← card_inv B, ← card_inv (B * C), mul_inv, ← div_eq_mul_inv]
   exact card_div_mul_le_card_div_mul_card_div _ _ _
-#align finset.card_div_mul_le_card_mul_mul_card_mul Finset.card_div_mul_le_card_mul_mul_card_mul
-#align finset.card_sub_mul_le_card_add_mul_card_add Finset.card_sub_mul_le_card_add_mul_card_add
+#align finset.card_div_mul_le_card_mul_mul_card_mul Finset.ruzsa_triangle_inequality_div_mul_mul
+#align finset.card_sub_mul_le_card_add_mul_card_add Finset.ruzsa_triangle_inequality_sub_add_add
 -/
 
-#print Finset.card_mul_mul_le_card_div_mul_card_mul /-
+#print Finset.ruzsa_triangle_inequality_mul_div_mul /-
 /-- **Ruzsa's triangle inequality**. Mul-div-div version. -/
 @[to_additive card_add_mul_le_card_sub_mul_card_add
       "**Ruzsa's triangle inequality**. Add-sub-sub version."]
-theorem card_mul_mul_le_card_div_mul_card_mul (A B C : Finset α) :
+theorem ruzsa_triangle_inequality_mul_div_mul (A B C : Finset α) :
     (A * C).card * B.card ≤ (A / B).card * (B * C).card := by
   rw [← div_inv_eq_mul, ← div_inv_eq_mul B]; exact card_div_mul_le_card_div_mul_card_div _ _ _
-#align finset.card_mul_mul_le_card_div_mul_card_mul Finset.card_mul_mul_le_card_div_mul_card_mul
-#align finset.card_add_mul_le_card_sub_mul_card_add Finset.card_add_mul_le_card_sub_mul_card_add
+#align finset.card_mul_mul_le_card_div_mul_card_mul Finset.ruzsa_triangle_inequality_mul_div_mul
+#align finset.card_add_mul_le_card_sub_mul_card_add Finset.ruzsa_triangle_inequality_add_sub_add
 -/
 
-#print Finset.card_mul_mul_le_card_mul_mul_card_div /-
+#print Finset.ruzsa_triangle_inequality_mul_mul_div /-
 /-- **Ruzsa's triangle inequality**. Mul-mul-div version. -/
 @[to_additive card_add_mul_le_card_add_mul_card_sub
       "**Ruzsa's triangle inequality**. Add-add-sub version."]
-theorem card_mul_mul_le_card_mul_mul_card_div (A B C : Finset α) :
+theorem ruzsa_triangle_inequality_mul_mul_div (A B C : Finset α) :
     (A * C).card * B.card ≤ (A * B).card * (B / C).card := by
   rw [← div_inv_eq_mul, div_eq_mul_inv B]; exact card_div_mul_le_card_mul_mul_card_mul _ _ _
-#align finset.card_mul_mul_le_card_mul_mul_card_div Finset.card_mul_mul_le_card_mul_mul_card_div
-#align finset.card_add_mul_le_card_add_mul_card_sub Finset.card_add_mul_le_card_add_mul_card_sub
+#align finset.card_mul_mul_le_card_mul_mul_card_div Finset.ruzsa_triangle_inequality_mul_mul_div
+#align finset.card_add_mul_le_card_add_mul_card_sub Finset.ruzsa_triangle_inequality_add_add_sub
 -/
 
 /- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
-#print Finset.mul_pluennecke_petridis /-
+#print Finset.pluennecke_petridis_inequality_mul /-
 @[to_additive]
-theorem mul_pluennecke_petridis (C : Finset α)
+theorem pluennecke_petridis_inequality_mul (C : Finset α)
     (hA : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card ≤ (A' * B).card * A.card) :
     (A * B * C).card * A.card ≤ (A * B).card * (A * C).card :=
   by
@@ -129,8 +129,8 @@ theorem mul_pluennecke_petridis (C : Finset α)
   rw [← mul_add, ← mul_tsub, ← hA', insert_eq, mul_union, ← card_mul_singleton A x, ←
     card_mul_singleton A' x, add_comm (card _), h₀,
     eq_tsub_of_add_eq (card_union_add_card_inter _ _)]
-#align finset.mul_pluennecke_petridis Finset.mul_pluennecke_petridis
-#align finset.add_pluennecke_petridis Finset.add_pluennecke_petridis
+#align finset.mul_pluennecke_petridis Finset.pluennecke_petridis_inequality_mul
+#align finset.add_pluennecke_petridis Finset.pluennecke_petridis_inequality_add
 -/
 
 /-! ### Sum triangle inequality -/
@@ -152,11 +152,11 @@ private theorem mul_aux (hA : A.Nonempty) (hAB : A ⊆ B)
     (div_le_div_iff hA₀ hA₀').1
       (h _ <| mem_erase_of_ne_of_mem hA'.ne_empty <| mem_powerset.2 <| hAA'.trans hAB)
 
-#print Finset.card_mul_mul_card_le_card_mul_mul_card_mul /-
+#print Finset.ruzsa_triangle_inequality_mul_mul_mul /-
 /-- **Ruzsa's triangle inequality**. Multiplication version. -/
 @[to_additive card_add_mul_card_le_card_add_mul_card_add
       "**Ruzsa's triangle inequality**. Addition version."]
-theorem card_mul_mul_card_le_card_mul_mul_card_mul (A B C : Finset α) :
+theorem ruzsa_triangle_inequality_mul_mul_mul (A B C : Finset α) :
     (A * C).card * B.card ≤ (A * B).card * (B * C).card :=
   by
   obtain rfl | hB := B.eq_empty_or_nonempty
@@ -178,26 +178,26 @@ theorem card_mul_mul_card_le_card_mul_mul_card_mul (A B C : Finset α) :
   rw [← mul_div_right_comm, ← mul_assoc]
   refine' (le_div_iff <| cast_pos.2 hU.1.card_pos).2 _
   exact_mod_cast mul_pluennecke_petridis C (mul_aux hU.1 hU.2 hUA)
-#align finset.card_mul_mul_card_le_card_mul_mul_card_mul Finset.card_mul_mul_card_le_card_mul_mul_card_mul
-#align finset.card_add_mul_card_le_card_add_mul_card_add Finset.card_add_mul_card_le_card_add_mul_card_add
+#align finset.card_mul_mul_card_le_card_mul_mul_card_mul Finset.ruzsa_triangle_inequality_mul_mul_mul
+#align finset.card_add_mul_card_le_card_add_mul_card_add Finset.ruzsa_triangle_inequality_add_add_add
 -/
 
-#print Finset.card_mul_mul_le_card_div_mul_card_div /-
+#print Finset.ruzsa_triangle_inequality_mul_div_div /-
 /-- **Ruzsa's triangle inequality**. Add-sub-sub version. -/
-theorem card_mul_mul_le_card_div_mul_card_div (A B C : Finset α) :
+theorem ruzsa_triangle_inequality_mul_div_div (A B C : Finset α) :
     (A * C).card * B.card ≤ (A / B).card * (B / C).card :=
   by
   rw [div_eq_mul_inv, ← card_inv B, ← card_inv (B / C), inv_div', div_inv_eq_mul]
   exact card_mul_mul_card_le_card_mul_mul_card_mul _ _ _
-#align finset.card_mul_mul_le_card_div_mul_card_div Finset.card_mul_mul_le_card_div_mul_card_div
+#align finset.card_mul_mul_le_card_div_mul_card_div Finset.ruzsa_triangle_inequality_mul_div_div
 -/
 
-#print Finset.card_div_mul_le_card_mul_mul_card_div /-
+#print Finset.ruzsa_triangle_inequality_div_mul_div /-
 /-- **Ruzsa's triangle inequality**. Sub-add-sub version. -/
-theorem card_div_mul_le_card_mul_mul_card_div (A B C : Finset α) :
+theorem ruzsa_triangle_inequality_div_mul_div (A B C : Finset α) :
     (A / C).card * B.card ≤ (A * B).card * (B / C).card := by rw [div_eq_mul_inv, div_eq_mul_inv];
   exact card_mul_mul_card_le_card_mul_mul_card_mul _ _ _
-#align finset.card_div_mul_le_card_mul_mul_card_div Finset.card_div_mul_le_card_mul_mul_card_div
+#align finset.card_div_mul_le_card_mul_mul_card_div Finset.ruzsa_triangle_inequality_div_mul_div
 -/
 
 #print Finset.card_div_mul_le_card_div_mul_card_mul /-
@@ -209,7 +209,6 @@ theorem card_div_mul_le_card_div_mul_card_mul (A B C : Finset α) :
 -/
 
 /- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
-#print Finset.card_add_nsmul_le /-
 theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B : Finset α}
     (hAB : ∀ (A') (_ : A' ⊆ A), (A + B).card * A'.card ≤ (A' + B).card * A.card) (n : ℕ) :
     ((A + n • B).card : ℚ≥0) ≤ ((A + B).card / A.card) ^ n * A.card :=
@@ -224,13 +223,12 @@ theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B 
   rw [cast_mul]
   exact mul_le_mul_of_nonneg_left ih (zero_le _)
 #align finset.card_add_nsmul_le Finset.card_add_nsmul_le
--/
 
 /- ././././Mathport/Syntax/Translate/Basic.lean:642:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
-#print Finset.card_mul_pow_le /-
 @[to_additive]
-theorem card_mul_pow_le (hAB : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card ≤ (A' * B).card * A.card)
-    (n : ℕ) : ((A * B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ n * A.card :=
+theorem card_hMul_pow_le
+    (hAB : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card ≤ (A' * B).card * A.card) (n : ℕ) :
+    ((A * B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ n * A.card :=
   by
   obtain rfl | hA := A.eq_empty_or_nonempty
   · simp
@@ -242,16 +240,15 @@ theorem card_mul_pow_le (hAB : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card �
   refine' (cast_le.2 <| mul_pluennecke_petridis _ hAB).trans _
   rw [cast_mul]
   exact mul_le_mul_of_nonneg_left ih (zero_le _)
-#align finset.card_mul_pow_le Finset.card_mul_pow_le
+#align finset.card_mul_pow_le Finset.card_hMul_pow_le
 #align finset.card_add_nsmul_le Finset.card_add_nsmul_le
--/
 
-#print Finset.card_pow_div_pow_le /-
+#print Finset.pluennecke_ruzsa_inequality_pow_div_pow_mul /-
 /-- The **Plünnecke-Ruzsa inequality**. Multiplication version. Note that this is genuinely harder
 than the division version because we cannot use a double counting argument. -/
 @[to_additive
       "The **Plünnecke-Ruzsa inequality**. Addition version. Note that this is genuinely\nharder than the subtraction version because we cannot use a double counting argument."]
-theorem card_pow_div_pow_le (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
+theorem pluennecke_ruzsa_inequality_pow_div_pow_mul (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
     ((B ^ m / B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ (m + n) * A.card :=
   by
   have hA' : A ∈ A.powerset.erase ∅ := mem_erase_of_ne_of_mem hA.ne_empty (mem_powerset_self _)
@@ -275,40 +272,40 @@ theorem card_pow_div_pow_le (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
           (zero_le _) <|
         zero_le _)
       (zero_le _)
-#align finset.card_pow_div_pow_le Finset.card_pow_div_pow_le
-#align finset.card_nsmul_sub_nsmul_le Finset.card_nsmul_sub_nsmul_le
+#align finset.card_pow_div_pow_le Finset.pluennecke_ruzsa_inequality_pow_div_pow_mul
+#align finset.card_nsmul_sub_nsmul_le Finset.pluennecke_ruzsa_inequality_nsmul_sub_nsmul_add
 -/
 
-#print Finset.card_pow_div_pow_le' /-
+#print Finset.pluennecke_ruzsa_inequality_pow_div_pow_div /-
 /-- The **Plünnecke-Ruzsa inequality**. Subtraction version. -/
 @[to_additive "The **Plünnecke-Ruzsa inequality**. Subtraction version."]
-theorem card_pow_div_pow_le' (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
+theorem pluennecke_ruzsa_inequality_pow_div_pow_div (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
     ((B ^ m / B ^ n).card : ℚ≥0) ≤ ((A / B).card / A.card) ^ (m + n) * A.card :=
   by
   rw [← card_inv, inv_div', ← inv_pow, ← inv_pow, div_eq_mul_inv A]
   exact card_pow_div_pow_le hA _ _ _
-#align finset.card_pow_div_pow_le' Finset.card_pow_div_pow_le'
-#align finset.card_nsmul_sub_nsmul_le' Finset.card_nsmul_sub_nsmul_le'
+#align finset.card_pow_div_pow_le' Finset.pluennecke_ruzsa_inequality_pow_div_pow_div
+#align finset.card_nsmul_sub_nsmul_le' Finset.pluennecke_ruzsa_inequality_nsmul_sub_nsmul_sub
 -/
 
-#print Finset.card_pow_le /-
+#print Finset.pluennecke_ruzsa_inequality_pow_mul /-
 /-- Special case of the **Plünnecke-Ruzsa inequality**. Multiplication version. -/
 @[to_additive "Special case of the **Plünnecke-Ruzsa inequality**. Addition version."]
-theorem card_pow_le (hA : A.Nonempty) (B : Finset α) (n : ℕ) :
+theorem pluennecke_ruzsa_inequality_pow_mul (hA : A.Nonempty) (B : Finset α) (n : ℕ) :
     ((B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ n * A.card := by
   simpa only [pow_zero, div_one] using card_pow_div_pow_le hA _ _ 0
-#align finset.card_pow_le Finset.card_pow_le
-#align finset.card_nsmul_le Finset.card_nsmul_le
+#align finset.card_pow_le Finset.pluennecke_ruzsa_inequality_pow_mul
+#align finset.card_nsmul_le Finset.pluennecke_ruzsa_inequality_nsmul_add
 -/
 
-#print Finset.card_pow_le' /-
+#print Finset.pluennecke_ruzsa_inequality_pow_div /-
 /-- Special case of the **Plünnecke-Ruzsa inequality**. Division version. -/
 @[to_additive "Special case of the **Plünnecke-Ruzsa inequality**. Subtraction version."]
-theorem card_pow_le' (hA : A.Nonempty) (B : Finset α) (n : ℕ) :
+theorem pluennecke_ruzsa_inequality_pow_div (hA : A.Nonempty) (B : Finset α) (n : ℕ) :
     ((B ^ n).card : ℚ≥0) ≤ ((A / B).card / A.card) ^ n * A.card := by
   simpa only [pow_zero, div_one] using card_pow_div_pow_le' hA _ _ 0
-#align finset.card_pow_le' Finset.card_pow_le'
-#align finset.card_nsmul_le' Finset.card_nsmul_le'
+#align finset.card_pow_le' Finset.pluennecke_ruzsa_inequality_pow_div
+#align finset.card_nsmul_le' Finset.pluennecke_ruzsa_inequality_nsmul_sub
 -/
 
 end Finset

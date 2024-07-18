@@ -891,7 +891,7 @@ theorem toNNReal_bit1 {r : ℝ} (hr : 0 ≤ r) : Real.toNNReal (bit1 r) = bit1 (
 
 #print Real.toNNReal_pow /-
 theorem toNNReal_pow {x : ℝ} (hx : 0 ≤ x) (n : ℕ) : (x ^ n).toNNReal = x.toNNReal ^ n := by
-  rw [← NNReal.coe_inj, NNReal.coe_pow, Real.coe_toNNReal _ (pow_nonneg hx _),
+  rw [← NNReal.coe_inj, NNReal.coe_pow, Real.coe_toNNReal _ (Nonneg.pow_nonneg hx _),
     Real.coe_toNNReal x hx]
 #align real.to_nnreal_pow Real.toNNReal_pow
 -/

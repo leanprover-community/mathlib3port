@@ -51,13 +51,11 @@ open CategoryTheory
 
 open scoped Topology
 
-#print Profinite /-
 /-- The type of profinite topological spaces. -/
 structure Profinite where
   toCompHaus : CompHaus
   [IsTotallyDisconnected : TotallyDisconnectedSpace to_CompHaus]
-#align Profinite Profinite
--/
+#align Profinite Profiniteₓ
 
 namespace Profinite
 
@@ -74,23 +72,17 @@ def of (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] [TotallyDi
 instance : Inhabited Profinite :=
   ⟨Profinite.of PEmpty⟩
 
-#print Profinite.category /-
 instance category : Category Profinite :=
   InducedCategory.category toCompHaus
-#align Profinite.category Profinite.category
--/
+#align Profinite.category Profiniteₓ.category
 
-#print Profinite.concreteCategory /-
 instance concreteCategory : ConcreteCategory Profinite :=
   InducedCategory.concreteCategory _
-#align Profinite.concrete_category Profinite.concreteCategory
--/
+#align Profinite.concrete_category Profiniteₓ.concreteCategory
 
-#print Profinite.hasForget₂ /-
 instance hasForget₂ : HasForget₂ Profinite TopCat :=
   InducedCategory.hasForget₂ _
-#align Profinite.has_forget₂ Profinite.hasForget₂
--/
+#align Profinite.has_forget₂ Profiniteₓ.hasForget₂
 
 instance : CoeSort Profinite (Type _) :=
   ⟨fun X => X.toCompHaus⟩
@@ -108,21 +100,17 @@ example {X : Profinite} : T2Space X :=
 @[simp]
 theorem coe_toCompHaus {X : Profinite} : (X.toCompHaus : Type _) = X :=
   rfl
-#align Profinite.coe_to_CompHaus Profinite.coe_toCompHaus
+#align Profinite.coe_to_CompHaus Profiniteₓ.coe_toCompHaus
 
-#print Profinite.coe_id /-
 @[simp]
 theorem coe_id (X : Profinite) : (𝟙 X : X → X) = id :=
   rfl
-#align Profinite.coe_id Profinite.coe_id
--/
+#align Profinite.coe_id Profiniteₓ.coe_id
 
-#print Profinite.coe_comp /-
 @[simp]
 theorem coe_comp {X Y Z : Profinite} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g : X → Z) = g ∘ f :=
   rfl
-#align Profinite.coe_comp Profinite.coe_comp
--/
+#align Profinite.coe_comp Profiniteₓ.coe_comp
 
 end Profinite
 
@@ -145,12 +133,10 @@ deriving CategoryTheory.Functor.Full, CategoryTheory.Functor.Faithful
 #align Profinite.to_Top Profinite.toTopCat
 -/
 
-#print Profinite.to_compHausToTopCat /-
 @[simp]
-theorem Profinite.to_compHausToTopCat : profiniteToCompHaus ⋙ compHausToTop = Profinite.toTopCat :=
+theorem Profinite.to_compHausToTop : profiniteToCompHaus ⋙ compHausToTop = Profinite.toTopCat :=
   rfl
-#align Profinite.to_CompHaus_to_Top Profinite.to_compHausToTopCat
--/
+#align Profinite.to_CompHaus_to_Top Profiniteₓ.to_compHausToTop
 
 section Profinite
 
@@ -320,37 +306,28 @@ noncomputable instance forgetPreservesLimits : Limits.PreservesLimits (forget Pr
 
 variable {X Y : Profinite.{u}} (f : X ⟶ Y)
 
-#print Profinite.isClosedMap /-
 /-- Any morphism of profinite spaces is a closed map. -/
 theorem isClosedMap : IsClosedMap f :=
   CompHaus.isClosedMap _
-#align Profinite.is_closed_map Profinite.isClosedMap
--/
+#align Profinite.is_closed_map Profiniteₓ.isClosedMap
 
-#print Profinite.isIso_of_bijective /-
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 theorem isIso_of_bijective (bij : Function.Bijective f) : IsIso f :=
   haveI := CompHaus.isIso_of_bijective (Profinite_to_CompHaus.map f) bij
   is_iso_of_fully_faithful profiniteToCompHaus _
-#align Profinite.is_iso_of_bijective Profinite.isIso_of_bijective
--/
+#align Profinite.is_iso_of_bijective Profiniteₓ.isIso_of_bijective
 
-#print Profinite.isoOfBijective /-
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y :=
   letI := Profinite.isIso_of_bijective f bij
   as_iso f
-#align Profinite.iso_of_bijective Profinite.isoOfBijective
--/
+#align Profinite.iso_of_bijective Profiniteₓ.isoOfBijective
 
-#print Profinite.forget_reflectsIsomorphisms /-
 instance forget_reflectsIsomorphisms :
     CategoryTheory.Functor.ReflectsIsomorphisms (forget Profinite) :=
   ⟨by intro A B f hf <;> exact Profinite.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
-#align Profinite.forget_reflects_isomorphisms Profinite.forget_reflectsIsomorphisms
--/
+#align Profinite.forget_reflects_isomorphisms Profiniteₓ.forget_reflectsIsomorphisms
 
-#print Profinite.isoOfHomeo /-
 /-- Construct an isomorphism from a homeomorphism. -/
 @[simps Hom inv]
 def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y
@@ -359,10 +336,8 @@ def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y
   inv := ⟨f.symm, f.symm.Continuous⟩
   hom_inv_id' := by ext x; exact f.symm_apply_apply x
   inv_hom_id' := by ext x; exact f.apply_symm_apply x
-#align Profinite.iso_of_homeo Profinite.isoOfHomeo
--/
+#align Profinite.iso_of_homeo Profiniteₓ.isoOfHomeo
 
-#print Profinite.homeoOfIso /-
 /-- Construct a homeomorphism from an isomorphism. -/
 @[simps]
 def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
@@ -372,10 +347,8 @@ def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
   right_inv x := by change (f.inv ≫ f.hom) x = x; rw [iso.inv_hom_id, coe_id, id.def]
   continuous_toFun := f.Hom.Continuous
   continuous_invFun := f.inv.Continuous
-#align Profinite.homeo_of_iso Profinite.homeoOfIso
--/
+#align Profinite.homeo_of_iso Profiniteₓ.homeoOfIso
 
-#print Profinite.isoEquivHomeo /-
 /-- The equivalence between isomorphisms in `Profinite` and homeomorphisms
 of topological spaces. -/
 @[simps]
@@ -385,8 +358,7 @@ def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y)
   invFun := isoOfHomeo
   left_inv f := by ext; rfl
   right_inv f := by ext; rfl
-#align Profinite.iso_equiv_homeo Profinite.isoEquivHomeo
--/
+#align Profinite.iso_equiv_homeo Profiniteₓ.isoEquivHomeo
 
 #print Profinite.epi_iff_surjective /-
 theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
@@ -419,7 +391,6 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
 #align Profinite.epi_iff_surjective Profinite.epi_iff_surjective
 -/
 
-#print Profinite.mono_iff_injective /-
 theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
   by
   constructor
@@ -429,8 +400,7 @@ theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : Mono f ↔ Func
     rwa [← CompHaus.mono_iff_injective]
   · rw [← CategoryTheory.mono_iff_injective]
     apply (forget Profinite).mono_of_mono_map
-#align Profinite.mono_iff_injective Profinite.mono_iff_injective
--/
+#align Profinite.mono_iff_injective Profiniteₓ.mono_iff_injective
 
 end Profinite
 

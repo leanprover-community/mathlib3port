@@ -2304,7 +2304,7 @@ theorem Orthonormal.sum_inner_products_le {s : Finset ι} (hv : Orthonormal 𝕜
     norm_cast
   suffices hbf : ‖x - ∑ i in s, ⟪v i, x⟫ • v i‖ ^ 2 = ‖x‖ ^ 2 - ∑ i in s, ‖⟪v i, x⟫‖ ^ 2
   · rw [← sub_nonneg, ← hbf]
-    simp only [norm_nonneg, pow_nonneg]
+    simp only [norm_nonneg, Nonneg.pow_nonneg]
   rw [@norm_sub_sq 𝕜, sub_add]
   simp only [@InnerProductSpace.norm_sq_eq_inner 𝕜, inner_sum]
   simp only [sum_inner, two_mul, inner_smul_right, inner_conj_symm, ← mul_assoc, h₂, ← h₃,
@@ -2319,7 +2319,7 @@ theorem Orthonormal.tsum_inner_products_le (hv : Orthonormal 𝕜 v) :
     ∑' i, ‖⟪v i, x⟫‖ ^ 2 ≤ ‖x‖ ^ 2 :=
   by
   refine' tsum_le_of_sum_le' _ fun s => hv.sum_inner_products_le x
-  simp only [norm_nonneg, pow_nonneg]
+  simp only [norm_nonneg, Nonneg.pow_nonneg]
 #align orthonormal.tsum_inner_products_le Orthonormal.tsum_inner_products_le
 -/
 
@@ -2331,7 +2331,7 @@ theorem Orthonormal.inner_products_summable (hv : Orthonormal 𝕜 v) :
   use⨆ s : Finset ι, ∑ i in s, ‖⟪v i, x⟫‖ ^ 2
   apply hasSum_of_isLUB_of_nonneg
   · intro b
-    simp only [norm_nonneg, pow_nonneg]
+    simp only [norm_nonneg, Nonneg.pow_nonneg]
   · refine' isLUB_ciSup _
     use‖x‖ ^ 2
     rintro y ⟨s, rfl⟩

@@ -5,7 +5,7 @@ Authors: Chris Hughes
 -/
 import Data.Fintype.Card
 import Algebra.Group.Action.Defs
-import GroupTheory.GroupAction.Group
+import Algebra.Group.Action.Basic
 import Data.Setoid.Basic
 import Data.Set.Pointwise.SMul
 import Algebra.Group.Subgroup.Basic

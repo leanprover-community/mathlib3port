@@ -99,8 +99,7 @@ unsafe def tactic.interactive.omega (opt : parse (many ident)) : tactic Unit := 
   if is_int then omega_int is_manual else omega_nat is_manual
 #align tactic.interactive.omega tactic.interactive.omega
 
-add_hint_tactic omega
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic omega -/
 initialize
   registerTraceClass.1 `omega
 

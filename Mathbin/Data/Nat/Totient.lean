@@ -353,7 +353,7 @@ theorem totient_eq_prod_factorization {n : ℕ} (hn : n ≠ 0) :
 #print Nat.totient_mul_prod_primeFactors /-
 /-- Euler's product formula for the totient function. -/
 theorem totient_mul_prod_primeFactors (n : ℕ) :
-    φ n * ∏ p in n.factors.toFinset, p = n * ∏ p in n.factors.toFinset, (p - 1) :=
+    φ n * ∏ p in n.primeFactorsList.toFinset, p = n * ∏ p in n.primeFactorsList.toFinset, (p - 1) :=
   by
   by_cases hn : n = 0; · simp [hn]
   rw [totient_eq_prod_factorization hn]
@@ -368,7 +368,8 @@ theorem totient_mul_prod_primeFactors (n : ℕ) :
 #print Nat.totient_eq_div_primeFactors_mul /-
 /-- Euler's product formula for the totient function. -/
 theorem totient_eq_div_primeFactors_mul (n : ℕ) :
-    φ n = (n / ∏ p in n.factors.toFinset, p) * ∏ p in n.factors.toFinset, (p - 1) :=
+    φ n =
+      (n / ∏ p in n.primeFactorsList.toFinset, p) * ∏ p in n.primeFactorsList.toFinset, (p - 1) :=
   by
   rw [← mul_div_left n.totient, totient_mul_prod_factors, mul_comm,
     Nat.mul_div_assoc _ (prod_prime_factors_dvd n), mul_comm]
@@ -379,7 +380,7 @@ theorem totient_eq_div_primeFactors_mul (n : ℕ) :
 #print Nat.totient_eq_mul_prod_factors /-
 /-- Euler's product formula for the totient function. -/
 theorem totient_eq_mul_prod_factors (n : ℕ) :
-    (φ n : ℚ) = n * ∏ p in n.factors.toFinset, (1 - p⁻¹) :=
+    (φ n : ℚ) = n * ∏ p in n.primeFactorsList.toFinset, (1 - p⁻¹) :=
   by
   by_cases hn : n = 0; · simp [hn]
   have hn' : (n : ℚ) ≠ 0 := by simp [hn]

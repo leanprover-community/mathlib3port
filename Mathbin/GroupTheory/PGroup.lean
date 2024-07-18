@@ -69,12 +69,12 @@ theorem iff_card [Fact p.Prime] [Fintype G] : IsPGroup p G ↔ ∃ n : ℕ, card
   by
   have hG : card G ≠ 0 := card_ne_zero
   refine' ⟨fun h => _, fun ⟨n, hn⟩ => of_card hn⟩
-  suffices ∀ q ∈ Nat.factors (card G), q = p
+  suffices ∀ q ∈ Nat.primeFactorsList (card G), q = p
     by
-    use(card G).factors.length
-    rw [← List.prod_replicate, ← List.eq_replicate_of_mem this, Nat.prod_factors hG]
+    use(card G).primeFactorsList.length
+    rw [← List.prod_replicate, ← List.eq_replicate_of_mem this, Nat.prod_primeFactorsList hG]
   intro q hq
-  obtain ⟨hq1, hq2⟩ := (Nat.mem_factors hG).mp hq
+  obtain ⟨hq1, hq2⟩ := (Nat.mem_primeFactorsList hG).mp hq
   haveI : Fact q.prime := ⟨hq1⟩
   obtain ⟨g, hg⟩ := exists_prime_orderOf_dvd_card q hq2
   obtain ⟨k, hk⟩ := (iff_order_of.mp h) g

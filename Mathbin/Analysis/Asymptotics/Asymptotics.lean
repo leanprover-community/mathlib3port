@@ -2068,7 +2068,7 @@ theorem IsBigOWith.of_pow {n : ℕ} {f : α → 𝕜} {g : α → R} (h : IsBigO
           ‖f x‖ ^ n = ‖f x ^ n‖ := (norm_pow _ _).symm
           _ ≤ c' ^ n * ‖g x ^ n‖ := hx
           _ ≤ c' ^ n * ‖g x‖ ^ n :=
-            (mul_le_mul_of_nonneg_left (norm_pow_le' _ hn.bot_lt) (pow_nonneg hc' _))
+            (mul_le_mul_of_nonneg_left (norm_pow_le' _ hn.bot_lt) (Nonneg.pow_nonneg hc' _))
           _ = (c' * ‖g x‖) ^ n := (mul_pow _ _ _).symm
 #align asymptotics.is_O_with.of_pow Asymptotics.IsBigOWith.of_pow
 -/

@@ -279,12 +279,10 @@ theorem IsAffineOpen.range_fromSpec {X : Scheme} {U : Opens X.carrier} (hU : IsA
 #align algebraic_geometry.is_affine_open.from_Spec_range AlgebraicGeometry.IsAffineOpen.range_fromSpec
 -/
 
-#print AlgebraicGeometry.IsAffineOpen.fromSpec_image_top /-
 theorem IsAffineOpen.fromSpec_image_top {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U) :
     hU.isOpenImmersion_fromSpec.base_open.IsOpenMap.Functor.obj ⊤ = U := by ext1;
   exact set.image_univ.trans hU.from_Spec_range
 #align algebraic_geometry.is_affine_open.from_Spec_image_top AlgebraicGeometry.IsAffineOpen.fromSpec_image_top
--/
 
 #print AlgebraicGeometry.IsAffineOpen.isCompact /-
 theorem IsAffineOpen.isCompact {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U) :

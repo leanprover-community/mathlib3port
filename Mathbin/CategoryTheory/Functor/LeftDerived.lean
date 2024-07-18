@@ -66,7 +66,7 @@ variable [Preadditive D] [HasEqualizers D] [HasCokernels D] [HasImages D] [HasIm
 #print CategoryTheory.Functor.leftDerived /-
 /-- The left derived functors of an additive functor. -/
 def Functor.leftDerived (F : C ⥤ D) [F.Additive] (n : ℕ) : C ⥤ D :=
-  projectiveResolutions C ⋙ F.mapHomotopyCategory _ ⋙ HomotopyCategory.homology'Functor D _ n
+  projectiveResolutions C ⋙ F.mapHomotopyCategory _ ⋙ HomotopyCategory.homologyFunctor D _ n
 #align category_theory.functor.left_derived CategoryTheory.Functor.leftDerived
 -/
 
@@ -76,11 +76,11 @@ def Functor.leftDerived (F : C ⥤ D) [F.Additive] (n : ℕ) : C ⥤ D :=
 def Functor.leftDerivedObjIso (F : C ⥤ D) [F.Additive] (n : ℕ) {X : C}
     (P : ProjectiveResolution X) :
     (F.leftDerived n).obj X ≅
-      (homology'Functor D _ n).obj ((F.mapHomologicalComplex _).obj P.complex) :=
-  (HomotopyCategory.homology'Functor D _ n).mapIso
+      (homologyFunctor D _ n).obj ((F.mapHomologicalComplex _).obj P.complex) :=
+  (HomotopyCategory.homologyFunctor D _ n).mapIso
       (HomotopyCategory.isoOfHomotopyEquiv
         (F.mapHomotopyEquiv (ProjectiveResolution.homotopyEquiv _ P))) ≪≫
-    (HomotopyCategory.homology'Factors D _ n).app _
+    (HomotopyCategory.homologyFactors D _ n).app _
 #align category_theory.functor.left_derived_obj_iso CategoryTheory.Functor.leftDerivedObjIso
 
 section
@@ -92,8 +92,8 @@ variable [HasZeroObject D]
 def Functor.leftDerivedObjProjectiveZero (F : C ⥤ D) [F.Additive] (X : C) [Projective X] :
     (F.leftDerived 0).obj X ≅ F.obj X :=
   F.leftDerivedObjIso 0 (ProjectiveResolution.self X) ≪≫
-    (homology'Functor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
-      (ChainComplex.homology'Functor0Single₀ D).app (F.obj X)
+    (homologyFunctor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
+      (ChainComplex.homologyFunctor0Single₀ D).app (F.obj X)
 #align category_theory.functor.left_derived_obj_projective_zero CategoryTheory.Functor.leftDerivedObjProjectiveZero
 
 open scoped ZeroObject
@@ -103,8 +103,8 @@ open scoped ZeroObject
 def Functor.leftDerivedObjProjectiveSucc (F : C ⥤ D) [F.Additive] (n : ℕ) (X : C) [Projective X] :
     (F.leftDerived (n + 1)).obj X ≅ 0 :=
   F.leftDerivedObjIso (n + 1) (ProjectiveResolution.self X) ≪≫
-    (homology'Functor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
-      (ChainComplex.homology'FunctorSuccSingle₀ D n).app (F.obj X) ≪≫ (Functor.zero_obj _).isoZero
+    (homologyFunctor _ _ _).mapIso ((ChainComplex.single₀MapHomologicalComplex F).app X) ≪≫
+      (ChainComplex.homologyFunctorSuccSingle₀ D n).app (F.obj X) ≪≫ (Functor.zero_obj _).isoZero
 #align category_theory.functor.left_derived_obj_projective_succ CategoryTheory.Functor.leftDerivedObjProjectiveSucc
 
 end
@@ -118,12 +118,12 @@ theorem Functor.leftDerived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : C
     (w : g ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f) :
     (F.leftDerived n).map f =
       (F.leftDerivedObjIso n P).Hom ≫
-        (homology'Functor D _ n).map ((F.mapHomologicalComplex _).map g) ≫
+        (homologyFunctor D _ n).map ((F.mapHomologicalComplex _).map g) ≫
           (F.leftDerivedObjIso n Q).inv :=
   by
   dsimp only [functor.left_derived, functor.left_derived_obj_iso]
   dsimp; simp only [category.comp_id, category.id_comp]
-  rw [← homology'Functor_map, HomotopyCategory.homology'Functor_map_factors]
+  rw [← homologyFunctor_map, HomotopyCategory.homologyFunctor_map_factors]
   simp only [← functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy
@@ -142,7 +142,7 @@ theorem Functor.leftDerived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : C
 def NatTrans.leftDerived {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G) (n : ℕ) :
     F.leftDerived n ⟶ G.leftDerived n :=
   whiskerLeft (projectiveResolutions C)
-    (whiskerRight (NatTrans.mapHomotopyCategory α _) (HomotopyCategory.homology'Functor D _ n))
+    (whiskerRight (NatTrans.mapHomotopyCategory α _) (HomotopyCategory.homologyFunctor D _ n))
 #align category_theory.nat_trans.left_derived CategoryTheory.NatTrans.leftDerived
 -/
 
@@ -170,13 +170,13 @@ theorem NatTrans.leftDerived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α : 
     (P : ProjectiveResolution X) :
     (NatTrans.leftDerived α n).app X =
       (F.leftDerivedObjIso n P).Hom ≫
-        (homology'Functor D _ n).map ((NatTrans.mapHomologicalComplex α _).app P.complex) ≫
+        (homologyFunctor D _ n).map ((NatTrans.mapHomologicalComplex α _).app P.complex) ≫
           (G.leftDerivedObjIso n P).inv :=
   by
   symm
   dsimp [nat_trans.left_derived, functor.left_derived_obj_iso]
   simp only [category.comp_id, category.id_comp]
-  rw [← homology'Functor_map, HomotopyCategory.homology'Functor_map_factors]
+  rw [← homologyFunctor_map, HomotopyCategory.homologyFunctor_map_factors]
   simp only [← functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Algebra.Order.AbsoluteValue
-import Algebra.EuclideanDomain.Instances
+import Algebra.EuclideanDomain.Field
 
 #align_import algebra.order.euclidean_absolute_value from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

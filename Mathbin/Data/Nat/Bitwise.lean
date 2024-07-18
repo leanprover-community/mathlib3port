@@ -363,7 +363,7 @@ theorem xor_trichotomy {a b c : ℕ} (h : a ≠ xor b c) : xor b c < a ∨ xor a
     by
     contrapose! hi
     simp only [Bool.eq_false_eq_not_eq_true, Ne, test_bit_lxor] at hi ⊢
-    rw [hi.1, hi.2.1, hi.2.2, Bool.xor_false, Bool.xor_false]
+    rw [hi.1, hi.2.1, hi.2.2, xor_false, xor_false]
   -- If, say, `a` has a one bit at position `i`, then `a xor v` has a zero bit at position `i`, but
       -- the same bits as `a` in positions greater than `j`, so `a xor v < a`.
       rcases this with (h | h | h) <;>

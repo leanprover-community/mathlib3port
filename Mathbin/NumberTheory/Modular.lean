@@ -6,7 +6,7 @@ Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 import Analysis.Complex.UpperHalfPlane.Basic
 import Analysis.NormedSpace.FiniteDimension
 import LinearAlgebra.GeneralLinearGroup
-import LinearAlgebra.Matrix.GeneralLinearGroup
+import LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 
 #align_import number_theory.modular from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"
 

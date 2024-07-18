@@ -78,15 +78,15 @@ variable {C : Type u₂} [Quiver.{v₂ + 1} C] [∀ a b : C, Quiver.{w₂ + 1} (
 
 variable {D : Type u₃} [Quiver.{v₃ + 1} D] [∀ a b : D, Quiver.{w₃ + 1} (a ⟶ b)]
 
-#print CategoryTheory.PrelaxFunctor /-
+#print CategoryTheory.PrelaxFunctorStruct /-
 /-- A prelax functor between bicategories consists of functions between objects,
 1-morphisms, and 2-morphisms. This structure will be extended to define `oplax_functor`.
 -/
-structure PrelaxFunctor (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiver.{w₁ + 1} (a ⟶ b)]
+structure PrelaxFunctorStruct (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiver.{w₁ + 1} (a ⟶ b)]
     (C : Type u₂) [Quiver.{v₂ + 1} C] [∀ a b : C, Quiver.{w₂ + 1} (a ⟶ b)] extends
     Prefunctor B C where
   zipWith {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
-#align category_theory.prelax_functor CategoryTheory.PrelaxFunctor
+#align category_theory.prelax_functor CategoryTheory.PrelaxFunctorStruct
 -/
 
 /-- The prefunctor between the underlying quivers. -/
@@ -94,46 +94,45 @@ add_decl_doc prelax_functor.to_prefunctor
 
 namespace PrelaxFunctor
 
-#print CategoryTheory.PrelaxFunctor.hasCoeToPrefunctor /-
-instance hasCoeToPrefunctor : Coe (PrelaxFunctor B C) (Prefunctor B C) :=
+instance hasCoeToPrefunctor : Coe (PrelaxFunctorStruct B C) (Prefunctor B C) :=
   ⟨toPrefunctor⟩
-#align category_theory.prelax_functor.has_coe_to_prefunctor CategoryTheory.PrelaxFunctor.hasCoeToPrefunctor
--/
+#align category_theory.prelax_functor.has_coe_to_prefunctor CategoryTheory.PrelaxFunctorStruct.hasCoeToPrefunctor
 
-variable (F : PrelaxFunctor B C)
+variable (F : PrelaxFunctorStruct B C)
 
 @[simp]
 theorem toPrefunctor_eq_coe : F.toPrefunctor = F :=
   rfl
-#align category_theory.prelax_functor.to_prefunctor_eq_coe CategoryTheory.PrelaxFunctor.toPrefunctor_eq_coe
+#align category_theory.prelax_functor.to_prefunctor_eq_coe CategoryTheory.PrelaxFunctorStruct.toPrefunctor_eq_coe
 
 @[simp]
 theorem to_prefunctor_obj : (F : Prefunctor B C).obj = F.obj :=
   rfl
-#align category_theory.prelax_functor.to_prefunctor_obj CategoryTheory.PrelaxFunctor.to_prefunctor_obj
+#align category_theory.prelax_functor.to_prefunctor_obj CategoryTheory.PrelaxFunctorStruct.to_prefunctor_obj
 
 @[simp]
 theorem to_prefunctor_map : @Prefunctor.map B _ C _ F = @map _ _ _ _ _ _ F :=
   rfl
-#align category_theory.prelax_functor.to_prefunctor_map CategoryTheory.PrelaxFunctor.to_prefunctor_map
+#align category_theory.prelax_functor.to_prefunctor_map CategoryTheory.PrelaxFunctorStruct.to_prefunctor_map
 
-#print CategoryTheory.PrelaxFunctor.id /-
+#print CategoryTheory.PrelaxFunctorStruct.id /-
 /-- The identity prelax functor. -/
 @[simps]
-def id (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiver.{w₁ + 1} (a ⟶ b)] : PrelaxFunctor B B :=
+def id (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiver.{w₁ + 1} (a ⟶ b)] :
+    PrelaxFunctorStruct B B :=
   { Prefunctor.id B with zipWith := fun a b f g η => η }
-#align category_theory.prelax_functor.id CategoryTheory.PrelaxFunctor.id
+#align category_theory.prelax_functor.id CategoryTheory.PrelaxFunctorStruct.id
 -/
 
-instance : Inhabited (PrelaxFunctor B B) :=
-  ⟨PrelaxFunctor.id B⟩
+instance : Inhabited (PrelaxFunctorStruct B B) :=
+  ⟨PrelaxFunctorStruct.id B⟩
 
-#print CategoryTheory.PrelaxFunctor.comp /-
+#print CategoryTheory.PrelaxFunctorStruct.comp /-
 /-- Composition of prelax functors. -/
 @[simps]
-def comp (F : PrelaxFunctor B C) (G : PrelaxFunctor C D) : PrelaxFunctor B D :=
+def comp (F : PrelaxFunctorStruct B C) (G : PrelaxFunctorStruct C D) : PrelaxFunctorStruct B D :=
   { (F : Prefunctor B C).comp ↑G with zipWith := fun a b f g η => G.zipWith (F.zipWith η) }
-#align category_theory.prelax_functor.comp CategoryTheory.PrelaxFunctor.comp
+#align category_theory.prelax_functor.comp CategoryTheory.PrelaxFunctorStruct.comp
 -/
 
 end PrelaxFunctor
@@ -175,7 +174,7 @@ associator, the left unitor, and the right unitor modulo some adjustments of dom
 of 2-morphisms.
 -/
 structure OplaxFunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u₂)
-    [Bicategory.{w₂, v₂} C] extends PrelaxFunctor B C where
+    [Bicategory.{w₂, v₂} C] extends PrelaxFunctorStruct B C where
   map_id (a : B) : map (𝟙 a) ⟶ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ⟶ map f ≫ map g
   mapComp_naturality_left :
@@ -220,11 +219,9 @@ section
 /-- The prelax functor between the underlying quivers. -/
 add_decl_doc oplax_functor.to_prelax_functor
 
-#print CategoryTheory.OplaxFunctor.hasCoeToPrelax /-
-instance hasCoeToPrelax : Coe (OplaxFunctor B C) (PrelaxFunctor B C) :=
+instance hasCoeToPrelax : Coe (OplaxFunctor B C) (PrelaxFunctorStruct B C) :=
   ⟨toPrelaxFunctor⟩
 #align category_theory.oplax_functor.has_coe_to_prelax CategoryTheory.OplaxFunctor.hasCoeToPrelax
--/
 
 variable (F : OplaxFunctor B C)
 
@@ -234,35 +231,35 @@ theorem to_prelax_eq_coe : F.toPrelaxFunctor = F :=
 #align category_theory.oplax_functor.to_prelax_eq_coe CategoryTheory.OplaxFunctor.to_prelax_eq_coe
 
 @[simp]
-theorem to_prelaxFunctor_obj : (F : PrelaxFunctor B C).obj = F.obj :=
+theorem to_prelaxFunctorStruct_obj : (F : PrelaxFunctorStruct B C).obj = F.obj :=
   rfl
-#align category_theory.oplax_functor.to_prelax_functor_obj CategoryTheory.OplaxFunctor.to_prelaxFunctor_obj
+#align category_theory.oplax_functor.to_prelax_functor_obj CategoryTheory.OplaxFunctor.to_prelaxFunctorStruct_obj
 
 @[simp]
-theorem to_prelaxFunctor_map : @PrelaxFunctor.map B _ _ C _ _ F = @map _ _ _ _ F :=
+theorem to_prelaxFunctorStruct_map : @PrelaxFunctorStruct.map B _ _ C _ _ F = @map _ _ _ _ F :=
   rfl
-#align category_theory.oplax_functor.to_prelax_functor_map CategoryTheory.OplaxFunctor.to_prelaxFunctor_map
+#align category_theory.oplax_functor.to_prelax_functor_map CategoryTheory.OplaxFunctor.to_prelaxFunctorStruct_map
 
 @[simp]
-theorem to_prelaxFunctor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
+theorem to_prelaxFunctorStruct_map₂ : @PrelaxFunctorStruct.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
   rfl
-#align category_theory.oplax_functor.to_prelax_functor_map₂ CategoryTheory.OplaxFunctor.to_prelaxFunctor_map₂
+#align category_theory.oplax_functor.to_prelax_functor_map₂ CategoryTheory.OplaxFunctor.to_prelaxFunctorStruct_map₂
 
-#print CategoryTheory.OplaxFunctor.mapFunctor /-
+#print CategoryTheory.PrelaxFunctor.mapFunctor /-
 /-- Function between 1-morphisms as a functor. -/
 @[simps]
 def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b)
     where
   obj f := F.map f
   map f g η := F.zipWith η
-#align category_theory.oplax_functor.map_functor CategoryTheory.OplaxFunctor.mapFunctor
+#align category_theory.oplax_functor.map_functor CategoryTheory.PrelaxFunctor.mapFunctor
 -/
 
 #print CategoryTheory.OplaxFunctor.id /-
 /-- The identity oplax functor. -/
 @[simps]
 def id (B : Type u₁) [Bicategory.{w₁, v₁} B] : OplaxFunctor B B :=
-  { PrelaxFunctor.id B with
+  { PrelaxFunctorStruct.id B with
     map_id := fun a => 𝟙 (𝟙 a)
     map_comp := fun a b c f g => 𝟙 (f ≫ g) }
 #align category_theory.oplax_functor.id CategoryTheory.OplaxFunctor.id
@@ -276,7 +273,7 @@ instance : Inhabited (OplaxFunctor B B) :=
 @[simps]
 def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
   {
-    (F : PrelaxFunctor B C).comp
+    (F : PrelaxFunctorStruct B C).comp
       ↑G with
     map_id := fun a => (G.mapFunctor _ _).map (F.map_id a) ≫ G.map_id (F.obj a)
     map_comp := fun a b c f g =>
@@ -359,7 +356,7 @@ associator, the left unitor, and the right unitor modulo some adjustments of dom
 of 2-morphisms.
 -/
 structure Pseudofunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u₂)
-    [Bicategory.{w₂, v₂} C] extends PrelaxFunctor B C where
+    [Bicategory.{w₂, v₂} C] extends PrelaxFunctorStruct B C where
   map_id (a : B) : map (𝟙 a) ≅ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ≅ map f ≫ map g
   map₂_id : ∀ {a b : B} (f : a ⟶ b), map₂ (𝟙 f) = 𝟙 (map f) := by obviously
@@ -405,11 +402,9 @@ open Iso
 /-- The prelax functor between the underlying quivers. -/
 add_decl_doc pseudofunctor.to_prelax_functor
 
-#print CategoryTheory.Pseudofunctor.hasCoeToPrelaxFunctor /-
-instance hasCoeToPrelaxFunctor : Coe (Pseudofunctor B C) (PrelaxFunctor B C) :=
+instance hasCoeToPrelaxFunctor : Coe (Pseudofunctor B C) (PrelaxFunctorStruct B C) :=
   ⟨toPrelaxFunctor⟩
 #align category_theory.pseudofunctor.has_coe_to_prelax_functor CategoryTheory.Pseudofunctor.hasCoeToPrelaxFunctor
--/
 
 variable (F : Pseudofunctor B C)
 
@@ -419,24 +414,26 @@ theorem toPrelaxFunctor_eq_coe : F.toPrelaxFunctor = F :=
 #align category_theory.pseudofunctor.to_prelax_functor_eq_coe CategoryTheory.Pseudofunctor.toPrelaxFunctor_eq_coe
 
 @[simp]
-theorem to_prelaxFunctor_obj : (F : PrelaxFunctor B C).obj = F.obj :=
+theorem to_prelaxFunctorStruct_obj : (F : PrelaxFunctorStruct B C).obj = F.obj :=
   rfl
-#align category_theory.pseudofunctor.to_prelax_functor_obj CategoryTheory.Pseudofunctor.to_prelaxFunctor_obj
+#align category_theory.pseudofunctor.to_prelax_functor_obj CategoryTheory.Pseudofunctor.to_prelaxFunctorStruct_obj
 
 @[simp]
-theorem to_prelaxFunctor_map : @PrelaxFunctor.map B _ _ C _ _ F = @map _ _ _ _ F :=
+theorem to_prelaxFunctorStruct_map : @PrelaxFunctorStruct.map B _ _ C _ _ F = @map _ _ _ _ F :=
   rfl
-#align category_theory.pseudofunctor.to_prelax_functor_map CategoryTheory.Pseudofunctor.to_prelaxFunctor_map
+#align category_theory.pseudofunctor.to_prelax_functor_map CategoryTheory.Pseudofunctor.to_prelaxFunctorStruct_map
 
 @[simp]
-theorem to_prelaxFunctor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
+theorem to_prelaxFunctorStruct_map₂ : @PrelaxFunctorStruct.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
   rfl
-#align category_theory.pseudofunctor.to_prelax_functor_map₂ CategoryTheory.Pseudofunctor.to_prelaxFunctor_map₂
+#align category_theory.pseudofunctor.to_prelax_functor_map₂ CategoryTheory.Pseudofunctor.to_prelaxFunctorStruct_map₂
 
 #print CategoryTheory.Pseudofunctor.toOplax /-
 /-- The oplax functor associated with a pseudofunctor. -/
 def toOplax : OplaxFunctor B C :=
-  { (F : PrelaxFunctor B C) with
+  {
+    (F : PrelaxFunctorStruct B
+        C) with
     map_id := fun a => (F.map_id a).Hom
     map_comp := fun a b c f g => (F.map_comp f g).Hom }
 #align category_theory.pseudofunctor.to_oplax CategoryTheory.Pseudofunctor.toOplax
@@ -453,12 +450,10 @@ theorem toOplax_eq_coe : F.toOplax = F :=
   rfl
 #align category_theory.pseudofunctor.to_oplax_eq_coe CategoryTheory.Pseudofunctor.toOplax_eq_coe
 
-#print CategoryTheory.Pseudofunctor.to_oplax_obj /-
 @[simp]
 theorem to_oplax_obj : (F : OplaxFunctor B C).obj = F.obj :=
   rfl
 #align category_theory.pseudofunctor.to_oplax_obj CategoryTheory.Pseudofunctor.to_oplax_obj
--/
 
 @[simp]
 theorem to_oplax_map : @OplaxFunctor.map B _ C _ F = @map _ _ _ _ F :=
@@ -470,34 +465,32 @@ theorem to_oplax_map₂ : @OplaxFunctor.map₂ B _ C _ F = @map₂ _ _ _ _ F :=
   rfl
 #align category_theory.pseudofunctor.to_oplax_map₂ CategoryTheory.Pseudofunctor.to_oplax_map₂
 
-#print CategoryTheory.Pseudofunctor.to_oplax_mapId /-
+#print CategoryTheory.Pseudofunctor.toOplax_mapId /-
 @[simp]
-theorem to_oplax_mapId (a : B) : (F : OplaxFunctor B C).map_id a = (F.map_id a).Hom :=
+theorem toOplax_mapId (a : B) : (F : OplaxFunctor B C).map_id a = (F.map_id a).Hom :=
   rfl
-#align category_theory.pseudofunctor.to_oplax_map_id CategoryTheory.Pseudofunctor.to_oplax_mapId
+#align category_theory.pseudofunctor.to_oplax_map_id CategoryTheory.Pseudofunctor.toOplax_mapId
 -/
 
-#print CategoryTheory.Pseudofunctor.to_oplax_mapComp /-
+#print CategoryTheory.Pseudofunctor.toOplax_mapComp /-
 @[simp]
-theorem to_oplax_mapComp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) :
+theorem toOplax_mapComp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) :
     (F : OplaxFunctor B C).map_comp f g = (F.map_comp f g).Hom :=
   rfl
-#align category_theory.pseudofunctor.to_oplax_map_comp CategoryTheory.Pseudofunctor.to_oplax_mapComp
+#align category_theory.pseudofunctor.to_oplax_map_comp CategoryTheory.Pseudofunctor.toOplax_mapComp
 -/
 
-#print CategoryTheory.Pseudofunctor.mapFunctor /-
 /-- Function on 1-morphisms as a functor. -/
 @[simps]
 def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b) :=
   (F : OplaxFunctor B C).mapFunctor a b
 #align category_theory.pseudofunctor.map_functor CategoryTheory.Pseudofunctor.mapFunctor
--/
 
 #print CategoryTheory.Pseudofunctor.id /-
 /-- The identity pseudofunctor. -/
 @[simps]
 def id (B : Type u₁) [Bicategory.{w₁, v₁} B] : Pseudofunctor B B :=
-  { PrelaxFunctor.id B with
+  { PrelaxFunctorStruct.id B with
     map_id := fun a => Iso.refl (𝟙 a)
     map_comp := fun a b c f g => Iso.refl (f ≫ g) }
 #align category_theory.pseudofunctor.id CategoryTheory.Pseudofunctor.id
@@ -511,7 +504,7 @@ instance : Inhabited (Pseudofunctor B B) :=
 @[simps]
 def comp (F : Pseudofunctor B C) (G : Pseudofunctor C D) : Pseudofunctor B D :=
   {
-    (F : PrelaxFunctor B C).comp
+    (F : PrelaxFunctorStruct B C).comp
       ↑G with
     map_id := fun a => (G.mapFunctor _ _).mapIso (F.map_id a) ≪≫ G.map_id (F.obj a)
     map_comp := fun a b c f g =>
@@ -524,7 +517,7 @@ def comp (F : Pseudofunctor B C) (G : Pseudofunctor C D) : Pseudofunctor B D :=
 -/
 @[simps]
 def mkOfOplax (F : OplaxFunctor B C) (F' : F.PseudoCore) : Pseudofunctor B C :=
-  { (F : PrelaxFunctor B C) with
+  { (F : PrelaxFunctorStruct B C) with
     map_id := F'.mapIdIso
     map_comp := fun _ _ _ => F'.mapCompIso
     map₂_whisker_left' := fun a b c f g h η => by
@@ -549,7 +542,9 @@ def mkOfOplax (F : OplaxFunctor B C) (F' : F.PseudoCore) : Pseudofunctor B C :=
 @[simps]
 noncomputable def mkOfOplax' (F : OplaxFunctor B C) [∀ a, IsIso (F.map_id a)]
     [∀ {a b c} (f : a ⟶ b) (g : b ⟶ c), IsIso (F.map_comp f g)] : Pseudofunctor B C :=
-  { (F : PrelaxFunctor B C) with
+  {
+    (F : PrelaxFunctorStruct B
+        C) with
     map_id := fun a => asIso (F.map_id a)
     map_comp := fun a b c f g => asIso (F.map_comp f g)
     map₂_whisker_left' := fun a b c f g h η => by

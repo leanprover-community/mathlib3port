@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
 import CategoryTheory.Limits.Shapes.Equalizers
-import CategoryTheory.Limits.Shapes.CommSq
+import CategoryTheory.Limits.Shapes.Pullback.CommSq
 import CategoryTheory.Limits.Shapes.RegularMono
 
 #align_import category_theory.limits.shapes.kernel_pair from "leanprover-community/mathlib"@"8ef6f08ff8c781c5c07a8b12843710e1a0d8a688"

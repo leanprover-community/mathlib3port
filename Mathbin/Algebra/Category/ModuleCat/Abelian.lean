@@ -132,7 +132,6 @@ open LinearMap
 
 attribute [local instance] preadditive.has_equalizers_of_has_kernels
 
-#print ModuleCat.exact_iff /-
 theorem exact_iff : Exact f g ↔ f.range = g.ker :=
   by
   rw [abelian.exact_iff' f g (kernel_is_limit _) (cokernel_is_colimit _)]
@@ -140,7 +139,6 @@ theorem exact_iff : Exact f g ↔ f.range = g.ker :=
     ⟨fun h => le_antisymm (range_le_ker_iff.2 h.1) (ker_le_range_iff.2 h.2), fun h =>
       ⟨range_le_ker_iff.1 <| le_of_eq h, ker_le_range_iff.1 <| le_of_eq h.symm⟩⟩
 #align Module.exact_iff ModuleCat.exact_iff
--/
 
 end ModuleCat
 

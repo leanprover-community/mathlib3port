@@ -1015,7 +1015,6 @@ section
 instance [Subsingleton R] : Unique (Localization M) :=
   ⟨⟨1⟩, by intro a; induction a; induction default; congr; rfl; rfl⟩
 
-#print Localization.add /-
 /-- Addition in a ring localization is defined as `⟨a, b⟩ + ⟨c, d⟩ = ⟨b * c + d * a, b * d⟩`.
 
 Should not be confused with `add_localization.add`, which is defined as
@@ -1037,7 +1036,6 @@ protected irreducible_def add (z w : Localization M) : Localization M :=
             by ring
           _ = t₅ * t₆ * (b * d * (b' * c' + d' * a')) := by rw [ht₆, ht₅] <;> ring)
 #align localization.add Localization.add
--/
 
 instance : Add (Localization M) :=
   ⟨Localization.add⟩
@@ -1308,7 +1306,6 @@ variable [Algebra R S] {P : Type _} [CommRing P]
 
 namespace Localization
 
-#print Localization.neg /-
 /-- Negation in a ring localization is defined as `-⟨a, b⟩ = ⟨-a, b⟩`. -/
 protected irreducible_def neg (z : Localization M) : Localization M :=
   Localization.liftOn z (fun a b => mk (-a) b) fun a b c d h =>
@@ -1320,7 +1317,6 @@ protected irreducible_def neg (z : Localization M) : Localization M :=
         rw [mul_neg, mul_neg, ht]
         ring_nf)
 #align localization.neg Localization.neg
--/
 
 instance : Neg (Localization M) :=
   ⟨Localization.neg⟩

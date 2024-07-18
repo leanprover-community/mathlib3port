@@ -234,7 +234,6 @@ theorem mk_bit1 (n) {h} {k} : (⟨bit1 n, h⟩ : ℕ+) = (bit1 ⟨n, k⟩ : ℕ+
   rfl
 #align pnat.mk_bit1 PNat.mk_bit1
 
-#print PNat.bit0_le_bit0 /-
 -- Some lemmas that rewrite inequalities between explicit numerals in `ℕ+`
 -- into the corresponding inequalities in `ℕ`.
 -- TODO: perhaps this should not be attempted by `simp`,
@@ -246,28 +245,21 @@ theorem mk_bit1 (n) {h} {k} : (⟨bit1 n, h⟩ : ℕ+) = (bit1 ⟨n, k⟩ : ℕ+
 theorem bit0_le_bit0 (n m : ℕ+) : bit0 n ≤ bit0 m ↔ bit0 (n : ℕ) ≤ bit0 (m : ℕ) :=
   Iff.rfl
 #align pnat.bit0_le_bit0 PNat.bit0_le_bit0
--/
 
-#print PNat.bit0_le_bit1 /-
 @[simp]
 theorem bit0_le_bit1 (n m : ℕ+) : bit0 n ≤ bit1 m ↔ bit0 (n : ℕ) ≤ bit1 (m : ℕ) :=
   Iff.rfl
 #align pnat.bit0_le_bit1 PNat.bit0_le_bit1
--/
 
-#print PNat.bit1_le_bit0 /-
 @[simp]
 theorem bit1_le_bit0 (n m : ℕ+) : bit1 n ≤ bit0 m ↔ bit1 (n : ℕ) ≤ bit0 (m : ℕ) :=
   Iff.rfl
 #align pnat.bit1_le_bit0 PNat.bit1_le_bit0
--/
 
-#print PNat.bit1_le_bit1 /-
 @[simp]
 theorem bit1_le_bit1 (n m : ℕ+) : bit1 n ≤ bit1 m ↔ bit1 (n : ℕ) ≤ bit1 (m : ℕ) :=
   Iff.rfl
 #align pnat.bit1_le_bit1 PNat.bit1_le_bit1
--/
 
 #print PNat.mul_coe /-
 @[simp, norm_cast]

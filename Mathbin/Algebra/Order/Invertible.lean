@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Algebra.Order.Ring.Defs
+import Algebra.Order.Ring.Unbundled.Basic
 import Algebra.Group.Invertible.Defs
 
 #align_import algebra.order.invertible from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"

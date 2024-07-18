@@ -3,7 +3,7 @@ Copyright (c) 2015 Nathaniel Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 -/
-import Algebra.Module.LinearMap.Basic
+import Algebra.Module.LinearMap.Defs
 import Algebra.Module.Equiv
 import GroupTheory.GroupAction.SubMulAction
 import Algebra.Group.Submonoid.Membership

@@ -81,7 +81,7 @@ theorem cantorFunctionAux_false (h : f n = false) : cantorFunctionAux c f n = 0 
 
 #print Cardinal.cantorFunctionAux_nonneg /-
 theorem cantorFunctionAux_nonneg (h : 0 ≤ c) : 0 ≤ cantorFunctionAux c f n := by
-  cases h' : f n <;> simp [h']; apply pow_nonneg h
+  cases h' : f n <;> simp [h']; apply Nonneg.pow_nonneg h
 #align cardinal.cantor_function_aux_nonneg Cardinal.cantorFunctionAux_nonneg
 -/
 

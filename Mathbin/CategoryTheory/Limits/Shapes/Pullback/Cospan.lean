@@ -1411,20 +1411,20 @@ abbrev pushout.desc {W X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} [HasPushout f g] (
 #align category_theory.limits.pushout.desc CategoryTheory.Limits.pushout.desc
 -/
 
-#print CategoryTheory.Limits.PullbackCone.fst_colimit_cocone /-
+#print CategoryTheory.Limits.PullbackCone.fst_limit_cone /-
 @[simp]
-theorem PullbackCone.fst_colimit_cocone {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
-    [HasLimit (cospan f g)] : PullbackCone.fst (limit.cone (cospan f g)) = pullback.fst :=
+theorem PullbackCone.fst_limit_cone {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasLimit (cospan f g)] :
+    PullbackCone.fst (limit.cone (cospan f g)) = pullback.fst :=
   rfl
-#align category_theory.limits.pullback_cone.fst_colimit_cocone CategoryTheory.Limits.PullbackCone.fst_colimit_cocone
+#align category_theory.limits.pullback_cone.fst_colimit_cocone CategoryTheory.Limits.PullbackCone.fst_limit_cone
 -/
 
-#print CategoryTheory.Limits.PullbackCone.snd_colimit_cocone /-
+#print CategoryTheory.Limits.PullbackCone.snd_limit_cone /-
 @[simp]
-theorem PullbackCone.snd_colimit_cocone {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
-    [HasLimit (cospan f g)] : PullbackCone.snd (limit.cone (cospan f g)) = pullback.snd :=
+theorem PullbackCone.snd_limit_cone {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasLimit (cospan f g)] :
+    PullbackCone.snd (limit.cone (cospan f g)) = pullback.snd :=
   rfl
-#align category_theory.limits.pullback_cone.snd_colimit_cocone CategoryTheory.Limits.PullbackCone.snd_colimit_cocone
+#align category_theory.limits.pullback_cone.snd_colimit_cocone CategoryTheory.Limits.PullbackCone.snd_limit_cone
 -/
 
 #print CategoryTheory.Limits.PushoutCocone.inl_colimit_cocone /-
@@ -3312,17 +3312,19 @@ instance (priority := 100) hasPullbacks_of_hasWidePullbacks [HasWidePullbacks.{w
 
 variable {C}
 
-#print CategoryTheory.Over.baseChange /-
+/- warning: category_theory.limits.base_change clashes with category_theory.over.pullback -> CategoryTheory.Over.pullback
+Case conversion may be inaccurate. Consider using '#align category_theory.limits.base_change CategoryTheory.Over.pullbackₓ'. -/
+#print CategoryTheory.Over.pullback /-
 /-- Given a morphism `f : X ⟶ Y`, we can take morphisms over `Y` to morphisms over `X` via
 pullbacks. This is right adjoint to `over.map` (TODO) -/
 @[simps (config :=
       { rhsMd := semireducible
         simpRhs := true }) obj_left obj_hom mapLeft]
-def baseChange [HasPullbacks C] {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X
+def pullback [HasPullbacks C] {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X
     where
   obj g := Over.mk (pullback.snd : pullback g.Hom f ⟶ _)
   map g₁ g₂ i := Over.homMk (pullback.map _ _ _ _ i.left (𝟙 _) (𝟙 _) (by simp) (by simp)) (by simp)
-#align category_theory.limits.base_change CategoryTheory.Over.baseChange
+#align category_theory.limits.base_change CategoryTheory.Over.pullback
 -/
 
 end CategoryTheory.Limits

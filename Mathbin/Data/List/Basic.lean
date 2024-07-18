@@ -75,10 +75,10 @@ theorem cons_injective {a : α} : Injective (cons a) := fun l₁ l₂ => fun Pe 
 #align list.cons_injective List.cons_injective
 -/
 
-#print List.cons_inj /-
-theorem cons_inj (a : α) {l l' : List α} : a :: l = a :: l' ↔ l = l' :=
+#print List.cons_inj_right /-
+theorem cons_inj_right (a : α) {l l' : List α} : a :: l = a :: l' ↔ l = l' :=
   cons_injective.eq_iff
-#align list.cons_inj List.cons_inj
+#align list.cons_inj List.cons_inj_right
 -/
 
 #print List.cons_eq_cons /-
@@ -315,12 +315,12 @@ theorem bind_map {g : α → List β} {f : β → γ} :
   | a :: l => by simp only [cons_bind, map_append, bind_map l]
 #align list.bind_map List.bind_mapₓ
 
-#print List.map_bind /-
-theorem map_bind (g : β → List γ) (f : α → β) :
+#print List.bind_map /-
+theorem bind_map (g : β → List γ) (f : α → β) :
     ∀ l : List α, (List.map f l).bind g = l.bind fun a => g (f a)
   | [] => rfl
   | a :: l => by simp only [cons_bind, map_cons, map_bind l]
-#align list.map_bind List.map_bind
+#align list.map_bind List.bind_map
 -/
 
 /-! ### length -/
@@ -1319,13 +1319,13 @@ theorem getLast_replicate_succ (m : ℕ) (a : α) :
 /-! ### last' -/
 
 
-#print List.getLast?_isNone /-
+#print List.getLast?_eq_none /-
 @[simp]
-theorem getLast?_isNone : ∀ {l : List α}, (getLast? l).isNone ↔ l = []
+theorem getLast?_eq_none : ∀ {l : List α}, (getLast? l).isNone ↔ l = []
   | [] => by simp
   | [a] => by simp
   | a :: b :: l => by simp [@last'_is_none (b :: l)]
-#align list.last'_is_none List.getLast?_isNone
+#align list.last'_is_none List.getLast?_eq_none
 -/
 
 #print List.getLast?_isSome /-
@@ -2020,11 +2020,11 @@ theorem get?_len_le : ∀ {l : List α} {n}, length l ≤ n → get? l n = none
 #align list.nth_len_le List.get?_len_le
 -/
 
-#print List.get?_length /-
+#print List.getElem?_length /-
 @[simp]
-theorem get?_length (l : List α) : l.get? l.length = none :=
+theorem getElem?_length (l : List α) : l.get? l.length = none :=
   get?_len_le le_rfl
-#align list.nth_length List.get?_length
+#align list.nth_length List.getElem?_length
 -/
 
 #print List.get?_eq_some /-
@@ -2340,8 +2340,8 @@ theorem indexOf_inj [DecidableEq α] {l : List α} {x y : α} (hx : x ∈ l) (hy
 #align list.index_of_inj List.indexOf_inj
 -/
 
-#print List.get_reverse_aux₂ /-
-theorem get_reverse_aux₂ :
+#print List.getElem_reverse_aux₂ /-
+theorem getElem_reverse_aux₂ :
     ∀ (l r : List α) (i : Nat) (h1) (h2),
       nthLe (reverseAux l r) (length l - 1 - i) h1 = nthLe l i h2
   | [], r, i, h1, h2 => absurd h2 (Nat.not_lt_zero _)
@@ -2358,14 +2358,14 @@ theorem get_reverse_aux₂ :
         _ = length l - 1 - i := by rw [← tsub_add_eq_tsub_tsub]
     rw [← HEq] at aux
     apply aux
-#align list.nth_le_reverse_aux2 List.get_reverse_aux₂
+#align list.nth_le_reverse_aux2 List.getElem_reverse_aux₂
 -/
 
 #print List.nthLe_reverse /-
 @[simp]
 theorem nthLe_reverse (l : List α) (i : Nat) (h1 h2) :
     nthLe (reverse l) (length l - 1 - i) h1 = nthLe l i h2 :=
-  get_reverse_aux₂ _ _ _ _ _
+  getElem_reverse_aux₂ _ _ _ _ _
 #align list.nth_le_reverse List.nthLe_reverse
 -/
 
@@ -2542,11 +2542,12 @@ theorem set_nil (n : ℕ) (a : α) : [].set n a = [] :=
 #align list.update_nth_nil List.set_nil
 -/
 
-#print List.set_succ /-
+#print List.set_cons_succ /-
 @[simp]
-theorem set_succ (x : α) (xs : List α) (n : ℕ) (a : α) : (x :: xs).set n.succ a = x :: xs.set n a :=
+theorem set_cons_succ (x : α) (xs : List α) (n : ℕ) (a : α) :
+    (x :: xs).set n.succ a = x :: xs.set n a :=
   rfl
-#align list.update_nth_succ List.set_succ
+#align list.update_nth_succ List.set_cons_succ
 -/
 
 #print List.set_comm /-
@@ -2571,12 +2572,12 @@ theorem get_set_eq (l : List α) (i : ℕ) (a : α) (h : i < (l.set i a).length)
 #align list.nth_le_update_nth_eq List.get_set_eq
 -/
 
-#print List.get_set_of_ne /-
+#print List.getElem_set_of_ne /-
 @[simp]
-theorem get_set_of_ne {l : List α} {i j : ℕ} (h : i ≠ j) (a : α) (hj : j < (l.set i a).length) :
+theorem getElem_set_of_ne {l : List α} {i j : ℕ} (h : i ≠ j) (a : α) (hj : j < (l.set i a).length) :
     (l.set i a).nthLe j hj = l.nthLe j (by simpa using hj) := by
   rw [← Option.some_inj, ← List.nthLe_get?, List.get?_set_ne _ _ h, List.nthLe_get?]
-#align list.nth_le_update_nth_of_ne List.get_set_of_ne
+#align list.nth_le_update_nth_of_ne List.getElem_set_of_ne
 -/
 
 #print List.mem_or_eq_of_mem_set /-
@@ -2802,22 +2803,22 @@ theorem map_eq_foldr (f : α → β) (l : List α) : map f l = foldr (fun a bs =
 #align list.map_eq_foldr List.map_eq_foldr
 -/
 
-#print List.map_congr /-
-theorem map_congr {f g : α → β} : ∀ {l : List α}, (∀ x ∈ l, f x = g x) → map f l = map g l
+#print List.map_congr_left /-
+theorem map_congr_left {f g : α → β} : ∀ {l : List α}, (∀ x ∈ l, f x = g x) → map f l = map g l
   | [], _ => rfl
   | a :: l, h => by
     let ⟨h₁, h₂⟩ := forall_mem_cons.1 h
     rw [map, map, h₁, map_congr h₂]
-#align list.map_congr List.map_congr
+#align list.map_congr List.map_congr_left
 -/
 
-#print List.map_eq_map_iff /-
-theorem map_eq_map_iff {f g : α → β} {l : List α} : map f l = map g l ↔ ∀ x ∈ l, f x = g x :=
+#print List.map_inj_left /-
+theorem map_inj_left {f g : α → β} {l : List α} : map f l = map g l ↔ ∀ x ∈ l, f x = g x :=
   by
   refine' ⟨_, map_congr⟩; intro h x hx
   rw [mem_iff_nth_le] at hx; rcases hx with ⟨n, hn, rfl⟩
   rw [nth_le_map_rev f, nth_le_map_rev g]; congr; exact h
-#align list.map_eq_map_iff List.map_eq_map_iff
+#align list.map_eq_map_iff List.map_inj_left
 -/
 
 #print List.map_concat /-
@@ -2867,7 +2868,7 @@ theorem bind_pure_eq_map (f : α → β) (l : List α) : l.bind (List.pure ∘ f
 #print List.bind_congr /-
 theorem bind_congr {l : List α} {f g : α → List β} (h : ∀ x ∈ l, f x = g x) :
     List.bind l f = List.bind l g :=
-  (congr_arg List.join <| map_congr h : _)
+  (congr_arg List.join <| map_congr_left h : _)
 #align list.bind_congr List.bind_congr
 -/
 
@@ -3124,11 +3125,11 @@ theorem get?_take {l : List α} {n m : ℕ} (h : m < n) : (l.take n).get? m = l.
 #align list.nth_take List.get?_take
 -/
 
-#print List.nth_take_of_succ /-
+#print List.get?_take_of_succ /-
 @[simp]
-theorem nth_take_of_succ {l : List α} {n : ℕ} : (l.take (n + 1)).get? n = l.get? n :=
+theorem get?_take_of_succ {l : List α} {n : ℕ} : (l.take (n + 1)).get? n = l.get? n :=
   get?_take (Nat.lt_succ_self n)
-#align list.nth_take_of_succ List.nth_take_of_succ
+#align list.nth_take_of_succ List.get?_take_of_succ
 -/
 
 #print List.take_succ /-
@@ -3833,14 +3834,14 @@ theorem scanl_cons : scanl f b (a :: l) = [b] ++ scanl f (f b a) l := by
 #align list.scanl_cons List.scanl_cons
 -/
 
-#print List.get?_zero_scanl /-
+#print List.getElem?_scanl_zero /-
 @[simp]
-theorem get?_zero_scanl : (scanl f b l).get? 0 = some b :=
+theorem getElem?_scanl_zero : (scanl f b l).get? 0 = some b :=
   by
   cases l
   · simp only [nth, scanl_nil]
   · simp only [nth, scanl_cons, singleton_append]
-#align list.nth_zero_scanl List.get?_zero_scanl
+#align list.nth_zero_scanl List.getElem?_scanl_zero
 -/
 
 #print List.nthLe_zero_scanl /-
@@ -5083,10 +5084,10 @@ theorem monotone_filter_right (l : List α) ⦃p q : α → Prop⦄ [DecidablePr
 #align list.monotone_filter_right List.monotone_filter_right
 -/
 
-#print List.map_filter /-
-theorem map_filter (f : β → α) (l : List β) : filter p (map f l) = map f (filter (p ∘ f) l) := by
+#print List.filter_map /-
+theorem filter_map (f : β → α) (l : List β) : filter p (map f l) = map f (filter (p ∘ f) l) := by
   rw [← filter_map_eq_map, filter_filter_map, filter_map_filter] <;> rfl
-#align list.map_filter List.map_filter
+#align list.map_filter List.filter_map
 -/
 
 #print List.map_filter' /-
@@ -6420,16 +6421,16 @@ def decidableGetDNilNe {α} (a : α) : DecidablePred fun i : ℕ => getD ([] : L
 #align list.decidable_nthd_nil_ne List.decidableGetDNilNeₓ
 
 @[simp]
-theorem getD_singleton_default_eq (n : ℕ) : [d].getD n d = d := by cases n <;> simp
-#align list.nthd_singleton_default_eq List.getD_singleton_default_eqₓ
+theorem getElem?_getD_singleton_default_eq (n : ℕ) : [d].getD n d = d := by cases n <;> simp
+#align list.nthd_singleton_default_eq List.getElem?_getD_singleton_default_eqₓ
 
 @[simp]
-theorem getD_replicate_default_eq (r n : ℕ) : (replicate r d).getD n d = d :=
+theorem getElem?_getD_replicate_default_eq (r n : ℕ) : (replicate r d).getD n d = d :=
   by
   induction' r with r IH generalizing n
   · simp
   · cases n <;> simp [IH]
-#align list.nthd_replicate_default_eq List.getD_replicate_default_eqₓ
+#align list.nthd_replicate_default_eq List.getElem?_getD_replicate_default_eqₓ
 
 theorem getD_append (l l' : List α) (d : α) (n : ℕ) (h : n < l.length)
     (h' : n < (l ++ l').length := h.trans_le ((length_append l l').symm ▸ le_self_add)) :

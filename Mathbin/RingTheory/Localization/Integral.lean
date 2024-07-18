@@ -7,7 +7,7 @@ import Algebra.Polynomial.Lifts
 import GroupTheory.MonoidLocalization
 import RingTheory.Algebraic
 import RingTheory.Ideal.LocalRing
-import RingTheory.IntegralClosure
+import RingTheory.IntegralClosure.IsIntegral.Defs
 import RingTheory.Localization.FractionRing
 import RingTheory.Localization.Integer
 import Algebra.GroupWithZero.NonZeroDivisors

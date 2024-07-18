@@ -195,25 +195,18 @@ theorem fib_two_mul_add_one (n : ℕ) : fib (2 * n + 1) = fib (n + 1) ^ 2 + fib 
 #align nat.fib_two_mul_add_one Nat.fib_two_mul_add_one
 -/
 
-#print Nat.fib_bit0 /-
 theorem fib_bit0 (n : ℕ) : fib (bit0 n) = fib n * (2 * fib (n + 1) - fib n) := by
-  rw [bit0_eq_two_mul, fib_two_mul]
+  rw [bit0_eq_two_hMul, fib_two_mul]
 #align nat.fib_bit0 Nat.fib_bit0
--/
 
-#print Nat.fib_bit1 /-
 theorem fib_bit1 (n : ℕ) : fib (bit1 n) = fib (n + 1) ^ 2 + fib n ^ 2 := by
-  rw [Nat.bit1_eq_succ_bit0, bit0_eq_two_mul, fib_two_mul_add_one]
+  rw [Nat.bit1_eq_succ_bit0, bit0_eq_two_hMul, fib_two_mul_add_one]
 #align nat.fib_bit1 Nat.fib_bit1
--/
 
-#print Nat.fib_bit0_succ /-
 theorem fib_bit0_succ (n : ℕ) : fib (bit0 n + 1) = fib (n + 1) ^ 2 + fib n ^ 2 :=
   fib_bit1 n
 #align nat.fib_bit0_succ Nat.fib_bit0_succ
--/
 
-#print Nat.fib_bit1_succ /-
 theorem fib_bit1_succ (n : ℕ) : fib (bit1 n + 1) = fib (n + 1) * (2 * fib n + fib (n + 1)) :=
   by
   rw [Nat.bit1_eq_succ_bit0, fib_add_two, fib_bit0, fib_bit0_succ]
@@ -223,7 +216,6 @@ theorem fib_bit1_succ (n : ℕ) : fib (bit1 n + 1) = fib (n + 1) * (2 * fib n + 
   zify
   ring
 #align nat.fib_bit1_succ Nat.fib_bit1_succ
--/
 
 #print Nat.fastFibAux /-
 /-- Computes `(nat.fib n, nat.fib (n + 1))` using the binary representation of `n`.
@@ -380,7 +372,7 @@ theorem isFibAux_bit0 {n a b c a2 b2 a' b' : ℕ} (H : IsFibAux n a b) (h1 : a +
     (h2 : a * c = a') (h3 : a * a = a2) (h4 : b * b = b2) (h5 : a2 + b2 = b') :
     IsFibAux (bit0 n) a' b' :=
   ⟨by
-    rw [fib_bit0, H.1, H.2, ← bit0_eq_two_mul,
+    rw [fib_bit0, H.1, H.2, ← bit0_eq_two_hMul,
       show bit0 b - a = c by rw [← h1, Nat.add_sub_cancel_left], h2],
     by rw [fib_bit0_succ, H.1, H.2, pow_two, pow_two, h3, h4, add_comm, h5]⟩
 #align norm_num.is_fib_aux_bit0 NormNum.isFibAux_bit0
@@ -389,7 +381,7 @@ theorem isFibAux_bit1 {n a b c a2 b2 a' b' : ℕ} (H : IsFibAux n a b) (h1 : a *
     (h2 : b * b = b2) (h3 : a2 + b2 = a') (h4 : bit0 a + b = c) (h5 : b * c = b') :
     IsFibAux (bit1 n) a' b' :=
   ⟨by rw [fib_bit1, H.1, H.2, pow_two, pow_two, h1, h2, add_comm, h3], by
-    rw [fib_bit1_succ, H.1, H.2, ← bit0_eq_two_mul, h4, h5]⟩
+    rw [fib_bit1_succ, H.1, H.2, ← bit0_eq_two_hMul, h4, h5]⟩
 #align norm_num.is_fib_aux_bit1 NormNum.isFibAux_bit1
 
 theorem isFibAux_bit0_done {n a b c a' : ℕ} (H : IsFibAux n a b) (h1 : a + c = bit0 b)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Algebra.Module.Equiv
-import GroupTheory.GroupAction.Opposite
+import Algebra.Group.Action.Opposite
 
 #align_import algebra.module.opposites from "leanprover-community/mathlib"@"fac369018417f980cec5fcdafc766a69f88d8cfe"
 

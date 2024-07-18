@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 -/
 import Order.Bounds.Basic
-import Algebra.Order.Group.Defs
+import Algebra.Order.Group.Unbundled.Basic
 
 #align_import algebra.order.group.bounds from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

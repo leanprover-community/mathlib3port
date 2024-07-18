@@ -47,54 +47,52 @@ convergence, fractions
 
 variable {K : Type _} (v : K) [LinearOrderedField K] [FloorRing K]
 
-open GeneralizedContinuedFraction (of)
+open GenContFract (of)
 
-open GeneralizedContinuedFraction
+open GenContFract
 
-#print GeneralizedContinuedFraction.of_isSimpleContinuedFraction /-
-theorem GeneralizedContinuedFraction.of_isSimpleContinuedFraction :
-    (of v).IsSimpleContinuedFraction := fun _ _ nth_part_num_eq =>
-  of_part_num_eq_one nth_part_num_eq
-#align generalized_continued_fraction.of_is_simple_continued_fraction GeneralizedContinuedFraction.of_isSimpleContinuedFraction
+#print GenContFract.of_isSimpContFract /-
+theorem GenContFract.of_isSimpContFract : (of v).IsSimpContFract := fun _ _ nth_part_num_eq =>
+  of_partNum_eq_one nth_part_num_eq
+#align generalized_continued_fraction.of_is_simple_continued_fraction GenContFract.of_isSimpContFract
 -/
 
-#print SimpleContinuedFraction.of /-
+#print SimpContFract.of /-
 /-- Creates the simple continued fraction of a value. -/
-def SimpleContinuedFraction.of : SimpleContinuedFraction K :=
-  ⟨of v, GeneralizedContinuedFraction.of_isSimpleContinuedFraction v⟩
-#align simple_continued_fraction.of SimpleContinuedFraction.of
+def SimpContFract.of : SimpContFract K :=
+  ⟨of v, GenContFract.of_isSimpContFract v⟩
+#align simple_continued_fraction.of SimpContFract.of
 -/
 
-#print SimpleContinuedFraction.of_isContinuedFraction /-
-theorem SimpleContinuedFraction.of_isContinuedFraction :
-    (SimpleContinuedFraction.of v).IsContinuedFraction := fun _ denom nth_part_denom_eq =>
-  lt_of_lt_of_le zero_lt_one (of_one_le_get?_part_denom nth_part_denom_eq)
-#align simple_continued_fraction.of_is_continued_fraction SimpleContinuedFraction.of_isContinuedFraction
+#print SimpContFract.of_isContFract /-
+theorem SimpContFract.of_isContFract : (SimpContFract.of v).IsContFract :=
+  fun _ denom nth_part_denom_eq =>
+  lt_of_lt_of_le zero_lt_one (of_one_le_get?_partDen nth_part_denom_eq)
+#align simple_continued_fraction.of_is_continued_fraction SimpContFract.of_isContFract
 -/
 
-#print ContinuedFraction.of /-
+#print ContFract.of /-
 /-- Creates the continued fraction of a value. -/
-def ContinuedFraction.of : ContinuedFraction K :=
-  ⟨SimpleContinuedFraction.of v, SimpleContinuedFraction.of_isContinuedFraction v⟩
-#align continued_fraction.of ContinuedFraction.of
+def ContFract.of : ContFract K :=
+  ⟨SimpContFract.of v, SimpContFract.of_isContFract v⟩
+#align continued_fraction.of ContFract.of
 -/
 
-namespace GeneralizedContinuedFraction
+namespace GenContFract
 
-#print GeneralizedContinuedFraction.of_convergents_eq_convergents' /-
-theorem of_convergents_eq_convergents' : (of v).convergents = (of v).convergents' :=
-  @ContinuedFraction.convergents_eq_convergents' _ _ (ContinuedFraction.of v)
-#align generalized_continued_fraction.of_convergents_eq_convergents' GeneralizedContinuedFraction.of_convergents_eq_convergents'
+#print GenContFract.of_convs_eq_convs' /-
+theorem of_convs_eq_convs' : (of v).convs = (of v).convs' :=
+  @ContFract.convs_eq_convs' _ _ (ContFract.of v)
+#align generalized_continued_fraction.of_convergents_eq_convergents' GenContFract.of_convs_eq_convs'
 -/
 
-#print GeneralizedContinuedFraction.convergents_succ /-
+#print GenContFract.convs_succ /-
 /-- The recurrence relation for the `convergents` of the continued fraction expansion
 of an element `v` of `K` in terms of the convergents of the inverse of its fractional part.
 -/
-theorem convergents_succ (n : ℕ) :
-    (of v).convergents (n + 1) = ⌊v⌋ + 1 / (of (Int.fract v)⁻¹).convergents n := by
+theorem convs_succ (n : ℕ) : (of v).convs (n + 1) = ⌊v⌋ + 1 / (of (Int.fract v)⁻¹).convs n := by
   rw [of_convergents_eq_convergents', convergents'_succ, of_convergents_eq_convergents']
-#align generalized_continued_fraction.convergents_succ GeneralizedContinuedFraction.convergents_succ
+#align generalized_continued_fraction.convergents_succ GenContFract.convs_succ
 -/
 
 section Convergence
@@ -110,8 +108,8 @@ variable [Archimedean K]
 
 open Nat
 
-#print GeneralizedContinuedFraction.of_convergence_epsilon /-
-theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v - (of v).convergents n| < ε :=
+#print GenContFract.of_convergence_epsilon /-
+theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v - (of v).convs n| < ε :=
   by
   intro ε ε_pos
   -- use the archimedean property to obtian a suitable N
@@ -170,19 +168,18 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
           (by exact_mod_cast (fib (n + 1)).zero_le))
       _ ≤ B * nB :=
         mul_le_mul B_ineq nB_ineq (by exact_mod_cast (fib (n + 2)).zero_le) (le_of_lt zero_lt_B)
-#align generalized_continued_fraction.of_convergence_epsilon GeneralizedContinuedFraction.of_convergence_epsilon
+#align generalized_continued_fraction.of_convergence_epsilon GenContFract.of_convergence_epsilon
 -/
 
 attribute [local instance] Preorder.topology
 
-#print GeneralizedContinuedFraction.of_convergence /-
-theorem of_convergence [OrderTopology K] :
-    Filter.Tendsto (of v).convergents Filter.atTop <| nhds v := by
+#print GenContFract.of_convergence /-
+theorem of_convergence [OrderTopology K] : Filter.Tendsto (of v).convs Filter.atTop <| nhds v := by
   simpa [LinearOrderedAddCommGroup.tendsto_nhds, abs_sub_comm] using of_convergence_epsilon v
-#align generalized_continued_fraction.of_convergence GeneralizedContinuedFraction.of_convergence
+#align generalized_continued_fraction.of_convergence GenContFract.of_convergence
 -/
 
 end Convergence
 
-end GeneralizedContinuedFraction
+end GenContFract
 

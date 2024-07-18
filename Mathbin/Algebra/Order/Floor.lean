@@ -1773,7 +1773,7 @@ theorem round_eq (x : α) : round x = ⌊x + 1 / 2⌋ :=
 #print round_two_inv /-
 @[simp]
 theorem round_two_inv : round (2⁻¹ : α) = 1 := by
-  simp only [round_eq, ← one_div, add_halves', floor_one]
+  simp only [round_eq, ← one_div, add_halves, floor_one]
 #align round_two_inv round_two_inv
 -/
 

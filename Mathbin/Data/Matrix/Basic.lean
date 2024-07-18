@@ -7,7 +7,7 @@ import Algebra.Algebra.Pi
 import Algebra.BigOperators.Pi
 import Algebra.BigOperators.Ring
 import Algebra.BigOperators.RingEquiv
-import Algebra.Module.LinearMap.Basic
+import Algebra.Module.LinearMap.Defs
 import Algebra.Module.Pi
 import Algebra.Star.BigOperators
 import Algebra.Star.Module
@@ -604,35 +604,27 @@ end One
 
 section Numeral
 
-#print Matrix.bit0_apply /-
 @[simp]
 theorem bit0_apply [Add α] (M : Matrix m m α) (i : m) (j : m) : (bit0 M) i j = bit0 (M i j) :=
   rfl
 #align matrix.bit0_apply Matrix.bit0_apply
--/
 
 variable [AddZeroClass α] [One α]
 
-#print Matrix.bit1_apply /-
 theorem bit1_apply (M : Matrix n n α) (i : n) (j : n) :
     (bit1 M) i j = if i = j then bit1 (M i j) else bit0 (M i j) := by
   dsimp [bit1] <;> by_cases h : i = j <;> simp [h]
 #align matrix.bit1_apply Matrix.bit1_apply
--/
 
-#print Matrix.bit1_apply_eq /-
 @[simp]
 theorem bit1_apply_eq (M : Matrix n n α) (i : n) : (bit1 M) i i = bit1 (M i i) := by
   simp [bit1_apply]
 #align matrix.bit1_apply_eq Matrix.bit1_apply_eq
--/
 
-#print Matrix.bit1_apply_ne /-
 @[simp]
 theorem bit1_apply_ne (M : Matrix n n α) {i j : n} (h : i ≠ j) : (bit1 M) i j = bit0 (M i j) := by
   simp [bit1_apply, h]
 #align matrix.bit1_apply_ne Matrix.bit1_apply_ne
--/
 
 end Numeral
 

@@ -6,7 +6,7 @@ Authors: Alex J. Best, Xavier Roblot
 import Analysis.Complex.Polynomial
 import FieldTheory.Minpoly.IsIntegrallyClosed
 import NumberTheory.NumberField.Basic
-import RingTheory.Norm
+import RingTheory.Norm.Defs
 import Topology.Instances.Complex
 
 #align_import number_theory.number_field.embeddings from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
@@ -94,7 +94,7 @@ variable {A : Type _} [NormedField A] [IsAlgClosed A] [NormedAlgebra ℚ A]
 theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x‖ ≤ B) (i : ℕ) :
     ‖(minpoly ℚ x).coeff i‖ ≤ max B 1 ^ finrank ℚ K * (finrank ℚ K).choose (finrank ℚ K / 2) :=
   by
-  have hx := IsSeparable.isIntegral ℚ x
+  have hx := Algebra.IsSeparable.isIntegral ℚ x
   rw [← norm_algebraMap' A, ← coeff_map (algebraMap ℚ A)]
   refine'
     coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splits_codomain _)

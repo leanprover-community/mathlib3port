@@ -2775,10 +2775,10 @@ theorem filter_add_not (s : Multiset α) : filter p s + filter (fun a => ¬p a) 
 #align multiset.filter_add_not Multiset.filter_add_not
 -/
 
-#print Multiset.map_filter /-
-theorem map_filter (f : β → α) (s : Multiset β) : filter p (map f s) = map f (filter (p ∘ f) s) :=
+#print Multiset.filter_map /-
+theorem filter_map (f : β → α) (s : Multiset β) : filter p (map f s) = map f (filter (p ∘ f) s) :=
   Quot.inductionOn s fun l => by simp [map_filter]
-#align multiset.map_filter Multiset.map_filter
+#align multiset.map_filter Multiset.filter_map
 -/
 
 #print Multiset.map_filter' /-

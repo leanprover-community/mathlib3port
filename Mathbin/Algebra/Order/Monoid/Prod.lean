@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Algebra.Group.Prod
 import Algebra.Order.Monoid.Cancel.Defs
-import Algebra.Order.Monoid.Canonical.Defs
+import Algebra.Order.Monoid.Unbundled.ExistsOfLE
 
 #align_import algebra.order.monoid.prod from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

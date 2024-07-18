@@ -6,7 +6,7 @@ Authors: Yury G. Kudryashov, Patrick Massot
 import Order.Interval.Set.Basic
 import Data.Set.Function
 import Algebra.Order.Monoid.Cancel.Defs
-import Algebra.Order.Monoid.Canonical.Defs
+import Algebra.Order.Monoid.Unbundled.ExistsOfLE
 import Algebra.Group.Basic
 
 #align_import data.set.intervals.monoid from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"

@@ -183,8 +183,8 @@ theorem Fintype.card_fun [DecidableEq α] [Fintype α] [Fintype β] :
 
 #print card_vector /-
 @[simp]
-theorem card_vector [Fintype α] (n : ℕ) : Fintype.card (Vector α n) = Fintype.card α ^ n := by
-  rw [Fintype.ofEquiv_card] <;> simp
+theorem card_vector [Fintype α] (n : ℕ) : Fintype.card (Mathlib.Vector α n) = Fintype.card α ^ n :=
+  by rw [Fintype.ofEquiv_card] <;> simp
 #align card_vector card_vector
 -/
 

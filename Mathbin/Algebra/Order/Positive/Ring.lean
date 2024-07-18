@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Algebra.Order.Ring.Defs
+import Algebra.Order.Ring.Unbundled.Basic
 import Algebra.Ring.InjSurj
 
 #align_import algebra.order.positive.ring from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"

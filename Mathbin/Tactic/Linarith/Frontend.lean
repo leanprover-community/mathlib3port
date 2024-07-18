@@ -309,8 +309,7 @@ unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (t
   tactic.linarith red.isSome restr.isSome (hyps.getD []) cfg
 #align tactic.interactive.linarith tactic.interactive.linarith
 
-add_hint_tactic linarith
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic linarith -/
 /-- `linarith` attempts to find a contradiction between hypotheses that are linear (in)equalities.
 Equivalently, it can prove a linear inequality by assuming its negation and proving `false`.
 
@@ -386,8 +385,7 @@ unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (
       preprocessors := some <| cfg.preprocessors.getD default_preprocessors ++ [nlinarith_extras] }
 #align tactic.interactive.nlinarith tactic.interactive.nlinarith
 
-add_hint_tactic nlinarith
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic nlinarith -/
 add_tactic_doc
   { Name := "nlinarith"
     category := DocCategory.tactic

@@ -24,7 +24,7 @@ namespace CliffordAlgebra
 
 variable {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
 
-variable {Q : QuadraticForm R M}
+variable {Q : QuadraticMap R M}
 
 open scoped DirectSum
 

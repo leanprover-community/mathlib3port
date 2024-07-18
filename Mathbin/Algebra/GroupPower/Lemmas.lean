@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis
 -/
 import Algebra.Group.Invertible.Defs
 import Algebra.GroupPower.Ring
-import Algebra.Order.Monoid.WithTop
+import Algebra.Order.Monoid.Unbundled.WithTop
 import Data.Nat.Pow
 import Data.Int.Cast.Lemmas
 
@@ -197,7 +197,7 @@ theorem zpow_mul' (a : α) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by rw [mul
 
 @[to_additive bit0_zsmul]
 theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
-  | (n : ℕ) => by simp only [zpow_natCast, ← Int.ofNat_bit0, pow_bit0]
+  | (n : ℕ) => by simp only [zpow_natCast, ← Int.coe_nat_bit0, pow_bit0]
   | -[n+1] => by
     simp [← mul_inv_rev, ← pow_bit0]; rw [neg_succ_of_nat_eq, bit0_neg, zpow_neg]
     norm_cast
@@ -639,31 +639,23 @@ theorem Int.natAbs_pow (n : ℤ) (k : ℕ) : Int.natAbs (n ^ k) = Int.natAbs n ^
 #align int.nat_abs_pow Int.natAbs_pow
 -/
 
-#print bit0_mul /-
 -- The next four lemmas allow us to replace multiplication by a numeral with a `zsmul` expression.
 -- They are used by the `noncomm_ring` tactic, to normalise expressions before passing to `abel`.
-theorem bit0_mul [NonUnitalNonAssocRing R] {n r : R} : bit0 n * r = (2 : ℤ) • (n * r) := by
+theorem bit0_hMul [NonUnitalNonAssocRing R] {n r : R} : bit0 n * r = (2 : ℤ) • (n * r) := by
   dsimp [bit0]; rw [add_mul, add_zsmul, one_zsmul]
-#align bit0_mul bit0_mul
--/
+#align bit0_mul bit0_hMul
 
-#print mul_bit0 /-
-theorem mul_bit0 [NonUnitalNonAssocRing R] {n r : R} : r * bit0 n = (2 : ℤ) • (r * n) := by
+theorem hMul_bit0 [NonUnitalNonAssocRing R] {n r : R} : r * bit0 n = (2 : ℤ) • (r * n) := by
   dsimp [bit0]; rw [mul_add, add_zsmul, one_zsmul]
-#align mul_bit0 mul_bit0
--/
+#align mul_bit0 hMul_bit0
 
-#print bit1_mul /-
-theorem bit1_mul [NonAssocRing R] {n r : R} : bit1 n * r = (2 : ℤ) • (n * r) + r := by dsimp [bit1];
-  rw [add_mul, bit0_mul, one_mul]
-#align bit1_mul bit1_mul
--/
+theorem bit1_hMul [NonAssocRing R] {n r : R} : bit1 n * r = (2 : ℤ) • (n * r) + r := by
+  dsimp [bit1]; rw [add_mul, bit0_hMul, one_mul]
+#align bit1_mul bit1_hMul
 
-#print mul_bit1 /-
-theorem mul_bit1 [NonAssocRing R] {n r : R} : r * bit1 n = (2 : ℤ) • (r * n) + r := by dsimp [bit1];
-  rw [mul_add, mul_bit0, mul_one]
-#align mul_bit1 mul_bit1
--/
+theorem hMul_bit1 [NonAssocRing R] {n r : R} : r * bit1 n = (2 : ℤ) • (r * n) + r := by
+  dsimp [bit1]; rw [mul_add, hMul_bit0, mul_one]
+#align mul_bit1 hMul_bit1
 
 #print Int.cast_mul_eq_zsmul_cast /-
 /-- Note this holds in marginally more generality than `int.cast_mul` -/
@@ -766,7 +758,7 @@ private theorem pow_le_pow_of_le_one_aux (h : 0 ≤ a) (ha : a ≤ 1) (i : ℕ) 
   | 0 => by simp
   | k + 1 => by
     rw [← add_assoc, ← one_mul (a ^ i), pow_succ']
-    exact mul_le_mul ha (pow_le_pow_of_le_one_aux _) (pow_nonneg h _) zero_le_one
+    exact mul_le_mul ha (pow_le_pow_of_le_one_aux _) (Nonneg.pow_nonneg h _) zero_le_one
 
 #print pow_le_pow_of_le_one /-
 theorem pow_le_pow_of_le_one (h : 0 ≤ a) (ha : a ≤ 1) {i j : ℕ} (hij : i ≤ j) : a ^ j ≤ a ^ i :=
@@ -818,35 +810,26 @@ theorem abs_pow (a : R) (n : ℕ) : |a ^ n| = |a| ^ n :=
 #align abs_pow abs_pow
 -/
 
-#print pow_bit1_neg_iff /-
 @[simp]
 theorem pow_bit1_neg_iff : a ^ bit1 n < 0 ↔ a < 0 :=
-  ⟨fun h => not_le.1 fun h' => not_le.2 h <| pow_nonneg h' _, fun ha => pow_bit1_neg ha n⟩
+  ⟨fun h => not_le.1 fun h' => not_le.2 h <| Nonneg.pow_nonneg h' _, fun ha => pow_bit1_neg ha n⟩
 #align pow_bit1_neg_iff pow_bit1_neg_iff
--/
 
-#print pow_bit1_nonneg_iff /-
 @[simp]
 theorem pow_bit1_nonneg_iff : 0 ≤ a ^ bit1 n ↔ 0 ≤ a :=
   le_iff_le_iff_lt_iff_lt.2 pow_bit1_neg_iff
 #align pow_bit1_nonneg_iff pow_bit1_nonneg_iff
--/
 
-#print pow_bit1_nonpos_iff /-
 @[simp]
 theorem pow_bit1_nonpos_iff : a ^ bit1 n ≤ 0 ↔ a ≤ 0 := by
   simp only [le_iff_lt_or_eq, pow_bit1_neg_iff, pow_eq_zero_iff (bit1_pos (zero_le n))]
 #align pow_bit1_nonpos_iff pow_bit1_nonpos_iff
--/
 
-#print pow_bit1_pos_iff /-
 @[simp]
 theorem pow_bit1_pos_iff : 0 < a ^ bit1 n ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le pow_bit1_nonpos_iff
 #align pow_bit1_pos_iff pow_bit1_pos_iff
--/
 
-#print strictMono_pow_bit1 /-
 theorem strictMono_pow_bit1 (n : ℕ) : StrictMono fun a : R => a ^ bit1 n :=
   by
   intro a b hab
@@ -857,7 +840,6 @@ theorem strictMono_pow_bit1 (n : ℕ) : StrictMono fun a : R => a ^ bit1 n :=
     · exact (pow_bit1_nonpos_iff.2 ha).trans_lt (pow_bit1_pos_iff.2 hb)
   · exact pow_lt_pow_left hab ha (bit1_pos (zero_le n))
 #align strict_mono_pow_bit1 strictMono_pow_bit1
--/
 
 #print one_add_mul_le_pow /-
 /-- Bernoulli's inequality for `n : ℕ`, `-2 ≤ a`. -/

@@ -161,7 +161,7 @@ theorem coe_symm_eq (x : I) : (σ x : ℝ) = 1 - x :=
 #align unit_interval.coe_symm_eq unitInterval.coe_symm_eq
 -/
 
-/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:303:22: continuitity! not supported at the moment -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:310:22: continuitity! not supported at the moment -/
 #print unitInterval.continuous_symm /-
 @[continuity]
 theorem continuous_symm : Continuous σ := by continuity

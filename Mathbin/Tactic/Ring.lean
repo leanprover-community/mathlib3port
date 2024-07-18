@@ -904,8 +904,7 @@ unsafe def ring (red : parse (tk "!")?) : tactic Unit :=
   ring1 red <|> ring_nf red NormalizeMode.horner (Loc.ns [none]) >> trace "Try this: ring_nf"
 #align tactic.interactive.ring tactic.interactive.ring
 
-add_hint_tactic ring
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic ring -/
 add_tactic_doc
   { Name := "ring"
     category := DocCategory.tactic

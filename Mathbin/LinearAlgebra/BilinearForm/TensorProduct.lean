@@ -40,9 +40,9 @@ variable [AddCommMonoid M₁] [AddCommMonoid M₂]
 
 variable [Module R M₁] [Module R M₂]
 
-#print LinearMap.BilinForm.tensorDistrib /-
+#print LinearMap.BilinMap.tensorDistrib /-
 /-- The tensor product of two bilinear forms injects into bilinear forms on tensor products. -/
-def LinearMap.BilinForm.tensorDistrib :
+def LinearMap.BilinMap.tensorDistrib :
     BilinForm R M₁ ⊗[R] BilinForm R M₂ →ₗ[R] BilinForm R (M₁ ⊗[R] M₂) :=
   ((TensorProduct.tensorTensorTensorComm R _ _ _ _).dualMap ≪≫ₗ
           (TensorProduct.lift.equiv R _ _ _).symm ≪≫ₗ
@@ -50,23 +50,23 @@ def LinearMap.BilinForm.tensorDistrib :
     TensorProduct.dualDistrib R _ _ ∘ₗ
       (TensorProduct.congr (LinearMap.BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _)
           (LinearMap.BilinForm.toLin ≪≫ₗ TensorProduct.lift.equiv R _ _ _)).toLinearMap
-#align bilin_form.tensor_distrib LinearMap.BilinForm.tensorDistrib
+#align bilin_form.tensor_distrib LinearMap.BilinMap.tensorDistrib
 -/
 
 @[simp]
-theorem LinearMap.BilinForm.tensorDistrib_tmul (B₁ : BilinForm R M₁) (B₂ : BilinForm R M₂) (m₁ : M₁)
+theorem LinearMap.BilinMap.tensorDistrib_tmul (B₁ : BilinForm R M₁) (B₂ : BilinForm R M₂) (m₁ : M₁)
     (m₂ : M₂) (m₁' : M₁) (m₂' : M₂) :
-    LinearMap.BilinForm.tensorDistrib (B₁ ⊗ₜ B₂) (m₁ ⊗ₜ m₂) (m₁' ⊗ₜ m₂') = B₁ m₁ m₁' * B₂ m₂ m₂' :=
+    LinearMap.BilinMap.tensorDistrib (B₁ ⊗ₜ B₂) (m₁ ⊗ₜ m₂) (m₁' ⊗ₜ m₂') = B₁ m₁ m₁' * B₂ m₂ m₂' :=
   rfl
-#align bilin_form.tensor_distrib_tmul LinearMap.BilinForm.tensorDistrib_tmulₓ
+#align bilin_form.tensor_distrib_tmul LinearMap.BilinMap.tensorDistrib_tmulₓ
 
-#print LinearMap.BilinForm.tmul /-
+#print LinearMap.BilinMap.tmul /-
 /-- The tensor product of two bilinear forms, a shorthand for dot notation. -/
 @[reducible]
-protected def LinearMap.BilinForm.tmul (B₁ : BilinForm R M₁) (B₂ : BilinForm R M₂) :
+protected def LinearMap.BilinMap.tmul (B₁ : BilinForm R M₁) (B₂ : BilinForm R M₂) :
     BilinForm R (M₁ ⊗[R] M₂) :=
-  LinearMap.BilinForm.tensorDistrib (B₁ ⊗ₜ[R] B₂)
-#align bilin_form.tmul LinearMap.BilinForm.tmul
+  LinearMap.BilinMap.tensorDistrib (B₁ ⊗ₜ[R] B₂)
+#align bilin_form.tmul LinearMap.BilinMap.tmul
 -/
 
 end CommSemiring
@@ -85,9 +85,9 @@ variable [Module.Free R M₂] [Module.Finite R M₂]
 
 variable [Nontrivial R]
 
-#print LinearMap.BilinForm.tensorDistribEquiv /-
+#print LinearMap.BilinMap.tensorDistribEquiv /-
 /-- `tensor_distrib` as an equivalence. -/
-noncomputable def LinearMap.BilinForm.tensorDistribEquiv :
+noncomputable def LinearMap.BilinMap.tensorDistribEquiv :
     BilinForm R M₁ ⊗[R] BilinForm R M₂ ≃ₗ[R] BilinForm R (M₁ ⊗[R] M₂) :=
   -- the same `linear_equiv`s as from `tensor_distrib`, but with the inner linear map also as an
             -- equiv
@@ -98,15 +98,15 @@ noncomputable def LinearMap.BilinForm.tensorDistribEquiv :
         (TensorProduct.tensorTensorTensorComm R _ _ _ _).dualMap ≪≫ₗ
       (TensorProduct.lift.equiv R _ _ _).symm ≪≫ₗ
     LinearMap.toBilin
-#align bilin_form.tensor_distrib_equiv LinearMap.BilinForm.tensorDistribEquiv
+#align bilin_form.tensor_distrib_equiv LinearMap.BilinMap.tensorDistribEquiv
 -/
 
-#print LinearMap.BilinForm.tensorDistribEquiv_apply /-
+#print LinearMap.BilinMap.tensorDistribEquiv_apply /-
 @[simp]
-theorem LinearMap.BilinForm.tensorDistribEquiv_apply (B : BilinForm R M₁ ⊗ BilinForm R M₂) :
-    LinearMap.BilinForm.tensorDistribEquiv B = LinearMap.BilinForm.tensorDistrib B :=
+theorem LinearMap.BilinMap.tensorDistribEquiv_apply (B : BilinForm R M₁ ⊗ BilinForm R M₂) :
+    LinearMap.BilinMap.tensorDistribEquiv B = LinearMap.BilinMap.tensorDistrib B :=
   rfl
-#align bilin_form.tensor_distrib_equiv_apply LinearMap.BilinForm.tensorDistribEquiv_apply
+#align bilin_form.tensor_distrib_equiv_apply LinearMap.BilinMap.tensorDistribEquiv_apply
 -/
 
 end CommRing

@@ -82,7 +82,8 @@ open Nat ZMod
 -- Since we need the fact that the factors are prime, we use `list.pmap`.
 /-- The Jacobi symbol of `a` and `b` -/
 def jacobiSym (a : ℤ) (b : ℕ) : ℤ :=
-  (b.factors.pmap (fun p pp => @legendreSym p ⟨pp⟩ a) fun p pf => prime_of_mem_factors pf).Prod
+  (b.factors.pmap (fun p pp => @legendreSym p ⟨pp⟩ a) fun p pf =>
+      prime_of_mem_primeFactorsList pf).Prod
 #align jacobi_sym jacobiSym
 -/
 
@@ -162,12 +163,10 @@ theorem one_left (b : ℕ) : J(1 | b) = 1 :=
 #align jacobi_sym.one_left jacobiSym.one_left
 -/
 
-#print jacobiSym.mul_left /-
 /-- The Jacobi symbol is multiplicative in its first argument. -/
-theorem mul_left (a₁ a₂ : ℤ) (b : ℕ) : J(a₁ * a₂ | b) = J(a₁ | b) * J(a₂ | b) := by
+theorem hMul_left (a₁ a₂ : ℤ) (b : ℕ) : J(a₁ * a₂ | b) = J(a₁ | b) * J(a₂ | b) := by
   simp_rw [jacobiSym, List.pmap_eq_map_attach, legendreSym.mul]; exact List.prod_map_mul
-#align jacobi_sym.mul_left jacobiSym.mul_left
--/
+#align jacobi_sym.mul_left jacobiSym.hMul_left
 
 #print jacobiSym.eq_zero_iff_not_coprime /-
 /-- The symbol `J(a | b)` vanishes iff `a` and `b` are not coprime (assuming `b ≠ 0`). -/
@@ -318,10 +317,10 @@ theorem eq_neg_one_at_prime_divisor_of_eq_neg_one {a : ℤ} {n : ℕ} (h : J(a |
     rintro rfl
     rw [zero_right, eq_neg_self_iff] at h
     exact one_ne_zero h
-  have hf₀ : ∀ p ∈ n.factors, p ≠ 0 := fun p hp => (Nat.pos_of_mem_factors hp).Ne.symm
-  rw [← Nat.prod_factors hn₀, list_prod_right hf₀] at h
+  have hf₀ : ∀ p ∈ n.factors, p ≠ 0 := fun p hp => (Nat.pos_of_mem_primeFactorsList hp).Ne.symm
+  rw [← Nat.prod_primeFactorsList hn₀, list_prod_right hf₀] at h
   obtain ⟨p, hmem, hj⟩ := list.mem_map.mp (List.neg_one_mem_of_prod_eq_neg_one h)
-  exact ⟨p, Nat.prime_of_mem_factors hmem, Nat.dvd_of_mem_factors hmem, hj⟩
+  exact ⟨p, Nat.prime_of_mem_primeFactorsList hmem, Nat.dvd_of_mem_primeFactorsList hmem, hj⟩
 #align jacobi_sym.eq_neg_one_at_prime_divisor_of_eq_neg_one jacobiSym.eq_neg_one_at_prime_divisor_of_eq_neg_one
 -/
 
@@ -447,7 +446,7 @@ theorem sq_eq_one {m n : ℕ} (hm : Odd m) (hn : Odd n) : qrSign m n ^ 2 = 1 := 
 #print qrSign.mul_left /-
 /-- `qr_sign` is multiplicative in the first argument. -/
 theorem mul_left (m₁ m₂ n : ℕ) : qrSign (m₁ * m₂) n = qrSign m₁ n * qrSign m₂ n := by
-  simp_rw [qrSign, Nat.cast_mul, map_mul, jacobiSym.mul_left]
+  simp_rw [qrSign, Nat.cast_mul, map_mul, jacobiSym.hMul_left]
 #align qr_sign.mul_left qrSign.mul_left
 -/
 

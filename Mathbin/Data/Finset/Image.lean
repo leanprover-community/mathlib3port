@@ -221,7 +221,7 @@ theorem mapEmbedding_apply : mapEmbedding f s = map f s :=
 #print Finset.filter_map /-
 theorem filter_map {p : β → Prop} [DecidablePred p] :
     (s.map f).filterₓ p = (s.filterₓ (p ∘ f)).map f :=
-  eq_of_veq (map_filter _ _ _)
+  eq_of_veq (filter_map _ _ _)
 #align finset.filter_map Finset.filter_map
 -/
 

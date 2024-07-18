@@ -278,19 +278,15 @@ theorem cast_mul [CharZero α] (m n) : ((m * n : ℚ) : α) = m * n :=
 #align rat.cast_mul Rat.cast_mul
 -/
 
-#print Rat.cast_bit0 /-
 @[simp, norm_cast]
 theorem cast_bit0 [CharZero α] (n : ℚ) : ((bit0 n : ℚ) : α) = bit0 n :=
   cast_add _ _
 #align rat.cast_bit0 Rat.cast_bit0
--/
 
-#print Rat.cast_bit1 /-
 @[simp, norm_cast]
 theorem cast_bit1 [CharZero α] (n : ℚ) : ((bit1 n : ℚ) : α) = bit1 n := by
   rw [bit1, cast_add, cast_one, cast_bit0] <;> rfl
 #align rat.cast_bit1 Rat.cast_bit1
--/
 
 variable (α) [CharZero α]
 

@@ -5,7 +5,7 @@ Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 -/
 import Analysis.InnerProductSpace.Projection
 import Analysis.NormedSpace.PiLp
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 import LinearAlgebra.UnitaryGroup
 
 #align_import analysis.inner_product_space.pi_L2 from "leanprover-community/mathlib"@"f60c6087a7275b72d5db3c5a1d0e19e35a429c0a"

@@ -25,7 +25,7 @@ It is not fully in compliance with mathlib style standards.
 /-- `bitvec n` is a `vector` of `bool` with length `n`. -/
 @[reducible]
 def BitVec (n : ℕ) :=
-  Vector Bool n
+  Mathlib.Vector Bool n
 #align bitvec BitVec
 -/
 
@@ -33,23 +33,23 @@ namespace BitVec
 
 open Nat
 
-open Vector
+open Mathlib.Vector
 
-local infixl:65 "++ₜ" => Vector.append
+local infixl:65 "++ₜ" => Mathlib.Vector.append
 
 #print BitVec.zero /-
 /-- Create a zero bitvector -/
 @[reducible]
 protected def zero (n : ℕ) : BitVec n :=
-  replicate n false
+  Mathlib.Vector.replicate n false
 #align bitvec.zero BitVec.zero
 -/
 
 /-- Create a bitvector of length `n` whose `n-1`st entry is 1 and other entries are 0. -/
 @[reducible]
 protected def one : ∀ n : ℕ, BitVec n
-  | 0 => nil
-  | succ n => replicate n false++ₜtrue ::ᵥ nil
+  | 0 => Mathlib.Vector.nil
+  | succ n => Mathlib.Vector.replicate n false++ₜtrue ::ᵥ Mathlib.Vector.nil
 #align bitvec.one BitVec.one
 
 #print BitVec.cast /-
@@ -62,7 +62,7 @@ protected def cast {a b : ℕ} (h : a = b) : BitVec a → BitVec b
 #print BitVec.append /-
 /-- `bitvec` specific version of `vector.append` -/
 def append {m n} : BitVec m → BitVec n → BitVec (m + n) :=
-  Vector.append
+  Mathlib.Vector.append
 #align bitvec.append BitVec.append
 -/
 
@@ -77,7 +77,7 @@ variable {n : ℕ}
 /-- `shl x i` is the bitvector obtained by left-shifting `x` `i` times and padding with `ff`.
 If `x.length < i` then this will return the all-`ff`s bitvector. -/
 def shiftLeft (x : BitVec n) (i : ℕ) : BitVec n :=
-  BitVec.cast (by simp) <| drop i x++ₜreplicate (min n i) false
+  BitVec.cast (by simp) <| Mathlib.Vector.drop i x++ₜMathlib.Vector.replicate (min n i) false
 #align bitvec.shl BitVec.shiftLeft
 -/
 
@@ -93,7 +93,7 @@ def fillShr (x : BitVec n) (i : ℕ) (fill : Bool) : BitVec n :=
           rw [min_eq_left h₁, ← add_tsub_assoc_of_le h, Nat.add_comm, add_tsub_cancel_right]
         · have h₁ := le_of_not_ge h
           rw [min_eq_left h₁, tsub_eq_zero_iff_le.mpr h₁, zero_min, Nat.add_zero]) <|
-    replicate (min n i) fill++ₜtake (n - i) x
+    Mathlib.Vector.replicate (min n i) fill++ₜMathlib.Vector.take (n - i) x
 #align bitvec.fill_shr BitVec.fillShr
 
 #print BitVec.ushiftRight /-
@@ -106,8 +106,9 @@ def ushiftRight (x : BitVec n) (i : ℕ) : BitVec n :=
 #print BitVec.sshiftRight /-
 /-- signed shift right -/
 def sshiftRight : ∀ {m : ℕ}, BitVec m → ℕ → BitVec m
-  | 0, _, _ => nil
-  | succ m, x, i => head x ::ᵥ fillShr (tail x) i (head x)
+  | 0, _, _ => Mathlib.Vector.nil
+  | succ m, x, i =>
+    Mathlib.Vector.head x ::ᵥ fillShr (Mathlib.Vector.tail x) i (Mathlib.Vector.head x)
 #align bitvec.sshr BitVec.sshiftRight
 -/
 
@@ -123,28 +124,28 @@ variable {n : ℕ}
 #print BitVec.not /-
 /-- bitwise not -/
 def not : BitVec n → BitVec n :=
-  map not
+  Mathlib.Vector.map not
 #align bitvec.not BitVec.not
 -/
 
 #print BitVec.and /-
 /-- bitwise and -/
 def and : BitVec n → BitVec n → BitVec n :=
-  map₂ and
+  Mathlib.Vector.map₂ and
 #align bitvec.and BitVec.and
 -/
 
 #print BitVec.or /-
 /-- bitwise or -/
 def or : BitVec n → BitVec n → BitVec n :=
-  map₂ or
+  Mathlib.Vector.map₂ or
 #align bitvec.or BitVec.or
 -/
 
 #print BitVec.xor /-
 /-- bitwise xor -/
 def xor : BitVec n → BitVec n → BitVec n :=
-  map₂ xor
+  Mathlib.Vector.map₂ xor
 #align bitvec.xor BitVec.xor
 -/
 
@@ -175,7 +176,7 @@ protected def carry (x y c : Bool) :=
 /-- `neg x` is the two's complement of `x`. -/
 protected def neg (x : BitVec n) : BitVec n :=
   let f y c := (y || c, xor y c)
-  Prod.snd (mapAccumr f x false)
+  Prod.snd (Mathlib.Vector.mapAccumr f x false)
 #align bitvec.neg BitVec.neg
 -/
 
@@ -183,7 +184,7 @@ protected def neg (x : BitVec n) : BitVec n :=
 /-- Add with carry (no overflow) -/
 def adc (x y : BitVec n) (c : Bool) : BitVec (n + 1) :=
   let f x y c := (Bool.carry x y c, Bool.xor3 x y c)
-  let ⟨c, z⟩ := Vector.mapAccumr₂ f x y c
+  let ⟨c, z⟩ := Mathlib.Vector.mapAccumr₂ f x y c
   c ::ᵥ z
 #align bitvec.adc BitVec.adc
 -/
@@ -191,14 +192,14 @@ def adc (x y : BitVec n) (c : Bool) : BitVec (n + 1) :=
 #print BitVec.add /-
 /-- The sum of two bitvectors -/
 protected def add (x y : BitVec n) : BitVec n :=
-  tail (adc x y false)
+  Mathlib.Vector.tail (adc x y false)
 #align bitvec.add BitVec.add
 -/
 
 /-- Subtract with borrow -/
 def sbb (x y : BitVec n) (b : Bool) : Bool × BitVec n :=
   let f x y c := (Bool.carry (not x) y c, Bool.xor3 x y c)
-  Vector.mapAccumr₂ f x y b
+  Mathlib.Vector.mapAccumr₂ f x y b
 #align bitvec.sbb BitVec.sbb
 
 #print BitVec.sub /-
@@ -227,7 +228,7 @@ instance : Neg (BitVec n) :=
 /-- The product of two bitvectors -/
 protected def mul (x y : BitVec n) : BitVec n :=
   let f r b := cond b (r + r + y) (r + r)
-  (toList x).foldl f 0
+  (Mathlib.Vector.toList x).foldl f 0
 #align bitvec.mul BitVec.mul
 -/
 
@@ -282,10 +283,10 @@ def Uge (x y : BitVec n) : Prop :=
 def slt : ∀ {n : ℕ}, BitVec n → BitVec n → Bool
   | 0, _, _ => false
   | succ n, x, y =>
-    match (head x, head y) with
+    match (Mathlib.Vector.head x, Mathlib.Vector.head y) with
     | (tt, ff) => true
     | (ff, tt) => false
-    | _ => ult (tail x) (tail y)
+    | _ => ult (Mathlib.Vector.tail x) (Mathlib.Vector.tail y)
 #align bitvec.sborrow BitVec.slt
 -/
 
@@ -327,8 +328,8 @@ variable {α : Type}
 #print BitVec.ofNat /-
 /-- Create a bitvector from a `nat` -/
 protected def ofNat : ∀ n : ℕ, Nat → BitVec n
-  | 0, x => nil
-  | succ n, x => of_nat n (x / 2)++ₜdecide (x % 2 = 1) ::ᵥ nil
+  | 0, x => Mathlib.Vector.nil
+  | succ n, x => of_nat n (x / 2)++ₜdecide (x % 2 = 1) ::ᵥ Mathlib.Vector.nil
 #align bitvec.of_nat BitVec.ofNat
 -/
 
@@ -353,11 +354,12 @@ def bitsToNat (v : List Bool) : Nat :=
 #print BitVec.toNat /-
 /-- Return the natural number encoded by the input bitvector -/
 protected def toNat {n : Nat} (v : BitVec n) : Nat :=
-  bitsToNat (toList v)
+  bitsToNat (Mathlib.Vector.toList v)
 #align bitvec.to_nat BitVec.toNat
 -/
 
-theorem bitsToNat_toList {n : ℕ} (x : BitVec n) : BitVec.toNat x = bitsToNat (Vector.toList x) :=
+theorem bitsToNat_toList {n : ℕ} (x : BitVec n) :
+    BitVec.toNat x = bitsToNat (Mathlib.Vector.toList x) :=
   rfl
 #align bitvec.bits_to_nat_to_list BitVec.bitsToNat_toList
 
@@ -368,7 +370,8 @@ attribute [local simp] Nat.zero_add Nat.add_zero Nat.one_mul Nat.mul_one Nat.zer
 #print BitVec.toNat_append /-
 -- mul_left_comm
 theorem toNat_append {m : ℕ} (xs : BitVec m) (b : Bool) :
-    BitVec.toNat (xs++ₜb ::ᵥ nil) = BitVec.toNat xs * 2 + BitVec.toNat (b ::ᵥ nil) :=
+    BitVec.toNat (xs++ₜb ::ᵥ Mathlib.Vector.nil) =
+      BitVec.toNat xs * 2 + BitVec.toNat (b ::ᵥ Mathlib.Vector.nil) :=
   by
   cases' xs with xs P
   simp [bits_to_nat_to_list]; clear P
@@ -383,7 +386,8 @@ theorem toNat_append {m : ℕ} (xs : BitVec m) (b : Bool) :
 #align bitvec.to_nat_append BitVec.toNat_append
 -/
 
-theorem bits_toNat_decide (n : ℕ) : BitVec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 :=
+theorem bits_toNat_decide (n : ℕ) :
+    BitVec.toNat (decide (n % 2 = 1) ::ᵥ Mathlib.Vector.nil) = n % 2 :=
   by
   simp [bits_to_nat_to_list]
   unfold bits_to_nat add_lsb List.foldl cond
@@ -391,7 +395,7 @@ theorem bits_toNat_decide (n : ℕ) : BitVec.toNat (decide (n % 2 = 1) ::ᵥ nil
 #align bitvec.bits_to_nat_to_bool BitVec.bits_toNat_decide
 
 theorem ofNat_succ {k n : ℕ} :
-    BitVec.ofNat (succ k) n = BitVec.ofNat k (n / 2)++ₜdecide (n % 2 = 1) ::ᵥ nil :=
+    BitVec.ofNat (succ k) n = BitVec.ofNat k (n / 2)++ₜdecide (n % 2 = 1) ::ᵥ Mathlib.Vector.nil :=
   rfl
 #align bitvec.of_nat_succ BitVec.ofNat_succ
 
@@ -409,8 +413,8 @@ theorem toNat_ofNat {k n : ℕ} : BitVec.toNat (BitVec.ofNat k n) = n % 2 ^ k :=
 protected def toInt : ∀ {n : Nat}, BitVec n → Int
   | 0, _ => 0
   | succ n, v =>
-    cond (head v) (Int.negSucc <| BitVec.toNat <| not <| tail v)
-      (Int.ofNat <| BitVec.toNat <| tail v)
+    cond (Mathlib.Vector.head v) (Int.negSucc <| BitVec.toNat <| not <| Mathlib.Vector.tail v)
+      (Int.ofNat <| BitVec.toNat <| Mathlib.Vector.tail v)
 #align bitvec.to_int BitVec.toInt
 -/
 

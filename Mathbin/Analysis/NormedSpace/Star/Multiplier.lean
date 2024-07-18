@@ -755,7 +755,7 @@ variable [NonUnitalNormedRing A] [StarRing A] [CstarRing A]
 variable [NormedSpace 𝕜 A] [SMulCommClass 𝕜 A A] [IsScalarTower 𝕜 A A] [StarModule 𝕜 A]
 
 instance : CstarRing 𝓜(𝕜, A)
-    where norm_star_hMul_self a :=
+    where norm_star_mul_self a :=
     congr_arg (coe : ℝ≥0 → ℝ) <|
       show ‖star a * a‖₊ = ‖a‖₊ * ‖a‖₊
         by

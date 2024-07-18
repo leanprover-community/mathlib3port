@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
 import Algebra.Order.Sub.Defs
-import Algebra.Order.Monoid.WithTop
+import Algebra.Order.Monoid.Unbundled.WithTop
 
 #align_import algebra.order.sub.with_top from "leanprover-community/mathlib"@"afdb4fa3b32d41106a4a09b371ce549ad7958abd"
 

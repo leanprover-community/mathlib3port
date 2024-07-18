@@ -5,7 +5,7 @@ Authors: Bhavik Mehta, Andrew Yang
 -/
 import CategoryTheory.Limits.Shapes.Equalizers
 import CategoryTheory.Limits.Shapes.BinaryProducts
-import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.Pullback.Cospan
 import CategoryTheory.Limits.Preserves.Shapes.Pullbacks
 import CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
 

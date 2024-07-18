@@ -2010,17 +2010,17 @@ theorem divMod_to_nat (d n : PosNum) :
     cases' divmod d n with q r; simp only [divmod] at IH ⊢
     apply divmod_to_nat_aux <;> simp
     ·
-      rw [_root_.bit1, _root_.bit1, add_right_comm, bit0_eq_two_mul (n : ℕ), ← IH.1, mul_add, ←
-        bit0_eq_two_mul, mul_left_comm, ← bit0_eq_two_mul]
-    · rw [← bit0_eq_two_mul]
+      rw [_root_.bit1, _root_.bit1, add_right_comm, bit0_eq_two_hMul (n : ℕ), ← IH.1, mul_add, ←
+        bit0_eq_two_hMul, mul_left_comm, ← bit0_eq_two_hMul]
+    · rw [← bit0_eq_two_hMul]
       exact Nat.bit1_lt_bit0 IH.2
   · unfold divmod
     cases' divmod d n with q r; simp only [divmod] at IH ⊢
     apply divmod_to_nat_aux <;> simp
     ·
-      rw [bit0_eq_two_mul (n : ℕ), ← IH.1, mul_add, ← bit0_eq_two_mul, mul_left_comm, ←
-        bit0_eq_two_mul]
-    · rw [← bit0_eq_two_mul]
+      rw [bit0_eq_two_hMul (n : ℕ), ← IH.1, mul_add, ← bit0_eq_two_hMul, mul_left_comm, ←
+        bit0_eq_two_hMul]
+    · rw [← bit0_eq_two_hMul]
       exact Nat.bit0_lt IH.2
 #align pos_num.divmod_to_nat PosNum.divMod_to_nat
 -/

@@ -576,8 +576,8 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
       _ ≤ c ^ 5 * (c - 1)⁻¹ ^ 3 * (2 * 𝔼[X 0]) :=
         by
         apply mul_le_mul_of_nonneg_left (I1 _)
-        apply mul_nonneg (pow_nonneg c_pos.le _)
-        exact pow_nonneg (inv_nonneg.2 (sub_nonneg.2 c_one.le)) _
+        apply mul_nonneg (Nonneg.pow_nonneg c_pos.le _)
+        exact Nonneg.pow_nonneg (inv_nonneg.2 (sub_nonneg.2 c_one.le)) _
   have I3 :
     ∀ N,
       ∑ i in range N, ℙ {ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]|} ≤

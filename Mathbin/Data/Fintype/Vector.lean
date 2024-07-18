@@ -19,7 +19,7 @@ import Data.Sym.Basic
 variable {α : Type _}
 
 #print Vector.fintype /-
-instance Vector.fintype [Fintype α] {n : ℕ} : Fintype (Vector α n) :=
+instance Vector.fintype [Fintype α] {n : ℕ} : Fintype (Mathlib.Vector α n) :=
   Fintype.ofEquiv _ (Equiv.vectorEquivFin _ _).symm
 #align vector.fintype Vector.fintype
 -/

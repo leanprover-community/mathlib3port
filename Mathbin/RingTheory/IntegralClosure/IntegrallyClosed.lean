@@ -3,7 +3,7 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import RingTheory.IntegralClosure
+import RingTheory.IntegralClosure.IsIntegral.Defs
 import RingTheory.Localization.Integral
 
 #align_import ring_theory.integrally_closed from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"

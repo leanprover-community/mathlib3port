@@ -380,24 +380,26 @@ theorem nat_card_dvd_of_le (hHK : H ≤ K) : Nat.card H ∣ Nat.card K :=
 #align add_subgroup.nat_card_dvd_of_le AddSubgroup.nat_card_dvd_of_le
 -/
 
-#print Subgroup.nat_card_dvd_of_surjective /-
+#print Subgroup.card_dvd_of_surjective /-
 @[to_additive]
-theorem nat_card_dvd_of_surjective {G H : Type _} [Group G] [Group H] (f : G →* H)
+theorem card_dvd_of_surjective {G H : Type _} [Group G] [Group H] (f : G →* H)
     (hf : Function.Surjective f) : Nat.card H ∣ Nat.card G :=
   by
   rw [← Nat.card_congr (QuotientGroup.quotientKerEquivOfSurjective f hf).toEquiv]
   exact Dvd.intro_left (Nat.card f.ker) f.ker.card_mul_index
-#align subgroup.nat_card_dvd_of_surjective Subgroup.nat_card_dvd_of_surjective
-#align add_subgroup.nat_card_dvd_of_surjective AddSubgroup.nat_card_dvd_of_surjective
+#align subgroup.nat_card_dvd_of_surjective Subgroup.card_dvd_of_surjective
+#align add_subgroup.nat_card_dvd_of_surjective AddSubgroup.card_dvd_of_surjective
 -/
 
+/- warning: subgroup.card_dvd_of_surjective clashes with subgroup.nat_card_dvd_of_surjective -> Subgroup.card_dvd_of_surjective
+Case conversion may be inaccurate. Consider using '#align subgroup.card_dvd_of_surjective Subgroup.card_dvd_of_surjectiveₓ'. -/
 #print Subgroup.card_dvd_of_surjective /-
 @[to_additive]
 theorem card_dvd_of_surjective {G H : Type _} [Group G] [Group H] [Fintype G] [Fintype H]
     (f : G →* H) (hf : Function.Surjective f) : Fintype.card H ∣ Fintype.card G := by
   simp only [← Nat.card_eq_fintype_card, nat_card_dvd_of_surjective f hf]
 #align subgroup.card_dvd_of_surjective Subgroup.card_dvd_of_surjective
-#align add_subgroup.card_dvd_of_surjective AddSubgroup.card_dvd_of_surjective
+#align add_subgroup.nat_card_dvd_of_surjective AddSubgroup.card_dvd_of_surjective
 -/
 
 #print Subgroup.index_map /-

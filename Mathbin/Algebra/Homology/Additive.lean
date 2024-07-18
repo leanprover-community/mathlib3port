@@ -133,30 +133,24 @@ instance eval_additive (i : ι) : (eval V c i).Additive where
 #align homological_complex.eval_additive HomologicalComplex.eval_additive
 -/
 
-#print HomologicalComplex.cycles'_additive /-
-instance cycles'_additive [HasEqualizers V] : (cycles'Functor V c i).Additive where
-#align homological_complex.cycles_additive HomologicalComplex.cycles'_additive
--/
+instance cycles_additive [HasEqualizers V] : (cyclesFunctor V c i).Additive where
+#align homological_complex.cycles_additive HomologicalComplex.cycles_additive
 
 variable [HasImages V] [HasImageMaps V]
 
-#print HomologicalComplex.boundaries_additive /-
 instance boundaries_additive : (boundariesFunctor V c i).Additive where
 #align homological_complex.boundaries_additive HomologicalComplex.boundaries_additive
--/
 
 variable [HasEqualizers V] [HasCokernels V]
 
-#print HomologicalComplex.homology_additive /-
-instance homology_additive : (homology'Functor V c i).Additive
+instance homology_additive : (homologyFunctor V c i).Additive
     where map_add' C D f g := by
-    dsimp [homology'Functor]
+    dsimp [homologyFunctor]
     ext
-    simp only [homology'.π_map, preadditive.comp_add, ← preadditive.add_comp]
+    simp only [homology.π_map, preadditive.comp_add, ← preadditive.add_comp]
     congr
     ext; simp
 #align homological_complex.homology_additive HomologicalComplex.homology_additive
--/
 
 end HomologicalComplex
 

@@ -226,7 +226,8 @@ theorem isLittleO_of_lt_radius (h : ↑r < p.radius) :
   calc
     |‖p n‖ * r ^ n| = ‖p n‖ * t ^ n * (r / t) ^ n := by
       field_simp [mul_right_comm, abs_mul, this.ne']
-    _ ≤ C * (r / t) ^ n := mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
+    _ ≤ C * (r / t) ^ n :=
+      mul_le_mul_of_nonneg_right (hC n) (Nonneg.pow_nonneg (div_nonneg r.2 t.2) _)
 #align formal_multilinear_series.is_o_of_lt_radius FormalMultilinearSeries.isLittleO_of_lt_radius
 -/
 
@@ -325,7 +326,8 @@ theorem summable_norm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r : ℝ≥
   by
   obtain ⟨a, ha : a ∈ Ioo (0 : ℝ) 1, C, hC : 0 < C, hp⟩ := p.norm_mul_pow_le_mul_pow_of_lt_radius h
   exact
-    Summable.of_nonneg_of_le (fun n => mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg _)) hp
+    Summable.of_nonneg_of_le
+      (fun n => mul_nonneg (norm_nonneg _) (Nonneg.pow_nonneg r.coe_nonneg _)) hp
       ((summable_geometric_of_lt_one ha.1.le ha.2).hMul_left _)
 #align formal_multilinear_series.summable_norm_mul_pow FormalMultilinearSeries.summable_norm_mul_pow
 -/
@@ -376,7 +378,7 @@ theorem radius_eq_top_iff_summable_norm (p : FormalMultilinearSeries 𝕜 E F) :
       Summable.of_norm_bounded (fun n => (C : ℝ) * a ^ n)
         ((summable_geometric_of_lt_one ha.1.le ha.2).hMul_left _) fun n => _
     specialize hp n
-    rwa [Real.norm_of_nonneg (mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg n))]
+    rwa [Real.norm_of_nonneg (mul_nonneg (norm_nonneg _) (Nonneg.pow_nonneg r.coe_nonneg n))]
   · exact p.radius_eq_top_of_summable_norm
 #align formal_multilinear_series.radius_eq_top_iff_summable_norm FormalMultilinearSeries.radius_eq_top_iff_summable_norm
 -/
@@ -814,8 +816,8 @@ theorem HasFPowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0}
   suffices ‖p.partial_sum n y - f (x + y)‖ ≤ C * (a * (‖y‖ / r')) ^ n / (1 - a * (‖y‖ / r'))
     by
     refine' this.trans _
-    apply_rules [div_le_div_of_nonneg_left, sub_pos.2, div_nonneg, mul_nonneg, pow_nonneg, hC.lt.le,
-        ha.1.le, norm_nonneg, NNReal.coe_nonneg, ha.2, (sub_le_sub_iff_left _).2] <;>
+    apply_rules [div_le_div_of_nonneg_left, sub_pos.2, div_nonneg, mul_nonneg, Nonneg.pow_nonneg,
+        hC.lt.le, ha.1.le, norm_nonneg, NNReal.coe_nonneg, ha.2, (sub_le_sub_iff_left _).2] <;>
       infer_instance
   apply norm_sub_le_of_geometric_bound_of_hasSum (ya.trans_lt ha.2) _ (hf.has_sum this)
   intro n
@@ -823,7 +825,8 @@ theorem HasFPowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0}
     ‖(p n) fun i : Fin n => y‖ ≤ ‖p n‖ * ∏ i : Fin n, ‖y‖ := ContinuousMultilinearMap.le_opNorm _ _
     _ = ‖p n‖ * r' ^ n * (‖y‖ / r') ^ n := by field_simp [hr'0.ne', mul_right_comm]
     _ ≤ C * a ^ n * (‖y‖ / r') ^ n :=
-      (mul_le_mul_of_nonneg_right (hp n) (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _))
+      (mul_le_mul_of_nonneg_right (hp n)
+        (Nonneg.pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _))
     _ ≤ C * (a * (‖y‖ / r')) ^ n := by rw [mul_pow, mul_assoc]
 #align has_fpower_series_on_ball.uniform_geometric_approx' HasFPowerSeriesOnBall.uniform_geometric_approx'
 -/
@@ -915,8 +918,8 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
           rw [pow_succ' ‖y - (x, x)‖]; ring
         _ ≤ C * a ^ (n + 2) / r' ^ (n + 2) * r' ^ n * (↑(n + 2) * ‖y - (x, x)‖ * ‖y.1 - y.2‖) := by
           apply_rules [mul_le_mul_of_nonneg_right, mul_le_mul, hp, pow_le_pow_left, hy'.le,
-            norm_nonneg, pow_nonneg, div_nonneg, mul_nonneg, Nat.cast_nonneg, hC.le, r'.coe_nonneg,
-            ha.1.le]
+            norm_nonneg, Nonneg.pow_nonneg, div_nonneg, mul_nonneg, Nat.cast_nonneg, hC.le,
+            r'.coe_nonneg, ha.1.le]
         _ = B n := by field_simp [B, pow_succ', hr'0.ne'];
           simp only [mul_assoc, mul_comm, mul_left_comm]
     have hBL : HasSum B (L y) := by

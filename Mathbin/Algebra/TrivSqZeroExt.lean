@@ -803,7 +803,7 @@ instance [Monoid R] [AddMonoid M] [DistribMulAction R M] [DistribMulAction Rᵐ�
             Function.comp, fst_pow]
           simp_rw [smul_smul, ← pow_succ', Nat.succ_eq_add_one]
           congr 2
-          refine' List.map_congr fun i hi => _
+          refine' List.map_congr_left fun i hi => _
           rw [List.mem_range, Nat.lt_succ_iff] at hi
           rw [Nat.sub_add_comm hi]) }
 

@@ -3,7 +3,7 @@ Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johan Commelin
 -/
-import RingTheory.IntegralClosure
+import RingTheory.IntegralClosure.IsIntegral.Defs
 
 #align_import field_theory.minpoly.basic from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"
 

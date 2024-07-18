@@ -58,7 +58,7 @@ instance Sym.hasCoe (α : Type _) (n : ℕ) : Coe (Sym α n) (Multiset α) :=
 See note [reducible non-instances].
 -/
 @[reducible]
-def Vector.Perm.isSetoid (α : Type _) (n : ℕ) : Setoid (Vector α n) :=
+def Vector.Perm.isSetoid (α : Type _) (n : ℕ) : Setoid (Mathlib.Vector α n) :=
   (List.isSetoid α).comap Subtype.val
 #align vector.perm.is_setoid Vector.Perm.isSetoid
 -/
@@ -147,19 +147,20 @@ theorem coe_cons (s : Sym α n) (a : α) : (a ::ₛ s : Multiset α) = a ::ₘ s
 /-- This is the quotient map that takes a list of n elements as an n-tuple and produces an nth
 symmetric power.
 -/
-instance : HasLift (Vector α n) (Sym α n) where lift x := ⟨↑x.val, (Multiset.coe_card _).trans x.2⟩
+instance : HasLift (Mathlib.Vector α n) (Sym α n)
+    where lift x := ⟨↑x.val, (Multiset.coe_card _).trans x.2⟩
 
 #print Sym.ofVector_nil /-
 @[simp]
-theorem ofVector_nil : ↑(Vector.nil : Vector α 0) = (Sym.nil : Sym α 0) :=
+theorem ofVector_nil : ↑(Mathlib.Vector.nil : Mathlib.Vector α 0) = (Sym.nil : Sym α 0) :=
   rfl
 #align sym.of_vector_nil Sym.ofVector_nil
 -/
 
 #print Sym.ofVector_cons /-
 @[simp]
-theorem ofVector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::ₛ (↑v : Sym α n) := by
-  cases v; rfl
+theorem ofVector_cons (a : α) (v : Mathlib.Vector α n) :
+    ↑(Mathlib.Vector.cons a v) = a ::ₛ (↑v : Sym α n) := by cases v; rfl
 #align sym.of_vector_cons Sym.ofVector_cons
 -/
 
@@ -209,13 +210,13 @@ theorem mem_cons_self (a : α) (s : Sym α n) : a ∈ a ::ₛ s :=
 -/
 
 #print Sym.cons_of_coe_eq /-
-theorem cons_of_coe_eq (a : α) (v : Vector α n) : a ::ₛ (↑v : Sym α n) = ↑(a ::ᵥ v) :=
+theorem cons_of_coe_eq (a : α) (v : Mathlib.Vector α n) : a ::ₛ (↑v : Sym α n) = ↑(a ::ᵥ v) :=
   Subtype.ext <| by cases v; rfl
 #align sym.cons_of_coe_eq Sym.cons_of_coe_eq
 -/
 
 #print Sym.sound /-
-theorem sound {a b : Vector α n} (h : a.val ~ b.val) : (↑a : Sym α n) = ↑b :=
+theorem sound {a b : Mathlib.Vector α n} (h : a.val ~ b.val) : (↑a : Sym α n) = ↑b :=
   Subtype.ext <| Quotient.sound h
 #align sym.sound Sym.sound
 -/
@@ -272,7 +273,7 @@ def Sym' (α : Type _) (n : ℕ) :=
 /-- This is `cons` but for the alternative `sym'` definition.
 -/
 def cons' {α : Type _} {n : ℕ} : α → Sym' α n → Sym' α (Nat.succ n) := fun a =>
-  Quotient.map (Vector.cons a) fun ⟨l₁, h₁⟩ ⟨l₂, h₂⟩ h => List.Perm.cons _ h
+  Quotient.map (Mathlib.Vector.cons a) fun ⟨l₁, h₁⟩ ⟨l₂, h₂⟩ h => List.Perm.cons _ h
 #align sym.cons' Sym.cons'
 -/
 
@@ -388,7 +389,7 @@ instance inhabitedSym [Inhabited α] (n : ℕ) : Inhabited (Sym α n) :=
 
 #print Sym.inhabitedSym' /-
 instance inhabitedSym' [Inhabited α] (n : ℕ) : Inhabited (Sym' α n) :=
-  ⟨Quotient.mk'' (Vector.replicate n default)⟩
+  ⟨Quotient.mk'' (Mathlib.Vector.replicate n default)⟩
 #align sym.inhabited_sym' Sym.inhabitedSym'
 -/
 

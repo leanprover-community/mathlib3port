@@ -42,7 +42,7 @@ variable [CommRing R] [AddCommGroup M] [AddCommGroup N]
 
 variable [Module R M] [Module R N]
 
-variable (Q : QuadraticForm R M)
+variable (Q : QuadraticMap R M)
 
 namespace CliffordAlgebra
 

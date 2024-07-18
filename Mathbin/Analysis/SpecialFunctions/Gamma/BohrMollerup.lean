@@ -423,8 +423,10 @@ theorem tendsto_logGammaSeq (hf_conv : ConvexOn ℝ (Ioi 0) f)
 theorem tendsto_log_gamma {x : ℝ} (hx : 0 < x) :
     Tendsto (logGammaSeq x) atTop (𝓝 <| log (Gamma x)) :=
   by
-  have : log (Gamma x) = (log ∘ Gamma) x - (log ∘ Gamma) 1 := by
-    simp_rw [Function.comp_apply, Gamma_one, log_one, sub_zero]
+  have :
+    log (CongruenceSubgroup.Gamma x) =
+      (log ∘ CongruenceSubgroup.Gamma) x - (log ∘ CongruenceSubgroup.Gamma) 1 :=
+    by simp_rw [Function.comp_apply, Gamma_one, log_one, sub_zero]
   rw [this]
   refine' bohr_mollerup.tendsto_log_gamma_seq convex_on_log_Gamma (fun y hy => _) hx
   rw [Function.comp_apply, Gamma_add_one hy.ne', log_mul hy.ne' (Gamma_pos_of_pos hy).ne', add_comm]
@@ -441,7 +443,7 @@ theorem eq_Gamma_of_log_convex {f : ℝ → ℝ} (hf_conv : ConvexOn ℝ (Ioi 0)
     (hf_feq : ∀ {y : ℝ}, 0 < y → f (y + 1) = y * f y) (hf_pos : ∀ {y : ℝ}, 0 < y → 0 < f y)
     (hf_one : f 1 = 1) : EqOn f Gamma (Ioi (0 : ℝ)) :=
   by
-  suffices : eq_on (log ∘ f) (log ∘ Gamma) (Ioi (0 : ℝ))
+  suffices : eq_on (log ∘ f) (log ∘ CongruenceSubgroup.Gamma) (Ioi (0 : ℝ))
   exact fun x hx => log_inj_on_pos (hf_pos hx) (Gamma_pos_of_pos hx) (this hx)
   intro x hx
   have e1 := bohr_mollerup.tendsto_log_gamma_seq hf_conv _ hx
@@ -546,8 +548,8 @@ theorem log_doublingGamma_eq :
   by
   intro s hs
   have h1 : sqrt π ≠ 0 := sqrt_ne_zero'.mpr pi_pos
-  have h2 : Gamma (s / 2) ≠ 0 := (Gamma_pos_of_pos <| div_pos hs two_pos).ne'
-  have h3 : Gamma (s / 2 + 1 / 2) ≠ 0 :=
+  have h2 : CongruenceSubgroup.Gamma (s / 2) ≠ 0 := (Gamma_pos_of_pos <| div_pos hs two_pos).ne'
+  have h3 : CongruenceSubgroup.Gamma (s / 2 + 1 / 2) ≠ 0 :=
     (Gamma_pos_of_pos <| add_pos (div_pos hs two_pos) one_half_pos).ne'
   have h4 : (2 : ℝ) ^ (s - 1) ≠ 0 := (rpow_pos_of_pos two_pos _).ne'
   rw [Function.comp_apply, doubling_Gamma, log_div (mul_ne_zero (mul_ne_zero h2 h3) h4) h1,
@@ -564,7 +566,8 @@ theorem doublingGamma_log_convex_Ioi : ConvexOn ℝ (Ioi (0 : ℝ)) (log ∘ dou
       convex_on_log_Gamma.comp_affine_map (DistribMulAction.toLinearMap ℝ ℝ (1 / 2 : ℝ)).toAffineMap
     · simpa only [zero_div] using (preimage_const_mul_Ioi (0 : ℝ) one_half_pos).symm
     · ext1 x
-      change log (Gamma (x / 2)) = log (Gamma ((1 / 2 : ℝ) • x))
+      change
+        log (CongruenceSubgroup.Gamma (x / 2)) = log (CongruenceSubgroup.Gamma ((1 / 2 : ℝ) • x))
       rw [smul_eq_mul, mul_comm, mul_one_div]
   · refine' ConvexOn.subset _ (Ioi_subset_Ioi <| neg_one_lt_zero.le) (convex_Ioi _)
     convert
@@ -575,7 +578,9 @@ theorem doublingGamma_log_convex_Ioi : ConvexOn ℝ (Ioi (0 : ℝ)) (log ∘ dou
       rw [preimage_comp, preimage_add_const_Ioi, zero_sub,
         preimage_const_mul_Ioi (_ : ℝ) one_half_pos, neg_div, div_self (@one_half_pos ℝ _).ne']
     · ext1 x
-      change log (Gamma (x / 2 + 1 / 2)) = log (Gamma ((1 / 2 : ℝ) • x + 1 / 2))
+      change
+        log (CongruenceSubgroup.Gamma (x / 2 + 1 / 2)) =
+          log (CongruenceSubgroup.Gamma ((1 / 2 : ℝ) • x + 1 / 2))
       rw [smul_eq_mul, mul_comm, mul_one_div]
   ·
     simpa only [mul_comm _ (log _)] using

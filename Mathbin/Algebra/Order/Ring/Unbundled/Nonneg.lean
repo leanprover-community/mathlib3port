@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
 import Data.Nat.Cast.Basic
-import Algebra.Order.Ring.Defs
+import Algebra.Order.Ring.Unbundled.Basic
 import Algebra.Order.Ring.InjSurj
 import Algebra.Order.Ring.Basic
 import Order.CompleteLatticeIntervals
@@ -304,7 +304,7 @@ theorem mk_natCast [OrderedSemiring α] (n : ℕ) : (⟨n, n.cast_nonneg⟩ : { 
 
 #print Nonneg.pow /-
 instance pow [OrderedSemiring α] : Pow { x : α // 0 ≤ x } ℕ
-    where pow x n := ⟨x ^ n, pow_nonneg x.2 n⟩
+    where pow x n := ⟨x ^ n, Nonneg.pow_nonneg x.2 n⟩
 #align nonneg.has_pow Nonneg.pow
 -/
 
@@ -319,7 +319,7 @@ protected theorem coe_pow [OrderedSemiring α] (a : { x : α // 0 ≤ x }) (n : 
 #print Nonneg.mk_pow /-
 @[simp]
 theorem mk_pow [OrderedSemiring α] {x : α} (hx : 0 ≤ x) (n : ℕ) :
-    (⟨x, hx⟩ : { x : α // 0 ≤ x }) ^ n = ⟨x ^ n, pow_nonneg hx n⟩ :=
+    (⟨x, hx⟩ : { x : α // 0 ≤ x }) ^ n = ⟨x ^ n, Nonneg.pow_nonneg hx n⟩ :=
   rfl
 #align nonneg.mk_pow Nonneg.mk_pow
 -/

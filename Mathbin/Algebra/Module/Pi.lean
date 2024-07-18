@@ -6,7 +6,7 @@ Authors: Simon Hudon, Patrick Massot
 import Algebra.Module.Defs
 import Algebra.Regular.SMul
 import Algebra.Ring.Pi
-import GroupTheory.GroupAction.Pi
+import Algebra.Group.Action.Pi
 
 #align_import algebra.module.pi from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

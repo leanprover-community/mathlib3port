@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import CategoryTheory.ConcreteCategory.BundledHom
-import Algebra.PUnitInstances
+import Algebra.PUnitInstances.Algebra
 import CategoryTheory.Functor.ReflectsIso
 
 #align_import algebra.category.Mon.basic from "leanprover-community/mathlib"@"0caf3701139ef2e69c215717665361cda205a90b"

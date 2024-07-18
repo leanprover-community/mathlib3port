@@ -308,7 +308,7 @@ theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p ^ n) ∣ z ↔ padicNorm p z
   by
   unfold padicNorm; split_ifs with hz
   · norm_cast at hz
-    have : 0 ≤ (p ^ n : ℚ) := by apply pow_nonneg; exact_mod_cast le_of_lt hp.1.Pos
+    have : 0 ≤ (p ^ n : ℚ) := by apply Nonneg.pow_nonneg; exact_mod_cast le_of_lt hp.1.Pos
     simp [hz, this]
   · rw [zpow_le_iff_le, neg_le_neg_iff, padicValRat.of_int,
       padicValInt.of_ne_one_ne_zero hp.1.ne_one _]

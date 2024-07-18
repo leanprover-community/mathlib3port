@@ -3,7 +3,7 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import CategoryTheory.Limits.Shapes.CommSq
+import CategoryTheory.Limits.Shapes.Pullback.CommSq
 import CategoryTheory.Limits.Shapes.StrictInitial
 import CategoryTheory.Limits.Shapes.Types
 import Topology.Category.TopCat.Limits.Pullbacks

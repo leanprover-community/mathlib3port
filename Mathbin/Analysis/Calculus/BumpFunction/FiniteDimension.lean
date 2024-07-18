@@ -361,7 +361,7 @@ theorem w_nonneg (D : ℝ) (x : E) : 0 ≤ w D x :=
   apply mul_nonneg _ (u_nonneg _)
   apply inv_nonneg.2
   apply mul_nonneg (u_int_pos E).le
-  apply pow_nonneg (abs_nonneg D)
+  apply Nonneg.pow_nonneg (abs_nonneg D)
 #align exists_cont_diff_bump_base.W_nonneg ExistsContDiffBumpBase.w_nonneg
 -/
 

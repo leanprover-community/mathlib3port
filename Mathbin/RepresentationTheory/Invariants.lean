@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
 import RepresentationTheory.Basic
-import RepresentationTheory.FdRep
+import RepresentationTheory.FDRep
 
 #align_import representation_theory.invariants from "leanprover-community/mathlib"@"728ef9dbb281241906f25cbeb30f90d83e0bb451"
 
@@ -186,21 +186,21 @@ def invariantsEquivRepHom (X Y : Rep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ
 
 end Rep
 
-section FdRep
+section FDRep
 
 variable {k : Type u} [Field k] {G : Grp.{u}}
 
-#print Representation.linHom.invariantsEquivFdRepHom /-
+#print Representation.linHom.invariantsEquivFDRepHom /-
 /-- The invariants of the representation `lin_hom X.ρ Y.ρ` correspond to the the representation
 homomorphisms from `X` to `Y` -/
-def invariantsEquivFdRepHom (X Y : FdRep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y :=
+def invariantsEquivFDRepHom (X Y : FDRep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y :=
   by
-  rw [← FdRep.forget₂_ρ, ← FdRep.forget₂_ρ]
-  exact lin_hom.invariants_equiv_Rep_hom _ _ ≪≫ₗ FdRep.forget₂HomLinearEquiv X Y
-#align representation.lin_hom.invariants_equiv_fdRep_hom Representation.linHom.invariantsEquivFdRepHom
+  rw [← FDRep.forget₂_ρ, ← FDRep.forget₂_ρ]
+  exact lin_hom.invariants_equiv_Rep_hom _ _ ≪≫ₗ FDRep.forget₂HomLinearEquiv X Y
+#align representation.lin_hom.invariants_equiv_fdRep_hom Representation.linHom.invariantsEquivFDRepHom
 -/
 
-end FdRep
+end FDRep
 
 end LinHom
 

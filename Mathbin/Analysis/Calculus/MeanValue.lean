@@ -799,7 +799,7 @@ theorem lipschitzOnWith_of_nnnorm_deriv_le {C : ℝ≥0} (hf : ∀ x ∈ s, Diff
 then the function is `C`-Lipschitz.  Version with `deriv` and `lipschitz_with`. -/
 theorem lipschitzWith_of_nnnorm_deriv_le {C : ℝ≥0} (hf : Differentiable 𝕜 f)
     (bound : ∀ x, ‖deriv f x‖₊ ≤ C) : LipschitzWith C f :=
-  lipschitzOn_univ.1 <|
+  lipschitzOnWith_univ.1 <|
     convex_univ.lipschitzOnWith_of_nnnorm_deriv_le (fun x hx => hf x) fun x hx => bound x
 #align lipschitz_with_of_nnnorm_deriv_le lipschitzWith_of_nnnorm_deriv_le
 -/

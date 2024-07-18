@@ -5,7 +5,7 @@ Authors: Andrew Yang
 -/
 import Geometry.RingedSpace.OpenImmersion
 import AlgebraicGeometry.Scheme
-import CategoryTheory.Limits.Shapes.CommSq
+import CategoryTheory.Limits.Shapes.Pullback.CommSq
 
 #align_import algebraic_geometry.open_immersion.Scheme from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"
 

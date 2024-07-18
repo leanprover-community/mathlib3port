@@ -1720,21 +1720,23 @@ instance (priority := 100) TopologicalGroup.regularSpace : RegularSpace G :=
 #align topological_add_group.regular_space TopologicalAddGroup.regularSpace
 -/
 
+/- warning: topological_group.t3_space clashes with infer_instance -> inferInstance
+Case conversion may be inaccurate. Consider using '#align topological_group.t3_space inferInstanceₓ'. -/
 #print inferInstance /-
 @[to_additive]
 theorem inferInstance [T0Space G] : T3Space G :=
   ⟨⟩
 #align topological_group.t3_space inferInstance
-#align topological_group.t3_space inferInstance
+#align infer_instance inferInstance
 -/
 
-/- warning: topological_group.t2_space clashes with topological_group.t3_space -> inferInstance
+/- warning: topological_group.t2_space clashes with infer_instance -> inferInstance
 Case conversion may be inaccurate. Consider using '#align topological_group.t2_space inferInstanceₓ'. -/
 #print inferInstance /-
 @[to_additive]
 theorem inferInstance [T0Space G] : T2Space G := by haveI := inferInstance G; infer_instance
 #align topological_group.t2_space inferInstance
-#align topological_group.t3_space inferInstance
+#align infer_instance inferInstance
 -/
 
 variable {G} (S : Subgroup G) [Subgroup.Normal S] [IsClosed (S : Set G)]

@@ -843,8 +843,8 @@ theorem iSup_add_iSup_of_monotone {ι : Sort _} [SemilatticeSup ι] {f g : ι �
 #align ennreal.supr_add_supr_of_monotone ENNReal.iSup_add_iSup_of_monotone
 -/
 
-#print ENNReal.finset_sum_iSup_nat /-
-theorem finset_sum_iSup_nat {α} {ι} [SemilatticeSup ι] {s : Finset α} {f : α → ι → ℝ≥0∞}
+#print ENNReal.finsetSum_iSup_of_monotone /-
+theorem finsetSum_iSup_of_monotone {α} {ι} [SemilatticeSup ι] {s : Finset α} {f : α → ι → ℝ≥0∞}
     (hf : ∀ a, Monotone (f a)) : ∑ a in s, iSup (f a) = ⨆ n, ∑ a in s, f a n :=
   by
   refine' Finset.induction_on s _ _
@@ -854,7 +854,7 @@ theorem finset_sum_iSup_nat {α} {ι} [SemilatticeSup ι] {s : Finset α} {f : �
     rw [ih, supr_add_supr_of_monotone (hf a)]
     intro i j h
     exact Finset.sum_le_sum fun a ha => hf a h
-#align ennreal.finset_sum_supr_nat ENNReal.finset_sum_iSup_nat
+#align ennreal.finset_sum_supr_nat ENNReal.finsetSum_iSup_of_monotone
 -/
 
 #print ENNReal.mul_iSup /-
@@ -2135,7 +2135,7 @@ theorem isClosed_setOf_lipschitzOnWith {α β} [PseudoEMetricSpace α] [PseudoEM
 #print isClosed_setOf_lipschitzWith /-
 theorem isClosed_setOf_lipschitzWith {α β} [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0) :
     IsClosed {f : α → β | LipschitzWith K f} := by
-  simp only [← lipschitzOn_univ, isClosed_setOf_lipschitzOnWith]
+  simp only [← lipschitzOnWith_univ, isClosed_setOf_lipschitzOnWith]
 #align is_closed_set_of_lipschitz_with isClosed_setOf_lipschitzWith
 -/
 

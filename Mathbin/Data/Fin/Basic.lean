@@ -854,16 +854,12 @@ theorem val_add_eq_ite {n : ℕ} (a b : Fin n) :
 #align fin.coe_add_eq_ite Fin.val_add_eq_ite
 -/
 
-#print Fin.val_bit0 /-
-theorem val_bit0 {n : ℕ} (k : Fin n) : ((bit0 k : Fin n) : ℕ) = bit0 (k : ℕ) % n := by cases k; rfl
-#align fin.coe_bit0 Fin.val_bit0
--/
+theorem coe_bit0 {n : ℕ} (k : Fin n) : ((bit0 k : Fin n) : ℕ) = bit0 (k : ℕ) % n := by cases k; rfl
+#align fin.coe_bit0 Fin.coe_bit0
 
-#print Fin.val_bit1 /-
-theorem val_bit1 {n : ℕ} [NeZero n] (k : Fin n) : ((bit1 k : Fin n) : ℕ) = bit1 (k : ℕ) % n := by
+theorem coe_bit1 {n : ℕ} [NeZero n] (k : Fin n) : ((bit1 k : Fin n) : ℕ) = bit1 (k : ℕ) % n := by
   simp [bit1, coe_add, coe_bit0, coe_one']
-#align fin.coe_bit1 Fin.val_bit1
--/
+#align fin.coe_bit1 Fin.coe_bit1
 
 #print Fin.val_add_one_of_lt /-
 theorem val_add_one_of_lt {n : ℕ} {i : Fin n.succ} (h : i < last _) : (↑(i + 1) : ℕ) = i + 1 :=
@@ -897,15 +893,12 @@ theorem val_add_one {n : ℕ} (i : Fin (n + 1)) :
 
 section Bit
 
-#print Fin.mk_bit0 /-
 @[simp]
 theorem mk_bit0 {m n : ℕ} (h : bit0 m < n) :
     (⟨bit0 m, h⟩ : Fin n) = (bit0 ⟨m, (Nat.le_add_right m m).trans_lt h⟩ : Fin _) :=
   eq_of_veq (Nat.mod_eq_of_lt h).symm
 #align fin.mk_bit0 Fin.mk_bit0
--/
 
-#print Fin.mk_bit1 /-
 @[simp]
 theorem mk_bit1 {m n : ℕ} [NeZero n] (h : bit1 m < n) :
     (⟨bit1 m, h⟩ : Fin n) =
@@ -915,7 +908,6 @@ theorem mk_bit1 {m n : ℕ} [NeZero n] (h : bit1 m < n) :
   simp only [bit1, bit0] at h
   simp only [bit1, bit0, coe_add, coe_one', coe_mk, ← Nat.add_mod, Nat.mod_eq_of_lt h]
 #align fin.mk_bit1 Fin.mk_bit1
--/
 
 end Bit
 

@@ -143,26 +143,21 @@ variable (x : S.arrows.FamilyOfElements ((ran G.op).obj ℱ.val ⋙ coyoneda.obj
 
 variable (hx : x.Compatible)
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.pulledbackFamily /-
 /-- The family of morphisms `X ⟶ 𝒢(G(Y')) ⟶ ℱ(Y')` defined on `{ Y' ⊆ Y : G(Y') ⊆ U ∈ S}`. -/
 def pulledbackFamily (Y : StructuredArrow (op U) G.op) :=
   ((x.pullback Y.Hom.unop).functorPullback G).compPresheafMap
-    (show _ ⟶ _ from whiskerRight ((Ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X)))
-#align category_theory.Ran_is_sheaf_of_cover_lifting.pulledback_family CategoryTheory.RanIsSheafOfIsCocontinuous.pulledbackFamily
--/
+    (show _ ⟶ _ from whiskerRight ((ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X)))
+#align category_theory.Ran_is_sheaf_of_cover_lifting.pulledback_family CategoryTheory.ran_isSheaf_of_isCocontinuous.pulledbackFamily
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.pulledbackFamily_apply /-
 @[simp]
 theorem pulledbackFamily_apply (Y : StructuredArrow (op U) G.op) {W} {f : W ⟶ _} (Hf) :
     pulledbackFamily ℱ S x Y f Hf =
-      x (G.map f ≫ Y.Hom.unop) Hf ≫ ((Ran.adjunction A G.op).counit.app ℱ.val).app (op W) :=
+      x (G.map f ≫ Y.Hom.unop) Hf ≫ ((ran.adjunction A G.op).counit.app ℱ.val).app (op W) :=
   rfl
-#align category_theory.Ran_is_sheaf_of_cover_lifting.pulledback_family_apply CategoryTheory.RanIsSheafOfIsCocontinuous.pulledbackFamily_apply
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.pulledback_family_apply CategoryTheory.ran_isSheaf_of_isCocontinuous.pulledbackFamily_apply
 
 variable {x} {S}
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.getSection /-
 /-- Given a `G(Y) ⊆ U`, we can find a unique section `X ⟶ ℱ(Y)` that agrees with `x`. -/
 def getSection (Y : StructuredArrow (op U) G.op) : X ⟶ ℱ.val.obj Y.right :=
   by
@@ -170,17 +165,13 @@ def getSection (Y : StructuredArrow (op U) G.op) : X ⟶ ℱ.val.obj Y.right :=
   have S' := K.pullback_stable Y.hom.unop hS
   have hs' := ((hx.pullback Y.3.unop).functorPullback G).compPresheafMap hom_sh
   exact (ℱ.2 X _ (hu.cover_lift S')).amalgamate _ hs'
-#align category_theory.Ran_is_sheaf_of_cover_lifting.get_section CategoryTheory.RanIsSheafOfIsCocontinuous.getSection
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.get_section CategoryTheory.ran_isSheaf_of_isCocontinuous.getSection
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.getSection_isAmalgamation /-
 theorem getSection_isAmalgamation (Y : StructuredArrow (op U) G.op) :
     (pulledbackFamily ℱ S x Y).IsAmalgamation (getSection hu ℱ hS hx Y) :=
   IsSheafFor.isAmalgamation _ _
-#align category_theory.Ran_is_sheaf_of_cover_lifting.get_section_is_amalgamation CategoryTheory.RanIsSheafOfIsCocontinuous.getSection_isAmalgamation
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.get_section_is_amalgamation CategoryTheory.ran_isSheaf_of_isCocontinuous.getSection_isAmalgamation
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.getSection_is_unique /-
 theorem getSection_is_unique (Y : StructuredArrow (op U) G.op) {y}
     (H : (pulledbackFamily ℱ S x Y).IsAmalgamation y) : y = getSection hu ℱ hS hx Y :=
   by
@@ -188,10 +179,8 @@ theorem getSection_is_unique (Y : StructuredArrow (op U) G.op) {y}
   · exact H
   · apply get_section_is_amalgamation
   · exact ℱ.2 X _ (hu.cover_lift (K.pullback_stable Y.hom.unop hS))
-#align category_theory.Ran_is_sheaf_of_cover_lifting.get_section_is_unique CategoryTheory.RanIsSheafOfIsCocontinuous.getSection_is_unique
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.get_section_is_unique CategoryTheory.ran_isSheaf_of_isCocontinuous.getSection_is_unique
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.getSection_commute /-
 @[simp]
 theorem getSection_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
     getSection hu ℱ hS hx Y ≫ ℱ.val.map f.right = getSection hu ℱ hS hx Z :=
@@ -207,34 +196,26 @@ theorem getSection_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
       category.assoc]
   · change S (G.map _ ≫ Y.hom.unop)
     simpa only [functor.map_comp, category.assoc] using hV'
-#align category_theory.Ran_is_sheaf_of_cover_lifting.get_section_commute CategoryTheory.RanIsSheafOfIsCocontinuous.getSection_commute
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.get_section_commute CategoryTheory.ran_isSheaf_of_isCocontinuous.getSection_commute
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.gluedLimitCone /-
 /-- The limit cone in order to glue the sections obtained via `get_section`. -/
 def gluedLimitCone : Limits.Cone (Ran.diagram G.op ℱ.val (op U)) :=
   { pt
     π :=
       { app := fun Y => getSection hu ℱ hS hx Y
         naturality' := fun Y Z f => by tidy } }
-#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_limit_cone CategoryTheory.RanIsSheafOfIsCocontinuous.gluedLimitCone
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_limit_cone CategoryTheory.ran_isSheaf_of_isCocontinuous.gluedLimitCone
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.gluedLimitCone_π_app /-
 @[simp]
 theorem gluedLimitCone_π_app (W) : (gluedLimitCone hu ℱ hS hx).π.app W = getSection hu ℱ hS hx W :=
   rfl
-#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_limit_cone_π_app CategoryTheory.RanIsSheafOfIsCocontinuous.gluedLimitCone_π_app
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_limit_cone_π_app CategoryTheory.ran_isSheaf_of_isCocontinuous.gluedLimitCone_π_app
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.gluedSection /-
 /-- The section obtained by passing `glued_limit_cone` into `category_theory.limits.limit.lift`. -/
 def gluedSection : X ⟶ ((ran G.op).obj ℱ.val).obj (op U) :=
   limit.lift _ (gluedLimitCone hu ℱ hS hx)
-#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section CategoryTheory.RanIsSheafOfIsCocontinuous.gluedSection
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section CategoryTheory.ran_isSheaf_of_isCocontinuous.gluedSection
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.helper /-
 /--
 A helper lemma for the following two lemmas. Basically stating that if the section `y : X ⟶ 𝒢(V)`
 coincides with `x` on `G(V')` for all `G(V') ⊆ V ∈ S`, then `X ⟶ 𝒢(V) ⟶ ℱ(W)` is indeed the
@@ -267,10 +248,8 @@ theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V))
   rw [structured_arrow.map_mk]
   erw [category.comp_id]
   simp only [Quiver.Hom.unop_op, functor.op_map, Quiver.Hom.op_unop]
-#align category_theory.Ran_is_sheaf_of_cover_lifting.helper CategoryTheory.RanIsSheafOfIsCocontinuous.helper
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.helper CategoryTheory.ran_isSheaf_of_isCocontinuous.helper
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.gluedSection_isAmalgamation /-
 /-- Verify that the `glued_section` is an amalgamation of `x`. -/
 theorem gluedSection_isAmalgamation : x.IsAmalgamation (gluedSection hu ℱ hS hx) :=
   by
@@ -283,10 +262,8 @@ theorem gluedSection_isAmalgamation : x.IsAmalgamation (gluedSection hu ℱ hS h
   intro V' fV' hV'
   convert hx fV' (𝟙 _) hV hV' (by rw [category.id_comp])
   simp only [op_id, functor_to_types.map_id_apply]
-#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section_is_amalgamation CategoryTheory.RanIsSheafOfIsCocontinuous.gluedSection_isAmalgamation
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section_is_amalgamation CategoryTheory.ran_isSheaf_of_isCocontinuous.gluedSection_isAmalgamation
 
-#print CategoryTheory.RanIsSheafOfIsCocontinuous.gluedSection_is_unique /-
 /-- Verify that the amalgamation is indeed unique. -/
 theorem gluedSection_is_unique (y) (hy : x.IsAmalgamation y) : y = gluedSection hu ℱ hS hx :=
   by
@@ -298,8 +275,7 @@ theorem gluedSection_is_unique (y) (hy : x.IsAmalgamation y) : y = gluedSection 
   · intro V' fV' hV'
     convert hy fV' (by simpa only [category.comp_id] using hV')
     erw [category.comp_id]
-#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section_is_unique CategoryTheory.RanIsSheafOfIsCocontinuous.gluedSection_is_unique
--/
+#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section_is_unique CategoryTheory.ran_isSheaf_of_isCocontinuous.gluedSection_is_unique
 
 end RanIsSheafOfCoverLifting
 
@@ -346,18 +322,18 @@ noncomputable def Functor.sheafAdjunctionCocontinuous {G : C ⥤ D} (Hp : CoverP
     Functor.sheafPushforwardContinuous A Hc Hp ⊣ Functor.sheafPushforwardCocontinuous A Hl
     where
   homEquiv X Y :=
-    { toFun := fun f => ⟨(Ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩
-      invFun := fun f => ⟨((Ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩
+    { toFun := fun f => ⟨(ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩
+      invFun := fun f => ⟨((ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩
       left_inv := fun f => by ext1; dsimp; rw [Equiv.symm_apply_apply]
       right_inv := fun f => by ext1; dsimp; rw [Equiv.apply_symm_apply] }
   Unit :=
-    { app := fun X => ⟨(Ran.adjunction A G.op).Unit.app X.val⟩
+    { app := fun X => ⟨(ran.adjunction A G.op).Unit.app X.val⟩
       naturality' := fun _ _ f =>
-        Sheaf.Hom.ext _ _ <| (Ran.adjunction A G.op).Unit.naturality f.val }
+        Sheaf.Hom.ext _ _ <| (ran.adjunction A G.op).Unit.naturality f.val }
   counit :=
-    { app := fun X => ⟨(Ran.adjunction A G.op).counit.app X.val⟩
+    { app := fun X => ⟨(ran.adjunction A G.op).counit.app X.val⟩
       naturality' := fun _ _ f =>
-        Sheaf.Hom.ext _ _ <| (Ran.adjunction A G.op).counit.naturality f.val }
+        Sheaf.Hom.ext _ _ <| (ran.adjunction A G.op).counit.naturality f.val }
   homEquiv_unit X Y f := by ext1; apply (Ran.adjunction A G.op).homEquiv_unit
   homEquiv_counit X Y f := by ext1; apply (Ran.adjunction A G.op).homEquiv_counit
 #align category_theory.sites.pullback_copullback_adjunction CategoryTheory.Functor.sheafAdjunctionCocontinuous

@@ -3,7 +3,7 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Algebra.Order.Monoid.Canonical.Defs
+import Algebra.Order.Monoid.Unbundled.ExistsOfLE
 import Algebra.Order.Sub.Defs
 
 #align_import algebra.order.sub.canonical from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"

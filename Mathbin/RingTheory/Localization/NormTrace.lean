@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import RingTheory.Localization.Module
-import RingTheory.Norm
+import RingTheory.Norm.Defs
 
 #align_import ring_theory.localization.norm from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 

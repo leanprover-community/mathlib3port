@@ -6,7 +6,7 @@ Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 import LinearAlgebra.FreeModule.PID
 import RingTheory.DedekindDomain.Basic
 import RingTheory.Localization.Module
-import RingTheory.Trace
+import RingTheory.Trace.Defs
 
 #align_import ring_theory.dedekind_domain.integral_closure from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
 
@@ -69,8 +69,8 @@ variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A 
 #print IsIntegralClosure.isLocalization_of_isSeparable /-
 /- If `L` is a separable extension of `K = Frac(A)` and `L` has no zero smul divisors by `A`,
 then `L` is the localization of the integral closure `C` of `A` in `L` at `A⁰`. -/
-theorem IsIntegralClosure.isLocalization_of_isSeparable [IsSeparable K L] [NoZeroSMulDivisors A L] :
-    IsLocalization (Algebra.algebraMapSubmonoid C A⁰) L :=
+theorem IsIntegralClosure.isLocalization_of_isSeparable [Algebra.IsSeparable K L]
+    [NoZeroSMulDivisors A L] : IsLocalization (Algebra.algebraMapSubmonoid C A⁰) L :=
   by
   haveI : IsDomain C :=
     (IsIntegralClosure.equiv A C L (integralClosure A L)).toRingEquiv.IsDomain (integralClosure A L)
@@ -81,7 +81,8 @@ theorem IsIntegralClosure.isLocalization_of_isSeparable [IsSeparable K L] [NoZer
       Subtype.coe_mk, map_ne_zero_iff _ (NoZeroSMulDivisors.algebraMap_injective A C)]
     exact mem_non_zero_divisors_iff_ne_zero.mp hx
   · obtain ⟨m, hm⟩ :=
-      IsIntegral.exists_multiple_integral_of_isLocalization A⁰ z (IsSeparable.isIntegral K z)
+      IsIntegral.exists_multiple_integral_of_isLocalization A⁰ z
+        (Algebra.IsSeparable.isIntegral K z)
     obtain ⟨x, hx⟩ : ∃ x, algebraMap C L x = m • z := is_integral_closure.is_integral_iff.mp hm
     refine' ⟨⟨x, algebraMap A C m, m, SetLike.coe_mem m, rfl⟩, _⟩
     rw [Subtype.coe_mk, ← IsScalarTower.algebraMap_apply, hx, mul_comm, Submonoid.smul_def,
@@ -99,7 +100,7 @@ variable [FiniteDimensional K L]
 variable {A K L}
 
 #print IsIntegralClosure.range_le_span_dualBasis /-
-theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Fintype ι]
+theorem IsIntegralClosure.range_le_span_dualBasis [Algebra.IsSeparable K L] {ι : Type _} [Fintype ι]
     [DecidableEq ι] (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     ((Algebra.linearMap C L).restrictScalars A).range ≤
       Submodule.span A (Set.range <| (traceForm K L).dualBasis (traceForm_nondegenerate K L) b) :=
@@ -129,8 +130,8 @@ theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _
 -/
 
 #print integralClosure_le_span_dualBasis /-
-theorem integralClosure_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
-    (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
+theorem integralClosure_le_span_dualBasis [Algebra.IsSeparable K L] {ι : Type _} [Fintype ι]
+    [DecidableEq ι] (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     (integralClosure A L).toSubmodule ≤
       Submodule.span A (Set.range <| (traceForm K L).dualBasis (traceForm_nondegenerate K L) b) :=
   by
@@ -209,7 +210,7 @@ theorem FiniteDimensional.exists_is_basis_integral :
 #align finite_dimensional.exists_is_basis_integral FiniteDimensional.exists_is_basis_integral
 -/
 
-variable (A K L) [IsSeparable K L]
+variable (A K L) [Algebra.IsSeparable K L]
 
 #print IsIntegralClosure.isNoetherian /-
 /- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is
@@ -315,7 +316,7 @@ theorem integralClosure.isDedekindDomain [h : IsDedekindDomain A] :
 
 variable [Algebra (FractionRing A) L] [IsScalarTower A (FractionRing A) L]
 
-variable [FiniteDimensional (FractionRing A) L] [IsSeparable (FractionRing A) L]
+variable [FiniteDimensional (FractionRing A) L] [Algebra.IsSeparable (FractionRing A) L]
 
 #print integralClosure.isDedekindDomain_fractionRing /-
 /- If `L` is a finite separable extension of `Frac(A)`, where `A` is a Dedekind domain,

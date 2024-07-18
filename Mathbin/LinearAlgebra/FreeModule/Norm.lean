@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
 import LinearAlgebra.FreeModule.IdealQuotient
-import RingTheory.Norm
+import RingTheory.Norm.Defs
 
 #align_import linear_algebra.free_module.norm from "leanprover-community/mathlib"@"fdc286cc6967a012f41b87f76dcd2797b53152af"
 

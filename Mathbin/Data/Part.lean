@@ -87,11 +87,11 @@ theorem toOption_isSome (o : Part α) [Decidable o.Dom] : o.toOption.isSome ↔ 
 #align part.to_option_is_some Part.toOption_isSome
 -/
 
-#print Part.toOption_isNone /-
+#print Part.toOption_eq_none /-
 @[simp]
-theorem toOption_isNone (o : Part α) [Decidable o.Dom] : o.toOption.isNone ↔ ¬o.Dom := by
+theorem toOption_eq_none (o : Part α) [Decidable o.Dom] : o.toOption.isNone ↔ ¬o.Dom := by
   by_cases o.dom <;> simp [h, Part.toOption]
-#align part.to_option_is_none Part.toOption_isNone
+#align part.to_option_is_none Part.toOption_eq_none
 -/
 
 #print Part.ext' /-

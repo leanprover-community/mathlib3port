@@ -402,7 +402,7 @@ theorem approx_Gamma_integral_tendsto_Gamma_integral {s : ℂ} (hs : 0 < re s) :
       exact rpow_nonneg_of_nonneg (le_of_lt hx) _
     · rw [indicator_of_mem (mem_Ioc.mpr ⟨hx, hxn⟩), norm_mul, Complex.norm_eq_abs,
         Complex.abs_of_nonneg
-          (pow_nonneg (sub_nonneg.mpr <| div_le_one_of_le hxn <| by positivity) _),
+          (Nonneg.pow_nonneg (sub_nonneg.mpr <| div_le_one_of_le hxn <| by positivity) _),
         Complex.norm_eq_abs, abs_cpow_eq_rpow_re_of_pos hx, sub_re, one_re,
         mul_le_mul_right (rpow_pos_of_pos hx _)]
       exact one_sub_div_pow_le_exp_neg hxn
@@ -415,7 +415,7 @@ theorem GammaSeq_tendsto_Gamma (s : ℂ) : Tendsto (GammaSeq s) atTop (𝓝 <| G
   by
   suffices ∀ m : ℕ, -↑m < re s → tendsto (Gamma_seq s) at_top (𝓝 <| Gamma_aux m s)
     by
-    rw [Gamma]
+    rw [CongruenceSubgroup.Gamma]
     apply this
     rw [neg_lt]
     rcases lt_or_le 0 (re s) with (hs | hs)
@@ -632,7 +632,9 @@ theorem one_div_Gamma_eq_self_mul_one_div_Gamma_add_one (s : ℂ) :
 Gamma itself is not). -/
 theorem differentiable_one_div_Gamma : Differentiable ℂ fun s : ℂ => (Gamma s)⁻¹ :=
   by
-  suffices : ∀ n : ℕ, ∀ (s : ℂ) (hs : -s.re < n), DifferentiableAt ℂ (fun u : ℂ => (Gamma u)⁻¹) s
+  suffices :
+    ∀ n : ℕ,
+      ∀ (s : ℂ) (hs : -s.re < n), DifferentiableAt ℂ (fun u : ℂ => (CongruenceSubgroup.Gamma u)⁻¹) s
   exact fun s =>
     let ⟨n, h⟩ := exists_nat_gt (-s.re)
     this n s h
@@ -674,18 +676,23 @@ theorem Gamma_mul_Gamma_add_half (s : ℂ) :
     Gamma s * Gamma (s + 1 / 2) = Gamma (2 * s) * 2 ^ (1 - 2 * s) * ↑(Real.sqrt π) :=
   by
   suffices
-    (fun z => (Gamma z)⁻¹ * (Gamma (z + 1 / 2))⁻¹) = fun z =>
-      (Gamma (2 * z))⁻¹ * 2 ^ (2 * z - 1) / ↑(Real.sqrt π)
+    (fun z => (CongruenceSubgroup.Gamma z)⁻¹ * (CongruenceSubgroup.Gamma (z + 1 / 2))⁻¹) = fun z =>
+      (CongruenceSubgroup.Gamma (2 * z))⁻¹ * 2 ^ (2 * z - 1) / ↑(Real.sqrt π)
     by
     convert congr_arg Inv.inv (congr_fun this s) using 1
     · rw [mul_inv, inv_inv, inv_inv]
     · rw [div_eq_mul_inv, mul_inv, mul_inv, inv_inv, inv_inv, ← cpow_neg, neg_sub]
-  have h1 : AnalyticOn ℂ (fun z : ℂ => (Gamma z)⁻¹ * (Gamma (z + 1 / 2))⁻¹) univ :=
+  have h1 :
+    AnalyticOn ℂ
+      (fun z : ℂ => (CongruenceSubgroup.Gamma z)⁻¹ * (CongruenceSubgroup.Gamma (z + 1 / 2))⁻¹)
+      univ :=
     by
     refine' DifferentiableOn.analyticOn _ isOpen_univ
     refine' (differentiable_one_div_Gamma.mul _).DifferentiableOn
     exact differentiable_one_div_Gamma.comp (differentiable_id.add (differentiable_const _))
-  have h2 : AnalyticOn ℂ (fun z => (Gamma (2 * z))⁻¹ * 2 ^ (2 * z - 1) / ↑(Real.sqrt π)) univ :=
+  have h2 :
+    AnalyticOn ℂ (fun z => (CongruenceSubgroup.Gamma (2 * z))⁻¹ * 2 ^ (2 * z - 1) / ↑(Real.sqrt π))
+      univ :=
     by
     refine' DifferentiableOn.analyticOn _ isOpen_univ
     refine' (Differentiable.mul _ (differentiable_const _)).DifferentiableOn

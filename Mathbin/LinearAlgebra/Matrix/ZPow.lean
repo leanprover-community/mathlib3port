@@ -310,14 +310,12 @@ theorem Commute.zpow_zpow_self (A : M) (m n : ℤ) : Commute (A ^ m) (A ^ n) :=
 #align matrix.commute.zpow_zpow_self Matrix.Commute.zpow_zpow_self
 -/
 
-#print Matrix.zpow_bit0 /-
 theorem zpow_bit0 (A : M) (n : ℤ) : A ^ bit0 n = A ^ n * A ^ n :=
   by
   cases' le_total 0 n with nonneg nonpos
   · exact zpow_add_of_nonneg nonneg nonneg
   · exact zpow_add_of_nonpos nonpos nonpos
 #align matrix.zpow_bit0 Matrix.zpow_bit0
--/
 
 #print Matrix.zpow_add_one_of_ne_neg_one /-
 theorem zpow_add_one_of_ne_neg_one {A : M} : ∀ n : ℤ, n ≠ -1 → A ^ (n + 1) = A ^ n * A
@@ -332,14 +330,12 @@ theorem zpow_add_one_of_ne_neg_one {A : M} : ∀ n : ℤ, n ≠ -1 → A ^ (n + 
 #align matrix.zpow_add_one_of_ne_neg_one Matrix.zpow_add_one_of_ne_neg_one
 -/
 
-#print Matrix.zpow_bit1 /-
 theorem zpow_bit1 (A : M) (n : ℤ) : A ^ bit1 n = A ^ n * A ^ n * A :=
   by
   rw [bit1, zpow_add_one_of_ne_neg_one, zpow_bit0]
   intro h
   simpa using congr_arg bodd h
 #align matrix.zpow_bit1 Matrix.zpow_bit1
--/
 
 #print Matrix.zpow_mul /-
 theorem zpow_mul (A : M) (h : IsUnit A.det) : ∀ m n : ℤ, A ^ (m * n) = (A ^ m) ^ n
@@ -399,17 +395,13 @@ theorem Commute.mul_zpow {A B : M} (h : Commute A B) : ∀ i : ℤ, (A * B) ^ i 
 #align matrix.commute.mul_zpow Matrix.Commute.mul_zpow
 -/
 
-#print Matrix.zpow_bit0' /-
 theorem zpow_bit0' (A : M) (n : ℤ) : A ^ bit0 n = (A * A) ^ n :=
   (zpow_bit0 A n).trans (Commute.mul_zpow (Commute.refl A) n).symm
 #align matrix.zpow_bit0' Matrix.zpow_bit0'
--/
 
-#print Matrix.zpow_bit1' /-
 theorem zpow_bit1' (A : M) (n : ℤ) : A ^ bit1 n = (A * A) ^ n * A := by
   rw [zpow_bit1, Commute.mul_zpow (Commute.refl A)]
 #align matrix.zpow_bit1' Matrix.zpow_bit1'
--/
 
 #print Matrix.zpow_neg_mul_zpow_self /-
 theorem zpow_neg_mul_zpow_self (n : ℤ) {A : M} (h : IsUnit A.det) : A ^ (-n) * A ^ n = 1 := by

@@ -257,24 +257,27 @@ def prec (f g : Code) : Code :=
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
 #print Turing.ToPartrec.Code.exists_code.comp /-
-theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector ℕ m →. ℕ}
-    (hf : ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v)
-    (hg : ∀ i, ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> g i v) :
-    ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> ((Vector.mOfFn fun i => g i v) >>= f) :=
+theorem exists_code.comp {m n} {f : Mathlib.Vector ℕ n →. ℕ} {g : Fin n → Mathlib.Vector ℕ m →. ℕ}
+    (hf : ∃ c : Code, ∀ v : Mathlib.Vector ℕ n, c.eval v.1 = pure <$> f v)
+    (hg : ∀ i, ∃ c : Code, ∀ v : Mathlib.Vector ℕ m, c.eval v.1 = pure <$> g i v) :
+    ∃ c : Code,
+      ∀ v : Mathlib.Vector ℕ m,
+        c.eval v.1 = pure <$> ((Mathlib.Vector.mOfFn fun i => g i v) >>= f) :=
   by
   rsuffices ⟨cg, hg⟩ :
-    ∃ c : code, ∀ v : Vector ℕ m, c.eval v.1 = Subtype.val <$> Vector.mOfFn fun i => g i v
+    ∃ c : code,
+      ∀ v : Mathlib.Vector ℕ m, c.eval v.1 = Subtype.val <$> Mathlib.Vector.mOfFn fun i => g i v
   · obtain ⟨cf, hf⟩ := hf
     exact
       ⟨cf.comp cg, fun v => by simp [hg, hf, map_bind, seq_bind_eq, (· ∘ ·), -Subtype.val_eq_coe];
         rfl⟩
   clear hf f; induction' n with n IH
-  · exact ⟨nil, fun v => by simp [Vector.mOfFn] <;> rfl⟩
+  · exact ⟨nil, fun v => by simp [Mathlib.Vector.mOfFn] <;> rfl⟩
   · obtain ⟨cg, hg₁⟩ := hg 0; obtain ⟨cl, hl⟩ := IH fun i => hg i.succ
     exact
       ⟨cons cg cl, fun v =>
         by
-        simp [Vector.mOfFn, hg₁, map_bind, seq_bind_eq, bind_assoc, (· ∘ ·), hl,
+        simp [Mathlib.Vector.mOfFn, hg₁, map_bind, seq_bind_eq, bind_assoc, (· ∘ ·), hl,
           -Subtype.val_eq_coe]
         rfl⟩
 #align turing.to_partrec.code.exists_code.comp Turing.ToPartrec.Code.exists_code.comp
@@ -304,8 +307,8 @@ theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Turing.ToPartrec.Code.exists_code /-
-theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
-    ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v :=
+theorem exists_code {n} {f : Mathlib.Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
+    ∃ c : Code, ∀ v : Mathlib.Vector ℕ n, c.eval v.1 = pure <$> f v :=
   by
   induction' hf with n f hf
   induction hf
@@ -315,16 +318,16 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     refine' Fin.succRec (fun n => _) (fun n i IH => _) i
     · exact ⟨head, fun ⟨List.cons a as, _⟩ => by simp <;> rfl⟩
     · obtain ⟨c, h⟩ := IH
-      exact ⟨c.comp tail, fun v => by simpa [← Vector.get_tail] using h v.tail⟩
+      exact ⟨c.comp tail, fun v => by simpa [← Mathlib.Vector.get_tail] using h v.tail⟩
   case prim.comp m n f g hf hg IHf IHg => simpa [Part.bind_eq_bind] using exists_code.comp IHf IHg
   case prim.prec n f g hf hg IHf IHg =>
     obtain ⟨cf, hf⟩ := IHf; obtain ⟨cg, hg⟩ := IHg
     simp only [Part.map_eq_map, Part.map_some, PFun.coe_val] at hf hg
     refine' ⟨prec cf cg, fun v => _⟩; rw [← v.cons_head_tail]
     specialize hf v.tail; replace hg := fun a b => hg (a ::ᵥ b ::ᵥ v.tail)
-    simp only [Vector.cons_val, Vector.tail_val] at hf hg
-    simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Vector.tail_cons, Vector.head_cons,
-      PFun.coe_val, Vector.tail_val]
+    simp only [Mathlib.Vector.cons_val, Mathlib.Vector.tail_val] at hf hg
+    simp only [Part.map_eq_map, Part.map_some, Mathlib.Vector.cons_val, Mathlib.Vector.tail_cons,
+      Mathlib.Vector.head_cons, PFun.coe_val, Mathlib.Vector.tail_val]
     simp only [← Part.pure_eq_some] at hf hg ⊢
     induction' v.head with n IH <;>
       simp [prec, hf, bind_assoc, ← Part.map_eq_map, ← bind_pure_comp_eq_map,
@@ -357,7 +360,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
   case rfind n f hf IHf =>
     obtain ⟨cf, hf⟩ := IHf; refine' ⟨rfind cf, fun v => _⟩
     replace hf := fun a => hf (a ::ᵥ v)
-    simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, PFun.coe_val,
+    simp only [Part.map_eq_map, Part.map_some, Mathlib.Vector.cons_val, PFun.coe_val,
       show ∀ x, pure x = [x] from fun _ => rfl] at hf ⊢
     refine' Part.ext fun x => _
     simp only [rfind, Part.bind_eq_bind, Part.pure_eq_some, Part.map_eq_map, Part.bind_some,

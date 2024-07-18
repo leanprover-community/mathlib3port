@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Algebra.Group.WithOne.Defs
-import Algebra.Order.Monoid.Canonical.Defs
+import Algebra.Order.Monoid.Unbundled.ExistsOfLE
 import Algebra.Order.ZeroLEOne
 
 #align_import algebra.order.monoid.with_zero.defs from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"

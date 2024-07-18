@@ -6,7 +6,7 @@ Authors: David Kurniadi Angdinata
 import Algebra.Group.Equiv.TypeTags
 import Data.ZMod.Quotient
 import RingTheory.DedekindDomain.AdicValuation
-import RingTheory.Norm
+import RingTheory.Norm.Defs
 
 #align_import ring_theory.dedekind_domain.selmer_group from "leanprover-community/mathlib"@"08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5"
 
@@ -90,8 +90,9 @@ namespace HeightOneSpectrum
 def valuationOfNeZeroToFun (x : Kˣ) : Multiplicative ℤ :=
   let hx := IsLocalization.sec R⁰ (x : K)
   Multiplicative.ofAdd <|
-    (-(Associates.mk v.asIdeal).count (Associates.mk <| Ideal.span {hx.fst}).factors : ℤ) -
-      (-(Associates.mk v.asIdeal).count (Associates.mk <| Ideal.span {(hx : R)}).factors : ℤ)
+    (-(Associates.mk v.asIdeal).count (Associates.mk <| Ideal.span {hx.fst}).primeFactorsList : ℤ) -
+      (-(Associates.mk v.asIdeal).count (Associates.mk <| Ideal.span {(hx : R)}).primeFactorsList :
+        ℤ)
 #align is_dedekind_domain.height_one_spectrum.valuation_of_ne_zero_to_fun IsDedekindDomain.HeightOneSpectrum.valuationOfNeZeroToFun
 -/
 

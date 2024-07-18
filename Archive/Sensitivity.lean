@@ -6,7 +6,7 @@ Authors: Reid Barton, Johan Commelin, Jesse Han, Chris Hughes, Robert Y. Lewis, 
 -/
 import Tactic.FinCases
 import Tactic.ApplyFun
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 import LinearAlgebra.Dual
 import Analysis.NormedSpace.Basic
 import Data.Real.Sqrt

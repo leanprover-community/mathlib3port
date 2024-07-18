@@ -265,11 +265,11 @@ section Real
 
 variable {f : α → ℝ}
 
-#print MeasureTheory.ae_nonneg_of_forall_setIntegral_nonneg_of_stronglyMeasurable /-
+#print MeasureTheory.ae_nonneg_of_forall_setIntegral_nonneg /-
 /-- Don't use this lemma. Use `ae_nonneg_of_forall_set_integral_nonneg`. -/
-theorem ae_nonneg_of_forall_setIntegral_nonneg_of_stronglyMeasurable (hfm : StronglyMeasurable f)
-    (hf : Integrable f μ) (hf_zero : ∀ s, MeasurableSet s → μ s < ∞ → 0 ≤ ∫ x in s, f x ∂μ) :
-    0 ≤ᵐ[μ] f := by
+theorem ae_nonneg_of_forall_setIntegral_nonneg (hfm : StronglyMeasurable f) (hf : Integrable f μ)
+    (hf_zero : ∀ s, MeasurableSet s → μ s < ∞ → 0 ≤ ∫ x in s, f x ∂μ) : 0 ≤ᵐ[μ] f :=
+  by
   simp_rw [eventually_le, Pi.zero_apply]
   rw [ae_const_le_iff_forall_lt_measure_zero]
   intro b hb_neg
@@ -305,9 +305,11 @@ theorem ae_nonneg_of_forall_setIntegral_nonneg_of_stronglyMeasurable (hfm : Stro
   cases' (ENNReal.toReal_eq_zero_iff _).mp h_eq.symm with hμs_eq_zero hμs_eq_top
   · exact hμs_eq_zero
   · exact absurd hμs_eq_top mus.ne
-#align measure_theory.ae_nonneg_of_forall_set_integral_nonneg_of_strongly_measurable MeasureTheory.ae_nonneg_of_forall_setIntegral_nonneg_of_stronglyMeasurable
+#align measure_theory.ae_nonneg_of_forall_set_integral_nonneg_of_strongly_measurable MeasureTheory.ae_nonneg_of_forall_setIntegral_nonneg
 -/
 
+/- warning: measure_theory.ae_nonneg_of_forall_set_integral_nonneg clashes with measure_theory.ae_nonneg_of_forall_set_integral_nonneg_of_strongly_measurable -> MeasureTheory.ae_nonneg_of_forall_setIntegral_nonneg
+Case conversion may be inaccurate. Consider using '#align measure_theory.ae_nonneg_of_forall_set_integral_nonneg MeasureTheory.ae_nonneg_of_forall_setIntegral_nonnegₓ'. -/
 #print MeasureTheory.ae_nonneg_of_forall_setIntegral_nonneg /-
 theorem ae_nonneg_of_forall_setIntegral_nonneg (hf : Integrable f μ)
     (hf_zero : ∀ s, MeasurableSet s → μ s < ∞ → 0 ≤ ∫ x in s, f x ∂μ) : 0 ≤ᵐ[μ] f :=

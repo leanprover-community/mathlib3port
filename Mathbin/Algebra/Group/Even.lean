@@ -295,12 +295,10 @@ theorem range_two_mul (α : Type _) [Semiring α] : (Set.range fun x : α => 2 *
 #align range_two_mul range_two_mul
 -/
 
-#print even_bit0 /-
 @[simp]
 theorem even_bit0 (a : α) : Even (bit0 a) :=
   ⟨a, rfl⟩
 #align even_bit0 even_bit0
--/
 
 #print even_two /-
 @[simp]
@@ -354,12 +352,10 @@ theorem odd_iff_exists_bit1 {a : α} : Odd a ↔ ∃ b, a = bit1 b :=
 alias ⟨Odd.exists_bit1, _⟩ := odd_iff_exists_bit1
 #align odd.exists_bit1 Odd.exists_bit1
 
-#print odd_bit1 /-
 @[simp]
 theorem odd_bit1 (a : α) : Odd (bit1 a) :=
   odd_iff_exists_bit1.2 ⟨a, rfl⟩
 #align odd_bit1 odd_bit1
--/
 
 #print range_two_mul_add_one /-
 @[simp]
@@ -555,7 +551,7 @@ theorem Odd.pow_neg (hn : Odd n) (ha : a < 0) : a ^ n < 0 := by
 
 #print Odd.pow_nonneg_iff /-
 theorem Odd.pow_nonneg_iff (hn : Odd n) : 0 ≤ a ^ n ↔ 0 ≤ a :=
-  ⟨fun h => le_of_not_lt fun ha => h.not_lt <| hn.pow_neg ha, fun ha => pow_nonneg ha n⟩
+  ⟨fun h => le_of_not_lt fun ha => h.not_lt <| hn.pow_neg ha, fun ha => Nonneg.pow_nonneg ha n⟩
 #align odd.pow_nonneg_iff Odd.pow_nonneg_iff
 -/
 
@@ -573,7 +569,7 @@ theorem Odd.pow_pos_iff (hn : Odd n) : 0 < a ^ n ↔ 0 < a :=
 
 #print Odd.pow_neg_iff /-
 theorem Odd.pow_neg_iff (hn : Odd n) : a ^ n < 0 ↔ a < 0 :=
-  ⟨fun h => lt_of_not_le fun ha => h.not_le <| pow_nonneg ha _, hn.pow_neg⟩
+  ⟨fun h => lt_of_not_le fun ha => h.not_le <| Nonneg.pow_nonneg ha _, hn.pow_neg⟩
 #align odd.pow_neg_iff Odd.pow_neg_iff
 -/
 

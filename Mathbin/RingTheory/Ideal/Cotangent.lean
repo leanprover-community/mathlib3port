@@ -6,7 +6,7 @@ Authors: Andrew Yang
 import RingTheory.Ideal.Operations
 import Algebra.Module.Torsion
 import Algebra.Ring.Idempotents
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 import RingTheory.Ideal.LocalRing
 
 #align_import ring_theory.ideal.cotangent from "leanprover-community/mathlib"@"4b92a463033b5587bb011657e25e4710bfca7364"

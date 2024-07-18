@@ -203,12 +203,16 @@ theorem negSucc_mul_negSucc (m n : ℕ) : -[m+1] * -[n+1] = succ m * succ n :=
 #align int.neg_succ_mul_neg_succ Int.negSucc_mul_negSucc
 -/
 
+/- warning: int.coe_nat_le clashes with int.coe_nat_le_coe_nat_iff -> Int.ofNat_le
+Case conversion may be inaccurate. Consider using '#align int.coe_nat_le Int.ofNat_leₓ'. -/
 #print Int.ofNat_le /-
 theorem ofNat_le {m n : ℕ} : (↑m : ℤ) ≤ ↑n ↔ m ≤ n :=
   ofNat_le m n
 #align int.coe_nat_le Int.ofNat_le
 -/
 
+/- warning: int.coe_nat_lt clashes with int.coe_nat_lt_coe_nat_iff -> Int.ofNat_lt
+Case conversion may be inaccurate. Consider using '#align int.coe_nat_lt Int.ofNat_ltₓ'. -/
 #print Int.ofNat_lt /-
 theorem ofNat_lt {m n : ℕ} : (↑m : ℤ) < ↑n ↔ m < n :=
   ofNat_lt m n
@@ -421,8 +425,6 @@ theorem natAbs_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h => hz 
 #align int.nat_abs_ne_zero_of_ne_zero Int.natAbs_ne_zero
 -/
 
-/- warning: int.nat_abs_eq_zero clashes with int.eq_zero_of_nat_abs_eq_zero -> Int.natAbs_eq_zero
-Case conversion may be inaccurate. Consider using '#align int.nat_abs_eq_zero Int.natAbs_eq_zeroₓ'. -/
 #print Int.natAbs_eq_zero /-
 @[simp]
 theorem natAbs_eq_zero {a : ℤ} : a.natAbs = 0 ↔ a = 0 :=
@@ -756,8 +758,6 @@ theorem ofNat_add_negSucc_of_lt {m n : ℕ} (h : m < n.succ) : ofNat m + -[n+1] 
 #align int.of_nat_add_neg_succ_of_nat_of_lt Int.ofNat_add_negSucc_of_lt
 -/
 
-/- warning: int.neg_add_neg clashes with int.neg_succ_of_nat_add_neg_succ_of_nat -> Int.negSucc_add_negSucc
-Case conversion may be inaccurate. Consider using '#align int.neg_add_neg Int.negSucc_add_negSuccₓ'. -/
 #print Int.negSucc_add_negSucc /-
 @[simp]
 theorem negSucc_add_negSucc (m n : ℕ) : -[m+1] + -[n+1] = -[Nat.succ (m + n)+1] :=

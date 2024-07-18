@@ -34,10 +34,10 @@ rational, continued fraction, termination
 -/
 
 
-namespace GeneralizedContinuedFraction
+namespace GenContFract
 
 /- ././././Mathport/Syntax/Translate/Command.lean:230:11: unsupported: unusual advanced open style -/
-open GeneralizedContinuedFraction (of)
+open GenContFract (of)
 
 variable {K : Type _} [LinearOrderedField K] [FloorRing K]
 
@@ -63,9 +63,9 @@ show that `v = ↑q`.
 
 variable (v : K) (n : ℕ)
 
-#print GeneralizedContinuedFraction.exists_gcf_pair_rat_eq_of_nth_conts_aux /-
-theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
-    ∃ conts : Pair ℚ, (of v).continuantsAux n = (conts.map coe : Pair K) :=
+#print GenContFract.exists_gcf_pair_rat_eq_of_nth_contsAux /-
+theorem exists_gcf_pair_rat_eq_of_nth_contsAux :
+    ∃ conts : Pair ℚ, (of v).contsAux n = (conts.map coe : Pair K) :=
   Nat.strong_induction_on n
     (by
       clear n
@@ -101,58 +101,57 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
           use next_continuants 1 (z : ℚ) ppred_conts pred_conts
           cases ppred_conts; cases pred_conts
           simp [next_continuants, next_numerator, next_denominator])
-#align generalized_continued_fraction.exists_gcf_pair_rat_eq_of_nth_conts_aux GeneralizedContinuedFraction.exists_gcf_pair_rat_eq_of_nth_conts_aux
+#align generalized_continued_fraction.exists_gcf_pair_rat_eq_of_nth_conts_aux GenContFract.exists_gcf_pair_rat_eq_of_nth_contsAux
 -/
 
-#print GeneralizedContinuedFraction.exists_gcf_pair_rat_eq_nth_conts /-
+#print GenContFract.exists_gcf_pair_rat_eq_nth_conts /-
 theorem exists_gcf_pair_rat_eq_nth_conts :
-    ∃ conts : Pair ℚ, (of v).continuants n = (conts.map coe : Pair K) := by
+    ∃ conts : Pair ℚ, (of v).conts n = (conts.map coe : Pair K) := by
   rw [nth_cont_eq_succ_nth_cont_aux]; exact exists_gcf_pair_rat_eq_of_nth_conts_aux v <| n + 1
-#align generalized_continued_fraction.exists_gcf_pair_rat_eq_nth_conts GeneralizedContinuedFraction.exists_gcf_pair_rat_eq_nth_conts
+#align generalized_continued_fraction.exists_gcf_pair_rat_eq_nth_conts GenContFract.exists_gcf_pair_rat_eq_nth_conts
 -/
 
-#print GeneralizedContinuedFraction.exists_rat_eq_nth_numerator /-
-theorem exists_rat_eq_nth_numerator : ∃ q : ℚ, (of v).numerators n = (q : K) :=
+#print GenContFract.exists_rat_eq_nth_num /-
+theorem exists_rat_eq_nth_num : ∃ q : ℚ, (of v).nums n = (q : K) :=
   by
   rcases exists_gcf_pair_rat_eq_nth_conts v n with ⟨⟨a, _⟩, nth_cont_eq⟩
   use a
   simp [num_eq_conts_a, nth_cont_eq]
-#align generalized_continued_fraction.exists_rat_eq_nth_numerator GeneralizedContinuedFraction.exists_rat_eq_nth_numerator
+#align generalized_continued_fraction.exists_rat_eq_nth_numerator GenContFract.exists_rat_eq_nth_num
 -/
 
-#print GeneralizedContinuedFraction.exists_rat_eq_nth_denominator /-
-theorem exists_rat_eq_nth_denominator : ∃ q : ℚ, (of v).denominators n = (q : K) :=
+#print GenContFract.exists_rat_eq_nth_den /-
+theorem exists_rat_eq_nth_den : ∃ q : ℚ, (of v).dens n = (q : K) :=
   by
   rcases exists_gcf_pair_rat_eq_nth_conts v n with ⟨⟨_, b⟩, nth_cont_eq⟩
   use b
   simp [denom_eq_conts_b, nth_cont_eq]
-#align generalized_continued_fraction.exists_rat_eq_nth_denominator GeneralizedContinuedFraction.exists_rat_eq_nth_denominator
+#align generalized_continued_fraction.exists_rat_eq_nth_denominator GenContFract.exists_rat_eq_nth_den
 -/
 
-#print GeneralizedContinuedFraction.exists_rat_eq_nth_convergent /-
+#print GenContFract.exists_rat_eq_nth_conv /-
 /-- Every finite convergent corresponds to a rational number. -/
-theorem exists_rat_eq_nth_convergent : ∃ q : ℚ, (of v).convergents n = (q : K) :=
+theorem exists_rat_eq_nth_conv : ∃ q : ℚ, (of v).convs n = (q : K) :=
   by
   rcases exists_rat_eq_nth_numerator v n with ⟨Aₙ, nth_num_eq⟩
   rcases exists_rat_eq_nth_denominator v n with ⟨Bₙ, nth_denom_eq⟩
   use Aₙ / Bₙ
   simp [nth_num_eq, nth_denom_eq, convergent_eq_num_div_denom]
-#align generalized_continued_fraction.exists_rat_eq_nth_convergent GeneralizedContinuedFraction.exists_rat_eq_nth_convergent
+#align generalized_continued_fraction.exists_rat_eq_nth_convergent GenContFract.exists_rat_eq_nth_conv
 -/
 
 variable {v}
 
-#print GeneralizedContinuedFraction.exists_rat_eq_of_terminates /-
+#print GenContFract.exists_rat_eq_of_terminates /-
 /-- Every terminating continued fraction corresponds to a rational number. -/
 theorem exists_rat_eq_of_terminates (terminates : (of v).Terminates) : ∃ q : ℚ, v = ↑q :=
   by
-  obtain ⟨n, v_eq_conv⟩ : ∃ n, v = (of v).convergents n;
-  exact of_correctness_of_terminates terminates
-  obtain ⟨q, conv_eq_q⟩ : ∃ q : ℚ, (of v).convergents n = (↑q : K)
+  obtain ⟨n, v_eq_conv⟩ : ∃ n, v = (of v).convs n; exact of_correctness_of_terminates terminates
+  obtain ⟨q, conv_eq_q⟩ : ∃ q : ℚ, (of v).convs n = (↑q : K)
   exact exists_rat_eq_nth_convergent v n
   have : v = (↑q : K) := Eq.trans v_eq_conv conv_eq_q
   use q, this
-#align generalized_continued_fraction.exists_rat_eq_of_terminates GeneralizedContinuedFraction.exists_rat_eq_of_terminates
+#align generalized_continued_fraction.exists_rat_eq_of_terminates GenContFract.exists_rat_eq_of_terminates
 -/
 
 end RatOfTerminates
@@ -187,13 +186,13 @@ variable {v : K} {q : ℚ} (v_eq_q : v = (↑q : K)) (n : ℕ)
 
 namespace IntFractPair
 
-#print GeneralizedContinuedFraction.IntFractPair.coe_of_rat_eq /-
+#print GenContFract.IntFractPair.coe_of_rat_eq /-
 theorem coe_of_rat_eq : ((IntFractPair.of q).mapFr coe : IntFractPair K) = IntFractPair.of v := by
   simp [int_fract_pair.of, v_eq_q]
-#align generalized_continued_fraction.int_fract_pair.coe_of_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_of_rat_eq
+#align generalized_continued_fraction.int_fract_pair.coe_of_rat_eq GenContFract.IntFractPair.coe_of_rat_eq
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.coe_stream_nth_rat_eq /-
+#print GenContFract.IntFractPair.coe_stream_nth_rat_eq /-
 theorem coe_stream_nth_rat_eq :
     ((IntFractPair.stream q n).map (mapFr coe) : Option <| IntFractPair K) =
       IntFractPair.stream v n :=
@@ -213,15 +212,15 @@ theorem coe_stream_nth_rat_eq :
         have : (fr : K)⁻¹ = ((fr⁻¹ : ℚ) : K) := by norm_cast
         have coe_of_fr := coe_of_rat_eq this
         simpa [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
-#align generalized_continued_fraction.int_fract_pair.coe_stream_nth_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_stream_nth_rat_eq
+#align generalized_continued_fraction.int_fract_pair.coe_stream_nth_rat_eq GenContFract.IntFractPair.coe_stream_nth_rat_eq
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.coe_stream'_rat_eq /-
+#print GenContFract.IntFractPair.coe_stream'_rat_eq /-
 theorem coe_stream'_rat_eq :
     ((IntFractPair.stream q).map (Option.map (mapFr coe)) : Stream' <| Option <| IntFractPair K) =
       IntFractPair.stream v :=
   by funext n; exact int_fract_pair.coe_stream_nth_rat_eq v_eq_q n
-#align generalized_continued_fraction.int_fract_pair.coe_stream_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_stream'_rat_eq
+#align generalized_continued_fraction.int_fract_pair.coe_stream_rat_eq GenContFract.IntFractPair.coe_stream'_rat_eq
 -/
 
 end IntFractPair
@@ -229,16 +228,16 @@ end IntFractPair
 /-! Now we lift the coercion results to the continued fraction computation. -/
 
 
-#print GeneralizedContinuedFraction.coe_of_h_rat_eq /-
+#print GenContFract.coe_of_h_rat_eq /-
 theorem coe_of_h_rat_eq : (↑((of q).h : ℚ) : K) = (of v).h :=
   by
   unfold of int_fract_pair.seq1
   rw [← int_fract_pair.coe_of_rat_eq v_eq_q]
   simp
-#align generalized_continued_fraction.coe_of_h_rat_eq GeneralizedContinuedFraction.coe_of_h_rat_eq
+#align generalized_continued_fraction.coe_of_h_rat_eq GenContFract.coe_of_h_rat_eq
 -/
 
-#print GeneralizedContinuedFraction.coe_of_s_get?_rat_eq /-
+#print GenContFract.coe_of_s_get?_rat_eq /-
 theorem coe_of_s_get?_rat_eq :
     (((of q).s.get? n).map (Pair.map coe) : Option <| Pair K) = (of v).s.get? n :=
   by
@@ -247,34 +246,33 @@ theorem coe_of_s_get?_rat_eq :
   rw [← int_fract_pair.coe_stream_rat_eq v_eq_q]
   rcases succ_nth_stream_eq : int_fract_pair.stream q (n + 1) with (_ | ⟨_, _⟩) <;>
     simp [Stream'.map, Stream'.get, succ_nth_stream_eq]
-#align generalized_continued_fraction.coe_of_s_nth_rat_eq GeneralizedContinuedFraction.coe_of_s_get?_rat_eq
+#align generalized_continued_fraction.coe_of_s_nth_rat_eq GenContFract.coe_of_s_get?_rat_eq
 -/
 
-#print GeneralizedContinuedFraction.coe_of_s_rat_eq /-
+#print GenContFract.coe_of_s_rat_eq /-
 theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : Seq <| Pair K) = (of v).s := by ext n;
   rw [← coe_of_s_nth_rat_eq v_eq_q]; rfl
-#align generalized_continued_fraction.coe_of_s_rat_eq GeneralizedContinuedFraction.coe_of_s_rat_eq
+#align generalized_continued_fraction.coe_of_s_rat_eq GenContFract.coe_of_s_rat_eq
 -/
 
-#print GeneralizedContinuedFraction.coe_of_rat_eq /-
+#print GenContFract.coe_of_rat_eq /-
 /-- Given `(v : K), (q : ℚ), and v = q`, we have that `gcf.of q = gcf.of v` -/
-theorem coe_of_rat_eq :
-    (⟨(of q).h, (of q).s.map (Pair.map coe)⟩ : GeneralizedContinuedFraction K) = of v :=
+theorem coe_of_rat_eq : (⟨(of q).h, (of q).s.map (Pair.map coe)⟩ : GenContFract K) = of v :=
   by
   cases' gcf_v_eq : of v with h s; subst v
   obtain rfl : ↑⌊↑q⌋ = h := by injection gcf_v_eq
   simp [coe_of_h_rat_eq rfl, coe_of_s_rat_eq rfl, gcf_v_eq]
-#align generalized_continued_fraction.coe_of_rat_eq GeneralizedContinuedFraction.coe_of_rat_eq
+#align generalized_continued_fraction.coe_of_rat_eq GenContFract.coe_of_rat_eq
 -/
 
-#print GeneralizedContinuedFraction.of_terminates_iff_of_rat_terminates /-
+#print GenContFract.of_terminates_iff_of_rat_terminates /-
 theorem of_terminates_iff_of_rat_terminates {v : K} {q : ℚ} (v_eq_q : v = (q : K)) :
     (of v).Terminates ↔ (of q).Terminates := by
   constructor <;> intro h <;> cases' h with n h <;> use n <;>
         simp only [seq.terminated_at, (coe_of_s_nth_rat_eq v_eq_q n).symm] at h ⊢ <;>
       cases (of q).s.get? n <;>
     trivial
-#align generalized_continued_fraction.of_terminates_iff_of_rat_terminates GeneralizedContinuedFraction.of_terminates_iff_of_rat_terminates
+#align generalized_continued_fraction.of_terminates_iff_of_rat_terminates GenContFract.of_terminates_iff_of_rat_terminates
 -/
 
 end RatTranslation
@@ -298,16 +296,16 @@ namespace IntFractPair
 
 variable {q : ℚ} {n : ℕ}
 
-#print GeneralizedContinuedFraction.IntFractPair.of_inv_fr_num_lt_num_of_pos /-
+#print GenContFract.IntFractPair.of_inv_fr_num_lt_num_of_pos /-
 /-- Shows that for any `q : ℚ` with `0 < q < 1`, the numerator of the fractional part of
 `int_fract_pair.of q⁻¹` is smaller than the numerator of `q`.
 -/
 theorem of_inv_fr_num_lt_num_of_pos (q_pos : 0 < q) : (IntFractPair.of q⁻¹).fr.num < q.num :=
   Rat.fract_inv_num_lt_num_of_pos q_pos
-#align generalized_continued_fraction.int_fract_pair.of_inv_fr_num_lt_num_of_pos GeneralizedContinuedFraction.IntFractPair.of_inv_fr_num_lt_num_of_pos
+#align generalized_continued_fraction.int_fract_pair.of_inv_fr_num_lt_num_of_pos GenContFract.IntFractPair.of_inv_fr_num_lt_num_of_pos
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.stream_succ_nth_fr_num_lt_nth_fr_num_rat /-
+#print GenContFract.IntFractPair.stream_succ_nth_fr_num_lt_nth_fr_num_rat /-
 /-- Shows that the sequence of numerators of the fractional parts of the stream is strictly
 antitone. -/
 theorem stream_succ_nth_fr_num_lt_nth_fr_num_rat {ifp_n ifp_succ_n : IntFractPair ℚ}
@@ -326,10 +324,10 @@ theorem stream_succ_nth_fr_num_lt_nth_fr_num_rat {ifp_n ifp_succ_n : IntFractPai
   cases' nth_stream_fr_nonneg_lt_one stream_nth_eq with zero_le_ifp_n_fract ifp_n_fract_lt_one
   have : 0 < ifp_n.fr := lt_of_le_of_ne zero_le_ifp_n_fract <| ifp_n_fract_ne_zero.symm
   exact of_inv_fr_num_lt_num_of_pos this
-#align generalized_continued_fraction.int_fract_pair.stream_succ_nth_fr_num_lt_nth_fr_num_rat GeneralizedContinuedFraction.IntFractPair.stream_succ_nth_fr_num_lt_nth_fr_num_rat
+#align generalized_continued_fraction.int_fract_pair.stream_succ_nth_fr_num_lt_nth_fr_num_rat GenContFract.IntFractPair.stream_succ_nth_fr_num_lt_nth_fr_num_rat
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.stream_nth_fr_num_le_fr_num_sub_n_rat /-
+#print GenContFract.IntFractPair.stream_nth_fr_num_le_fr_num_sub_n_rat /-
 theorem stream_nth_fr_num_le_fr_num_sub_n_rat :
     ∀ {ifp_n : IntFractPair ℚ},
       IntFractPair.stream q n = some ifp_n → ifp_n.fr.num ≤ (IntFractPair.of q).fr.num - n :=
@@ -350,10 +348,10 @@ theorem stream_nth_fr_num_le_fr_num_sub_n_rat :
       stream_succ_nth_fr_num_lt_nth_fr_num_rat stream_nth_eq stream_succ_nth_eq
     have : ifp_succ_n.fr.num + 1 ≤ ifp_n.fr.num := Int.add_one_le_of_lt this
     exact le_trans this (IH stream_nth_eq)
-#align generalized_continued_fraction.int_fract_pair.stream_nth_fr_num_le_fr_num_sub_n_rat GeneralizedContinuedFraction.IntFractPair.stream_nth_fr_num_le_fr_num_sub_n_rat
+#align generalized_continued_fraction.int_fract_pair.stream_nth_fr_num_le_fr_num_sub_n_rat GenContFract.IntFractPair.stream_nth_fr_num_le_fr_num_sub_n_rat
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.exists_nth_stream_eq_none_of_rat /-
+#print GenContFract.IntFractPair.exists_nth_stream_eq_none_of_rat /-
 theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.stream q n = none :=
   by
   let fract_q_num := (Int.fract q).num; let n := fract_q_num.nat_abs + 1
@@ -371,24 +369,24 @@ theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.s
     have : 0 ≤ ifp.fr := (nth_stream_fr_nonneg_lt_one stream_nth_eq).left
     have : 0 ≤ ifp.fr.num := rat.num_nonneg_iff_zero_le.elim_right this
     linarith
-#align generalized_continued_fraction.int_fract_pair.exists_nth_stream_eq_none_of_rat GeneralizedContinuedFraction.IntFractPair.exists_nth_stream_eq_none_of_rat
+#align generalized_continued_fraction.int_fract_pair.exists_nth_stream_eq_none_of_rat GenContFract.IntFractPair.exists_nth_stream_eq_none_of_rat
 -/
 
 end IntFractPair
 
-#print GeneralizedContinuedFraction.terminates_of_rat /-
+#print GenContFract.terminates_of_rat /-
 /-- The continued fraction of a rational number terminates. -/
 theorem terminates_of_rat (q : ℚ) : (of q).Terminates :=
   Exists.elim (IntFractPair.exists_nth_stream_eq_none_of_rat q) fun n stream_nth_eq_none =>
     Exists.intro n
       (have : IntFractPair.stream q (n + 1) = none := IntFractPair.stream_isSeq q stream_nth_eq_none
       of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none.right this)
-#align generalized_continued_fraction.terminates_of_rat GeneralizedContinuedFraction.terminates_of_rat
+#align generalized_continued_fraction.terminates_of_rat GenContFract.terminates_of_rat
 -/
 
 end TerminatesOfRat
 
-#print GeneralizedContinuedFraction.terminates_iff_rat /-
+#print GenContFract.terminates_iff_rat /-
 /-- The continued fraction `generalized_continued_fraction.of v` terminates if and only if `v ∈ ℚ`.
 -/
 theorem terminates_iff_rat (v : K) : (of v).Terminates ↔ ∃ q : ℚ, v = (q : K) :=
@@ -399,8 +397,8 @@ theorem terminates_iff_rat (v : K) : (of v).Terminates ↔ ∃ q : ℚ, v = (q :
     Exists.elim exists_q_eq_v fun q => fun v_eq_q : v = ↑q =>
       have : (of q).Terminates := terminates_of_rat q
       (of_terminates_iff_of_rat_terminates v_eq_q).right this
-#align generalized_continued_fraction.terminates_iff_rat GeneralizedContinuedFraction.terminates_iff_rat
+#align generalized_continued_fraction.terminates_iff_rat GenContFract.terminates_iff_rat
 -/
 
-end GeneralizedContinuedFraction
+end GenContFract
 

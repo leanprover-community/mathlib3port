@@ -35,7 +35,7 @@ the bulk of the proof below.
 theorem sq_ne_two_fin_zmod_four (z : ZMod 4) : z * z ≠ 2 :=
   by
   change Fin 4 at z
-  fin_cases z <;> norm_num [Fin.ext_iff, Fin.val_bit0, Fin.val_bit1]
+  fin_cases z <;> norm_num [Fin.ext_iff, Fin.coe_bit0, Fin.coe_bit1]
 #align sq_ne_two_fin_zmod_four sq_ne_two_fin_zmod_four
 -/
 

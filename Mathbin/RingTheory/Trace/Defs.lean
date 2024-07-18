@@ -6,7 +6,7 @@ Authors: Anne Baanen
 import LinearAlgebra.Matrix.BilinearForm
 import LinearAlgebra.Matrix.Charpoly.Minpoly
 import LinearAlgebra.Determinant
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 import LinearAlgebra.Vandermonde
 import LinearAlgebra.Trace
 import FieldTheory.IsAlgClosed.AlgebraicClosure
@@ -420,14 +420,14 @@ theorem trace_eq_sum_embeddings_gen (pb : PowerBasis K L)
 variable [IsAlgClosed E]
 
 #print sum_embeddings_eq_finrank_mul /-
-theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F]
+theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [Algebra.IsSeparable K F]
     (pb : PowerBasis K L) :
     ∑ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen) =
       finrank L F •
         (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Sum fun σ : L →ₐ[K] E => σ pb.gen :=
   by
   haveI : FiniteDimensional L F := FiniteDimensional.right K L F
-  haveI : IsSeparable L F := isSeparable_tower_top_of_isSeparable K L F
+  haveI : Algebra.IsSeparable L F := Algebra.isSeparable_tower_top_of_isSeparable K L F
   letI : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
   letI : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _
   -- will be solved by unification
@@ -445,16 +445,16 @@ theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F]
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print trace_eq_sum_embeddings /-
-theorem trace_eq_sum_embeddings [FiniteDimensional K L] [IsSeparable K L] {x : L} :
+theorem trace_eq_sum_embeddings [FiniteDimensional K L] [Algebra.IsSeparable K L] {x : L} :
     algebraMap K E (Algebra.trace K L x) = ∑ σ : L →ₐ[K] E, σ x :=
   by
-  have hx := IsSeparable.isIntegral K x
+  have hx := Algebra.IsSeparable.isIntegral K x
   rw [trace_eq_trace_adjoin K x, Algebra.smul_def, RingHom.map_mul, ← adjoin.power_basis_gen hx,
     trace_eq_sum_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splits_codomain _), ←
     Algebra.smul_def, algebraMap_smul]
   · exact (sum_embeddings_eq_finrank_mul L E (adjoin.power_basis hx)).symm
-  · haveI := isSeparable_tower_bot_of_isSeparable K K⟮⟯ L
-    exact IsSeparable.separable K _
+  · haveI := Algebra.isSeparable_tower_bot_of_isSeparable K K⟮⟯ L
+    exact Algebra.IsSeparable.isSeparable K _
 #align trace_eq_sum_embeddings trace_eq_sum_embeddings
 -/
 
@@ -626,7 +626,7 @@ variable (K) {L} (E : Type z) [Field E]
 
 variable [Algebra K E]
 
-variable [Module.Finite K L] [IsSeparable K L] [IsAlgClosed E]
+variable [Module.Finite K L] [Algebra.IsSeparable K L] [IsAlgClosed E]
 
 variable (b : κ → L) (pb : PowerBasis K L)
 
@@ -656,7 +656,7 @@ open Algebra
 variable (pb : PowerBasis K L)
 
 #print det_traceMatrix_ne_zero' /-
-theorem det_traceMatrix_ne_zero' [IsSeparable K L] : det (traceMatrix K pb.Basis) ≠ 0 :=
+theorem det_traceMatrix_ne_zero' [Algebra.IsSeparable K L] : det (traceMatrix K pb.Basis) ≠ 0 :=
   by
   suffices algebraMap K (AlgebraicClosureAux L) (det (trace_matrix K pb.basis)) ≠ 0
     by
@@ -676,7 +676,7 @@ theorem det_traceMatrix_ne_zero' [IsSeparable K L] : det (traceMatrix K pb.Basis
 -/
 
 #print det_traceForm_ne_zero /-
-theorem det_traceForm_ne_zero [IsSeparable K L] [DecidableEq ι] (b : Basis ι K L) :
+theorem det_traceForm_ne_zero [Algebra.IsSeparable K L] [DecidableEq ι] (b : Basis ι K L) :
     det (BilinForm.toMatrix b (traceForm K L)) ≠ 0 :=
   by
   haveI : FiniteDimensional K L := FiniteDimensional.of_fintype_basis b
@@ -704,7 +704,7 @@ theorem det_traceForm_ne_zero [IsSeparable K L] [DecidableEq ι] (b : Basis ι K
 variable (K L)
 
 #print traceForm_nondegenerate /-
-theorem traceForm_nondegenerate [FiniteDimensional K L] [IsSeparable K L] :
+theorem traceForm_nondegenerate [FiniteDimensional K L] [Algebra.IsSeparable K L] :
     (traceForm K L).Nondegenerate :=
   LinearMap.BilinForm.nondegenerate_of_det_ne_zero (traceForm K L) _
     (det_traceForm_ne_zero (FiniteDimensional.finBasis K L))

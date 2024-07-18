@@ -128,9 +128,9 @@ def resize (f : ℕ → ℕ) (cmd : Gen α) : Gen α :=
 -/
 
 /-- Create `n` examples using `cmd`. -/
-def vectorOf : ∀ (n : ℕ) (cmd : Gen α), Gen (Vector α n)
-  | 0, _ => return Vector.nil
-  | succ n, cmd => Vector.cons <$> cmd <*> vector_of n cmd
+def vectorOf : ∀ (n : ℕ) (cmd : Gen α), Gen (Mathlib.Vector α n)
+  | 0, _ => return Mathlib.Vector.nil
+  | succ n, cmd => Mathlib.Vector.cons <$> cmd <*> vector_of n cmd
 #align slim_check.gen.vector_of SlimCheck.Gen.vectorOf
 
 #print SlimCheck.Gen.listOf /-

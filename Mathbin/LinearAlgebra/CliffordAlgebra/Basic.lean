@@ -53,7 +53,7 @@ variable {R : Type _} [CommRing R]
 
 variable {M : Type _} [AddCommGroup M] [Module R M]
 
-variable (Q : QuadraticForm R M)
+variable (Q : QuadraticMap R M)
 
 variable {n : ℕ}
 
@@ -233,20 +233,20 @@ theorem induction {C : CliffordAlgebra Q → Prop}
 #print CliffordAlgebra.ι_mul_ι_add_swap /-
 /-- The symmetric product of vectors is a scalar -/
 theorem ι_mul_ι_add_swap (a b : M) :
-    ι Q a * ι Q b + ι Q b * ι Q a = algebraMap R _ (QuadraticForm.polar Q a b) :=
+    ι Q a * ι Q b + ι Q b * ι Q a = algebraMap R _ (QuadraticMap.polar Q a b) :=
   calc
     ι Q a * ι Q b + ι Q b * ι Q a = ι Q (a + b) * ι Q (a + b) - ι Q a * ι Q a - ι Q b * ι Q b := by
       rw [(ι Q).map_add, mul_add, add_mul, add_mul]; abel
     _ = algebraMap R _ (Q (a + b)) - algebraMap R _ (Q a) - algebraMap R _ (Q b) := by
       rw [ι_sq_scalar, ι_sq_scalar, ι_sq_scalar]
     _ = algebraMap R _ (Q (a + b) - Q a - Q b) := by rw [← RingHom.map_sub, ← RingHom.map_sub]
-    _ = algebraMap R _ (QuadraticForm.polar Q a b) := rfl
+    _ = algebraMap R _ (QuadraticMap.polar Q a b) := rfl
 #align clifford_algebra.ι_mul_ι_add_swap CliffordAlgebra.ι_mul_ι_add_swap
 -/
 
 #print CliffordAlgebra.ι_mul_ι_comm /-
 theorem ι_mul_ι_comm (a b : M) :
-    ι Q a * ι Q b = algebraMap R _ (QuadraticForm.polar Q a b) - ι Q b * ι Q a :=
+    ι Q a * ι Q b = algebraMap R _ (QuadraticMap.polar Q a b) - ι Q b * ι Q a :=
   eq_sub_of_add_eq (ι_mul_ι_add_swap a b)
 #align clifford_algebra.ι_mul_comm CliffordAlgebra.ι_mul_ι_comm
 -/
@@ -254,7 +254,7 @@ theorem ι_mul_ι_comm (a b : M) :
 #print CliffordAlgebra.ι_mul_ι_mul_ι /-
 /-- $aba$ is a vector. -/
 theorem ι_mul_ι_mul_ι (a b : M) :
-    ι Q a * ι Q b * ι Q a = ι Q (QuadraticForm.polar Q a b • a - Q a • b) := by
+    ι Q a * ι Q b * ι Q a = ι Q (QuadraticMap.polar Q a b • a - Q a • b) := by
   rw [ι_mul_comm, sub_mul, mul_assoc, ι_sq_scalar, ← Algebra.smul_def, ← Algebra.commutes, ←
     Algebra.smul_def, ← map_smul, ← map_smul, ← map_sub]
 #align clifford_algebra.ι_mul_ι_mul_ι CliffordAlgebra.ι_mul_ι_mul_ι
@@ -276,7 +276,7 @@ variable [AddCommGroup M₁] [AddCommGroup M₂] [AddCommGroup M₃]
 
 variable [Module R M₁] [Module R M₂] [Module R M₃]
 
-variable (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) (Q₃ : QuadraticForm R M₃)
+variable (Q₁ : QuadraticMap R M₁) (Q₂ : QuadraticMap R M₂) (Q₃ : QuadraticMap R M₃)
 
 #print CliffordAlgebra.map /-
 /-- Any linear map that preserves the quadratic form lifts to an `alg_hom` between algebras.
@@ -337,7 +337,7 @@ variable {Q₁ Q₂ Q₃}
 /-- Two `clifford_algebra`s are equivalent as algebras if their quadratic forms are
 equivalent. -/
 @[simps apply]
-def equivOfIsometry (e : Q₁.IsometryEquiv Q₂) : CliffordAlgebra Q₁ ≃ₐ[R] CliffordAlgebra Q₂ :=
+def equivOfIsometry (e : Q₁.IsometryEquivₓ Q₂) : CliffordAlgebra Q₁ ≃ₐ[R] CliffordAlgebra Q₂ :=
   AlgEquiv.ofAlgHom (map Q₁ Q₂ e e.map_app) (map Q₂ Q₁ e.symm e.symm.map_app)
     ((map_comp_map _ _ _ _ _ _ _).trans <|
       by
@@ -354,7 +354,7 @@ def equivOfIsometry (e : Q₁.IsometryEquiv Q₂) : CliffordAlgebra Q₁ ≃ₐ[
 
 #print CliffordAlgebra.equivOfIsometry_symm /-
 @[simp]
-theorem equivOfIsometry_symm (e : Q₁.IsometryEquiv Q₂) :
+theorem equivOfIsometry_symm (e : Q₁.IsometryEquivₓ Q₂) :
     (equivOfIsometry e).symm = equivOfIsometry e.symm :=
   rfl
 #align clifford_algebra.equiv_of_isometry_symm CliffordAlgebra.equivOfIsometry_symm
@@ -362,7 +362,7 @@ theorem equivOfIsometry_symm (e : Q₁.IsometryEquiv Q₂) :
 
 #print CliffordAlgebra.equivOfIsometry_trans /-
 @[simp]
-theorem equivOfIsometry_trans (e₁₂ : Q₁.IsometryEquiv Q₂) (e₂₃ : Q₂.IsometryEquiv Q₃) :
+theorem equivOfIsometry_trans (e₁₂ : Q₁.IsometryEquivₓ Q₂) (e₂₃ : Q₂.IsometryEquivₓ Q₃) :
     (equivOfIsometry e₁₂).trans (equivOfIsometry e₂₃) = equivOfIsometry (e₁₂.trans e₂₃) := by ext x;
   exact AlgHom.congr_fun (map_comp_map Q₁ Q₂ Q₃ _ _ _ _) x
 #align clifford_algebra.equiv_of_isometry_trans CliffordAlgebra.equivOfIsometry_trans
@@ -371,7 +371,7 @@ theorem equivOfIsometry_trans (e₁₂ : Q₁.IsometryEquiv Q₂) (e₂₃ : Q�
 #print CliffordAlgebra.equivOfIsometry_refl /-
 @[simp]
 theorem equivOfIsometry_refl :
-    (equivOfIsometry <| QuadraticForm.IsometryEquiv.refl Q₁) = AlgEquiv.refl := by ext x;
+    (equivOfIsometry <| QuadraticMap.IsometryEquiv.refl Q₁) = AlgEquiv.refl := by ext x;
   exact AlgHom.congr_fun (map_id Q₁) x
 #align clifford_algebra.equiv_of_isometry_refl CliffordAlgebra.equivOfIsometry_refl
 -/
@@ -413,7 +413,7 @@ theorem isUnit_ι_of_isUnit {m : M} (h : IsUnit (Q m)) : IsUnit (ι Q m) :=
 #print CliffordAlgebra.ι_mul_ι_mul_invOf_ι /-
 /-- $aba^{-1}$ is a vector. -/
 theorem ι_mul_ι_mul_invOf_ι (a b : M) [Invertible (ι Q a)] [Invertible (Q a)] :
-    ι Q a * ι Q b * ⅟ (ι Q a) = ι Q ((⅟ (Q a) * QuadraticForm.polar Q a b) • a - b) := by
+    ι Q a * ι Q b * ⅟ (ι Q a) = ι Q ((⅟ (Q a) * QuadraticMap.polar Q a b) • a - b) := by
   rw [inv_of_ι, map_smul, mul_smul_comm, ι_mul_ι_mul_ι, ← map_smul, smul_sub, smul_smul, smul_smul,
     invOf_mul_self, one_smul]
 #align clifford_algebra.ι_mul_ι_mul_inv_of_ι CliffordAlgebra.ι_mul_ι_mul_invOf_ι
@@ -422,7 +422,7 @@ theorem ι_mul_ι_mul_invOf_ι (a b : M) [Invertible (ι Q a)] [Invertible (Q a)
 #print CliffordAlgebra.invOf_ι_mul_ι_mul_ι /-
 /-- $a^{-1}ba$ is a vector. -/
 theorem invOf_ι_mul_ι_mul_ι (a b : M) [Invertible (ι Q a)] [Invertible (Q a)] :
-    ⅟ (ι Q a) * ι Q b * ι Q a = ι Q ((⅟ (Q a) * QuadraticForm.polar Q a b) • a - b) := by
+    ⅟ (ι Q a) * ι Q b * ι Q a = ι Q ((⅟ (Q a) * QuadraticMap.polar Q a b) • a - b) := by
   rw [inv_of_ι, map_smul, smul_mul_assoc, smul_mul_assoc, ι_mul_ι_mul_ι, ← map_smul, smul_sub,
     smul_smul, smul_smul, invOf_mul_self, one_smul]
 #align clifford_algebra.inv_of_ι_mul_ι_mul_ι CliffordAlgebra.invOf_ι_mul_ι_mul_ι

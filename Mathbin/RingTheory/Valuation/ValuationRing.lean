@@ -426,8 +426,8 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
 #align valuation_ring.iff_local_bezout_domain ValuationRing.iff_local_bezout_domain
 -/
 
-#print ValuationRing.tFAE /-
-protected theorem tFAE (R : Type u) [CommRing R] [IsDomain R] :
+#print ValuationRing.TFAE /-
+protected theorem TFAE (R : Type u) [CommRing R] [IsDomain R] :
     TFAE
       [ValuationRing R,
         ∀ x : FractionRing R, IsLocalization.IsInteger R x ∨ IsLocalization.IsInteger R x⁻¹,
@@ -438,7 +438,7 @@ protected theorem tFAE (R : Type u) [CommRing R] [IsDomain R] :
   tfae_have 1 ↔ 4; · exact iff_ideal_total
   tfae_have 1 ↔ 5; · exact iff_local_bezout_domain
   tfae_finish
-#align valuation_ring.tfae ValuationRing.tFAE
+#align valuation_ring.tfae ValuationRing.TFAE
 -/
 
 end

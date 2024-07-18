@@ -191,7 +191,7 @@ theorem isHermitian_diagonal [TrivialStar α] [DecidableEq n] (v : n → α) :
 #print Matrix.isHermitian_zero /-
 @[simp]
 theorem isHermitian_zero : (0 : Matrix n n α).IsHermitian :=
-  isSelfAdjoint_zero _
+  IsSelfAdjoint.zero _
 #align matrix.is_hermitian_zero Matrix.isHermitian_zero
 -/
 
@@ -211,13 +211,13 @@ variable [AddCommMonoid α] [StarAddMonoid α]
 
 #print Matrix.isHermitian_add_transpose_self /-
 theorem isHermitian_add_transpose_self (A : Matrix n n α) : (A + Aᴴ).IsHermitian :=
-  isSelfAdjoint_add_star_self A
+  IsSelfAdjoint.add_star_self A
 #align matrix.is_hermitian_add_transpose_self Matrix.isHermitian_add_transpose_self
 -/
 
 #print Matrix.isHermitian_transpose_add_self /-
 theorem isHermitian_transpose_add_self (A : Matrix n n α) : (Aᴴ + A).IsHermitian :=
-  isSelfAdjoint_star_add_self A
+  IsSelfAdjoint.star_add_self A
 #align matrix.is_hermitian_transpose_add_self Matrix.isHermitian_transpose_add_self
 -/
 

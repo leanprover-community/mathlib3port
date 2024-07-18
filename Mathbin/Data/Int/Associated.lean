@@ -3,7 +3,7 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Algebra.Associated
+import Algebra.Associated.Basic
 import Algebra.Group.Int
 
 #align_import data.int.associated from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"

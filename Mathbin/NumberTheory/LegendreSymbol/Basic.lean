@@ -253,7 +253,7 @@ end legendreSym
 
 end Legendre
 
-section QuadraticForm
+section QuadraticMap
 
 /-!
 ### Applications to binary quadratic forms
@@ -324,7 +324,7 @@ theorem prime_dvd_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : legendre
 
 end legendreSym
 
-end QuadraticForm
+end QuadraticMap
 
 section Values
 

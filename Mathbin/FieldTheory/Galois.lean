@@ -49,7 +49,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
 /-- A field extension E/F is galois if it is both separable and normal. Note that in mathlib
 a separable extension of fields is by definition algebraic. -/
 class IsGalois : Prop where
-  [to_isSeparable : IsSeparable F E]
+  [to_isSeparable : Algebra.IsSeparable F E]
   [to_normal : Normal F E]
 #align is_galois IsGalois
 -/
@@ -57,7 +57,7 @@ class IsGalois : Prop where
 variable {F E}
 
 #print isGalois_iff /-
-theorem isGalois_iff : IsGalois F E ↔ IsSeparable F E ∧ Normal F E :=
+theorem isGalois_iff : IsGalois F E ↔ Algebra.IsSeparable F E ∧ Normal F E :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h =>
     { to_isSeparable := h.1
       to_normal := h.2 }⟩
@@ -87,7 +87,7 @@ theorem integral [IsGalois F E] (x : E) : IsIntegral F x :=
 
 #print IsGalois.separable /-
 theorem separable [IsGalois F E] (x : E) : (minpoly F x).Separable :=
-  IsSeparable.separable F x
+  Algebra.IsSeparable.isSeparable F x
 #align is_galois.separable IsGalois.separable
 -/
 
@@ -171,7 +171,7 @@ variable [Algebra F K] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 #print IsGalois.tower_top_of_isGalois /-
 theorem IsGalois.tower_top_of_isGalois [IsGalois F E] : IsGalois K E :=
-  { to_isSeparable := isSeparable_tower_top_of_isSeparable F K E
+  { to_isSeparable := Algebra.isSeparable_tower_top_of_isSeparable F K E
     to_normal := Normal.tower_top_of_normal F K E }
 #align is_galois.tower_top_of_is_galois IsGalois.tower_top_of_isGalois
 -/
@@ -198,7 +198,7 @@ theorem isGalois_iff_isGalois_bot : IsGalois (⊥ : IntermediateField F E) E ↔
 
 #print IsGalois.of_algEquiv /-
 theorem IsGalois.of_algEquiv [h : IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois F E' :=
-  { to_isSeparable := IsSeparable.of_algHom F E f.symm
+  { to_isSeparable := Algebra.IsSeparable.of_algHom F E f.symm
     to_normal := Normal.of_algEquiv f }
 #align is_galois.of_alg_equiv IsGalois.of_algEquiv
 -/
@@ -574,7 +574,7 @@ variable (k K F : Type _) [Field k] [Field K] [Field F] [Algebra k K] [Algebra k
 
 #print IsGalois.normalClosure /-
 instance IsGalois.normalClosure : IsGalois k (normalClosure k K F)
-    where to_isSeparable := isSeparable_tower_bot_of_isSeparable k _ F
+    where to_isSeparable := Algebra.isSeparable_tower_bot_of_isSeparable k _ F
 #align is_galois.normal_closure IsGalois.normalClosure
 -/
 

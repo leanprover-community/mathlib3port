@@ -657,17 +657,17 @@ theorem εToSingle₀_comp_eq :
 
 #print groupCohomology.resolution.quasiIso_forget₂_εToSingle₀ /-
 theorem quasiIso_forget₂_εToSingle₀ :
-    QuasiIso' (((forget₂ _ (ModuleCat.{u} k)).mapHomologicalComplex _).map (εToSingle₀ k G)) :=
+    QuasiIso (((forget₂ _ (ModuleCat.{u} k)).mapHomologicalComplex _).map (εToSingle₀ k G)) :=
   by
-  have h : QuasiIso' (forget₂_to_Module_homotopy_equiv k G).hom := HomotopyEquiv.toQuasiIso' _
+  have h : QuasiIso (forget₂_to_Module_homotopy_equiv k G).hom := HomotopyEquiv.toQuasiIso _
   rw [← ε_to_single₀_comp_eq k G] at h
   haveI := h
-  exact quasiIso'_of_comp_right _ ((ChainComplex.single₀MapHomologicalComplex _).hom.app _)
+  exact quasiIsoOfCompRight _ ((ChainComplex.single₀MapHomologicalComplex _).hom.app _)
 #align group_cohomology.resolution.quasi_iso_of_forget₂_ε_to_single₀ groupCohomology.resolution.quasiIso_forget₂_εToSingle₀
 -/
 
-instance : QuasiIso' (εToSingle₀ k G) :=
-  (forget₂ _ (ModuleCat.{u} k)).quasiIso'_of_map_quasiIso' _ (quasiIso_forget₂_εToSingle₀ k G)
+instance : QuasiIso (εToSingle₀ k G) :=
+  (forget₂ _ (ModuleCat.{u} k)).quasiIsoOfMapQuasiIso _ (quasiIso_forget₂_εToSingle₀ k G)
 
 end Exactness
 
@@ -695,7 +695,7 @@ standard resolution of `k` called `group_cohomology.resolution k G`. -/
 def groupCohomology.extIso (V : Rep k G) (n : ℕ) :
     ((Ext k (Rep k G) n).obj (Opposite.op <| Rep.trivial k G k)).obj V ≅
       (((((linearYoneda k (Rep k G)).obj V).rightOp.mapHomologicalComplex _).obj
-              (groupCohomology.resolution k G)).homology'
+              (groupCohomology.resolution k G)).homology
           n).unop :=
   by
   let this.1 :=

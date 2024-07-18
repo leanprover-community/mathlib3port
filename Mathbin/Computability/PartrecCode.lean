@@ -222,7 +222,7 @@ theorem encode_lt_pair (cf cg) :
   by
   simp [encode_code_eq, encode_code, -add_comm]
   have := Nat.mul_le_mul_right _ (by decide : 1 ≤ 2 * 2)
-  rw [one_mul, mul_assoc, ← bit0_eq_two_mul, ← bit0_eq_two_mul] at this
+  rw [one_mul, mul_assoc, ← bit0_eq_two_hMul, ← bit0_eq_two_hMul] at this
   have := lt_of_le_of_lt this (lt_add_of_pos_right _ (by decide : 0 < 4))
   exact ⟨lt_of_le_of_lt (Nat.left_le_pair _ _) this, lt_of_le_of_lt (Nat.right_le_pair _ _) this⟩
 #align nat.partrec.code.encode_lt_pair Nat.Partrec.Code.encode_lt_pair
@@ -251,7 +251,7 @@ theorem encode_lt_rfind' (cf) : encode cf < encode (rfind' cf) :=
   by
   simp [encode_code_eq, encode_code, -add_comm]
   have := Nat.mul_le_mul_right _ (by decide : 1 ≤ 2 * 2)
-  rw [one_mul, mul_assoc, ← bit0_eq_two_mul, ← bit0_eq_two_mul] at this
+  rw [one_mul, mul_assoc, ← bit0_eq_two_hMul, ← bit0_eq_two_hMul] at this
   refine' lt_of_le_of_lt (le_trans this _) (lt_add_of_pos_right _ (by decide : 0 < 4))
   exact le_of_lt (Nat.bit0_lt_bit1 <| le_of_lt <| Nat.bit0_lt_bit1 <| le_rfl)
 #align nat.partrec.code.encode_lt_rfind' Nat.Partrec.Code.encode_lt_rfind'
@@ -1077,7 +1077,7 @@ theorem evaln_prim : Primrec fun a : (ℕ × Code) × ℕ => evaln a.1.1 a.1.2 a
       simp [G]
       rw [(_ : (of_nat (ℕ × code) _).snd = of_nat code p.unpair.2)]
       swap; · simp
-      apply List.map_congr fun n => _
+      apply List.map_congr_left fun n => _
       rw [(by simp :
           List.range p = List.range (mkpair p.unpair.1 (encode (of_nat code p.unpair.2))))]
       generalize p.unpair.1 = k

@@ -151,7 +151,7 @@ theorem fAux_deriv_zero (n : ℕ) : HasDerivAt (fAux n) 0 0 :=
       (f_aux_deriv_pos n x hx).DifferentiableAt.DifferentiableWithinAt
     -- next line is the nontrivial bit of this proof, appealing to differentiability
     -- extension results.
-    apply has_deriv_at_interval_left_endpoint_of_tendsto_deriv diff _ self_mem_nhdsWithin
+    apply hasDerivWithinAt_Ici_of_tendsto_deriv diff _ self_mem_nhdsWithin
     · refine' (f_aux_limit (n + 1)).congr' _
       apply mem_of_superset self_mem_nhdsWithin fun x hx => _
       simp [(f_aux_deriv_pos n x hx).deriv]

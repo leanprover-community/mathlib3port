@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import RingTheory.RingHomProperties
-import RingTheory.IntegralClosure
+import RingTheory.IntegralClosure.IsIntegral.Defs
 
 #align_import ring_theory.ring_hom.integral from "leanprover-community/mathlib"@"d07a9c875ed7139abfde6a333b2be205c5bd404e"
 

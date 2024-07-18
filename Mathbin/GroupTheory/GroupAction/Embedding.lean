@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import GroupTheory.GroupAction.Group
-import GroupTheory.GroupAction.Pi
+import Algebra.Group.Action.Basic
+import Algebra.Group.Action.Pi
 
 #align_import group_theory.group_action.embedding from "leanprover-community/mathlib"@"baba818b9acea366489e8ba32d2cc0fcaf50a1f7"
 

@@ -445,7 +445,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
       rw [sum_sigma']
       refine'
         sum_le_sum_of_subset_of_nonneg _ fun x hx1 hx2 =>
-          prod_nonneg fun j hj => mul_nonneg hr (mul_nonneg (pow_nonneg ha _) (hp _))
+          prod_nonneg fun j hj => mul_nonneg hr (mul_nonneg (Nonneg.pow_nonneg ha _) (hp _))
       rintro ⟨k, c⟩ hd
       simp only [Set.mem_toFinset, mem_Ico, mem_sigma, Set.mem_setOf_eq] at hd
       simp only [mem_comp_partial_sum_target_iff]
@@ -520,7 +520,7 @@ theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
                   C * r ^ c.length * ∏ j, ‖p.right_inv i (c.blocksFun j)‖) :=
       by
       apply_rules [add_le_add, le_refl, sum_le_sum fun j hj => _, mul_le_mul_of_nonneg_left,
-        pow_nonneg, ha]
+        Nonneg.pow_nonneg, ha]
       apply (ContinuousLinearMap.norm_compContinuousMultilinearMap_le _ _).trans
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
       apply (norm_sum_le _ _).trans
@@ -590,7 +590,7 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
     · intro n one_le_n hn
       have In : 2 ≤ n + 1 := by linarith
       have Snonneg : 0 ≤ S n :=
-        sum_nonneg fun x hx => mul_nonneg (pow_nonneg apos.le _) (norm_nonneg _)
+        sum_nonneg fun x hx => mul_nonneg (Nonneg.pow_nonneg apos.le _) (norm_nonneg _)
       have rSn : r * S n ≤ 1 / 2 :=
         calc
           r * S n ≤ r * ((I + 1) * a) := mul_le_mul_of_nonneg_left hn rpos.le
@@ -606,7 +606,7 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
             Cpos.le]
           refine' div_le_div (sq_nonneg _) _ (by norm_num) (by linarith)
           simp only [sub_le_self_iff]
-          apply pow_nonneg (mul_nonneg rpos.le Snonneg)
+          apply Nonneg.pow_nonneg (mul_nonneg rpos.le Snonneg)
         _ = I * a + 2 * I * C * (r * S n) ^ 2 := by ring
         _ ≤ I * a + 2 * I * C * (r * ((I + 1) * a)) ^ 2 := by
           apply_rules [add_le_add, le_refl, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg,
@@ -627,7 +627,7 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
       ‖p.right_inv i n‖ * ↑a' ^ n = a ^ n * ‖p.right_inv i n‖ := mul_comm _ _
       _ ≤ ∑ k in Ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖ :=
         (haveI : ∀ k ∈ Ico 1 (n + 1), 0 ≤ a ^ k * ‖p.right_inv i k‖ := fun k hk =>
-          mul_nonneg (pow_nonneg apos.le _) (norm_nonneg _)
+          mul_nonneg (Nonneg.pow_nonneg apos.le _) (norm_nonneg _)
         single_le_sum this (by simp [one_le_n]))
       _ ≤ (I + 1) * a := IRec (n + 1) (by decide)
 #align formal_multilinear_series.radius_right_inv_pos_of_radius_pos FormalMultilinearSeries.radius_rightInv_pos_of_radius_pos

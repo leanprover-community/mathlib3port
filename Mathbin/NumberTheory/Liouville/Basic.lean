@@ -154,7 +154,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
   -- Since the polynomial `fR` has finitely many roots, there is a closed interval centered at `α`
   -- such that `α` is the only root of `fR` in the interval.
   obtain ⟨ζ, z0, U⟩ : ∃ ζ > 0, closed_ball α ζ ∩ fR.roots.to_finset = {α} :=
-    @exists_closed_ball_inter_eq_singleton_of_discrete _ _ _ discrete_of_t1_of_finite _ ar
+    @exists_closed_ball_inter_eq_singleton_of_discrete _ _ _ Finite.instDiscreteTopology _ ar
   -- Since `fR` is continuous, it is bounded on the interval above.
   obtain ⟨xm, -, hM⟩ :
     ∃ (xm : ℝ) (H : xm ∈ Icc (α - ζ) (α + ζ)),
@@ -225,7 +225,7 @@ protected theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental �
   -- This branch of the proof uses the Liouville condition and the Archimedean property
   · refine' (lt_div_iff' hA).mpr _
     refine' lt_of_le_of_lt _ a1
-    refine' mul_le_mul_of_nonneg_right _ (mul_nonneg (pow_nonneg b0.le _) (abs_nonneg _))
+    refine' mul_le_mul_of_nonneg_right _ (mul_nonneg (Nonneg.pow_nonneg b0.le _) (abs_nonneg _))
     refine' hn.le.trans _
     refine' pow_le_pow_left zero_le_two _ _
     exact int.cast_two.symm.le.trans (int.cast_le.mpr (int.add_one_le_iff.mpr b1))

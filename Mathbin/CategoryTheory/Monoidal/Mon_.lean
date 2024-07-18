@@ -7,7 +7,7 @@ import CategoryTheory.Monoidal.Braided.Basic
 import CategoryTheory.Monoidal.Discrete
 import CategoryTheory.Monoidal.CoherenceLemmas
 import CategoryTheory.Limits.Shapes.Terminal
-import Algebra.PUnitInstances
+import Algebra.PUnitInstances.Algebra
 
 #align_import category_theory.monoidal.Mon_ from "leanprover-community/mathlib"@"7e5137f579de09a059a5ce98f364a04e221aabf0"
 

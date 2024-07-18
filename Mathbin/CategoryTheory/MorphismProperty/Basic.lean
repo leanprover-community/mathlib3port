@@ -5,7 +5,7 @@ Authors: Andrew Yang
 -/
 import CategoryTheory.Limits.Shapes.Diagonal
 import CategoryTheory.Comma.Arrow
-import CategoryTheory.Limits.Shapes.CommSq
+import CategoryTheory.Limits.Shapes.Pullback.CommSq
 import CategoryTheory.ConcreteCategory.Basic
 
 #align_import category_theory.morphism_property from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
@@ -180,32 +180,33 @@ theorem CategoryTheory.MorphismProperty.respectsIso_of_isStableUnderComposition
 #align category_theory.morphism_property.stable_under_composition.respects_iso CategoryTheory.MorphismProperty.respectsIso_of_isStableUnderComposition
 -/
 
-#print CategoryTheory.MorphismProperty.RespectsIso.cancel_left_isIso /-
-theorem RespectsIso.cancel_left_isIso {P : MorphismProperty C} (hP : RespectsIso P) {X Y Z : C}
-    (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] : P (f ≫ g) ↔ P g :=
+#print CategoryTheory.MorphismProperty.cancel_left_of_respectsIso /-
+theorem CategoryTheory.MorphismProperty.cancel_left_of_respectsIso {P : MorphismProperty C}
+    (hP : RespectsIso P) {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] : P (f ≫ g) ↔ P g :=
   ⟨fun h => by simpa using hP.1 (as_iso f).symm (f ≫ g) h, hP.1 (asIso f) g⟩
-#align category_theory.morphism_property.respects_iso.cancel_left_is_iso CategoryTheory.MorphismProperty.RespectsIso.cancel_left_isIso
+#align category_theory.morphism_property.respects_iso.cancel_left_is_iso CategoryTheory.MorphismProperty.cancel_left_of_respectsIso
 -/
 
-#print CategoryTheory.MorphismProperty.RespectsIso.cancel_right_isIso /-
-theorem RespectsIso.cancel_right_isIso {P : MorphismProperty C} (hP : RespectsIso P) {X Y Z : C}
-    (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] : P (f ≫ g) ↔ P f :=
+#print CategoryTheory.MorphismProperty.cancel_right_of_respectsIso /-
+theorem CategoryTheory.MorphismProperty.cancel_right_of_respectsIso {P : MorphismProperty C}
+    (hP : RespectsIso P) {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] : P (f ≫ g) ↔ P f :=
   ⟨fun h => by simpa using hP.2 (as_iso g).symm (f ≫ g) h, hP.2 (asIso g) f⟩
-#align category_theory.morphism_property.respects_iso.cancel_right_is_iso CategoryTheory.MorphismProperty.RespectsIso.cancel_right_isIso
+#align category_theory.morphism_property.respects_iso.cancel_right_is_iso CategoryTheory.MorphismProperty.cancel_right_of_respectsIso
 -/
 
-#print CategoryTheory.MorphismProperty.RespectsIso.arrow_iso_iff /-
-theorem RespectsIso.arrow_iso_iff {P : MorphismProperty C} (hP : RespectsIso P) {f g : Arrow C}
-    (e : f ≅ g) : P f.Hom ↔ P g.Hom := by
+#print CategoryTheory.MorphismProperty.arrow_iso_iff /-
+theorem CategoryTheory.MorphismProperty.arrow_iso_iff {P : MorphismProperty C} (hP : RespectsIso P)
+    {f g : Arrow C} (e : f ≅ g) : P f.Hom ↔ P g.Hom := by
   rw [← arrow.inv_left_hom_right e.hom, hP.cancel_left_is_iso, hP.cancel_right_is_iso]; rfl
-#align category_theory.morphism_property.respects_iso.arrow_iso_iff CategoryTheory.MorphismProperty.RespectsIso.arrow_iso_iff
+#align category_theory.morphism_property.respects_iso.arrow_iso_iff CategoryTheory.MorphismProperty.arrow_iso_iff
 -/
 
-#print CategoryTheory.MorphismProperty.RespectsIso.arrow_mk_iso_iff /-
-theorem RespectsIso.arrow_mk_iso_iff {P : MorphismProperty C} (hP : RespectsIso P) {W X Y Z : C}
-    {f : W ⟶ X} {g : Y ⟶ Z} (e : Arrow.mk f ≅ Arrow.mk g) : P f ↔ P g :=
+#print CategoryTheory.MorphismProperty.arrow_mk_iso_iff /-
+theorem CategoryTheory.MorphismProperty.arrow_mk_iso_iff {P : MorphismProperty C}
+    (hP : RespectsIso P) {W X Y Z : C} {f : W ⟶ X} {g : Y ⟶ Z} (e : Arrow.mk f ≅ Arrow.mk g) :
+    P f ↔ P g :=
   hP.arrow_iso_iff e
-#align category_theory.morphism_property.respects_iso.arrow_mk_iso_iff CategoryTheory.MorphismProperty.RespectsIso.arrow_mk_iso_iff
+#align category_theory.morphism_property.respects_iso.arrow_mk_iso_iff CategoryTheory.MorphismProperty.arrow_mk_iso_iff
 -/
 
 #print CategoryTheory.MorphismProperty.RespectsIso.of_respects_arrow_iso /-
@@ -263,7 +264,7 @@ theorem StableUnderBaseChange.snd {P : MorphismProperty C} (hP : StableUnderBase
 #print CategoryTheory.MorphismProperty.StableUnderBaseChange.baseChange_obj /-
 theorem StableUnderBaseChange.baseChange_obj [HasPullbacks C] {P : MorphismProperty C}
     (hP : StableUnderBaseChange P) {S S' : C} (f : S' ⟶ S) (X : Over S) (H : P X.Hom) :
-    P ((baseChange f).obj X).Hom :=
+    P ((pullback f).obj X).Hom :=
   hP.snd X.Hom f H
 #align category_theory.morphism_property.stable_under_base_change.base_change_obj CategoryTheory.MorphismProperty.StableUnderBaseChange.baseChange_obj
 -/
@@ -271,7 +272,7 @@ theorem StableUnderBaseChange.baseChange_obj [HasPullbacks C] {P : MorphismPrope
 #print CategoryTheory.MorphismProperty.StableUnderBaseChange.baseChange_map /-
 theorem StableUnderBaseChange.baseChange_map [HasPullbacks C] {P : MorphismProperty C}
     (hP : StableUnderBaseChange P) {S S' : C} (f : S' ⟶ S) {X Y : Over S} (g : X ⟶ Y)
-    (H : P g.left) : P ((baseChange f).map g).left :=
+    (H : P g.left) : P ((pullback f).map g).left :=
   by
   let e :=
     pullback_right_pullback_fst_iso Y.hom f g.left ≪≫

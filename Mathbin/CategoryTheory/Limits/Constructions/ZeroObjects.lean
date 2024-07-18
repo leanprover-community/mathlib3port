@@ -3,7 +3,7 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.Pullback.Cospan
 import CategoryTheory.Limits.Shapes.ZeroMorphisms
 import CategoryTheory.Limits.Constructions.BinaryProducts
 

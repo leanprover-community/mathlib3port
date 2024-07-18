@@ -369,10 +369,10 @@ def Gamma (s : ℂ) : ℂ :=
 #print Complex.Gamma_eq_GammaAux /-
 theorem Gamma_eq_GammaAux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : Gamma s = GammaAux n s :=
   by
-  have u : ∀ k : ℕ, Gamma_aux (⌊1 - s.re⌋₊ + k) s = Gamma s :=
+  have u : ∀ k : ℕ, Gamma_aux (⌊1 - s.re⌋₊ + k) s = CongruenceSubgroup.Gamma s :=
     by
     intro k; induction' k with k hk
-    · simp [Gamma]
+    · simp [CongruenceSubgroup.Gamma]
     · rw [← hk, Nat.succ_eq_add_one, ← add_assoc]
       refine' (Gamma_aux_recurrence2 s (⌊1 - s.re⌋₊ + k) _).symm
       rw [Nat.cast_add]
@@ -424,7 +424,7 @@ theorem Gamma_nat_eq_factorial (n : ℕ) : Gamma (n + 1) = n ! :=
 #print Complex.Gamma_zero /-
 /-- At `0` the Gamma function is undefined; by convention we assign it the value `0`. -/
 theorem Gamma_zero : Gamma 0 = 0 := by
-  simp_rw [Gamma, zero_re, sub_zero, Nat.floor_one, Gamma_aux, div_zero]
+  simp_rw [CongruenceSubgroup.Gamma, zero_re, sub_zero, Nat.floor_one, Gamma_aux, div_zero]
 #align complex.Gamma_zero Complex.Gamma_zero
 -/
 
@@ -541,7 +541,8 @@ end GammaHasDeriv
 /-- At `s = 0`, the Gamma function has a simple pole with residue 1. -/
 theorem tendsto_self_mul_Gamma_nhds_zero : Tendsto (fun z : ℂ => z * Gamma z) (𝓝[≠] 0) (𝓝 1) :=
   by
-  rw [show 𝓝 (1 : ℂ) = 𝓝 (Gamma (0 + 1)) by simp only [zero_add, Complex.Gamma_one]]
+  rw [show 𝓝 (1 : ℂ) = 𝓝 (CongruenceSubgroup.Gamma (0 + 1)) by
+      simp only [zero_add, Complex.Gamma_one]]
   convert
     (tendsto.mono_left _ nhdsWithin_le_nhds).congr'
       (eventually_eq_of_mem self_mem_nhdsWithin Complex.Gamma_add_one)
@@ -568,7 +569,8 @@ def Gamma (s : ℝ) : ℝ :=
 #print Real.Gamma_eq_integral /-
 theorem Gamma_eq_integral {s : ℝ} (hs : 0 < s) : Gamma s = ∫ x in Ioi 0, exp (-x) * x ^ (s - 1) :=
   by
-  rw [Gamma, Complex.Gamma_eq_integral (by rwa [Complex.ofReal_re] : 0 < Complex.re s)]
+  rw [CongruenceSubgroup.Gamma,
+    Complex.Gamma_eq_integral (by rwa [Complex.ofReal_re] : 0 < Complex.re s)]
   dsimp only [Complex.GammaIntegral]
   simp_rw [← Complex.ofReal_one, ← Complex.ofReal_sub]
   suffices
@@ -585,7 +587,7 @@ theorem Gamma_eq_integral {s : ℝ} (hs : 0 < s) : Gamma s = ∫ x in Ioi 0, exp
 #print Real.Gamma_add_one /-
 theorem Gamma_add_one {s : ℝ} (hs : s ≠ 0) : Gamma (s + 1) = s * Gamma s :=
   by
-  simp_rw [Gamma]
+  simp_rw [CongruenceSubgroup.Gamma]
   rw [Complex.ofReal_add, Complex.ofReal_one, Complex.Gamma_add_one, Complex.re_ofReal_mul]
   rwa [Complex.ofReal_ne_zero]
 #align real.Gamma_add_one Real.Gamma_add_one
@@ -593,19 +595,20 @@ theorem Gamma_add_one {s : ℝ} (hs : s ≠ 0) : Gamma (s + 1) = s * Gamma s :=
 
 #print Real.Gamma_one /-
 theorem Gamma_one : Gamma 1 = 1 := by
-  rw [Gamma, Complex.ofReal_one, Complex.Gamma_one, Complex.one_re]
+  rw [CongruenceSubgroup.Gamma, Complex.ofReal_one, Complex.Gamma_one, Complex.one_re]
 #align real.Gamma_one Real.Gamma_one
 -/
 
 #print Complex.Gamma_ofReal /-
 theorem Complex.Gamma_ofReal (s : ℝ) : Complex.Gamma (s : ℂ) = Gamma s := by
-  rw [Gamma, eq_comm, ← Complex.conj_eq_iff_re, ← Complex.Gamma_conj, Complex.conj_ofReal]
+  rw [CongruenceSubgroup.Gamma, eq_comm, ← Complex.conj_eq_iff_re, ← Complex.Gamma_conj,
+    Complex.conj_ofReal]
 #align complex.Gamma_of_real Complex.Gamma_ofReal
 -/
 
 #print Real.Gamma_nat_eq_factorial /-
 theorem Gamma_nat_eq_factorial (n : ℕ) : Gamma (n + 1) = n ! := by
-  rw [Gamma, Complex.ofReal_add, Complex.ofReal_natCast, Complex.ofReal_one,
+  rw [CongruenceSubgroup.Gamma, Complex.ofReal_add, Complex.ofReal_natCast, Complex.ofReal_one,
     Complex.Gamma_nat_eq_factorial, ← Complex.ofReal_natCast, Complex.ofReal_re]
 #align real.Gamma_nat_eq_factorial Real.Gamma_nat_eq_factorial
 -/
@@ -651,7 +654,7 @@ theorem Gamma_pos_of_pos {s : ℝ} (hs : 0 < s) : 0 < Gamma s :=
 is mathematically undefined and we set it to `0` by convention). -/
 theorem Gamma_ne_zero {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : Gamma s ≠ 0 :=
   by
-  suffices ∀ {n : ℕ}, -(n : ℝ) < s → Gamma s ≠ 0
+  suffices ∀ {n : ℕ}, -(n : ℝ) < s → CongruenceSubgroup.Gamma s ≠ 0
     by
     apply this
     swap; use⌊-s⌋₊ + 1
@@ -663,7 +666,8 @@ theorem Gamma_ne_zero {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : Gamma s ≠ 0 :=
     refine' (Gamma_pos_of_pos _).ne'
     rwa [Nat.cast_zero, neg_zero] at hs
   · intro hs'
-    have : Gamma (s + 1) ≠ 0 := by
+    have : CongruenceSubgroup.Gamma (s + 1) ≠ 0 :=
+      by
       apply n_ih
       · intro m
         specialize hs (1 + m)

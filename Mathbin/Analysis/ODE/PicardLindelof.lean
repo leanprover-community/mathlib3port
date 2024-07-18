@@ -439,7 +439,7 @@ theorem exists_contracting_iterate :
         (gt_mem_nhds zero_lt_one)).exists with
     ⟨N, hN⟩
   have : (0 : ℝ) ≤ (v.L * v.t_dist) ^ N / N ! :=
-    div_nonneg (pow_nonneg (mul_nonneg v.L.2 v.t_dist_nonneg) _) (Nat.cast_nonneg _)
+    div_nonneg (Nonneg.pow_nonneg (mul_nonneg v.L.2 v.t_dist_nonneg) _) (Nat.cast_nonneg _)
   exact
     ⟨N, ⟨_, this⟩, hN, LipschitzWith.of_dist_le_mul fun f g => fun_space.dist_iterate_next_le f g N⟩
 #align picard_lindelof.exists_contracting_iterate PicardLindelof.exists_contracting_iterate

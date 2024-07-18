@@ -41,7 +41,7 @@ namespace CliffordAlgebra
 
 variable {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
 
-variable (Q : QuadraticForm R M)
+variable (Q : QuadraticMap R M)
 
 /-! ### Constructions needed for `clifford_algebra.equiv_even` -/
 
@@ -51,8 +51,8 @@ namespace EquivEven
 #print CliffordAlgebra.EquivEven.Q' /-
 /-- The quadratic form on the augmented vector space `M × R` sending `v + r•e0` to `Q v - r^2`. -/
 @[reducible]
-def Q' : QuadraticForm R (M × R) :=
-  Q.Prod <| -@QuadraticForm.sq R _
+def Q' : QuadraticMap R (M × R) :=
+  Q.Prod <| -@QuadraticMap.sq R _
 #align clifford_algebra.equiv_even.Q' CliffordAlgebra.EquivEven.Q'
 -/
 
@@ -99,8 +99,8 @@ theorem v_sq_scalar (m : M) : v Q m * v Q m = algebraMap _ _ (Q m) :=
 theorem neg_e0_mul_v (m : M) : -(e0 Q * v Q m) = v Q m * e0 Q :=
   by
   refine' neg_eq_of_add_eq_zero_right ((ι_mul_ι_add_swap _ _).trans _)
-  dsimp [QuadraticForm.polar]
-  simp only [add_zero, MulZeroClass.mul_zero, mul_one, zero_add, neg_zero, QuadraticForm.map_zero,
+  dsimp [QuadraticMap.polar]
+  simp only [add_zero, MulZeroClass.mul_zero, mul_one, zero_add, neg_zero, QuadraticMap.map_zero,
     add_sub_cancel_right, sub_self, map_zero, zero_sub]
 #align clifford_algebra.equiv_even.neg_e0_mul_v CliffordAlgebra.EquivEven.neg_e0_mul_v
 -/
@@ -303,29 +303,29 @@ theorem coe_toEven_reverse_involute (x : CliffordAlgebra Q) :
 
 #print CliffordAlgebra.evenToNeg /-
 /-- One direction of `clifford_algebra.even_equiv_even_neg` -/
-def evenToNeg (Q' : QuadraticForm R M) (h : Q' = -Q) :
+def evenToNeg (Q' : QuadraticMap R M) (h : Q' = -Q) :
     CliffordAlgebra.even Q →ₐ[R] CliffordAlgebra.even Q' :=
   even.lift Q
     { bilin := -(even.ι Q' : _).bilin
       contract := fun m => by
-        simp_rw [LinearMap.neg_apply, even_hom.contract, h, QuadraticForm.neg_apply, map_neg,
+        simp_rw [LinearMap.neg_apply, even_hom.contract, h, QuadraticMap.neg_apply, map_neg,
           neg_neg]
       contract_mid := fun m₁ m₂ m₃ => by
-        simp_rw [LinearMap.neg_apply, neg_mul_neg, even_hom.contract_mid, h,
-          QuadraticForm.neg_apply, smul_neg, neg_smul] }
+        simp_rw [LinearMap.neg_apply, neg_mul_neg, even_hom.contract_mid, h, QuadraticMap.neg_apply,
+          smul_neg, neg_smul] }
 #align clifford_algebra.even_to_neg CliffordAlgebra.evenToNeg
 -/
 
 #print CliffordAlgebra.evenToNeg_ι /-
 @[simp]
-theorem evenToNeg_ι (Q' : QuadraticForm R M) (h : Q' = -Q) (m₁ m₂ : M) :
+theorem evenToNeg_ι (Q' : QuadraticMap R M) (h : Q' = -Q) (m₁ m₂ : M) :
     evenToNeg Q Q' h ((even.ι Q).bilin m₁ m₂) = -(even.ι Q').bilin m₁ m₂ :=
   even.lift_ι _ _ m₁ m₂
 #align clifford_algebra.even_to_neg_ι CliffordAlgebra.evenToNeg_ι
 -/
 
 #print CliffordAlgebra.evenToNeg_comp_evenToNeg /-
-theorem evenToNeg_comp_evenToNeg (Q' : QuadraticForm R M) (h : Q' = -Q) (h' : Q = -Q') :
+theorem evenToNeg_comp_evenToNeg (Q' : QuadraticMap R M) (h : Q' = -Q) (h' : Q = -Q') :
     (evenToNeg Q' Q h').comp (evenToNeg Q Q' h) = AlgHom.id R _ :=
   by
   ext m₁ m₂ : 4

@@ -461,10 +461,10 @@ theorem geom_sum_Ico_le_of_lt_one [LinearOrderedField α] {x : α} (hx : 0 ≤ x
   by
   rcases le_or_lt m n with (hmn | hmn)
   · rw [geom_sum_Ico' h'x.ne hmn]
-    apply div_le_div (pow_nonneg hx _) _ (sub_pos.2 h'x) le_rfl
-    simpa using pow_nonneg hx _
+    apply div_le_div (Nonneg.pow_nonneg hx _) _ (sub_pos.2 h'x) le_rfl
+    simpa using Nonneg.pow_nonneg hx _
   · rw [Ico_eq_empty, sum_empty]
-    · apply div_nonneg (pow_nonneg hx _)
+    · apply div_nonneg (Nonneg.pow_nonneg hx _)
       simpa using h'x.le
     · simpa using hmn.le
 #align geom_sum_Ico_le_of_lt_one geom_sum_Ico_le_of_lt_one
@@ -566,7 +566,7 @@ variable {n : ℕ} {x : α}
 #print geom_sum_pos /-
 theorem geom_sum_pos [StrictOrderedSemiring α] (hx : 0 ≤ x) (hn : n ≠ 0) :
     0 < ∑ i in range n, x ^ i :=
-  sum_pos' (fun k hk => pow_nonneg hx _) ⟨0, mem_range.2 hn.bot_lt, by simp⟩
+  sum_pos' (fun k hk => Nonneg.pow_nonneg hx _) ⟨0, mem_range.2 hn.bot_lt, by simp⟩
 #align geom_sum_pos geom_sum_pos
 -/
 

@@ -82,8 +82,8 @@ theorem bernstein_nonneg {n ν : ℕ} {x : I} : 0 ≤ bernstein n ν x :=
   by
   simp only [bernstein_apply]
   exact
-    mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (by unit_interval) _))
-      (pow_nonneg (by unit_interval) _)
+    mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (Nonneg.pow_nonneg (by unit_interval) _))
+      (Nonneg.pow_nonneg (by unit_interval) _)
 #align bernstein_nonneg bernstein_nonneg
 -/
 

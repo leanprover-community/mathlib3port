@@ -3,7 +3,7 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 -/
-import Algebra.Associated
+import Algebra.Associated.Basic
 import Algebra.BigOperators.Finsupp
 
 #align_import algebra.big_operators.associated from "leanprover-community/mathlib"@"e46da4e335b8671848ac711ccb34b42538c0d800"

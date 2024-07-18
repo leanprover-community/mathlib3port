@@ -36,7 +36,7 @@ end
 
 /-- Like `list.mmap` but for a vector. -/
 def Fin.mmap {α} {n : ℕ} {m : Type _ → Type _} [Monad m] (f : Fin n → m α) : m (Fin n → α) :=
-  Vector.get <$> Vector.mmap f ⟨List.finRange n, List.length_finRange _⟩
+  Mathlib.Vector.get <$> Mathlib.Vector.mmap f ⟨List.finRange n, List.length_finRange _⟩
 #align fin.mmap Fin.mmap
 
 namespace Matrix

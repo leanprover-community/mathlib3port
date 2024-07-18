@@ -22,7 +22,7 @@ and is used by category theory files which do not need everything imported by `d
 universe u v
 
 #print smallVector /-
-instance smallVector {α : Type v} {n : ℕ} [Small.{u} α] : Small.{u} (Vector α n) :=
+instance smallVector {α : Type v} {n : ℕ} [Small.{u} α] : Small.{u} (Mathlib.Vector α n) :=
   small_of_injective (Equiv.vectorEquivFin α n).Injective
 #align small_vector smallVector
 -/
@@ -30,7 +30,7 @@ instance smallVector {α : Type v} {n : ℕ} [Small.{u} α] : Small.{u} (Vector 
 #print smallList /-
 instance smallList {α : Type v} [Small.{u} α] : Small.{u} (List α) :=
   by
-  let e : (Σ n, Vector α n) ≃ List α := Equiv.sigmaFiberEquiv List.length
+  let e : (Σ n, Mathlib.Vector α n) ≃ List α := Equiv.sigmaFiberEquiv List.length
   exact small_of_surjective e.surjective
 #align small_list smallList
 -/

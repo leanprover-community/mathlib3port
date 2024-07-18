@@ -8,7 +8,7 @@ import Algebra.Order.AbsoluteValue
 import Algebra.Order.Group.MinMax
 import Algebra.Order.Field.Basic
 import Algebra.Ring.Pi
-import GroupTheory.GroupAction.Pi
+import Algebra.Group.Action.Pi
 
 #align_import data.real.cau_seq from "leanprover-community/mathlib"@"be24ec5de6701447e5df5ca75400ffee19d65659"
 

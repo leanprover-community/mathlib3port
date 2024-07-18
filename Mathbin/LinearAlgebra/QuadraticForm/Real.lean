@@ -25,7 +25,7 @@ as in `equivalent_one_zero_neg_one_weighted_sum_squared`.
 -/
 
 
-namespace QuadraticForm
+namespace QuadraticMap
 
 open scoped BigOperators
 
@@ -85,7 +85,7 @@ noncomputable def isometryEquivSignWeightedSumSquares [DecidableEq ι] (w : ι �
 /-- **Sylvester's law of inertia**: A nondegenerate real quadratic form is equivalent to a weighted
 sum of squares with the weights being ±1. -/
 theorem equivalent_one_neg_one_weighted_sum_squared {M : Type _} [AddCommGroup M] [Module ℝ M]
-    [FiniteDimensional ℝ M] (Q : QuadraticForm ℝ M) (hQ : (associated Q).Nondegenerate) :
+    [FiniteDimensional ℝ M] (Q : QuadraticMap ℝ M) (hQ : (associated Q).Nondegenerate) :
     ∃ w : Fin (FiniteDimensional.finrank ℝ M) → ℝ,
       (∀ i, w i = -1 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weightedSumSquares_units_of_nondegenerate' hQ
@@ -98,7 +98,7 @@ theorem equivalent_one_neg_one_weighted_sum_squared {M : Type _} [AddCommGroup M
 /-- **Sylvester's law of inertia**: A real quadratic form is equivalent to a weighted
 sum of squares with the weights being ±1 or 0. -/
 theorem equivalent_one_zero_neg_one_weighted_sum_squared {M : Type _} [AddCommGroup M] [Module ℝ M]
-    [FiniteDimensional ℝ M] (Q : QuadraticForm ℝ M) :
+    [FiniteDimensional ℝ M] (Q : QuadraticMap ℝ M) :
     ∃ w : Fin (FiniteDimensional.finrank ℝ M) → ℝ,
       (∀ i, w i = -1 ∨ w i = 0 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weightedSumSquares
@@ -107,5 +107,5 @@ theorem equivalent_one_zero_neg_one_weighted_sum_squared {M : Type _} [AddCommGr
 #align quadratic_form.equivalent_one_zero_neg_one_weighted_sum_squared QuadraticForm.equivalent_one_zero_neg_one_weighted_sum_squared
 -/
 
-end QuadraticForm
+end QuadraticMap
 

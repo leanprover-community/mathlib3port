@@ -479,37 +479,37 @@ theorem list_length : Computable (@List.length α) :=
 -/
 
 #print Computable.vector_cons /-
-theorem vector_cons {n} : Computable₂ (@Vector.cons α n) :=
+theorem vector_cons {n} : Computable₂ (@Mathlib.Vector.cons α n) :=
   Primrec.vector_cons.to_comp
 #align computable.vector_cons Computable.vector_cons
 -/
 
 #print Computable.vector_toList /-
-theorem vector_toList {n} : Computable (@Vector.toList α n) :=
+theorem vector_toList {n} : Computable (@Mathlib.Vector.toList α n) :=
   Primrec.vector_toList.to_comp
 #align computable.vector_to_list Computable.vector_toList
 -/
 
 #print Computable.vector_length /-
-theorem vector_length {n} : Computable (@Vector.length α n) :=
+theorem vector_length {n} : Computable (@Mathlib.Vector.length α n) :=
   Primrec.vector_length.to_comp
 #align computable.vector_length Computable.vector_length
 -/
 
 #print Computable.vector_head /-
-theorem vector_head {n} : Computable (@Vector.head α n) :=
+theorem vector_head {n} : Computable (@Mathlib.Vector.head α n) :=
   Primrec.vector_head.to_comp
 #align computable.vector_head Computable.vector_head
 -/
 
 #print Computable.vector_tail /-
-theorem vector_tail {n} : Computable (@Vector.tail α n) :=
+theorem vector_tail {n} : Computable (@Mathlib.Vector.tail α n) :=
   Primrec.vector_tail.to_comp
 #align computable.vector_tail Computable.vector_tail
 -/
 
 #print Computable.vector_get /-
-theorem vector_get {n} : Computable₂ (@Vector.get α n) :=
+theorem vector_get {n} : Computable₂ (@Mathlib.Vector.get α n) :=
   Primrec.vector_get.to_comp
 #align computable.vector_nth Computable.vector_get
 -/
@@ -517,13 +517,13 @@ theorem vector_get {n} : Computable₂ (@Vector.get α n) :=
 /- warning: computable.vector_nth' clashes with computable.vector_nth -> Computable.vector_get
 Case conversion may be inaccurate. Consider using '#align computable.vector_nth' Computable.vector_getₓ'. -/
 #print Computable.vector_get /-
-theorem vector_get {n} : Computable (@Vector.get α n) :=
+theorem vector_get {n} : Computable (@Mathlib.Vector.get α n) :=
   Primrec.vector_get'.to_comp
 #align computable.vector_nth' Computable.vector_get
 -/
 
 #print Computable.vector_ofFn' /-
-theorem vector_ofFn' {n} : Computable (@Vector.ofFn α n) :=
+theorem vector_ofFn' {n} : Computable (@Mathlib.Vector.ofFn α n) :=
   Primrec.vector_ofFn'.to_comp
 #align computable.vector_of_fn' Computable.vector_ofFn'
 -/
@@ -799,10 +799,10 @@ theorem bind_decode₂_iff {f : α →. σ} :
 #print Partrec.vector_mOfFn /-
 theorem vector_mOfFn :
     ∀ {n} {f : Fin n → α →. σ},
-      (∀ i, Partrec (f i)) → Partrec fun a : α => Vector.mOfFn fun i => f i a
+      (∀ i, Partrec (f i)) → Partrec fun a : α => Mathlib.Vector.mOfFn fun i => f i a
   | 0, f, hf => const _
   | n + 1, f, hf => by
-    simp [Vector.mOfFn] <;>
+    simp [Mathlib.Vector.mOfFn] <;>
       exact
         (hf 0).bind
           (Partrec.bind ((vector_m_of_fn fun i => hf i.succ).comp fst)
@@ -815,8 +815,9 @@ end Partrec
 #print Vector.mOfFn_part_some /-
 @[simp]
 theorem Vector.mOfFn_part_some {α n} :
-    ∀ f : Fin n → α, (Vector.mOfFn fun i => Part.some (f i)) = Part.some (Vector.ofFn f) :=
-  Vector.mOfFn_pure
+    ∀ f : Fin n → α,
+      (Mathlib.Vector.mOfFn fun i => Part.some (f i)) = Part.some (Mathlib.Vector.ofFn f) :=
+  Mathlib.Vector.mOfFn_pure
 #align vector.m_of_fn_part_some Vector.mOfFn_part_some
 -/
 
@@ -967,7 +968,7 @@ theorem list_ofFn :
 
 #print Computable.vector_ofFn /-
 theorem vector_ofFn {n} {f : Fin n → α → σ} (hf : ∀ i, Computable (f i)) :
-    Computable fun a => Vector.ofFn fun i => f i a :=
+    Computable fun a => Mathlib.Vector.ofFn fun i => f i a :=
   (Partrec.vector_mOfFn hf).of_eq fun a => by simp
 #align computable.vector_of_fn Computable.vector_ofFn
 -/

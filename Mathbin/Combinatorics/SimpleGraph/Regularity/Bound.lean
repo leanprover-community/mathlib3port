@@ -152,7 +152,8 @@ theorem one_le_m_coe [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ 
 
 #print SzemerediRegularity.eps_pow_five_pos /-
 theorem eps_pow_five_pos (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 0 < ε ^ 5 :=
-  pos_of_mul_pos_right ((by norm_num : (0 : ℝ) < 100).trans_le hPε) <| pow_nonneg (by norm_num) _
+  pos_of_mul_pos_right ((by norm_num : (0 : ℝ) < 100).trans_le hPε) <|
+    Nonneg.pow_nonneg (by norm_num) _
 #align szemeredi_regularity.eps_pow_five_pos SzemerediRegularity.eps_pow_five_pos
 -/
 

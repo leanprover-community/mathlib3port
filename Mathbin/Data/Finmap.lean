@@ -209,11 +209,11 @@ theorem ext : ∀ {s t : Finmap β}, s.entries = t.entries → s = t
 #align finmap.ext Finmap.ext
 -/
 
-#print Finmap.ext_iff /-
+#print Finmap.ext_iff' /-
 @[simp]
-theorem ext_iff {s t : Finmap β} : s.entries = t.entries ↔ s = t :=
+theorem ext_iff' {s t : Finmap β} : s.entries = t.entries ↔ s = t :=
   ⟨ext, congr_arg _⟩
-#align finmap.ext_iff Finmap.ext_iff
+#align finmap.ext_iff Finmap.ext_iff'
 -/
 
 /-! ### mem -/
@@ -333,7 +333,7 @@ variable [DecidableEq α]
 
 #print Finmap.decidableEq /-
 instance decidableEq [∀ a, DecidableEq (β a)] : DecidableEq (Finmap β)
-  | s₁, s₂ => decidable_of_iff _ ext_iff
+  | s₁, s₂ => decidable_of_iff _ ext_iff'
 #align finmap.has_decidable_eq Finmap.decidableEq
 -/
 

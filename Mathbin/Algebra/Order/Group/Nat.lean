@@ -878,17 +878,13 @@ end FindGreatest
 /-! ### `bit0` and `bit1` -/
 
 
-#print Nat.bit0_le /-
 protected theorem bit0_le {n m : ℕ} (h : n ≤ m) : bit0 n ≤ bit0 m :=
   add_le_add h h
 #align nat.bit0_le Nat.bit0_le
--/
 
-#print Nat.bit1_le /-
 protected theorem bit1_le {n m : ℕ} (h : n ≤ m) : bit1 n ≤ bit1 m :=
   succ_le_succ (add_le_add h h)
 #align nat.bit1_le Nat.bit1_le
--/
 
 #print Nat.bit_le /-
 theorem bit_le : ∀ (b : Bool) {m n : ℕ}, m ≤ n → bit b m ≤ bit b n
@@ -897,26 +893,20 @@ theorem bit_le : ∀ (b : Bool) {m n : ℕ}, m ≤ n → bit b m ≤ bit b n
 #align nat.bit_le Nat.bit_le
 -/
 
-#print Nat.bit0_le_bit /-
 theorem bit0_le_bit : ∀ (b) {m n : ℕ}, m ≤ n → bit0 m ≤ bit b n
   | tt, _, _, h => le_of_lt <| Nat.bit0_lt_bit1 h
   | ff, _, _, h => Nat.bit0_le h
 #align nat.bit0_le_bit Nat.bit0_le_bit
--/
 
-#print Nat.bit_le_bit1 /-
 theorem bit_le_bit1 : ∀ (b) {m n : ℕ}, m ≤ n → bit b m ≤ bit1 n
   | ff, _, _, h => le_of_lt <| Nat.bit0_lt_bit1 h
   | tt, _, _, h => Nat.bit1_le h
 #align nat.bit_le_bit1 Nat.bit_le_bit1
--/
 
-#print Nat.bit_lt_bit0 /-
 theorem bit_lt_bit0 : ∀ (b) {m n : ℕ}, m < n → bit b m < bit0 n
   | tt, _, _, h => Nat.bit1_lt_bit0 h
   | ff, _, _, h => Nat.bit0_lt h
 #align nat.bit_lt_bit0 Nat.bit_lt_bit0
--/
 
 #print Nat.bit_lt_bit /-
 theorem bit_lt_bit (a b) (h : m < n) : bit a m < bit b n :=
@@ -924,7 +914,6 @@ theorem bit_lt_bit (a b) (h : m < n) : bit a m < bit b n :=
 #align nat.bit_lt_bit Nat.bit_lt_bit
 -/
 
-#print Nat.bit0_le_bit1_iff /-
 @[simp]
 theorem bit0_le_bit1_iff : bit0 m ≤ bit1 n ↔ m ≤ n :=
   ⟨fun h => by
@@ -932,29 +921,22 @@ theorem bit0_le_bit1_iff : bit0 m ≤ bit1 n ↔ m ≤ n :=
       h,
     fun h => le_of_lt (Nat.bit0_lt_bit1 h)⟩
 #align nat.bit0_le_bit1_iff Nat.bit0_le_bit1_iff
--/
 
-#print Nat.bit0_lt_bit1_iff /-
 @[simp]
 theorem bit0_lt_bit1_iff : bit0 m < bit1 n ↔ m ≤ n :=
   ⟨fun h => bit0_le_bit1_iff.1 (le_of_lt h), Nat.bit0_lt_bit1⟩
 #align nat.bit0_lt_bit1_iff Nat.bit0_lt_bit1_iff
--/
 
-#print Nat.bit1_le_bit0_iff /-
 @[simp]
 theorem bit1_le_bit0_iff : bit1 m ≤ bit0 n ↔ m < n :=
   ⟨fun h => by rwa [m.bit1_eq_succ_bit0, succ_le_iff, bit0_lt_bit0] at h, fun h =>
     le_of_lt (Nat.bit1_lt_bit0 h)⟩
 #align nat.bit1_le_bit0_iff Nat.bit1_le_bit0_iff
--/
 
-#print Nat.bit1_lt_bit0_iff /-
 @[simp]
 theorem bit1_lt_bit0_iff : bit1 m < bit0 n ↔ m < n :=
   ⟨fun h => bit1_le_bit0_iff.1 (le_of_lt h), Nat.bit1_lt_bit0⟩
 #align nat.bit1_lt_bit0_iff Nat.bit1_lt_bit0_iff
--/
 
 @[simp]
 theorem one_le_bit0_iff : 1 ≤ bit0 n ↔ 0 < n := by convert bit1_le_bit0_iff; rfl

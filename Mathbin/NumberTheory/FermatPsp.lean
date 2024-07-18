@@ -3,7 +3,7 @@ Copyright (c) 2022 Niels Voss. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Niels Voss
 -/
-import Data.Nat.Prime
+import Data.Nat.Prime.Defs
 import FieldTheory.Finite.Basic
 import Order.Filter.Cofinite
 

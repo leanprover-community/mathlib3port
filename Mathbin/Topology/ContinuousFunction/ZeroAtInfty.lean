@@ -663,7 +663,7 @@ end StarRing
 section CstarRing
 
 instance [NonUnitalNormedRing β] [StarRing β] [CstarRing β] : CstarRing C₀(α, β)
-    where norm_star_hMul_self f := @CstarRing.norm_star_hMul_self _ _ _ _ f.toBCF
+    where norm_star_mul_self f := @CstarRing.norm_star_mul_self _ _ _ _ f.toBCF
 
 end CstarRing
 

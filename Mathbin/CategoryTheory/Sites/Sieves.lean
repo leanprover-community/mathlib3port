@@ -6,7 +6,7 @@ Authors: Bhavik Mehta, E. W. Ayers
 import Order.CompleteLattice
 import CategoryTheory.Comma.Over
 import CategoryTheory.Yoneda
-import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.Pullback.Cospan
 import Data.Set.Lattice
 
 #align_import category_theory.sites.sieves from "leanprover-community/mathlib"@"f47581155c818e6361af4e4fda60d27d020c226b"
@@ -452,20 +452,20 @@ def bind (S : Presieve X) (R : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, S f → Sieve Y) :
 
 open Order Lattice
 
-#print CategoryTheory.Sieve.sets_iff_generate /-
-theorem sets_iff_generate (R : Presieve X) (S : Sieve X) : generate R ≤ S ↔ R ≤ S :=
+#print CategoryTheory.Sieve.generate_le_iff /-
+theorem generate_le_iff (R : Presieve X) (S : Sieve X) : generate R ≤ S ↔ R ≤ S :=
   ⟨fun H Y g hg => H _ ⟨_, 𝟙 _, _, hg, id_comp _⟩, fun ss Y f =>
     by
     rintro ⟨Z, f, g, hg, rfl⟩
     exact S.downward_closed (ss Z hg) f⟩
-#align category_theory.sieve.sets_iff_generate CategoryTheory.Sieve.sets_iff_generate
+#align category_theory.sieve.sets_iff_generate CategoryTheory.Sieve.generate_le_iff
 -/
 
 #print CategoryTheory.Sieve.giGenerate /-
 /-- Show that there is a galois insertion (generate, set_over). -/
 def giGenerate : GaloisInsertion (generate : Presieve X → Sieve X) arrows
     where
-  gc := sets_iff_generate
+  gc := generate_le_iff
   choice 𝒢 _ := generate 𝒢
   choice_eq _ _ := rfl
   le_l_u S Y f hf := ⟨_, 𝟙 _, _, hf, id_comp _⟩

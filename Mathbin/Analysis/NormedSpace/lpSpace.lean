@@ -992,16 +992,16 @@ instance inftyStarRing : StarRing (lp B ∞) :=
 
 #print lp.inftyCstarRing /-
 instance inftyCstarRing [∀ i, CstarRing (B i)] : CstarRing (lp B ∞)
-    where norm_star_hMul_self f := by
+    where norm_star_mul_self f := by
     apply le_antisymm
     · rw [← sq]
       refine' lp.norm_le_of_forall_le (sq_nonneg ‖f‖) fun i => _
-      simp only [lp.star_apply, CstarRing.norm_star_hMul_self, ← sq, infty_coe_fn_mul, Pi.mul_apply]
+      simp only [lp.star_apply, CstarRing.norm_star_mul_self, ← sq, infty_coe_fn_mul, Pi.mul_apply]
       refine' sq_le_sq' _ (lp.norm_apply_le_norm ENNReal.top_ne_zero _ _)
       linarith [norm_nonneg (f i), norm_nonneg f]
     · rw [← sq, ← Real.le_sqrt (norm_nonneg _) (norm_nonneg _)]
       refine' lp.norm_le_of_forall_le ‖star f * f‖.sqrt_nonneg fun i => _
-      rw [Real.le_sqrt (norm_nonneg _) (norm_nonneg _), sq, ← CstarRing.norm_star_hMul_self]
+      rw [Real.le_sqrt (norm_nonneg _) (norm_nonneg _), sq, ← CstarRing.norm_star_mul_self]
       exact lp.norm_apply_le_norm ENNReal.top_ne_zero (star f * f) i
 #align lp.infty_cstar_ring lp.inftyCstarRing
 -/

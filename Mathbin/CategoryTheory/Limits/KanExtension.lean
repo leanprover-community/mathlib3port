@@ -52,16 +52,13 @@ namespace Ran
 
 attribute [local simp] structured_arrow.proj
 
-#print CategoryTheory.Ran.diagram /-
 /-- The diagram indexed by `Ran.index ι x` used to define `Ran`. -/
 abbrev diagram (F : S ⥤ D) (x : L) : StructuredArrow x ι ⥤ D :=
   StructuredArrow.proj x ι ⋙ F
 #align category_theory.Ran.diagram CategoryTheory.Ran.diagram
--/
 
 variable {ι}
 
-#print CategoryTheory.Ran.cone /-
 /-- A cone over `Ran.diagram ι F x` used to define `Ran`. -/
 @[simp]
 def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : Cone (diagram ι F x)
@@ -77,11 +74,9 @@ def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : Cone (diagra
         have := f.naturality
         tidy }
 #align category_theory.Ran.cone CategoryTheory.Ran.cone
--/
 
 variable (ι)
 
-#print CategoryTheory.Ran.loc /-
 /-- An auxiliary definition used to define `Ran`. -/
 @[simps]
 def loc (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] : L ⥤ D
@@ -101,9 +96,7 @@ def loc (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] : L ⥤ D
     congr 1
     tidy
 #align category_theory.Ran.loc CategoryTheory.Ran.loc
--/
 
-#print CategoryTheory.Ran.equiv /-
 /-- An auxiliary definition used to define `Ran` and `Ran.adjunction`. -/
 @[simps]
 def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
@@ -139,31 +132,25 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
     tidy
   right_inv := by tidy
 #align category_theory.Ran.equiv CategoryTheory.Ran.equiv
--/
 
 end Ran
 
-#print CategoryTheory.ran /-
 /-- The right Kan extension of a functor. -/
 @[simps]
 def ran [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (S ⥤ D) ⥤ L ⥤ D :=
   Adjunction.rightAdjointOfEquiv (fun F G => (Ran.equiv ι G F).symm) (by tidy)
 #align category_theory.Ran CategoryTheory.ran
--/
 
 namespace Ran
 
 variable (D)
 
-#print CategoryTheory.Ran.adjunction /-
 /-- The adjunction associated to `Ran`. -/
 def adjunction [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] :
     (whiskeringLeft _ _ D).obj ι ⊣ ran ι :=
   Adjunction.adjunctionOfEquivRight _ _
-#align category_theory.Ran.adjunction CategoryTheory.Ran.adjunction
--/
+#align category_theory.Ran.adjunction CategoryTheory.ran.adjunction
 
-#print CategoryTheory.Ran.reflective /-
 theorem reflective [CategoryTheory.Functor.Full ι] [CategoryTheory.Functor.Faithful ι]
     [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : IsIso (adjunction D ι).counit :=
   by
@@ -177,8 +164,7 @@ theorem reflective [CategoryTheory.Functor.Full ι] [CategoryTheory.Functor.Fait
     is_iso.of_iso
       ((limit.is_limit _).conePointUniqueUpToIso
         (limit_of_diagram_initial structured_arrow.mk_id_initial _))
-#align category_theory.Ran.reflective CategoryTheory.Ran.reflective
--/
+#align category_theory.Ran.reflective CategoryTheory.ran.reflective
 
 end Ran
 
@@ -186,16 +172,13 @@ namespace Lan
 
 attribute [local simp] costructured_arrow.proj
 
-#print CategoryTheory.Lan.diagram /-
 /-- The diagram indexed by `Ran.index ι x` used to define `Ran`. -/
 abbrev diagram (F : S ⥤ D) (x : L) : CostructuredArrow ι x ⥤ D :=
   CostructuredArrow.proj ι x ⋙ F
 #align category_theory.Lan.diagram CategoryTheory.Lan.diagram
--/
 
 variable {ι}
 
-#print CategoryTheory.Lan.cocone /-
 /-- A cocone over `Lan.diagram ι F x` used to define `Lan`. -/
 @[simp]
 def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : Cocone (diagram ι F x)
@@ -210,11 +193,9 @@ def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : Cocone (di
         rw [← G.map_comp, ff]
         tidy }
 #align category_theory.Lan.cocone CategoryTheory.Lan.cocone
--/
 
 variable (ι)
 
-#print CategoryTheory.Lan.loc /-
 /-- An auxiliary definition used to define `Lan`. -/
 @[simps]
 def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D
@@ -242,9 +223,7 @@ def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D
     congr 1
     simp
 #align category_theory.Lan.loc CategoryTheory.Lan.loc
--/
 
-#print CategoryTheory.Lan.equiv /-
 /-- An auxiliary definition used to define `Lan` and `Lan.adjunction`. -/
 @[simps]
 def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
@@ -292,31 +271,25 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     tidy
   right_inv := by tidy
 #align category_theory.Lan.equiv CategoryTheory.Lan.equiv
--/
 
 end Lan
 
-#print CategoryTheory.lan /-
 /-- The left Kan extension of a functor. -/
 @[simps]
 def lan [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : (S ⥤ D) ⥤ L ⥤ D :=
   Adjunction.leftAdjointOfEquiv (fun F G => Lan.equiv ι F G) (by tidy)
 #align category_theory.Lan CategoryTheory.lan
--/
 
 namespace Lan
 
 variable (D)
 
-#print CategoryTheory.Lan.adjunction /-
 /-- The adjunction associated to `Lan`. -/
 def adjunction [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] :
     lan ι ⊣ (whiskeringLeft _ _ D).obj ι :=
   Adjunction.adjunctionOfEquivLeft _ _
-#align category_theory.Lan.adjunction CategoryTheory.Lan.adjunction
--/
+#align category_theory.Lan.adjunction CategoryTheory.lan.adjunction
 
-#print CategoryTheory.Lan.coreflective /-
 theorem coreflective [CategoryTheory.Functor.Full ι] [CategoryTheory.Functor.Faithful ι]
     [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : IsIso (adjunction D ι).Unit :=
   by
@@ -330,8 +303,7 @@ theorem coreflective [CategoryTheory.Functor.Full ι] [CategoryTheory.Functor.Fa
     is_iso.of_iso
       ((colimit.is_colimit _).coconePointUniqueUpToIso
           (colimit_of_diagram_terminal costructured_arrow.mk_id_terminal _)).symm
-#align category_theory.Lan.coreflective CategoryTheory.Lan.coreflective
--/
+#align category_theory.Lan.coreflective CategoryTheory.lan.coreflective
 
 end Lan
 

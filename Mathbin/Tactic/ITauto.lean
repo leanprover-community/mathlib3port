@@ -946,8 +946,7 @@ unsafe def itauto (classical : parse (parser.optional (tk "!"))) :
   | some (some ls) => ls.mapM i_to_expr >>= Mathlib.Tactic.ITauto.itautoCore False classical.isSome
 #align tactic.interactive.itauto tactic.interactive.itauto
 
-add_hint_tactic itauto
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic itauto -/
 add_tactic_doc
   { Name := "itauto"
     category := DocCategory.tactic

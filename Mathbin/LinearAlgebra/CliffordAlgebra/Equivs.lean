@@ -76,13 +76,13 @@ variable {R : Type _} [CommRing R]
 
 #print CliffordAlgebraRing.ι_eq_zero /-
 @[simp]
-theorem ι_eq_zero : ι (0 : QuadraticForm R Unit) = 0 :=
+theorem ι_eq_zero : ι (0 : QuadraticMap R Unit) = 0 :=
   Subsingleton.elim _ _
 #align clifford_algebra_ring.ι_eq_zero CliffordAlgebraRing.ι_eq_zero
 -/
 
 /-- Since the vector space is empty the ring is commutative. -/
-instance : CommRing (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
+instance : CommRing (CliffordAlgebra (0 : QuadraticMap R Unit)) :=
   { CliffordAlgebra.instRing _ with
     mul_comm := fun x y => by
       induction x using CliffordAlgebra.induction
@@ -92,7 +92,7 @@ instance : CommRing (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
       case h_mul x₁ x₂ hx₁ hx₂ => rw [mul_assoc, hx₂, ← mul_assoc, hx₁, ← mul_assoc] }
 
 #print CliffordAlgebraRing.reverse_apply /-
-theorem reverse_apply (x : CliffordAlgebra (0 : QuadraticForm R Unit)) : x.reverse = x :=
+theorem reverse_apply (x : CliffordAlgebra (0 : QuadraticMap R Unit)) : x.reverse = x :=
   by
   induction x using CliffordAlgebra.induction
   case h_grade0 r => exact reverse.commutes _
@@ -105,7 +105,7 @@ theorem reverse_apply (x : CliffordAlgebra (0 : QuadraticForm R Unit)) : x.rever
 #print CliffordAlgebraRing.reverse_eq_id /-
 @[simp]
 theorem reverse_eq_id :
-    (reverse : CliffordAlgebra (0 : QuadraticForm R Unit) →ₗ[R] _) = LinearMap.id :=
+    (reverse : CliffordAlgebra (0 : QuadraticMap R Unit) →ₗ[R] _) = LinearMap.id :=
   LinearMap.ext reverse_apply
 #align clifford_algebra_ring.reverse_eq_id CliffordAlgebraRing.reverse_eq_id
 -/
@@ -113,15 +113,15 @@ theorem reverse_eq_id :
 #print CliffordAlgebraRing.involute_eq_id /-
 @[simp]
 theorem involute_eq_id :
-    (involute : CliffordAlgebra (0 : QuadraticForm R Unit) →ₐ[R] _) = AlgHom.id R _ := by ext; simp
+    (involute : CliffordAlgebra (0 : QuadraticMap R Unit) →ₐ[R] _) = AlgHom.id R _ := by ext; simp
 #align clifford_algebra_ring.involute_eq_id CliffordAlgebraRing.involute_eq_id
 -/
 
 #print CliffordAlgebraRing.equiv /-
 /-- The clifford algebra over a 0-dimensional vector space is isomorphic to its scalars. -/
-protected def equiv : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
+protected def equiv : CliffordAlgebra (0 : QuadraticMap R Unit) ≃ₐ[R] R :=
   AlgEquiv.ofAlgHom
-    (CliffordAlgebra.lift (0 : QuadraticForm R Unit) <|
+    (CliffordAlgebra.lift (0 : QuadraticMap R Unit) <|
       ⟨0, fun m : Unit => (MulZeroClass.zero_mul (0 : R)).trans (algebraMap R _).map_zero.symm⟩)
     (Algebra.ofId R _) (by ext x; exact AlgHom.commutes _ x)
     (by ext : 1; rw [ι_eq_zero, LinearMap.comp_zero, LinearMap.comp_zero])
@@ -139,8 +139,8 @@ open scoped ComplexConjugate
 
 #print CliffordAlgebraComplex.Q /-
 /-- The quadratic form sending elements to the negation of their square. -/
-def Q : QuadraticForm ℝ ℝ :=
-  -QuadraticForm.sq
+def Q : QuadraticMap ℝ ℝ :=
+  -QuadraticMap.sq
 #align clifford_algebra_complex.Q CliffordAlgebraComplex.Q
 -/
 
@@ -302,8 +302,8 @@ variable {R : Type _} [CommRing R] (c₁ c₂ : R)
 #print CliffordAlgebraQuaternion.Q /-
 /-- `Q c₁ c₂` is a quadratic form over `R × R` such that `clifford_algebra (Q c₁ c₂)` is isomorphic
 as an `R`-algebra to `ℍ[R,c₁,c₂]`. -/
-def Q : QuadraticForm R (R × R) :=
-  (c₁ • QuadraticForm.sq).Prod (c₂ • QuadraticForm.sq)
+def Q : QuadraticMap R (R × R) :=
+  (c₁ • QuadraticMap.sq).Prod (c₂ • QuadraticMap.sq)
 #align clifford_algebra_quaternion.Q CliffordAlgebraQuaternion.Q
 -/
 
@@ -330,7 +330,7 @@ def quaternionBasis : QuaternionAlgebra.Basis (CliffordAlgebra (Q c₁ c₂)) c�
     simp
   i_hMul_j := rfl
   j_hMul_i := by
-    rw [eq_neg_iff_add_eq_zero, ι_mul_ι_add_swap, QuadraticForm.polar]
+    rw [eq_neg_iff_add_eq_zero, ι_mul_ι_add_swap, QuadraticMap.polar]
     simp
 #align clifford_algebra_quaternion.quaternion_basis CliffordAlgebraQuaternion.quaternionBasis
 -/
@@ -473,9 +473,9 @@ open DualNumber TrivSqZeroExt
 variable {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
 
 #print CliffordAlgebraDualNumber.ι_mul_ι /-
-theorem ι_mul_ι (r₁ r₂) : ι (0 : QuadraticForm R R) r₁ * ι (0 : QuadraticForm R R) r₂ = 0 := by
+theorem ι_mul_ι (r₁ r₂) : ι (0 : QuadraticMap R R) r₁ * ι (0 : QuadraticMap R R) r₂ = 0 := by
   rw [← mul_one r₁, ← mul_one r₂, ← smul_eq_mul R, ← smul_eq_mul R, LinearMap.map_smul,
-    LinearMap.map_smul, smul_mul_smul, ι_sq_scalar, QuadraticForm.zero_apply, RingHom.map_zero,
+    LinearMap.map_smul, smul_mul_smul, ι_sq_scalar, QuadraticMap.zero_apply, RingHom.map_zero,
     smul_zero]
 #align clifford_algebra_dual_number.ι_mul_ι CliffordAlgebraDualNumber.ι_mul_ι
 -/
@@ -483,9 +483,9 @@ theorem ι_mul_ι (r₁ r₂) : ι (0 : QuadraticForm R R) r₁ * ι (0 : Quadra
 #print CliffordAlgebraDualNumber.equiv /-
 /-- The clifford algebra over a 1-dimensional vector space with 0 quadratic form is isomorphic to
 the dual numbers. -/
-protected def equiv : CliffordAlgebra (0 : QuadraticForm R R) ≃ₐ[R] R[ε] :=
+protected def equiv : CliffordAlgebra (0 : QuadraticMap R R) ≃ₐ[R] R[ε] :=
   AlgEquiv.ofAlgHom
-    (CliffordAlgebra.lift (0 : QuadraticForm R R) ⟨inrHom R _, fun m => inr_mul_inr _ m m⟩)
+    (CliffordAlgebra.lift (0 : QuadraticMap R R) ⟨inrHom R _, fun m => inr_mul_inr _ m m⟩)
     (DualNumber.lift ⟨ι _ (1 : R), ι_mul_ι (1 : R) 1⟩)
     (by ext x : 1; dsimp; rw [lift_apply_eps, Subtype.coe_mk, lift_ι_apply, inr_hom_apply, eps])
     (by ext : 2; dsimp; rw [lift_ι_apply, inr_hom_apply, ← eps, lift_apply_eps, Subtype.coe_mk])
@@ -502,7 +502,7 @@ theorem equiv_ι (r : R) : CliffordAlgebraDualNumber.equiv (ι _ r) = r • ε :
 #print CliffordAlgebraDualNumber.equiv_symm_eps /-
 @[simp]
 theorem equiv_symm_eps :
-    CliffordAlgebraDualNumber.equiv.symm (eps : R[ε]) = ι (0 : QuadraticForm R R) 1 :=
+    CliffordAlgebraDualNumber.equiv.symm (eps : R[ε]) = ι (0 : QuadraticMap R R) 1 :=
   DualNumber.lift_apply_eps _
 #align clifford_algebra_dual_number.equiv_symm_eps CliffordAlgebraDualNumber.equiv_symm_eps
 -/

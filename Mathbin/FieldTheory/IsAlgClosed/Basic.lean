@@ -233,7 +233,7 @@ instance (priority := 100) IsAlgClosure.normal (R K : Type _) [Field R] [Field K
 
 #print IsAlgClosure.separable /-
 instance (priority := 100) IsAlgClosure.separable (R K : Type _) [Field R] [Field K] [Algebra R K]
-    [IsAlgClosure R K] [CharZero R] : IsSeparable R K :=
+    [IsAlgClosure R K] [CharZero R] : Algebra.IsSeparable R K :=
   ⟨fun _ => isAlgebraic_iff_isIntegral.mp (IsAlgClosure.algebraic _), fun _ =>
     (minpoly.irreducible (isAlgebraic_iff_isIntegral.mp (IsAlgClosure.algebraic _))).Separable⟩
 #align is_alg_closure.separable IsAlgClosure.separable

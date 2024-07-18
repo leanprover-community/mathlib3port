@@ -769,7 +769,7 @@ theorem continuous_eval : Continuous fun p : ContinuousMultilinearMap 𝕜 E G �
           ‖q - p‖ * ∏ i, ‖p.2 i‖ :=
       by
       apply_rules [add_le_add, mul_le_mul, le_refl, le_trans (norm_fst_le q) A, Nat.cast_nonneg,
-        mul_nonneg, pow_le_pow_left, pow_nonneg, norm_snd_le (q - p), norm_nonneg,
+        mul_nonneg, pow_le_pow_left, Nonneg.pow_nonneg, norm_snd_le (q - p), norm_nonneg,
         norm_fst_le (q - p), prod_nonneg]
     _ = ((‖p‖ + 1) * Fintype.card ι * (‖p‖ + 1) ^ (Fintype.card ι - 1) + ∏ i, ‖p.2 i‖) * dist q p :=
       by rw [dist_eq_norm]; ring
@@ -925,7 +925,7 @@ theorem norm_restr {k n : ℕ} (f : G[×n]→L[𝕜] G') (s : Finset (Fin n)) (h
     ‖f.restr s hk z‖ ≤ ‖f‖ * ‖z‖ ^ (n - k) :=
   by
   apply MultilinearMap.mkContinuous_norm_le
-  exact mul_nonneg (norm_nonneg _) (pow_nonneg (norm_nonneg _) _)
+  exact mul_nonneg (norm_nonneg _) (Nonneg.pow_nonneg (norm_nonneg _) _)
 #align continuous_multilinear_map.norm_restr ContinuousMultilinearMap.norm_restr
 -/
 

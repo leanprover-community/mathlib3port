@@ -178,14 +178,14 @@ noncomputable def Fintype.toEncodable (α : Type _) [Fintype α] : Encodable α 
 
 #print Vector.encodable /-
 /-- If `α` is encodable, then so is `vector α n`. -/
-instance Vector.encodable [Encodable α] {n} : Encodable (Vector α n) :=
+instance Vector.encodable [Encodable α] {n} : Encodable (Mathlib.Vector α n) :=
   Subtype.encodable
 #align vector.encodable Vector.encodable
 -/
 
 #print Vector.countable /-
 /-- If `α` is countable, then so is `vector α n`. -/
-instance Vector.countable [Countable α] {n} : Countable (Vector α n) :=
+instance Vector.countable [Countable α] {n} : Countable (Mathlib.Vector α n) :=
   Subtype.countable
 #align vector.countable Vector.countable
 -/

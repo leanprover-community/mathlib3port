@@ -290,17 +290,13 @@ theorem natDegree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
 #align polynomial.nat_degree_sum_eq_of_disjoint Polynomial.natDegree_sum_eq_of_disjoint
 -/
 
-#print Polynomial.natDegree_bit0 /-
 theorem natDegree_bit0 (a : R[X]) : (bit0 a).natDegree ≤ a.natDegree :=
   (natDegree_add_le _ _).trans (max_self _).le
 #align polynomial.nat_degree_bit0 Polynomial.natDegree_bit0
--/
 
-#print Polynomial.natDegree_bit1 /-
 theorem natDegree_bit1 (a : R[X]) : (bit1 a).natDegree ≤ a.natDegree :=
   (natDegree_add_le _ _).trans (by simp [nat_degree_bit0])
 #align polynomial.nat_degree_bit1 Polynomial.natDegree_bit1
--/
 
 variable [Semiring S]
 

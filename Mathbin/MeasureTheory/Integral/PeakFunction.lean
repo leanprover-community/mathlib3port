@@ -230,15 +230,15 @@ theorem tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_n
   let φ : ℕ → α → ℝ := fun n x => (∫ x in s, c x ^ n ∂μ)⁻¹ * c x ^ n
   have hnφ : ∀ n, ∀ x ∈ s, 0 ≤ φ n x := by
     intro n x hx
-    apply mul_nonneg (inv_nonneg.2 _) (pow_nonneg (hnc x hx) _)
-    exact set_integral_nonneg hs.measurable_set fun x hx => pow_nonneg (hnc x hx) _
+    apply mul_nonneg (inv_nonneg.2 _) (Nonneg.pow_nonneg (hnc x hx) _)
+    exact set_integral_nonneg hs.measurable_set fun x hx => Nonneg.pow_nonneg (hnc x hx) _
   have I : ∀ n, integrable_on (fun x => c x ^ n) s μ := fun n =>
     ContinuousOn.integrableOn_compact hs (hc.pow n)
   have J : ∀ n, 0 ≤ᵐ[μ.restrict s] fun x : α => c x ^ n :=
     by
     intro n
     filter_upwards [ae_restrict_mem hs.measurable_set] with x hx
-    exact pow_nonneg (hnc x hx) n
+    exact Nonneg.pow_nonneg (hnc x hx) n
   have P : ∀ n, 0 < ∫ x in s, c x ^ n ∂μ := by
     intro n
     refine' (set_integral_pos_iff_support_of_nonneg_ae (J n) (I n)).2 _
@@ -285,7 +285,7 @@ theorem tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_n
           _ ≤ ∫ y in s, c y ^ n ∂μ :=
             set_integral_mono_set (I n) (J n) (eventually_of_forall (inter_subset_right _ _))
       simp_rw [φ, ← div_eq_inv_mul, div_pow, div_div]
-      apply div_le_div (pow_nonneg t_pos n) _ _ B
+      apply div_le_div (Nonneg.pow_nonneg t_pos n) _ _ B
       · exact pow_le_pow_left (hnc _ hx.1) (ht x hx) _
       · apply mul_pos (pow_pos (t_pos.trans_lt tt') _) (ENNReal.toReal_pos (hμ v v_open x₀_v).ne' _)
         have : μ (v ∩ s) ≤ μ s := measure_mono (inter_subset_right _ _)

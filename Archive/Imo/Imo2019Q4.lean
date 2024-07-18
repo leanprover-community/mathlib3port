@@ -57,7 +57,7 @@ theorem upper_bound {k n : ℕ} (hk : k > 0) (h : (k ! : ℤ) = ∏ i in range n
     by
     apply lt_of_le_of_lt _ this; apply prod_le_prod
     · intros; rw [sub_nonneg]; apply pow_le_pow_right; norm_num; apply le_of_lt; rwa [← mem_range]
-    · intros; apply sub_le_self; apply pow_nonneg; norm_num
+    · intros; apply sub_le_self; apply Nonneg.pow_nonneg; norm_num
   suffices 2 ^ (n * n) < (n * (n - 1) / 2)!
     by
     rw [prod_const, card_range, ← pow_mul]; rw [← Int.ofNat_lt] at this

@@ -34,7 +34,7 @@ def arrayEquivFin (n : ℕ) (α : Type _) : Array' n α ≃ (Fin n → α) :=
 #align equiv.array_equiv_fin Equiv.arrayEquivFin
 
 /-- The natural equivalence between length-`n` vectors and length-`n` arrays. -/
-def vectorEquivArray (α : Type _) (n : ℕ) : Vector α n ≃ Array' n α :=
+def vectorEquivArray (α : Type _) (n : ℕ) : Mathlib.Vector α n ≃ Array' n α :=
   (vectorEquivFin _ _).trans (arrayEquivFin _ _).symm
 #align equiv.vector_equiv_array Equiv.vectorEquivArray
 
@@ -47,10 +47,10 @@ open Function
 variable {n : ℕ}
 
 instance : Traversable (Array' n) :=
-  @Equiv.traversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _
+  @Equiv.traversable (flip Mathlib.Vector n) _ (fun α => Equiv.vectorEquivArray α n) _
 
 instance : LawfulTraversable (Array' n) :=
-  @Equiv.isLawfulTraversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _ _
+  @Equiv.isLawfulTraversable (flip Mathlib.Vector n) _ (fun α => Equiv.vectorEquivArray α n) _ _
 
 end Array'
 

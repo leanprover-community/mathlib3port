@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 -/
 import LinearAlgebra.Contraction
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 import LinearAlgebra.Dual
 
 #align_import linear_algebra.coevaluation from "leanprover-community/mathlib"@"38df578a6450a8c5142b3727e3ae894c2300cae0"

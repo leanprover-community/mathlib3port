@@ -103,9 +103,9 @@ unsafe def entry_parser {α : Type} (p : parser α) : parser (Σ m n, Fin m → 
     | Sum.inl l => do
       let h::tl ← pure l
       let n := h
-      let l : List (Vector α n) ←
+      let l : List (Mathlib.Vector α n) ←
         l fun row =>
-            if h : row = n then pure (⟨row, h⟩ : Vector α n)
+            if h : row = n then pure (⟨row, h⟩ : Mathlib.Vector α n)
             else interaction_monad.fail "Rows must be of equal length"
       pure ⟨l, n, fun i j => (l _ i).get? j⟩
     | Sum.inr n => pure ⟨0, n, finZeroElim⟩

@@ -124,8 +124,8 @@ theorem tendsto_sum_pi_div_four :
     intro x hx
     rw [abs_div, IsAbsoluteValue.abv_pow abs (-x ^ 2) k, abs_neg, IsAbsoluteValue.abv_pow abs x 2, ←
       pow_mul]
-    refine' div_le_of_nonneg_of_le_mul (abs_nonneg _) (pow_nonneg (abs_nonneg _) _) _
-    refine' le_mul_of_one_le_right (pow_nonneg (abs_nonneg _) _) _
+    refine' div_le_of_nonneg_of_le_mul (abs_nonneg _) (Nonneg.pow_nonneg (abs_nonneg _) _) _
+    refine' le_mul_of_one_le_right (Nonneg.pow_nonneg (abs_nonneg _) _) _
     rw [abs_of_nonneg (add_nonneg zero_le_one (sq_nonneg x) : (0 : ℝ) ≤ _)]
     exact (le_add_of_nonneg_right (sq_nonneg x) : (1 : ℝ) ≤ _)
   have hbound1 : ∀ x ∈ Ico (U : ℝ) 1, |f' x| ≤ 1 :=

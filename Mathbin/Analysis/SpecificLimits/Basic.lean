@@ -231,7 +231,7 @@ theorem hasSum_geometric_of_lt_one {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) :
   have : r ≠ 1 := ne_of_lt h₂
   have : Tendsto (fun n => (r ^ n - 1) * (r - 1)⁻¹) atTop (𝓝 ((0 - 1) * (r - 1)⁻¹)) :=
     ((tendsto_pow_atTop_nhds_zero_of_lt_one h₁ h₂).sub tendsto_const_nhds).mul tendsto_const_nhds
-  (hasSum_iff_tendsto_nat_of_nonneg (pow_nonneg h₁) _).mpr <| by
+  (hasSum_iff_tendsto_nat_of_nonneg (Nonneg.pow_nonneg h₁) _).mpr <| by
     simp_all [neg_inv, geom_sum_eq, div_eq_mul_inv]
 #align has_sum_geometric_of_lt_1 hasSum_geometric_of_lt_one
 -/
@@ -277,7 +277,7 @@ theorem tsum_geometric_two : ∑' n : ℕ, ((1 : ℝ) / 2) ^ n = 2 :=
 #print sum_geometric_two_le /-
 theorem sum_geometric_two_le (n : ℕ) : ∑ i : ℕ in range n, (1 / (2 : ℝ)) ^ i ≤ 2 :=
   by
-  have : ∀ i, 0 ≤ (1 / (2 : ℝ)) ^ i := by intro i; apply pow_nonneg; norm_num
+  have : ∀ i, 0 ≤ (1 / (2 : ℝ)) ^ i := by intro i; apply Nonneg.pow_nonneg; norm_num
   convert sum_le_tsum (range n) (fun i _ => this i) summable_geometric_two
   exact tsum_geometric_two.symm
 #align sum_geometric_two_le sum_geometric_two_le
@@ -549,8 +549,8 @@ theorem summable_one_div_pow_of_le {m : ℝ} {f : ℕ → ℕ} (hm : 1 < m) (fi 
     Summable fun i => 1 / m ^ f i :=
   by
   refine'
-    Summable.of_nonneg_of_le (fun a => one_div_nonneg.mpr (pow_nonneg (zero_le_one.trans hm.le) _))
-      (fun a => _)
+    Summable.of_nonneg_of_le
+      (fun a => one_div_nonneg.mpr (Nonneg.pow_nonneg (zero_le_one.trans hm.le) _)) (fun a => _)
       (summable_geometric_of_lt_one (one_div_nonneg.mpr (zero_le_one.trans hm.le))
         ((one_div_lt (zero_lt_one.trans hm) zero_lt_one).mpr (one_div_one.le.trans_lt hm)))
   rw [div_pow, one_pow]
@@ -675,7 +675,7 @@ theorem tendsto_factorial_div_pow_self_atTop : Tendsto (fun n => n ! / n ^ n : �
     (tendsto_const_div_atTop_nhds_zero_nat 1)
     (eventually_of_forall fun n =>
       div_nonneg (by exact_mod_cast n.factorial_pos.le)
-        (pow_nonneg (by exact_mod_cast n.zero_le) _))
+        (Nonneg.pow_nonneg (by exact_mod_cast n.zero_le) _))
     (by
       refine' (eventually_gt_at_top 0).mono fun n hn => _
       rcases Nat.exists_eq_succ_of_ne_zero hn.ne.symm with ⟨k, rfl⟩

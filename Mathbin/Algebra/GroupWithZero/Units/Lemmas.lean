@@ -5,7 +5,7 @@ Authors: Johan Commelin
 -/
 import Algebra.GroupWithZero.Commute
 import Algebra.Group.Units.Hom
-import GroupTheory.GroupAction.Units
+import Algebra.Group.Action.Units
 
 #align_import algebra.group_with_zero.units.lemmas from "leanprover-community/mathlib"@"dc6c365e751e34d100e80fe6e314c3c3e0fd2988"
 

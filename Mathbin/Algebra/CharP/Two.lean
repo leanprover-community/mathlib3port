@@ -39,27 +39,19 @@ theorem add_self_eq_zero (x : R) : x + x = 0 := by rw [← two_smul R x, two_eq_
 #align char_two.add_self_eq_zero CharTwo.add_self_eq_zero
 -/
 
-#print CharTwo.bit0_eq_zero /-
 @[simp]
 theorem bit0_eq_zero : (bit0 : R → R) = 0 := by funext; exact add_self_eq_zero _
 #align char_two.bit0_eq_zero CharTwo.bit0_eq_zero
--/
 
-#print CharTwo.bit0_apply_eq_zero /-
 theorem bit0_apply_eq_zero (x : R) : (bit0 x : R) = 0 := by simp
 #align char_two.bit0_apply_eq_zero CharTwo.bit0_apply_eq_zero
--/
 
-#print CharTwo.bit1_eq_one /-
 @[simp]
 theorem bit1_eq_one : (bit1 : R → R) = 1 := by funext; simp [bit1]
 #align char_two.bit1_eq_one CharTwo.bit1_eq_one
--/
 
-#print CharTwo.bit1_apply_eq_one /-
 theorem bit1_apply_eq_one (x : R) : (bit1 x : R) = 1 := by simp
 #align char_two.bit1_apply_eq_one CharTwo.bit1_apply_eq_one
--/
 
 end Semiring
 

@@ -7,7 +7,7 @@ import Algebra.Ring.Int
 import Data.Int.Cast.Basic
 import Algebra.Ring.Divisibility.Basic
 import Algebra.Order.Group.Abs
-import Algebra.Order.Ring.CharZero
+import Algebra.Order.Ring.Defs
 import Tactic.AssertExists
 
 #align_import data.int.order.basic from "leanprover-community/mathlib"@"e8638a0fcaf73e4500469f368ef9494e495099b3"

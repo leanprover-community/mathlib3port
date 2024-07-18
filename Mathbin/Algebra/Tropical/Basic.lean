@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
 import Algebra.Order.Ring.Basic
-import Algebra.Order.Monoid.WithTop
+import Algebra.Order.Monoid.Unbundled.WithTop
 import Algebra.SMulWithZero
 import Algebra.Order.Monoid.Unbundled.MinMax
 
@@ -455,11 +455,13 @@ theorem add_self (x : Tropical R) : x + x = x :=
 #align tropical.add_self Tropical.add_self
 -/
 
-#print Tropical.bit0 /-
+/- warning: tropical.bit0 clashes with tropical.add_self -> Tropical.add_self
+Case conversion may be inaccurate. Consider using '#align tropical.bit0 Tropical.add_selfₓ'. -/
+#print Tropical.add_self /-
 @[simp]
-theorem bit0 (x : Tropical R) : bit0 x = x :=
+theorem add_self (x : Tropical R) : bit0 x = x :=
   add_self x
-#align tropical.bit0 Tropical.bit0
+#align tropical.bit0 Tropical.add_self
 -/
 
 #print Tropical.add_eq_iff /-

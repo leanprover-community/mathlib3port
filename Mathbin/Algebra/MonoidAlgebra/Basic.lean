@@ -1097,7 +1097,7 @@ protected noncomputable def opRingEquiv [Monoid G] :
     opAddEquiv.symm.trans <|
       (Finsupp.mapRange.addEquiv (opAddEquiv : k ≃+ kᵐᵒᵖ)).trans <| Finsupp.domCongr opEquiv with
     map_mul' := by
-      dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_toAddMonoidHom]
+      dsimp only [AddEquiv.toFun_eq_coe, ← AddEquiv.coe_toAddMonoidHom]
       rw [AddMonoidHom.map_mul_iff]
       ext i₁ r₁ i₂ r₂ : 6
       simp }
@@ -1851,7 +1851,7 @@ protected noncomputable def opRingEquiv [AddCommMonoid G] :
     MulOpposite.opAddEquiv.symm.trans
       (Finsupp.mapRange.addEquiv (MulOpposite.opAddEquiv : k ≃+ kᵐᵒᵖ)) with
     map_mul' := by
-      dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_toAddMonoidHom]
+      dsimp only [AddEquiv.toFun_eq_coe, ← AddEquiv.coe_toAddMonoidHom]
       rw [AddMonoidHom.map_mul_iff]
       ext i r i' r' : 6
       dsimp

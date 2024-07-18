@@ -147,7 +147,7 @@ instance mul : Mul (Icc (0 : α) 1)
 
 #print Set.Icc.pow /-
 instance pow : Pow (Icc (0 : α) 1) ℕ
-    where pow p n := ⟨p.1 ^ n, ⟨pow_nonneg p.2.1 n, pow_le_one n p.2.1 p.2.2⟩⟩
+    where pow p n := ⟨p.1 ^ n, ⟨Nonneg.pow_nonneg p.2.1 n, pow_le_one n p.2.1 p.2.2⟩⟩
 #align set.Icc.has_pow Set.Icc.pow
 -/
 

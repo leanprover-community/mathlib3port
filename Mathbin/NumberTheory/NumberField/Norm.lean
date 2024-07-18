@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Eric Rodriguez
 -/
 import NumberTheory.NumberField.Basic
-import RingTheory.Norm
+import RingTheory.Norm.Defs
 
 #align_import number_theory.number_field.norm from "leanprover-community/mathlib"@"1b089e3bdc3ce6b39cd472543474a0a137128c6c"
 
@@ -36,7 +36,7 @@ variable {L : Type _} (K : Type _) [Field K] [Field L] [Algebra K L] [FiniteDime
 #print RingOfIntegers.norm /-
 /-- `algebra.norm` as a morphism betwen the rings of integers. -/
 @[simps]
-noncomputable def norm [IsSeparable K L] : 𝓞 L →* 𝓞 K :=
+noncomputable def norm [Algebra.IsSeparable K L] : 𝓞 L →* 𝓞 K :=
   ((Algebra.norm K).restrict (𝓞 L)).codRestrict (𝓞 K) fun x => isIntegral_norm K x.2
 #align ring_of_integers.norm RingOfIntegers.norm
 -/
@@ -44,21 +44,21 @@ noncomputable def norm [IsSeparable K L] : 𝓞 L →* 𝓞 K :=
 attribute [local instance] NumberField.inst_ringOfIntegersAlgebra
 
 #print RingOfIntegers.coe_algebraMap_norm /-
-theorem coe_algebraMap_norm [IsSeparable K L] (x : 𝓞 L) :
+theorem coe_algebraMap_norm [Algebra.IsSeparable K L] (x : 𝓞 L) :
     (algebraMap (𝓞 K) (𝓞 L) (norm K x) : L) = algebraMap K L (Algebra.norm K (x : L)) :=
   rfl
 #align ring_of_integers.coe_algebra_map_norm RingOfIntegers.coe_algebraMap_norm
 -/
 
 #print RingOfIntegers.algebraMap_norm_algebraMap /-
-theorem algebraMap_norm_algebraMap [IsSeparable K L] (x : 𝓞 K) :
+theorem algebraMap_norm_algebraMap [Algebra.IsSeparable K L] (x : 𝓞 K) :
     (norm K (algebraMap (𝓞 K) (𝓞 L) x) : K) = Algebra.norm K (algebraMap K L x) :=
   rfl
 #align ring_of_integers.coe_norm_algebra_map RingOfIntegers.algebraMap_norm_algebraMap
 -/
 
 #print RingOfIntegers.norm_algebraMap /-
-theorem norm_algebraMap [IsSeparable K L] (x : 𝓞 K) :
+theorem norm_algebraMap [Algebra.IsSeparable K L] (x : 𝓞 K) :
     norm K (algebraMap (𝓞 K) (𝓞 L) x) = x ^ finrank K L := by
   rw [← Subtype.coe_inj, RingOfIntegers.algebraMap_norm_algebraMap, Algebra.norm_algebraMap,
     SubsemiringClass.coe_pow]
@@ -101,11 +101,11 @@ theorem dvd_norm [IsGalois K L] (x : 𝓞 L) : x ∣ algebraMap (𝓞 K) (𝓞 L
 #align ring_of_integers.dvd_norm RingOfIntegers.dvd_norm
 -/
 
-variable (F : Type _) [Field F] [Algebra K F] [IsSeparable K F] [FiniteDimensional K F]
+variable (F : Type _) [Field F] [Algebra K F] [Algebra.IsSeparable K F] [FiniteDimensional K F]
 
 #print RingOfIntegers.norm_norm /-
-theorem norm_norm [IsSeparable K L] [Algebra F L] [IsSeparable F L] [FiniteDimensional F L]
-    [IsScalarTower K F L] (x : 𝓞 L) : norm K (norm F x) = norm K x := by
+theorem norm_norm [Algebra.IsSeparable K L] [Algebra F L] [Algebra.IsSeparable F L]
+    [FiniteDimensional F L] [IsScalarTower K F L] (x : 𝓞 L) : norm K (norm F x) = norm K x := by
   rw [← Subtype.coe_inj, norm_apply_coe, norm_apply_coe, norm_apply_coe, Algebra.norm_norm]
 #align ring_of_integers.norm_norm RingOfIntegers.norm_norm
 -/

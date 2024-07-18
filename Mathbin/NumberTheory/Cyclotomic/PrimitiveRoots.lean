@@ -8,7 +8,7 @@ import Algebra.IsPrimePow
 import NumberTheory.Cyclotomic.Basic
 import RingTheory.Adjoin.PowerBasis
 import RingTheory.Polynomial.Cyclotomic.Eval
-import RingTheory.Norm
+import RingTheory.Norm.Defs
 import RingTheory.Polynomial.Cyclotomic.Expand
 
 #align_import number_theory.cyclotomic.primitive_roots from "leanprover-community/mathlib"@"5d0c76894ada7940957143163d7b921345474cbc"

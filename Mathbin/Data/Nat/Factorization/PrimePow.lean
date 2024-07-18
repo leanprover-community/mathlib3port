@@ -37,8 +37,8 @@ theorem isPrimePow_of_minFac_pow_factorization_eq {n : ℕ}
   rcases eq_or_ne n 0 with (rfl | hn')
   · simpa using h
   refine' ⟨_, _, (Nat.minFac_prime hn).Prime, _, h⟩
-  rw [pos_iff_ne_zero, ← Finsupp.mem_support_iff, Nat.mem_primeFactors_iff_mem_factors,
-    Nat.mem_factors_iff_dvd hn' (Nat.minFac_prime hn)]
+  rw [pos_iff_ne_zero, ← Finsupp.mem_support_iff, Nat.mem_primeFactors_iff_mem_primeFactorsList,
+    Nat.mem_primeFactorsList_iff_dvd hn' (Nat.minFac_prime hn)]
   apply Nat.minFac_dvd
 #align is_prime_pow_of_min_fac_pow_factorization_eq isPrimePow_of_minFac_pow_factorization_eq
 -/
@@ -124,10 +124,10 @@ theorem isPrimePow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : �
   simp only [and_imp] at hq
   apply Nat.dvd_antisymm (Nat.ord_proj_dvd _ _)
   -- We need to show n ∣ p ^ n.factorization p
-  apply Nat.dvd_of_factors_subperm hn₀
+  apply Nat.dvd_of_primeFactorsList_subperm hn₀
   rw [hp.factors_pow, List.subperm_ext_iff]
   intro q hq'
-  rw [Nat.mem_factors hn₀] at hq'
+  rw [Nat.mem_primeFactorsList hn₀] at hq'
   cases hq _ hq'.1 hq'.2
   simp
 #align is_prime_pow_iff_unique_prime_dvd isPrimePow_iff_unique_prime_dvd

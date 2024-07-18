@@ -292,7 +292,7 @@ variable [CharZero R]
 
 @[simp]
 theorem degree_bit0_eq (p : R[X]) : degree (bit0 p) = degree p := by
-  rw [bit0_eq_two_mul, degree_mul, (by simp : (2 : R[X]) = C 2),
+  rw [bit0_eq_two_hMul, degree_mul, (by simp : (2 : R[X]) = C 2),
     @Polynomial.degree_C R _ _ two_ne_zero, zero_add]
 #align polynomial.degree_bit0_eq Polynomial.degree_bit0_eq
 

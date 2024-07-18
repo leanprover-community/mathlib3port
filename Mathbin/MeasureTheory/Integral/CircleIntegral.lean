@@ -705,7 +705,7 @@ theorem le_radius_cauchyPowerSeries (f : ℂ → E) (c : ℂ) (R : ℝ≥0) :
       ((2 * π)⁻¹ * ∫ θ : ℝ in 0 ..2 * π, ‖f (circleMap c R θ)‖) fun n => _
   refine'
     (mul_le_mul_of_nonneg_right (norm_cauchyPowerSeries_le _ _ _ _)
-          (pow_nonneg R.coe_nonneg _)).trans
+          (Nonneg.pow_nonneg R.coe_nonneg _)).trans
       _
   rw [_root_.abs_of_nonneg R.coe_nonneg]
   cases' eq_or_ne (R ^ n : ℝ) 0 with hR hR

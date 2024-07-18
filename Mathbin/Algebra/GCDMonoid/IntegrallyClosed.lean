@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Algebra.GCDMonoid.Basic
-import RingTheory.IntegrallyClosed
+import RingTheory.IntegralClosure.IntegrallyClosed
 import RingTheory.Polynomial.Eisenstein.Basic
 
 #align_import algebra.gcd_monoid.integrally_closed from "leanprover-community/mathlib"@"af471b9e3ce868f296626d33189b4ce730fa4c00"

@@ -82,30 +82,22 @@ theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
 #align add_self_eq_zero add_self_eq_zero
 -/
 
-#print bit0_eq_zero /-
 @[simp]
 theorem bit0_eq_zero {a : R} : bit0 a = 0 ↔ a = 0 :=
   add_self_eq_zero
 #align bit0_eq_zero bit0_eq_zero
--/
 
-#print zero_eq_bit0 /-
 @[simp]
 theorem zero_eq_bit0 {a : R} : 0 = bit0 a ↔ a = 0 := by rw [eq_comm]; exact bit0_eq_zero
 #align zero_eq_bit0 zero_eq_bit0
--/
 
-#print bit0_ne_zero /-
 theorem bit0_ne_zero : bit0 a ≠ 0 ↔ a ≠ 0 :=
   bit0_eq_zero.Not
 #align bit0_ne_zero bit0_ne_zero
--/
 
-#print zero_ne_bit0 /-
 theorem zero_ne_bit0 : 0 ≠ bit0 a ↔ a ≠ 0 :=
   zero_eq_bit0.Not
 #align zero_ne_bit0 zero_ne_bit0
--/
 
 end
 
@@ -139,7 +131,6 @@ theorem nat_mul_inj' {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) (w : n 
 #align nat_mul_inj' nat_mul_inj'
 -/
 
-#print bit0_injective /-
 theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h =>
   by
   dsimp [bit0] at h
@@ -147,42 +138,31 @@ theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h =>
   refine' nat_mul_inj' _ two_ne_zero
   exact_mod_cast h
 #align bit0_injective bit0_injective
--/
 
-#print bit1_injective /-
 theorem bit1_injective : Function.Injective (bit1 : R → R) := fun a b h =>
   by
   simp only [bit1, add_left_inj] at h
   exact bit0_injective h
 #align bit1_injective bit1_injective
--/
 
-#print bit0_eq_bit0 /-
 @[simp]
 theorem bit0_eq_bit0 {a b : R} : bit0 a = bit0 b ↔ a = b :=
   bit0_injective.eq_iff
 #align bit0_eq_bit0 bit0_eq_bit0
--/
 
-#print bit1_eq_bit1 /-
 @[simp]
 theorem bit1_eq_bit1 {a b : R} : bit1 a = bit1 b ↔ a = b :=
   bit1_injective.eq_iff
 #align bit1_eq_bit1 bit1_eq_bit1
--/
 
-#print bit1_eq_one /-
 @[simp]
 theorem bit1_eq_one {a : R} : bit1 a = 1 ↔ a = 0 := by
   rw [show (1 : R) = bit1 0 by simp, bit1_eq_bit1]
 #align bit1_eq_one bit1_eq_one
--/
 
-#print one_eq_bit1 /-
 @[simp]
 theorem one_eq_bit1 {a : R} : 1 = bit1 a ↔ a = 0 := by rw [eq_comm]; exact bit1_eq_one
 #align one_eq_bit1 one_eq_bit1
--/
 
 end
 
@@ -190,21 +170,25 @@ section
 
 variable {R : Type _} [DivisionRing R] [CharZero R]
 
-#print half_add_self /-
+/- warning: half_add_self clashes with add_self_div_two -> add_self_div_two
+Case conversion may be inaccurate. Consider using '#align half_add_self add_self_div_twoₓ'. -/
+#print add_self_div_two /-
 @[simp]
-theorem half_add_self (a : R) : (a + a) / 2 = a := by
+theorem add_self_div_two (a : R) : (a + a) / 2 = a := by
   rw [← mul_two, mul_div_cancel_right₀ a two_ne_zero]
-#align half_add_self half_add_self
+#align half_add_self add_self_div_two
 -/
 
-#print add_halves' /-
+/- warning: add_halves' clashes with add_halves -> add_halves
+Case conversion may be inaccurate. Consider using '#align add_halves' add_halvesₓ'. -/
+#print add_halves /-
 @[simp]
-theorem add_halves' (a : R) : a / 2 + a / 2 = a := by rw [← add_div, half_add_self]
-#align add_halves' add_halves'
+theorem add_halves (a : R) : a / 2 + a / 2 = a := by rw [← add_div, add_self_div_two]
+#align add_halves' add_halves
 -/
 
 #print sub_half /-
-theorem sub_half (a : R) : a - a / 2 = a / 2 := by rw [sub_eq_iff_eq_add, add_halves']
+theorem sub_half (a : R) : a - a / 2 = a / 2 := by rw [sub_eq_iff_eq_add, add_halves]
 #align sub_half sub_half
 -/
 

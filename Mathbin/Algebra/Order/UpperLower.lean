@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Algebra.Order.Group.Defs
+import Algebra.Order.Group.Unbundled.Basic
 import Data.Set.Pointwise.SMul
 import Order.UpperLower.Basic
 

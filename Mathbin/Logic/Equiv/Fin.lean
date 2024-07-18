@@ -328,40 +328,40 @@ theorem finSuccEquiv'_ne_last_apply {i j : Fin (n + 1)} (hi : i ≠ Fin.last n) 
 #align fin_succ_equiv'_ne_last_apply finSuccEquiv'_ne_last_apply
 -/
 
-#print finSuccAboveEquiv /-
+#print finSuccAboveOrderIso /-
 /-- `succ_above` as an order isomorphism between `fin n` and `{x : fin (n + 1) // x ≠ p}`. -/
-def finSuccAboveEquiv (p : Fin (n + 1)) : Fin n ≃o { x : Fin (n + 1) // x ≠ p } :=
+def finSuccAboveOrderIso (p : Fin (n + 1)) : Fin n ≃o { x : Fin (n + 1) // x ≠ p } :=
   { Equiv.optionSubtype p ⟨(finSuccEquiv' p).symm, rfl⟩ with
     map_rel_iff' := fun _ _ => p.succAboveOrderEmb.map_rel_iff' }
-#align fin_succ_above_equiv finSuccAboveEquiv
+#align fin_succ_above_equiv finSuccAboveOrderIso
 -/
 
-#print finSuccAboveEquiv_apply /-
-theorem finSuccAboveEquiv_apply (p : Fin (n + 1)) (i : Fin n) :
-    finSuccAboveEquiv p i = ⟨p.succAboveOrderEmb i, p.succAbove_ne i⟩ :=
+#print finSuccAboveOrderIso_apply /-
+theorem finSuccAboveOrderIso_apply (p : Fin (n + 1)) (i : Fin n) :
+    finSuccAboveOrderIso p i = ⟨p.succAboveOrderEmb i, p.succAbove_ne i⟩ :=
   rfl
-#align fin_succ_above_equiv_apply finSuccAboveEquiv_apply
+#align fin_succ_above_equiv_apply finSuccAboveOrderIso_apply
 -/
 
 #print finSuccAboveEquiv_symm_apply_last /-
 theorem finSuccAboveEquiv_symm_apply_last (x : { x : Fin (n + 1) // x ≠ Fin.last n }) :
-    (finSuccAboveEquiv (Fin.last n)).symm x =
+    (finSuccAboveOrderIso (Fin.last n)).symm x =
       Fin.castLT (x : Fin (n + 1))
         (lt_of_le_of_ne (Fin.le_last _) (Fin.val_injective.ne_iff.2 x.property)) :=
   by
   rw [← Option.some_inj, ← Option.coe_def]
-  simpa [finSuccAboveEquiv, OrderIso.symm] using finSuccEquiv'_last_apply x.property
+  simpa [finSuccAboveOrderIso, OrderIso.symm] using finSuccEquiv'_last_apply x.property
 #align fin_succ_above_equiv_symm_apply_last finSuccAboveEquiv_symm_apply_last
 -/
 
 #print finSuccAboveEquiv_symm_apply_ne_last /-
 theorem finSuccAboveEquiv_symm_apply_ne_last {p : Fin (n + 1)} (h : p ≠ Fin.last n)
     (x : { x : Fin (n + 1) // x ≠ p }) :
-    (finSuccAboveEquiv p).symm x =
+    (finSuccAboveOrderIso p).symm x =
       (p.castLT (lt_of_le_of_ne (Fin.le_last _) (Fin.val_injective.ne_iff.2 h))).predAbove x :=
   by
   rw [← Option.some_inj, ← Option.coe_def]
-  simpa [finSuccAboveEquiv, OrderIso.symm] using finSuccEquiv'_ne_last_apply h x.property
+  simpa [finSuccAboveOrderIso, OrderIso.symm] using finSuccEquiv'_ne_last_apply h x.property
 #align fin_succ_above_equiv_symm_apply_ne_last finSuccAboveEquiv_symm_apply_ne_last
 -/
 

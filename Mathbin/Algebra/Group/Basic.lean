@@ -170,23 +170,17 @@ section AddCommSemigroup
 
 variable {M : Type u} [AddCommSemigroup M]
 
-#print bit0_add /-
 theorem bit0_add (a b : M) : bit0 (a + b) = bit0 a + bit0 b :=
   add_add_add_comm _ _ _ _
 #align bit0_add bit0_add
--/
 
-#print bit1_add /-
 theorem bit1_add [One M] (a b : M) : bit1 (a + b) = bit0 a + bit1 b :=
   (congr_arg (· + (1 : M)) <| bit0_add a b : _).trans (add_assoc _ _ _)
 #align bit1_add bit1_add
--/
 
-#print bit1_add' /-
 theorem bit1_add' [One M] (a b : M) : bit1 (a + b) = bit1 a + bit0 b := by
   rw [add_comm, bit1_add, add_comm]
 #align bit1_add' bit1_add'
--/
 
 end AddCommSemigroup
 
@@ -196,18 +190,14 @@ section AddMonoid
 
 variable {M : Type u} [AddMonoid M] {a b c : M}
 
-#print bit0_zero /-
 @[simp]
 theorem bit0_zero : bit0 (0 : M) = 0 :=
   add_zero _
 #align bit0_zero bit0_zero
--/
 
-#print bit1_zero /-
 @[simp]
 theorem bit1_zero [One M] : bit1 (0 : M) = 1 := by rw [bit1, bit0_zero, zero_add]
 #align bit1_zero bit1_zero
--/
 
 end AddMonoid
 
@@ -628,11 +618,9 @@ theorem div_mul_eq_div_div_swap : a / (b * c) = a / c / b := by
 
 end DivisionMonoid
 
-#print bit0_neg /-
 theorem bit0_neg [SubtractionMonoid α] (a : α) : bit0 (-a) = -bit0 a :=
   (neg_add_rev _ _).symm
 #align bit0_neg bit0_neg
--/
 
 section DivisionCommMonoid
 

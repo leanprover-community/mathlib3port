@@ -910,16 +910,15 @@ end HomotopyEquiv
 
 variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 
-#print homology'_map_eq_of_homotopy /-
 /-- Homotopic maps induce the same map on homology.
 -/
-theorem homology'_map_eq_of_homotopy (h : Homotopy f g) (i : ι) :
-    (homology'Functor V c i).map f = (homology'Functor V c i).map g :=
+theorem homology_map_eq_of_homotopy (h : Homotopy f g) (i : ι) :
+    (homologyFunctor V c i).map f = (homologyFunctor V c i).map g :=
   by
-  dsimp [homology'Functor]
+  dsimp [homologyFunctor]
   apply eq_of_sub_eq_zero
   ext
-  simp only [homology'.π_map, comp_zero, preadditive.comp_sub]
+  simp only [homology.π_map, comp_zero, preadditive.comp_sub]
   dsimp [kernel_subobject_map]
   simp_rw [h.comm i]
   simp only [zero_add, zero_comp, dNext_eq_dFrom_fromNext, kernel_subobject_arrow_comp_assoc,
@@ -930,24 +929,21 @@ theorem homology'_map_eq_of_homotopy (h : Homotopy f g) (i : ι) :
   · simp
   · rw [prevD_eq_toPrev_dTo, ← category.assoc]
     apply image_subobject_factors_comp_self
-#align homology_map_eq_of_homotopy homology'_map_eq_of_homotopy
--/
+#align homology_map_eq_of_homotopy homology_map_eq_of_homotopy
 
-#print homologyObjIsoOfHomotopyEquiv /-
 /-- Homotopy equivalent complexes have isomorphic homologies. -/
 def homologyObjIsoOfHomotopyEquiv (f : HomotopyEquiv C D) (i : ι) :
-    (homology'Functor V c i).obj C ≅ (homology'Functor V c i).obj D
+    (homologyFunctor V c i).obj C ≅ (homologyFunctor V c i).obj D
     where
-  Hom := (homology'Functor V c i).map f.Hom
-  inv := (homology'Functor V c i).map f.inv
+  Hom := (homologyFunctor V c i).map f.Hom
+  inv := (homologyFunctor V c i).map f.inv
   hom_inv_id' := by
-    rw [← functor.map_comp, homology'_map_eq_of_homotopy f.homotopy_hom_inv_id,
+    rw [← functor.map_comp, homology_map_eq_of_homotopy f.homotopy_hom_inv_id,
       CategoryTheory.Functor.map_id]
   inv_hom_id' := by
-    rw [← functor.map_comp, homology'_map_eq_of_homotopy f.homotopy_inv_hom_id,
+    rw [← functor.map_comp, homology_map_eq_of_homotopy f.homotopy_inv_hom_id,
       CategoryTheory.Functor.map_id]
 #align homology_obj_iso_of_homotopy_equiv homologyObjIsoOfHomotopyEquiv
--/
 
 end
 

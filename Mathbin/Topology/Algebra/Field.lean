@@ -165,7 +165,7 @@ theorem IsPreconnected.eq_one_or_eq_neg_one_of_sq_eq [Ring 𝕜] [NoZeroDivisors
   refine' fun x hx => hS.constant_of_maps_to hf (fun z hz => _) hx hy
   show f z ∈ ({-1, 1} : Set 𝕜)
   · exact mem_insert_iff.mpr (hsq hz).symm
-  exact discrete_of_t1_of_finite
+  exact Finite.instDiscreteTopology
 #align is_preconnected.eq_one_or_eq_neg_one_of_sq_eq IsPreconnected.eq_one_or_eq_neg_one_of_sq_eq
 -/
 

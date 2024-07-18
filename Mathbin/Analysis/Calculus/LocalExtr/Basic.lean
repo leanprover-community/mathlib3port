@@ -96,6 +96,8 @@ theorem posTangentConeAt_mono : Monotone fun s => posTangentConeAt s a :=
 #align pos_tangent_cone_at_mono posTangentConeAt_mono
 -/
 
+/- warning: mem_pos_tangent_cone_at_of_segment_subset clashes with mem_pos_tangent_cone_at_of_segment_subset' -> mem_posTangentConeAt_of_segment_subset
+Case conversion may be inaccurate. Consider using '#align mem_pos_tangent_cone_at_of_segment_subset mem_posTangentConeAt_of_segment_subsetₓ'. -/
 #print mem_posTangentConeAt_of_segment_subset /-
 theorem mem_posTangentConeAt_of_segment_subset {s : Set E} {x y : E} (h : segment ℝ x y ⊆ s) :
     y - x ∈ posTangentConeAt s x :=
@@ -106,7 +108,8 @@ theorem mem_posTangentConeAt_of_segment_subset {s : Set E} {x y : E} (h : segmen
   show x + d n ∈ segment ℝ x y
   · rw [segment_eq_image']
     refine' ⟨(c n)⁻¹, ⟨_, _⟩, rfl⟩
-    exacts [inv_nonneg.2 (pow_nonneg zero_le_two _), inv_le_one (one_le_pow_of_one_le one_le_two _)]
+    exacts [inv_nonneg.2 (Nonneg.pow_nonneg zero_le_two _),
+      inv_le_one (one_le_pow_of_one_le one_le_two _)]
   show tendsto (fun n => c n • d n) at_top (𝓝 (y - x))
   · convert tendsto_const_nhds; ext n
     simp only [d, smul_smul]
@@ -115,16 +118,16 @@ theorem mem_posTangentConeAt_of_segment_subset {s : Set E} {x y : E} (h : segmen
 #align mem_pos_tangent_cone_at_of_segment_subset mem_posTangentConeAt_of_segment_subset
 -/
 
-#print mem_posTangentConeAt_of_segment_subset' /-
-theorem mem_posTangentConeAt_of_segment_subset' {s : Set E} {x y : E}
-    (h : segment ℝ x (x + y) ⊆ s) : y ∈ posTangentConeAt s x := by
+#print mem_posTangentConeAt_of_segment_subset /-
+theorem mem_posTangentConeAt_of_segment_subset {s : Set E} {x y : E} (h : segment ℝ x (x + y) ⊆ s) :
+    y ∈ posTangentConeAt s x := by
   simpa only [add_sub_cancel_left] using mem_posTangentConeAt_of_segment_subset h
-#align mem_pos_tangent_cone_at_of_segment_subset' mem_posTangentConeAt_of_segment_subset'
+#align mem_pos_tangent_cone_at_of_segment_subset' mem_posTangentConeAt_of_segment_subset
 -/
 
 #print posTangentConeAt_univ /-
 theorem posTangentConeAt_univ : posTangentConeAt univ a = univ :=
-  eq_univ_of_forall fun x => mem_posTangentConeAt_of_segment_subset' (subset_univ _)
+  eq_univ_of_forall fun x => mem_posTangentConeAt_of_segment_subset (subset_univ _)
 #align pos_tangent_cone_at_univ posTangentConeAt_univ
 -/
 

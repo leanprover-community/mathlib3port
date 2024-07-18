@@ -5,7 +5,7 @@ Authors: Manuel Candales
 -/
 import Data.Real.Basic
 import Data.Real.Sqrt
-import Data.Nat.Prime
+import Data.Nat.Prime.Defs
 import NumberTheory.PrimesCongruentOne
 import NumberTheory.LegendreSymbol.QuadraticReciprocity
 import Tactic.LinearCombination

@@ -663,12 +663,12 @@ theorem totallyBounded_of_forall_symm {s : Set α}
 #align totally_bounded_of_forall_symm totallyBounded_of_forall_symm
 -/
 
-#print totallyBounded_subset /-
-theorem totallyBounded_subset {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) (h : TotallyBounded s₂) :
+#print TotallyBounded.subset /-
+theorem TotallyBounded.subset {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) (h : TotallyBounded s₂) :
     TotallyBounded s₁ := fun d hd =>
   let ⟨t, ht₁, ht₂⟩ := h d hd
   ⟨t, ht₁, Subset.trans hs ht₂⟩
-#align totally_bounded_subset totallyBounded_subset
+#align totally_bounded_subset TotallyBounded.subset
 -/
 
 #print totallyBounded_empty /-

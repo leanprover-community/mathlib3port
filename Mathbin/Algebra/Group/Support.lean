@@ -9,7 +9,7 @@ import Algebra.BigOperators.Group.Finset
 import Algebra.Group.Prod
 import Algebra.Group.Pi.Lemmas
 import Algebra.Module.Defs
-import GroupTheory.GroupAction.Pi
+import Algebra.Group.Action.Pi
 
 #align_import algebra.support from "leanprover-community/mathlib"@"29cb56a7b35f72758b05a30490e1f10bd62c35c1"
 

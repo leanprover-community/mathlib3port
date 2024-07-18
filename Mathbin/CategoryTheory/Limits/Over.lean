@@ -6,7 +6,7 @@ Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 import CategoryTheory.Comma.Over
 import CategoryTheory.Adjunction.Opposites
 import CategoryTheory.Limits.Preserves.Basic
-import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.Pullback.Cospan
 import CategoryTheory.Limits.Creates
 import CategoryTheory.Limits.Comma
 

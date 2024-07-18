@@ -45,7 +45,7 @@ def opRingEquiv (R : Type _) [Semiring R] : R[X]ᵐᵒᵖ ≃+* Rᵐᵒᵖ[X] :=
 theorem opRingEquiv_op_monomial (n : ℕ) (r : R) :
     opRingEquiv R (op (monomial n r : R[X])) = monomial n (op r) := by
   simp only [op_ring_equiv, RingEquiv.trans_apply, RingEquiv.op_apply_apply,
-    RingEquiv.toAddEquiv_eq_coe, AddEquiv.mulOp_apply, AddEquiv.to_fun_eq_coe, AddEquiv.coe_trans,
+    RingEquiv.toAddEquiv_eq_coe, AddEquiv.mulOp_apply, AddEquiv.toFun_eq_coe, AddEquiv.coe_trans,
     op_add_equiv_apply, RingEquiv.coe_toAddEquiv, op_add_equiv_symm_apply, Function.comp_apply,
     unop_op, to_finsupp_iso_apply, to_finsupp_monomial, AddMonoidAlgebra.opRingEquiv_single,
     to_finsupp_iso_symm_apply, of_finsupp_single]

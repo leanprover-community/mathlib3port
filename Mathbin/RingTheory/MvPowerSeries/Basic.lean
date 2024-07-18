@@ -1217,21 +1217,17 @@ theorem coe_C (a : R) : ((C a : MvPolynomial σ R) : MvPowerSeries σ R) = MvPow
 #align mv_polynomial.coe_C MvPolynomial.coe_C
 -/
 
-#print MvPolynomial.coe_bit0 /-
 @[simp, norm_cast]
 theorem coe_bit0 :
     ((bit0 φ : MvPolynomial σ R) : MvPowerSeries σ R) = bit0 (φ : MvPowerSeries σ R) :=
   coe_add _ _
 #align mv_polynomial.coe_bit0 MvPolynomial.coe_bit0
--/
 
-#print MvPolynomial.coe_bit1 /-
 @[simp, norm_cast]
 theorem coe_bit1 :
     ((bit1 φ : MvPolynomial σ R) : MvPowerSeries σ R) = bit1 (φ : MvPowerSeries σ R) := by
   rw [bit1, bit1, coe_add, coe_one, coe_bit0]
 #align mv_polynomial.coe_bit1 MvPolynomial.coe_bit1
--/
 
 #print MvPolynomial.coe_X /-
 @[simp, norm_cast]
@@ -2872,19 +2868,15 @@ theorem coe_C (a : R) : ((C a : R[X]) : PowerSeries R) = PowerSeries.C R a :=
 #align polynomial.coe_C Polynomial.coe_C
 -/
 
-#print Polynomial.coe_bit0 /-
 @[simp, norm_cast]
 theorem coe_bit0 : ((bit0 φ : R[X]) : PowerSeries R) = bit0 (φ : PowerSeries R) :=
   coe_add φ φ
 #align polynomial.coe_bit0 Polynomial.coe_bit0
--/
 
-#print Polynomial.coe_bit1 /-
 @[simp, norm_cast]
 theorem coe_bit1 : ((bit1 φ : R[X]) : PowerSeries R) = bit1 (φ : PowerSeries R) := by
   rw [bit1, bit1, coe_add, coe_one, coe_bit0]
 #align polynomial.coe_bit1 Polynomial.coe_bit1
--/
 
 #print Polynomial.coe_X /-
 @[simp, norm_cast]

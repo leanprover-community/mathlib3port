@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 -/
 import Algebra.CubicDiscriminant
-import RingTheory.Norm
+import RingTheory.Norm.Defs
 import Tactic.LinearCombination
 
 #align_import algebraic_geometry.elliptic_curve.weierstrass from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"

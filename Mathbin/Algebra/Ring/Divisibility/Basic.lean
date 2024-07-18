@@ -34,12 +34,10 @@ alias Dvd.dvd.add := dvd_add
 
 end DistribSemigroup
 
-#print two_dvd_bit0 /-
 @[simp]
 theorem two_dvd_bit0 [Semiring α] {a : α} : 2 ∣ bit0 a :=
-  ⟨a, bit0_eq_two_mul _⟩
+  ⟨a, bit0_eq_two_hMul _⟩
 #align two_dvd_bit0 two_dvd_bit0
--/
 
 section NonUnitalCommSemiring
 
@@ -146,11 +144,9 @@ section Ring
 
 variable [Ring α] {a b c : α}
 
-#print two_dvd_bit1 /-
 theorem two_dvd_bit1 : 2 ∣ bit1 a ↔ (2 : α) ∣ 1 :=
   dvd_add_right two_dvd_bit0
 #align two_dvd_bit1 two_dvd_bit1
--/
 
 #print dvd_add_self_left /-
 /-- An element a divides the sum a + b if and only if a divides b.-/

@@ -533,7 +533,7 @@ theorem totallyBounded_preimage {f : α → β} {s : Set β} (hf : UniformEmbedd
   by
   rw [← hf.comap_uniformity] at ht
   rcases mem_comap.2 ht with ⟨t', ht', ts⟩
-  rcases totallyBounded_iff_subset.1 (totallyBounded_subset (image_preimage_subset f s) hs) _
+  rcases totallyBounded_iff_subset.1 (TotallyBounded.subset (image_preimage_subset f s) hs) _
       ht' with
     ⟨c, cs, hfc, hct⟩
   refine' ⟨f ⁻¹' c, hfc.preimage (hf.inj.inj_on _), fun x h => _⟩

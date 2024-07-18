@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
 import Data.Nat.Choose.Dvd
-import RingTheory.IntegrallyClosed
-import RingTheory.Norm
+import RingTheory.IntegralClosure.IntegrallyClosed
+import RingTheory.Norm.Defs
 import RingTheory.Polynomial.Cyclotomic.Expand
 
 #align_import ring_theory.polynomial.eisenstein.is_integral from "leanprover-community/mathlib"@"e8e130de9dba4ed6897183c3193c752ffadbcc77"
@@ -137,7 +137,7 @@ section IsIntegral
 
 variable {K : Type v} {L : Type z} {p : R} [CommRing R] [Field K] [Field L]
 
-variable [Algebra K L] [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSeparable K L]
+variable [Algebra K L] [Algebra R L] [Algebra R K] [IsScalarTower R K L] [Algebra.IsSeparable K L]
 
 variable [IsDomain R] [IsFractionRing R K] [IsIntegrallyClosed R]
 

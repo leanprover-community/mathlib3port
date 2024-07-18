@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Data.Num.Lemmas
-import Data.Nat.Prime
+import Data.Nat.Prime.Defs
 import Tactic.Ring
 
 #align_import data.num.prime from "leanprover-community/mathlib"@"ce38d86c0b2d427ce208c3cee3159cb421d2b3c4"

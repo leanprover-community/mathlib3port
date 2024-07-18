@@ -563,14 +563,14 @@ theorem sub_dvd_eval_sub (a b : R) (p : R[X]) : a - b ∣ p.eval a - p.eval b :=
 #align polynomial.sub_dvd_eval_sub Polynomial.sub_dvd_eval_sub
 -/
 
-#print Polynomial.mul_div_mod_by_monic_cancel_left /-
-theorem mul_div_mod_by_monic_cancel_left (p : R[X]) {q : R[X]} (hmo : q.Monic) : q * p /ₘ q = p :=
+#print Polynomial.mul_divByMonic_cancel_left /-
+theorem mul_divByMonic_cancel_left (p : R[X]) {q : R[X]} (hmo : q.Monic) : q * p /ₘ q = p :=
   by
   nontriviality R
   refine' (div_mod_by_monic_unique _ 0 hmo ⟨by rw [zero_add], _⟩).1
   rw [degree_zero]
   exact Ne.bot_lt fun h => hmo.ne_zero (degree_eq_bot.1 h)
-#align polynomial.mul_div_mod_by_monic_cancel_left Polynomial.mul_div_mod_by_monic_cancel_left
+#align polynomial.mul_div_mod_by_monic_cancel_left Polynomial.mul_divByMonic_cancel_left
 -/
 
 variable (R)

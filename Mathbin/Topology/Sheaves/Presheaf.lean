@@ -151,31 +151,25 @@ theorem map_restrict {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C]
 #align Top.presheaf.map_restrict TopCat.Presheaf.map_restrict
 -/
 
-#print TopCat.Presheaf.pushforwardObj /-
 /-- Pushforward a presheaf on `X` along a continuous map `f : X ⟶ Y`, obtaining a presheaf
 on `Y`. -/
 def pushforwardObj {X Y : TopCat.{w}} (f : X ⟶ Y) (ℱ : X.Presheaf C) : Y.Presheaf C :=
   (Opens.map f).op ⋙ ℱ
 #align Top.presheaf.pushforward_obj TopCat.Presheaf.pushforwardObj
--/
 
 infixl:80 " _* " => pushforwardObj
 
-#print TopCat.Presheaf.pushforwardObj_obj /-
 @[simp]
 theorem pushforwardObj_obj {X Y : TopCat.{w}} (f : X ⟶ Y) (ℱ : X.Presheaf C) (U : (Opens Y)ᵒᵖ) :
     (f _* ℱ).obj U = ℱ.obj ((Opens.map f).op.obj U) :=
   rfl
 #align Top.presheaf.pushforward_obj_obj TopCat.Presheaf.pushforwardObj_obj
--/
 
-#print TopCat.Presheaf.pushforwardObj_map /-
 @[simp]
 theorem pushforwardObj_map {X Y : TopCat.{w}} (f : X ⟶ Y) (ℱ : X.Presheaf C) {U V : (Opens Y)ᵒᵖ}
     (i : U ⟶ V) : (f _* ℱ).map i = ℱ.map ((Opens.map f).op.map i) :=
   rfl
 #align Top.presheaf.pushforward_obj_map TopCat.Presheaf.pushforwardObj_map
--/
 
 #print TopCat.Presheaf.pushforwardEq /-
 /--
@@ -203,14 +197,11 @@ theorem pushforwardEq_hom_app {X Y : TopCat.{w}} {f g : X ⟶ Y} (h : f = g) (�
 #align Top.presheaf.pushforward_eq_hom_app TopCat.Presheaf.pushforwardEq_hom_app
 -/
 
-#print TopCat.Presheaf.pushforward_eq'_hom_app /-
 theorem pushforward_eq'_hom_app {X Y : TopCat.{w}} {f g : X ⟶ Y} (h : f = g) (ℱ : X.Presheaf C)
     (U) : NatTrans.app (eqToHom (pushforward_eq' h ℱ)) U = ℱ.map (eqToHom (by rw [h])) := by
   simpa [eq_to_hom_map]
 #align Top.presheaf.pushforward_eq'_hom_app TopCat.Presheaf.pushforward_eq'_hom_app
--/
 
-#print TopCat.Presheaf.pushforwardEq_rfl /-
 @[simp]
 theorem pushforwardEq_rfl {X Y : TopCat.{w}} (f : X ⟶ Y) (ℱ : X.Presheaf C) (U) :
     (pushforwardEq (rfl : f = f) ℱ).Hom.app (op U) = 𝟙 _ :=
@@ -218,14 +209,11 @@ theorem pushforwardEq_rfl {X Y : TopCat.{w}} (f : X ⟶ Y) (ℱ : X.Presheaf C) 
   dsimp [pushforward_eq]
   simp
 #align Top.presheaf.pushforward_eq_rfl TopCat.Presheaf.pushforwardEq_rfl
--/
 
-#print TopCat.Presheaf.pushforwardEq_eq /-
 theorem pushforwardEq_eq {X Y : TopCat.{w}} {f g : X ⟶ Y} (h₁ h₂ : f = g) (ℱ : X.Presheaf C) :
     ℱ.pushforwardEq h₁ = ℱ.pushforwardEq h₂ :=
   rfl
 #align Top.presheaf.pushforward_eq_eq TopCat.Presheaf.pushforwardEq_eq
--/
 
 namespace Pushforward
 
@@ -245,12 +233,10 @@ theorem id_eq : 𝟙 X _* ℱ = ℱ := by unfold pushforward_obj; rw [opens.map_
 #align Top.presheaf.pushforward.id_eq TopCat.Presheaf.Pushforward.id_eq
 -/
 
-#print TopCat.Presheaf.Pushforward.id_hom_app' /-
 @[simp]
 theorem id_hom_app' (U) (p) : (id ℱ).Hom.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by dsimp [id];
   simp
 #align Top.presheaf.pushforward.id_hom_app' TopCat.Presheaf.Pushforward.id_hom_app'
--/
 
 attribute [local tidy] tactic.op_induction'
 
@@ -266,11 +252,11 @@ theorem id_hom_app (U) : (id ℱ).Hom.app U = ℱ.map (eqToHom (Opens.op_map_id_
 #align Top.presheaf.pushforward.id_hom_app TopCat.Presheaf.Pushforward.id_hom_app
 -/
 
-#print TopCat.Presheaf.Pushforward.id_inv_app' /-
+#print TopCat.Presheaf.Pushforward.id_inv_app /-
 @[simp]
-theorem id_inv_app' (U) (p) : (id ℱ).inv.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by dsimp [id];
+theorem id_inv_app (U) (p) : (id ℱ).inv.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by dsimp [id];
   simp
-#align Top.presheaf.pushforward.id_inv_app' TopCat.Presheaf.Pushforward.id_inv_app'
+#align Top.presheaf.pushforward.id_inv_app' TopCat.Presheaf.Pushforward.id_inv_app
 -/
 
 #print TopCat.Presheaf.Pushforward.comp /-
@@ -304,7 +290,6 @@ theorem comp_inv_app {Y Z : TopCat.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
 
 end Pushforward
 
-#print TopCat.Presheaf.pushforwardMap /-
 /-- A morphism of presheaves gives rise to a morphisms of the pushforwards of those presheaves.
 -/
 @[simps]
@@ -313,7 +298,6 @@ def pushforwardMap {X Y : TopCat.{w}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (�
   app U := α.app _
   naturality' U V i := by erw [α.naturality]; rfl
 #align Top.presheaf.pushforward_map TopCat.Presheaf.pushforwardMap
--/
 
 open CategoryTheory.Limits
 
@@ -323,7 +307,6 @@ variable [HasColimits C]
 
 noncomputable section
 
-#print TopCat.Presheaf.pullbackObj /-
 /-- Pullback a presheaf on `Y` along a continuous map `f : X ⟶ Y`, obtaining a presheaf on `X`.
 
 This is defined in terms of left Kan extensions, which is just a fancy way of saying
@@ -333,15 +316,12 @@ This is defined in terms of left Kan extensions, which is just a fancy way of sa
 def pullbackObj {X Y : TopCat.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf C) : X.Presheaf C :=
   (lan (Opens.map f).op).obj ℱ
 #align Top.presheaf.pullback_obj TopCat.Presheaf.pullbackObj
--/
 
-#print TopCat.Presheaf.pullbackMap /-
 /-- Pulling back along continuous maps is functorial. -/
 def pullbackMap {X Y : TopCat.{v}} (f : X ⟶ Y) {ℱ 𝒢 : Y.Presheaf C} (α : ℱ ⟶ 𝒢) :
     pullbackObj f ℱ ⟶ pullbackObj f 𝒢 :=
   (lan (Opens.map f).op).map α
 #align Top.presheaf.pullback_map TopCat.Presheaf.pullbackMap
--/
 
 #print TopCat.Presheaf.pullbackObjObjOfImageOpen /-
 /-- If `f '' U` is open, then `f⁻¹ℱ U ≅ ℱ (f '' U)`.  -/
@@ -372,7 +352,6 @@ namespace Pullback
 
 variable {X Y : TopCat.{v}} (ℱ : Y.Presheaf C)
 
-#print TopCat.Presheaf.Pullback.id /-
 /-- The pullback along the identity is isomorphic to the original presheaf. -/
 def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
   NatIso.ofComponents
@@ -385,10 +364,8 @@ def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
     erw [colimit.ι_desc_assoc]
     erw [colimit.ι_desc_assoc]
     dsimp; simp only [← ℱ.map_comp]; congr
-#align Top.presheaf.pullback.id TopCat.Presheaf.Pullback.id
--/
+#align Top.presheaf.pullback.id TopCat.Presheaf.pullback.id
 
-#print TopCat.Presheaf.Pullback.id_inv_app /-
 theorem id_inv_app (U : Opens Y) :
     (id ℱ).inv.app (op U) =
       colimit.ι (Lan.diagram (Opens.map (𝟙 Y)).op ℱ (op U))
@@ -399,8 +376,7 @@ theorem id_inv_app (U : Opens Y) :
   rw [colimit.ι_desc_assoc]
   dsimp
   rw [← ℱ.map_comp, ← ℱ.map_id]; rfl
-#align Top.presheaf.pullback.id_inv_app TopCat.Presheaf.Pullback.id_inv_app
--/
+#align Top.presheaf.pullback.id_inv_app TopCat.Presheaf.pullback.id_inv_app
 
 end Pullback
 
@@ -511,19 +487,17 @@ def pullback {X Y : TopCat.{v}} (f : X ⟶ Y) : Y.Presheaf C ⥤ X.Presheaf C :=
 #align Top.presheaf.pullback TopCat.Presheaf.pullback
 -/
 
-#print TopCat.Presheaf.pullbackObj_eq_pullbackObj /-
 @[simp]
 theorem pullbackObj_eq_pullbackObj {C} [Category C] [HasColimits C] {X Y : TopCat.{w}} (f : X ⟶ Y)
     (ℱ : Y.Presheaf C) : (pullback C f).obj ℱ = pullbackObj f ℱ :=
   rfl
 #align Top.presheaf.pullback_obj_eq_pullback_obj TopCat.Presheaf.pullbackObj_eq_pullbackObj
--/
 
 #print TopCat.Presheaf.pushforwardPullbackAdjunction /-
 /-- The pullback and pushforward along a continuous map are adjoint to each other. -/
 @[simps unit_app_app counit_app_app]
 def pushforwardPullbackAdjunction {X Y : TopCat.{v}} (f : X ⟶ Y) : pullback C f ⊣ pushforward C f :=
-  Lan.adjunction _ _
+  lan.adjunction _ _
 #align Top.presheaf.pushforward_pullback_adjunction TopCat.Presheaf.pushforwardPullbackAdjunction
 -/
 

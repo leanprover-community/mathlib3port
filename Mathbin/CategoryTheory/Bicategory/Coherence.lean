@@ -80,7 +80,7 @@ as a prelax functor. This will be promoted to a pseudofunctor after proving the 
 See `inclusion`.
 -/
 def preinclusion (B : Type u) [Quiver.{v + 1} B] :
-    PrelaxFunctor (LocallyDiscrete (Paths B)) (FreeBicategory B)
+    PrelaxFunctorStruct (LocallyDiscrete (Paths B)) (FreeBicategory B)
     where
   obj := id
   map a b := (inclusionPath a b).obj

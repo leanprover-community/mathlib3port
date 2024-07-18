@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
 import Algebra.Order.Group.Abs
-import Algebra.Order.Ring.Defs
+import Algebra.Order.Ring.Unbundled.Basic
 import Algebra.Order.Sub.Canonical
 import Data.Set.Lattice
 import Tactic.Monotonicity.Basic

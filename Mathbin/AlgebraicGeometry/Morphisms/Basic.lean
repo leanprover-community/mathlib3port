@@ -108,18 +108,20 @@ theorem AffineTargetMorphismProperty.toProperty_apply (P : AffineTargetMorphismP
 #align algebraic_geometry.affine_target_morphism_property.to_property_apply AlgebraicGeometry.AffineTargetMorphismProperty.toProperty_apply
 -/
 
-#print AlgebraicGeometry.affine_cancel_left_isIso /-
-theorem affine_cancel_left_isIso {P : AffineTargetMorphismProperty} (hP : P.toProperty.RespectsIso)
-    {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [IsAffine Z] : P (f ≫ g) ↔ P g := by
+#print AlgebraicGeometry.AffineTargetMorphismProperty.cancel_left_of_respectsIso /-
+theorem AlgebraicGeometry.AffineTargetMorphismProperty.cancel_left_of_respectsIso
+    {P : AffineTargetMorphismProperty} (hP : P.toProperty.RespectsIso) {X Y Z : Scheme} (f : X ⟶ Y)
+    (g : Y ⟶ Z) [IsIso f] [IsAffine Z] : P (f ≫ g) ↔ P g := by
   rw [← P.to_property_apply, ← P.to_property_apply, hP.cancel_left_is_iso]
-#align algebraic_geometry.affine_cancel_left_is_iso AlgebraicGeometry.affine_cancel_left_isIso
+#align algebraic_geometry.affine_cancel_left_is_iso AlgebraicGeometry.AffineTargetMorphismProperty.cancel_left_of_respectsIso
 -/
 
-#print AlgebraicGeometry.affine_cancel_right_isIso /-
-theorem affine_cancel_right_isIso {P : AffineTargetMorphismProperty} (hP : P.toProperty.RespectsIso)
-    {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] [IsAffine Z] [IsAffine Y] :
-    P (f ≫ g) ↔ P f := by rw [← P.to_property_apply, ← P.to_property_apply, hP.cancel_right_is_iso]
-#align algebraic_geometry.affine_cancel_right_is_iso AlgebraicGeometry.affine_cancel_right_isIso
+#print AlgebraicGeometry.AffineTargetMorphismProperty.cancel_right_of_respectsIso /-
+theorem AlgebraicGeometry.AffineTargetMorphismProperty.cancel_right_of_respectsIso
+    {P : AffineTargetMorphismProperty} (hP : P.toProperty.RespectsIso) {X Y Z : Scheme} (f : X ⟶ Y)
+    (g : Y ⟶ Z) [IsIso g] [IsAffine Z] [IsAffine Y] : P (f ≫ g) ↔ P f := by
+  rw [← P.to_property_apply, ← P.to_property_apply, hP.cancel_right_is_iso]
+#align algebraic_geometry.affine_cancel_right_is_iso AlgebraicGeometry.AffineTargetMorphismProperty.cancel_right_of_respectsIso
 -/
 
 #print AlgebraicGeometry.AffineTargetMorphismProperty.respectsIso_mk /-
@@ -423,7 +425,7 @@ theorem PropertyIsLocalAtTarget.openCover_TFAE {P : MorphismProperty Scheme}
     apply H
   tfae_have 5 → 4
   · intro H U
-    erw [hP.1.cancel_left_isIso]
+    erw [hP.1.cancel_left_of_respectsIso]
     apply H
   tfae_have 4 → 6
   · intro H; exact ⟨PUnit, fun _ => ⊤, ciSup_const, fun _ => H _⟩
@@ -502,7 +504,7 @@ theorem IsLocal.stableUnderBaseChange {P : AffineTargetMorphismProperty} (hP : P
           as_iso
             (pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simpa using pullback.condition) (by simp))
       have : e.hom ≫ pullback.fst = pullback.snd := by simp
-      rw [← this, (target_affine_locally_respects_iso hP.1).cancel_left_isIso]
+      rw [← this, (target_affine_locally_respects_iso hP.1).cancel_left_of_respectsIso]
       apply hP.target_affine_locally_pullback_fst_of_right_of_stable_under_base_change hP'
       rw [← pullback_symmetry_hom_comp_snd, affine_cancel_left_is_iso hP.1]
       apply H)

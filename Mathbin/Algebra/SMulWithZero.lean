@@ -5,8 +5,8 @@ Authors: Damiano Testa
 -/
 import Algebra.GroupPower.Basic
 import Algebra.Ring.Opposite
-import GroupTheory.GroupAction.Opposite
-import GroupTheory.GroupAction.Prod
+import Algebra.Group.Action.Opposite
+import Algebra.Group.Action.Prod
 
 #align_import algebra.smul_with_zero from "leanprover-community/mathlib"@"dc17b6ac53b111affde68d96e5e7a0726816e2cf"
 

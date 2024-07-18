@@ -1129,7 +1129,7 @@ def sumFinsuppLEquivProdFinsupp {α β : Type _} : (Sum α β →₀ M) ≃ₗ[R
   { sumFinsuppAddEquivProdFinsupp with
     map_smul' := by intros;
       ext <;>
-        simp only [AddEquiv.to_fun_eq_coe, Prod.smul_fst, Prod.smul_snd, smul_apply,
+        simp only [AddEquiv.toFun_eq_coe, Prod.smul_fst, Prod.smul_snd, smul_apply,
           snd_sum_finsupp_add_equiv_prod_finsupp, fst_sum_finsupp_add_equiv_prod_finsupp,
           RingHom.id_apply] }
 #align finsupp.sum_finsupp_lequiv_prod_finsupp Finsupp.sumFinsuppLEquivProdFinsupp

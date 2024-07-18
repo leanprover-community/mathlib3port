@@ -288,7 +288,7 @@ theorem isBoundedLinearMap_continuousMultilinearMap_comp_linear (g : G →L[𝕜
     IsLinearMap.with_bound ⟨fun f₁ f₂ => by ext m; rfl, fun c f => by ext m; rfl⟩
       (‖g‖ ^ Fintype.card ι) fun f => _
   apply ContinuousMultilinearMap.opNorm_le_bound _ _ fun m => _
-  · apply_rules [mul_nonneg, pow_nonneg, norm_nonneg]
+  · apply_rules [mul_nonneg, Nonneg.pow_nonneg, norm_nonneg]
   calc
     ‖f (g ∘ m)‖ ≤ ‖f‖ * ∏ i, ‖g (m i)‖ := f.le_op_norm _
     _ ≤ ‖f‖ * ∏ i, ‖g‖ * ‖m i‖ :=

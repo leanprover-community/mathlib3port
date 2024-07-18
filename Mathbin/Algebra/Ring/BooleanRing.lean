@@ -3,7 +3,7 @@ Copyright (c) 2021 Bryan Gin-ge Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
 -/
-import Algebra.PUnitInstances
+import Algebra.PUnitInstances.Algebra
 import Tactic.Abel
 import Tactic.Ring
 import Order.Hom.Lattice
@@ -734,19 +734,19 @@ instance : BooleanRing Bool where
   add := xor
   add_assoc := xor_assoc
   zero := false
-  zero_add := Bool.false_xor
-  add_zero := Bool.xor_false
+  zero_add := false_xor
+  add_zero := xor_false
   neg := id
   sub := xor
   sub_eq_add_neg _ _ := rfl
-  add_left_neg := Bool.xor_self
+  add_left_neg := xor_self
   add_comm := xor_comm
   one := true
   mul := and
   mul_assoc := and_assoc
-  one_mul := Bool.true_and
-  mul_one := Bool.and_true
+  one_mul := true_and
+  mul_one := and_true
   left_distrib := and_xor_distrib_left
   right_distrib := and_xor_distrib_right
-  hMul_self := Bool.and_self
+  hMul_self := and_self
 

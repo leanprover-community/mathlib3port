@@ -218,15 +218,12 @@ def Localization :=
 
 namespace Localization
 
-#print Localization.inhabited /-
 @[to_additive]
 instance inhabited : Inhabited (Localization S) :=
   Con.Quotient.inhabited
 #align localization.inhabited Localization.inhabited
 #align add_localization.inhabited AddLocalization.inhabited
--/
 
-#print Localization.mul /-
 /-- Multiplication in a localization is defined as `⟨a, b⟩ * ⟨c, d⟩ = ⟨a * c, b * d⟩`. -/
 @[to_additive
       "Addition in an `add_localization` is defined as `⟨a, b⟩ + ⟨c, d⟩ = ⟨a + c, b + d⟩`.\n\nShould not be confused with the ring localization counterpart `localization.add`, which maps\n`⟨a, b⟩ + ⟨c, d⟩` to `⟨d * a + b * c, b * d⟩`."]
@@ -234,13 +231,11 @@ protected irreducible_def mul : Localization S → Localization S → Localizati
   (r S).CommMonoid.mul
 #align localization.mul Localization.mul
 #align add_localization.add AddLocalization.add
--/
 
 @[to_additive]
 instance : Mul (Localization S) :=
   ⟨Localization.mul S⟩
 
-#print Localization.one /-
 /-- The identity element of a localization is defined as `⟨1, 1⟩`. -/
 @[to_additive
       "The identity element of an `add_localization` is defined as `⟨0, 0⟩`.\n\nShould not be confused with the ring localization counterpart `localization.zero`,\nwhich is defined as `⟨0, 1⟩`."]
@@ -248,13 +243,11 @@ protected irreducible_def one : Localization S :=
   (r S).CommMonoid.one
 #align localization.one Localization.one
 #align add_localization.zero AddLocalization.zero
--/
 
 @[to_additive]
 instance : One (Localization S) :=
   ⟨Localization.one S⟩
 
-#print Localization.npow /-
 /-- Exponentiation in a localization is defined as `⟨a, b⟩ ^ n = ⟨a ^ n, b ^ n⟩`.
 
 This is a separate `irreducible` def to ensure the elaborator doesn't waste its time
@@ -266,7 +259,6 @@ protected irreducible_def npow : ℕ → Localization S → Localization S :=
   (r S).CommMonoid.npow
 #align localization.npow Localization.npow
 #align add_localization.nsmul AddLocalization.nsmul
--/
 
 attribute [local semireducible] Localization.mul Localization.one Localization.npow
 
@@ -481,7 +473,6 @@ section Scalar
 
 variable {R R₁ R₂ : Type _}
 
-#print Localization.smul /-
 /-- Scalar multiplication in a monoid localization is defined as `c • ⟨a, b⟩ = ⟨c • a, b⟩`. -/
 protected irreducible_def smul [SMul R M] [IsScalarTower R M M] (c : R) (z : Localization S) :
     Localization S :=
@@ -500,7 +491,6 @@ protected irreducible_def smul [SMul R M] [IsScalarTower R M M] (c : R) (z : Loc
           ⟨fun r m₁ m₂ => by simp_rw [smul_eq_mul, mul_comm m₁, smul_mul_assoc]⟩
         simp only [mul_smul_comm, ht])
 #align localization.smul Localization.smul
--/
 
 instance [SMul R M] [IsScalarTower R M M] : SMul R (Localization S) where smul := Localization.smul
 
@@ -521,8 +511,7 @@ instance [SMul R₁ M] [SMul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R�
     where smul_assoc s t :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, smul_assoc s t r]
 
-#print Localization.smulCommClass_right /-
-instance smulCommClass_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
+instance sMulCommClass_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
     SMulCommClass R (Localization S) (Localization S)
     where smul_comm s :=
     Localization.ind <|
@@ -530,10 +519,8 @@ instance smulCommClass_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
         Localization.ind <|
           Prod.rec fun r₂ x₂ => by
             simp only [smul_mk, smul_eq_mul, mk_mul, mul_comm r₁, smul_mul_assoc]
-#align localization.smul_comm_class_right Localization.smulCommClass_right
--/
+#align localization.smul_comm_class_right Localization.sMulCommClass_right
 
-#print Localization.isScalarTower_right /-
 instance isScalarTower_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
     IsScalarTower R (Localization S) (Localization S)
     where smul_assoc s :=
@@ -542,7 +529,6 @@ instance isScalarTower_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
         Localization.ind <|
           Prod.rec fun r₂ x₂ => by simp only [smul_mk, smul_eq_mul, mk_mul, smul_mul_assoc]
 #align localization.is_scalar_tower_right Localization.isScalarTower_right
--/
 
 instance [SMul R M] [SMul Rᵐᵒᵖ M] [IsScalarTower R M M] [IsScalarTower Rᵐᵒᵖ M M]
     [IsCentralScalar R M] : IsCentralScalar R (Localization S)
@@ -2109,14 +2095,12 @@ namespace Localization
 
 attribute [local semireducible] Localization
 
-#print Localization.zero /-
 /-- The zero element in a localization is defined as `(0, 1)`.
 
 Should not be confused with `add_localization.zero` which is `(0, 0)`. -/
 protected irreducible_def zero : Localization S :=
   mk 0 1
 #align localization.zero Localization.zero
--/
 
 instance : Zero (Localization S) :=
   ⟨Localization.zero S⟩

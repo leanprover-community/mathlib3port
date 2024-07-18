@@ -792,7 +792,7 @@ theorem norm_conj {z : K} : ‖conj z‖ = ‖z‖ := by simp only [← sqrt_nor
 -/
 
 instance (priority := 100) : CstarRing K
-    where norm_star_hMul_self x := (norm_mul _ _).trans <| congr_arg (· * ‖x‖) norm_conj
+    where norm_star_mul_self x := (norm_mul _ _).trans <| congr_arg (· * ‖x‖) norm_conj
 
 /-! ### Cast lemmas -/
 

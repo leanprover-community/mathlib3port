@@ -250,19 +250,21 @@ section
 
 variable {D : Type u} [Category.{u} D] {I : Type u} (f : I → D) (X : Discrete I)
 
-#print CategoryTheory.FreeMonoidalCategory.discrete_functor_obj_eq_as /-
+#print CategoryTheory.Discrete.functor_obj_eq_as /-
 -- TODO: move to discrete_category.lean, decide whether this should be a global simp lemma
 @[simp]
-theorem discrete_functor_obj_eq_as : (Discrete.functor f).obj X = f X.as :=
+theorem functor_obj_eq_as : (Discrete.functor f).obj X = f X.as :=
   rfl
-#align category_theory.free_monoidal_category.discrete_functor_obj_eq_as CategoryTheory.FreeMonoidalCategory.discrete_functor_obj_eq_as
+#align category_theory.free_monoidal_category.discrete_functor_obj_eq_as CategoryTheory.Discrete.functor_obj_eq_as
 -/
 
-#print CategoryTheory.FreeMonoidalCategory.discrete_functor_map_eq_id /-
+/- warning: category_theory.free_monoidal_category.discrete_functor_map_eq_id clashes with category_theory.discrete.functor_map -> CategoryTheory.Discrete.functor_map
+Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.discrete_functor_map_eq_id CategoryTheory.Discrete.functor_mapₓ'. -/
+#print CategoryTheory.Discrete.functor_map /-
 -- TODO: move to discrete_category.lean, decide whether this should be a global simp lemma
 @[simp]
-theorem discrete_functor_map_eq_id (g : X ⟶ X) : (Discrete.functor f).map g = 𝟙 _ := by tidy
-#align category_theory.free_monoidal_category.discrete_functor_map_eq_id CategoryTheory.FreeMonoidalCategory.discrete_functor_map_eq_id
+theorem functor_map (g : X ⟶ X) : (Discrete.functor f).map g = 𝟙 _ := by tidy
+#align category_theory.free_monoidal_category.discrete_functor_map_eq_id CategoryTheory.Discrete.functor_map
 -/
 
 end

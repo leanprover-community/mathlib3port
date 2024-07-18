@@ -1367,7 +1367,7 @@ theorem tendsto_const_mul_pow_atTop_iff :
   · rintro rfl
     simpa only [pow_zero, not_tendsto_const_at_top] using h
   · rcases((h.eventually_gt_at_top 0).And (eventually_ge_at_top 0)).exists with ⟨k, hck, hk⟩
-    exact pos_of_mul_pos_left hck (pow_nonneg hk _)
+    exact pos_of_mul_pos_left hck (Nonneg.pow_nonneg hk _)
 #align filter.tendsto_const_mul_pow_at_top_iff Filter.tendsto_const_mul_pow_atTop_iff
 -/
 

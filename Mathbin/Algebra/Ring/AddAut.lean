@@ -3,7 +3,7 @@ Copyright (c) 2022 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import GroupTheory.GroupAction.Group
+import Algebra.Group.Action.Basic
 import Algebra.Module.Defs
 
 #align_import algebra.ring.add_aut from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"

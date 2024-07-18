@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Andrew Yang
 -/
 import CategoryTheory.Limits.Shapes.Terminal
-import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.Pullback.Cospan
 import CategoryTheory.Limits.Shapes.BinaryProducts
 import CategoryTheory.Limits.Preserves.Shapes.Pullbacks
 import CategoryTheory.Limits.Preserves.Shapes.Terminal

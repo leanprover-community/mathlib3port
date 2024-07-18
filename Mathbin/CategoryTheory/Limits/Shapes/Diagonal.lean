@@ -3,9 +3,9 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.Pullback.Cospan
 import CategoryTheory.Limits.Shapes.KernelPair
-import CategoryTheory.Limits.Shapes.CommSq
+import CategoryTheory.Limits.Shapes.Pullback.CommSq
 
 #align_import category_theory.limits.shapes.diagonal from "leanprover-community/mathlib"@"cb3ceec8485239a61ed51d944cb9a95b68c6bafc"
 
@@ -410,7 +410,7 @@ theorem diagonalObjPullbackFstIso_inv_snd_snd {X Y Z : C} (f : X ⟶ Z) (g : Y �
 theorem diagonal_pullback_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
     diagonal (pullback.fst : pullback f g ⟶ _) =
       (pullbackSymmetry _ _).Hom ≫
-        ((baseChange f).map
+        ((pullback f).map
               (Over.homMk (diagonal g) (by simp) : Over.mk g ⟶ Over.mk (pullback.snd ≫ g))).left ≫
           (diagonalObjPullbackFstIso f g).inv :=
   by ext <;> simp

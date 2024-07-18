@@ -131,7 +131,7 @@ instance Pi.finite {α : Sort _} {β : α → Sort _} [Finite α] [∀ a, Finite
 -/
 
 #print Vector.finite /-
-instance Vector.finite {α : Type _} [Finite α] {n : ℕ} : Finite (Vector α n) := by
+instance Vector.finite {α : Type _} [Finite α] {n : ℕ} : Finite (Mathlib.Vector α n) := by
   haveI := Fintype.ofFinite α; infer_instance
 #align vector.finite Vector.finite
 -/

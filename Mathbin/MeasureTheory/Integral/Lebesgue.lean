@@ -475,7 +475,7 @@ theorem lintegral_iSup {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
         rw [measure_Union_eq_supr (directed_of_isDirected_le <| mono x), ENNReal.mul_iSup])
     _ = ⨆ n, ∑ r in (rs.map c).range, r * μ (rs.map c ⁻¹' {r} ∩ {a | r ≤ f n a}) :=
       by
-      rw [ENNReal.finset_sum_iSup_nat]
+      rw [ENNReal.finsetSum_iSup_of_monotone]
       intro p i j h
       exact mul_le_mul_left' (measure_mono <| mono p h) _
     _ ≤ ⨆ n : ℕ, ((rs.map c).restrict {a | (rs.map c) a ≤ f n a}).lintegral μ :=
@@ -2391,12 +2391,12 @@ theorem univ_le_of_forall_fin_meas_le {μ : Measure α} (hm : m ≤ m0) [SigmaFi
 #align measure_theory.univ_le_of_forall_fin_meas_le MeasureTheory.univ_le_of_forall_fin_meas_le
 -/
 
-#print MeasureTheory.lintegral_le_of_forall_fin_meas_le_of_measurable /-
+#print MeasureTheory.lintegral_le_of_forall_fin_meas_trim_le /-
 /-- If the Lebesgue integral of a function is bounded by some constant on all sets with finite
 measure in a sub-σ-algebra and the measure is σ-finite on that sub-σ-algebra, then the integral
 over the whole space is bounded by that same constant. Version for a measurable function.
 See `lintegral_le_of_forall_fin_meas_le'` for the more general `ae_measurable` version. -/
-theorem lintegral_le_of_forall_fin_meas_le_of_measurable {μ : Measure α} (hm : m ≤ m0)
+theorem lintegral_le_of_forall_fin_meas_trim_le {μ : Measure α} (hm : m ≤ m0)
     [SigmaFinite (μ.trim hm)] (C : ℝ≥0∞) {f : α → ℝ≥0∞} (hf_meas : Measurable f)
     (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → ∫⁻ x in s, f x ∂μ ≤ C) : ∫⁻ x, f x ∂μ ≤ C :=
   by
@@ -2432,15 +2432,17 @@ theorem lintegral_le_of_forall_fin_meas_le_of_measurable {μ : Measure α} (hm :
     · exact absurd (mem_of_mem_of_subset h (hS_mono hn₁₂)) h_1
     · exact zero_le _
     · exact le_rfl
-#align measure_theory.lintegral_le_of_forall_fin_meas_le_of_measurable MeasureTheory.lintegral_le_of_forall_fin_meas_le_of_measurable
+#align measure_theory.lintegral_le_of_forall_fin_meas_le_of_measurable MeasureTheory.lintegral_le_of_forall_fin_meas_trim_le
 -/
 
-#print MeasureTheory.lintegral_le_of_forall_fin_meas_le' /-
+/- warning: measure_theory.lintegral_le_of_forall_fin_meas_le' clashes with measure_theory.lintegral_le_of_forall_fin_meas_le_of_measurable -> MeasureTheory.lintegral_le_of_forall_fin_meas_trim_le
+Case conversion may be inaccurate. Consider using '#align measure_theory.lintegral_le_of_forall_fin_meas_le' MeasureTheory.lintegral_le_of_forall_fin_meas_trim_leₓ'. -/
+#print MeasureTheory.lintegral_le_of_forall_fin_meas_trim_le /-
 /-- If the Lebesgue integral of a function is bounded by some constant on all sets with finite
 measure in a sub-σ-algebra and the measure is σ-finite on that sub-σ-algebra, then the integral
 over the whole space is bounded by that same constant. -/
-theorem lintegral_le_of_forall_fin_meas_le' {μ : Measure α} (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
-    (C : ℝ≥0∞) {f : _ → ℝ≥0∞} (hf_meas : AEMeasurable f μ)
+theorem lintegral_le_of_forall_fin_meas_trim_le {μ : Measure α} (hm : m ≤ m0)
+    [SigmaFinite (μ.trim hm)] (C : ℝ≥0∞) {f : _ → ℝ≥0∞} (hf_meas : AEMeasurable f μ)
     (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → ∫⁻ x in s, f x ∂μ ≤ C) : ∫⁻ x, f x ∂μ ≤ C :=
   by
   let f' := hf_meas.mk f
@@ -2451,7 +2453,7 @@ theorem lintegral_le_of_forall_fin_meas_le' {μ : Measure α} (hm : m ≤ m0) [S
     rw [hx]
   rw [lintegral_congr_ae hf_meas.ae_eq_mk]
   exact lintegral_le_of_forall_fin_meas_le_of_measurable hm C hf_meas.measurable_mk hf'
-#align measure_theory.lintegral_le_of_forall_fin_meas_le' MeasureTheory.lintegral_le_of_forall_fin_meas_le'
+#align measure_theory.lintegral_le_of_forall_fin_meas_le' MeasureTheory.lintegral_le_of_forall_fin_meas_trim_le
 -/
 
 #print MeasureTheory.lintegral_le_of_forall_fin_meas_le /-
@@ -2461,7 +2463,7 @@ constant. -/
 theorem lintegral_le_of_forall_fin_meas_le [MeasurableSpace α] {μ : Measure α} [SigmaFinite μ]
     (C : ℝ≥0∞) {f : α → ℝ≥0∞} (hf_meas : AEMeasurable f μ)
     (hf : ∀ s, MeasurableSet s → μ s ≠ ∞ → ∫⁻ x in s, f x ∂μ ≤ C) : ∫⁻ x, f x ∂μ ≤ C :=
-  @lintegral_le_of_forall_fin_meas_le' _ _ _ _ _ (by rwa [trim_eq_self]) C _ hf_meas hf
+  @lintegral_le_of_forall_fin_meas_trim_le _ _ _ _ _ (by rwa [trim_eq_self]) C _ hf_meas hf
 #align measure_theory.lintegral_le_of_forall_fin_meas_le MeasureTheory.lintegral_le_of_forall_fin_meas_le
 -/
 

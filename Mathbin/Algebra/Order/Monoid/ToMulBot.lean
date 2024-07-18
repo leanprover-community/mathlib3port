@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Algebra.Order.WithZero
-import Algebra.Order.Monoid.WithTop
+import Algebra.Order.Monoid.Unbundled.WithTop
 import Algebra.Order.Monoid.TypeTags
 
 #align_import algebra.order.monoid.to_mul_bot from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"

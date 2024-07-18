@@ -101,10 +101,10 @@ theorem PosDef.transpose {M : Matrix n n 𝕜} (hM : M.PosDef) : Mᵀ.PosDef :=
 
 #print Matrix.PosDef.of_toQuadraticForm' /-
 theorem Matrix.PosDef.of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
-    (hMq : M.toQuadraticForm'.PosDef) : M.PosDef :=
+    (hMq : M.toQuadraticMap'.PosDef) : M.PosDef :=
   by
   refine' ⟨hM, fun x hx => _⟩
-  simp only [to_quadratic_form', QuadraticForm.PosDef, LinearMap.BilinForm.toQuadraticForm_apply,
+  simp only [to_quadratic_form', QuadraticMap.PosDef, LinearMap.BilinMap.toQuadraticMap_apply,
     Matrix.toBilin'_apply'] at hMq
   apply hMq x hx
 #align matrix.pos_def_of_to_quadratic_form' Matrix.PosDef.of_toQuadraticForm'
@@ -112,9 +112,9 @@ theorem Matrix.PosDef.of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (
 
 #print Matrix.PosDef.toQuadraticForm' /-
 theorem Matrix.PosDef.toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
-    M.toQuadraticForm'.PosDef := by
+    M.toQuadraticMap'.PosDef := by
   intro x hx
-  simp only [to_quadratic_form', LinearMap.BilinForm.toQuadraticForm_apply, Matrix.toBilin'_apply']
+  simp only [to_quadratic_form', LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toBilin'_apply']
   apply hM.2 x hx
 #align matrix.pos_def_to_quadratic_form' Matrix.PosDef.toQuadraticForm'
 -/
@@ -142,13 +142,13 @@ end PosDef
 
 end Matrix
 
-namespace QuadraticForm
+namespace QuadraticMap
 
 variable {n : Type _} [Fintype n]
 
 #print QuadraticForm.posDef_of_toMatrix' /-
-theorem posDef_of_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)}
-    (hQ : Q.toMatrix'.PosDef) : Q.PosDef :=
+theorem posDef_of_toMatrix' [DecidableEq n] {Q : QuadraticMap ℝ (n → ℝ)} (hQ : Q.toMatrix'.PosDef) :
+    Q.PosDef :=
   by
   rw [← to_quadratic_form_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associated_hom _) Q)]
   apply Matrix.PosDef.toQuadraticForm' hQ
@@ -156,7 +156,7 @@ theorem posDef_of_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)}
 -/
 
 #print QuadraticForm.posDef_toMatrix' /-
-theorem posDef_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.PosDef) :
+theorem posDef_toMatrix' [DecidableEq n] {Q : QuadraticMap ℝ (n → ℝ)} (hQ : Q.PosDef) :
     Q.toMatrix'.PosDef :=
   by
   rw [← to_quadratic_form_associated ℝ Q, ←
@@ -165,7 +165,7 @@ theorem posDef_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ
 #align quadratic_form.pos_def_to_matrix' QuadraticForm.posDef_toMatrix'
 -/
 
-end QuadraticForm
+end QuadraticMap
 
 namespace Matrix
 

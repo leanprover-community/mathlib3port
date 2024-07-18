@@ -802,8 +802,6 @@ protected theorem mul_div_cancel_left' {a b : ℕ} (Hd : a ∣ b) : a * (b / a) 
 #align nat.mul_div_cancel_left' Nat.mul_div_cancel_left'
 -/
 
-/- warning: nat.mul_div_mul_left clashes with nat.mul_div_mul -> Nat.mul_div_mul_left
-Case conversion may be inaccurate. Consider using '#align nat.mul_div_mul_left Nat.mul_div_mul_leftₓ'. -/
 #print Nat.mul_div_mul_left /-
 --TODO: Update `nat.mul_div_mul` in the core?
 /-- Alias of `nat.mul_div_mul` -/

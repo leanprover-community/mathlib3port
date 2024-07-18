@@ -143,7 +143,7 @@ theorem log_stirlingSeq_diff_le_geo_sum (n : ℕ) :
       1 / (2 * (k.succ : ℝ) + 1) * ((1 / (2 * n.succ + 1)) ^ 2) ^ k.succ ≤
         ((1 / (2 * n.succ + 1)) ^ 2) ^ k.succ :=
     by
-    refine' fun k => mul_le_of_le_one_left (pow_nonneg h_nonneg k.succ) _
+    refine' fun k => mul_le_of_le_one_left (Nonneg.pow_nonneg h_nonneg k.succ) _
     rw [one_div]
     exact inv_le_one (le_add_of_nonneg_left <| by positivity)
   exact hasSum_le hab (log_stirling_seq_diff_has_sum n) g
@@ -276,7 +276,7 @@ theorem tendsto_self_div_two_mul_self_add_one :
 theorem stirlingSeq_pow_four_div_stirlingSeq_pow_two_eq (n : ℕ) (hn : n ≠ 0) :
     stirlingSeq n ^ 4 / stirlingSeq (2 * n) ^ 2 * (n / (2 * n + 1)) = Wallis.W n :=
   by
-  rw [bit0_eq_two_mul, stirling_seq, pow_mul, stirling_seq, wallis.W_eq_factorial_ratio]
+  rw [bit0_eq_two_hMul, stirling_seq, pow_mul, stirling_seq, wallis.W_eq_factorial_ratio]
   simp_rw [div_pow, mul_pow]
   rw [sq_sqrt, sq_sqrt]
   any_goals positivity

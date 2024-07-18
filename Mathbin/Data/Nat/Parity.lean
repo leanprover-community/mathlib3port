@@ -353,51 +353,39 @@ theorem one_add_div_two_mul_two_of_odd (h : Odd n) : 1 + n / 2 * 2 = n := by rw 
 #align nat.one_add_div_two_mul_two_of_odd Nat.one_add_div_two_mul_two_of_odd
 -/
 
-#print Nat.bit0_div_two /-
 theorem bit0_div_two : bit0 n / 2 = n := by
-  rw [← Nat.bit0_eq_bit0, bit0_eq_two_mul, two_mul_div_two_of_even (even_bit0 n)]
+  rw [← Nat.bit0_eq_bit0, bit0_eq_two_hMul, two_mul_div_two_of_even (even_bit0 n)]
 #align nat.bit0_div_two Nat.bit0_div_two
--/
 
-#print Nat.bit1_div_two /-
 theorem bit1_div_two : bit1 n / 2 = n := by
-  rw [← Nat.bit1_eq_bit1, bit1, bit0_eq_two_mul, Nat.two_mul_div_two_add_one_of_odd (odd_bit1 n)]
+  rw [← Nat.bit1_eq_bit1, bit1, bit0_eq_two_hMul, Nat.two_mul_div_two_add_one_of_odd (odd_bit1 n)]
 #align nat.bit1_div_two Nat.bit1_div_two
--/
 
-#print Nat.bit0_div_bit0 /-
 @[simp]
 theorem bit0_div_bit0 : bit0 n / bit0 m = n / m := by
-  rw [bit0_eq_two_mul m, ← Nat.div_div_eq_div_mul, bit0_div_two]
+  rw [bit0_eq_two_hMul m, ← Nat.div_div_eq_div_mul, bit0_div_two]
 #align nat.bit0_div_bit0 Nat.bit0_div_bit0
--/
 
-#print Nat.bit1_div_bit0 /-
 @[simp]
 theorem bit1_div_bit0 : bit1 n / bit0 m = n / m := by
-  rw [bit0_eq_two_mul, ← Nat.div_div_eq_div_mul, bit1_div_two]
+  rw [bit0_eq_two_hMul, ← Nat.div_div_eq_div_mul, bit1_div_two]
 #align nat.bit1_div_bit0 Nat.bit1_div_bit0
--/
 
-#print Nat.bit0_mod_bit0 /-
 @[simp]
 theorem bit0_mod_bit0 : bit0 n % bit0 m = bit0 (n % m) := by
-  rw [bit0_eq_two_mul n, bit0_eq_two_mul m, bit0_eq_two_mul (n % m), Nat.mul_mod_mul_left]
+  rw [bit0_eq_two_hMul n, bit0_eq_two_hMul m, bit0_eq_two_hMul (n % m), Nat.mul_mod_mul_left]
 #align nat.bit0_mod_bit0 Nat.bit0_mod_bit0
--/
 
-#print Nat.bit1_mod_bit0 /-
 @[simp]
 theorem bit1_mod_bit0 : bit1 n % bit0 m = bit1 (n % m) :=
   by
   have h₁ := congr_arg bit1 (Nat.div_add_mod n m)
   -- `∀ m n : ℕ, bit0 m * n = bit0 (m * n)` seems to be missing...
-  rw [bit1_add, bit0_eq_two_mul, ← mul_assoc, ← bit0_eq_two_mul] at h₁
+  rw [bit1_add, bit0_eq_two_hMul, ← mul_assoc, ← bit0_eq_two_hMul] at h₁
   have h₂ := Nat.div_add_mod (bit1 n) (bit0 m)
   rw [bit1_div_bit0] at h₂
   exact add_left_cancel (h₂.trans h₁.symm)
 #align nat.bit1_mod_bit0 Nat.bit1_mod_bit0
--/
 
 -- Here are examples of how `parity_simps` can be used with `nat`.
 example (m n : ℕ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by

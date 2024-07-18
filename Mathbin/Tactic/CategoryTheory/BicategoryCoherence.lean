@@ -182,178 +182,170 @@ instance Mathlib.Tactic.BicategoryCoherence.liftHom₂WhiskerRight {f g : a ⟶ 
 #align category_theory.bicategory.lift_hom₂_whisker_right Mathlib.Tactic.BicategoryCoherence.liftHom₂WhiskerRight
 -/
 
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence /-
+#print CategoryTheory.BicategoricalCoherence /-
 /- ././././Mathport/Syntax/Translate/Command.lean:400:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 /-- A typeclass carrying a choice of bicategorical structural isomorphism between two objects.
 Used by the `⊗≫` bicategorical composition operator, and the `coherence` tactic.
 -/
-class Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence (f g : a ⟶ b)
+class CategoryTheory.BicategoricalCoherence (f g : a ⟶ b)
     [Mathlib.Tactic.BicategoryCoherence.LiftHom f]
     [Mathlib.Tactic.BicategoryCoherence.LiftHom g] where
   Hom : f ⟶ g
   [IsIso : IsIso hom]
-#align category_theory.bicategory.bicategorical_coherence Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence
+#align category_theory.bicategory.bicategorical_coherence CategoryTheory.BicategoricalCoherence
 -/
 
 attribute [instance] bicategorical_coherence.is_iso
 
 namespace BicategoricalCoherence
 
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.refl /-
+#print CategoryTheory.BicategoricalCoherence.refl /-
 @[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.refl (f : a ⟶ b)
-    [Mathlib.Tactic.BicategoryCoherence.LiftHom f] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f f :=
+instance CategoryTheory.BicategoricalCoherence.refl (f : a ⟶ b)
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom f] : CategoryTheory.BicategoricalCoherence f f :=
   ⟨𝟙 _⟩
-#align category_theory.bicategory.bicategorical_coherence.refl Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.refl
+#align category_theory.bicategory.bicategorical_coherence.refl CategoryTheory.BicategoricalCoherence.refl
 -/
 
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.whiskerLeft /-
+#print CategoryTheory.BicategoricalCoherence.whiskerLeft /-
 @[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.whiskerLeft (f : a ⟶ b)
-    (g h : b ⟶ c) [Mathlib.Tactic.BicategoryCoherence.LiftHom f]
-    [Mathlib.Tactic.BicategoryCoherence.LiftHom g] [Mathlib.Tactic.BicategoryCoherence.LiftHom h]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence g h] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence (f ≫ g) (f ≫ h) :=
-  ⟨f ◁ Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom g h⟩
-#align category_theory.bicategory.bicategorical_coherence.whisker_left Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.whiskerLeft
--/
-
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.whiskerRight /-
-@[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.whiskerRight (f g : a ⟶ b)
-    (h : b ⟶ c) [Mathlib.Tactic.BicategoryCoherence.LiftHom f]
-    [Mathlib.Tactic.BicategoryCoherence.LiftHom g] [Mathlib.Tactic.BicategoryCoherence.LiftHom h]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f g] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence (f ≫ h) (g ≫ h) :=
-  ⟨Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom f g ▷ h⟩
-#align category_theory.bicategory.bicategorical_coherence.whisker_right Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.whiskerRight
--/
-
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.tensorRight /-
-@[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.tensorRight (f : a ⟶ b)
-    (g : b ⟶ b) [Mathlib.Tactic.BicategoryCoherence.LiftHom f]
-    [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence (𝟙 b) g] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f (f ≫ g) :=
-  ⟨(ρ_ f).inv ≫ f ◁ Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom (𝟙 b) g⟩
-#align category_theory.bicategory.bicategorical_coherence.tensor_right Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.tensorRight
--/
-
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.tensorRight' /-
-@[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.tensorRight' (f : a ⟶ b)
-    (g : b ⟶ b) [Mathlib.Tactic.BicategoryCoherence.LiftHom f]
-    [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence g (𝟙 b)] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence (f ≫ g) f :=
-  ⟨f ◁ Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom g (𝟙 b) ≫ (ρ_ f).Hom⟩
-#align category_theory.bicategory.bicategorical_coherence.tensor_right' Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.tensorRight'
--/
-
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.left /-
-@[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.left (f g : a ⟶ b)
+instance CategoryTheory.BicategoricalCoherence.whiskerLeft (f : a ⟶ b) (g h : b ⟶ c)
     [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f g] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence (𝟙 a ≫ f) g :=
-  ⟨(λ_ f).Hom ≫ Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom f g⟩
-#align category_theory.bicategory.bicategorical_coherence.left Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.left
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom h] [CategoryTheory.BicategoricalCoherence g h] :
+    CategoryTheory.BicategoricalCoherence (f ≫ g) (f ≫ h) :=
+  ⟨f ◁ CategoryTheory.BicategoricalCoherence.hom g h⟩
+#align category_theory.bicategory.bicategorical_coherence.whisker_left CategoryTheory.BicategoricalCoherence.whiskerLeft
 -/
 
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.left' /-
+#print CategoryTheory.BicategoricalCoherence.whiskerRight /-
 @[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.left' (f g : a ⟶ b)
+instance CategoryTheory.BicategoricalCoherence.whiskerRight (f g : a ⟶ b) (h : b ⟶ c)
     [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f g] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f (𝟙 a ≫ g) :=
-  ⟨Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom f g ≫ (λ_ g).inv⟩
-#align category_theory.bicategory.bicategorical_coherence.left' Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.left'
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom h] [CategoryTheory.BicategoricalCoherence f g] :
+    CategoryTheory.BicategoricalCoherence (f ≫ h) (g ≫ h) :=
+  ⟨CategoryTheory.BicategoricalCoherence.hom f g ▷ h⟩
+#align category_theory.bicategory.bicategorical_coherence.whisker_right CategoryTheory.BicategoricalCoherence.whiskerRight
 -/
 
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.right /-
+#print CategoryTheory.BicategoricalCoherence.tensorRight /-
 @[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.right (f g : a ⟶ b)
+instance CategoryTheory.BicategoricalCoherence.tensorRight (f : a ⟶ b) (g : b ⟶ b)
     [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f g] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence (f ≫ 𝟙 b) g :=
-  ⟨(ρ_ f).Hom ≫ Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom f g⟩
-#align category_theory.bicategory.bicategorical_coherence.right Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.right
+    [CategoryTheory.BicategoricalCoherence (𝟙 b) g] :
+    CategoryTheory.BicategoricalCoherence f (f ≫ g) :=
+  ⟨(ρ_ f).inv ≫ f ◁ CategoryTheory.BicategoricalCoherence.hom (𝟙 b) g⟩
+#align category_theory.bicategory.bicategorical_coherence.tensor_right CategoryTheory.BicategoricalCoherence.tensorRight
 -/
 
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.right' /-
+#print CategoryTheory.BicategoricalCoherence.tensorRight' /-
 @[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.right' (f g : a ⟶ b)
+instance CategoryTheory.BicategoricalCoherence.tensorRight' (f : a ⟶ b) (g : b ⟶ b)
     [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f g] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f (g ≫ 𝟙 b) :=
-  ⟨Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom f g ≫ (ρ_ g).inv⟩
-#align category_theory.bicategory.bicategorical_coherence.right' Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.right'
+    [CategoryTheory.BicategoricalCoherence g (𝟙 b)] :
+    CategoryTheory.BicategoricalCoherence (f ≫ g) f :=
+  ⟨f ◁ CategoryTheory.BicategoricalCoherence.hom g (𝟙 b) ≫ (ρ_ f).Hom⟩
+#align category_theory.bicategory.bicategorical_coherence.tensor_right' CategoryTheory.BicategoricalCoherence.tensorRight'
 -/
 
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.assoc /-
+#print CategoryTheory.BicategoricalCoherence.left /-
 @[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.assoc (f : a ⟶ b) (g : b ⟶ c)
-    (h : c ⟶ d) (i : a ⟶ d) [Mathlib.Tactic.BicategoryCoherence.LiftHom f]
-    [Mathlib.Tactic.BicategoryCoherence.LiftHom g] [Mathlib.Tactic.BicategoryCoherence.LiftHom h]
-    [Mathlib.Tactic.BicategoryCoherence.LiftHom i]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence (f ≫ g ≫ h) i] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence ((f ≫ g) ≫ h) i :=
-  ⟨(α_ f g h).Hom ≫ Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom (f ≫ g ≫ h) i⟩
-#align category_theory.bicategory.bicategorical_coherence.assoc Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.assoc
+instance CategoryTheory.BicategoricalCoherence.left (f g : a ⟶ b)
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
+    [CategoryTheory.BicategoricalCoherence f g] :
+    CategoryTheory.BicategoricalCoherence (𝟙 a ≫ f) g :=
+  ⟨(λ_ f).Hom ≫ CategoryTheory.BicategoricalCoherence.hom f g⟩
+#align category_theory.bicategory.bicategorical_coherence.left CategoryTheory.BicategoricalCoherence.left
 -/
 
-#print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.assoc' /-
+#print CategoryTheory.BicategoricalCoherence.left' /-
 @[simps]
-instance Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.assoc' (f : a ⟶ b) (g : b ⟶ c)
-    (h : c ⟶ d) (i : a ⟶ d) [Mathlib.Tactic.BicategoryCoherence.LiftHom f]
+instance CategoryTheory.BicategoricalCoherence.left' (f g : a ⟶ b)
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
+    [CategoryTheory.BicategoricalCoherence f g] :
+    CategoryTheory.BicategoricalCoherence f (𝟙 a ≫ g) :=
+  ⟨CategoryTheory.BicategoricalCoherence.hom f g ≫ (λ_ g).inv⟩
+#align category_theory.bicategory.bicategorical_coherence.left' CategoryTheory.BicategoricalCoherence.left'
+-/
+
+#print CategoryTheory.BicategoricalCoherence.right /-
+@[simps]
+instance CategoryTheory.BicategoricalCoherence.right (f g : a ⟶ b)
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
+    [CategoryTheory.BicategoricalCoherence f g] :
+    CategoryTheory.BicategoricalCoherence (f ≫ 𝟙 b) g :=
+  ⟨(ρ_ f).Hom ≫ CategoryTheory.BicategoricalCoherence.hom f g⟩
+#align category_theory.bicategory.bicategorical_coherence.right CategoryTheory.BicategoricalCoherence.right
+-/
+
+#print CategoryTheory.BicategoricalCoherence.right' /-
+@[simps]
+instance CategoryTheory.BicategoricalCoherence.right' (f g : a ⟶ b)
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
+    [CategoryTheory.BicategoricalCoherence f g] :
+    CategoryTheory.BicategoricalCoherence f (g ≫ 𝟙 b) :=
+  ⟨CategoryTheory.BicategoricalCoherence.hom f g ≫ (ρ_ g).inv⟩
+#align category_theory.bicategory.bicategorical_coherence.right' CategoryTheory.BicategoricalCoherence.right'
+-/
+
+#print CategoryTheory.BicategoricalCoherence.assoc /-
+@[simps]
+instance CategoryTheory.BicategoricalCoherence.assoc (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (i : a ⟶ d)
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom h] [Mathlib.Tactic.BicategoryCoherence.LiftHom i]
+    [CategoryTheory.BicategoricalCoherence (f ≫ g ≫ h) i] :
+    CategoryTheory.BicategoricalCoherence ((f ≫ g) ≫ h) i :=
+  ⟨(α_ f g h).Hom ≫ CategoryTheory.BicategoricalCoherence.hom (f ≫ g ≫ h) i⟩
+#align category_theory.bicategory.bicategorical_coherence.assoc CategoryTheory.BicategoricalCoherence.assoc
+-/
+
+#print CategoryTheory.BicategoricalCoherence.assoc' /-
+@[simps]
+instance CategoryTheory.BicategoricalCoherence.assoc' (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d)
+    (i : a ⟶ d) [Mathlib.Tactic.BicategoryCoherence.LiftHom f]
     [Mathlib.Tactic.BicategoryCoherence.LiftHom g] [Mathlib.Tactic.BicategoryCoherence.LiftHom h]
     [Mathlib.Tactic.BicategoryCoherence.LiftHom i]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence i (f ≫ g ≫ h)] :
-    Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence i ((f ≫ g) ≫ h) :=
-  ⟨Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom i (f ≫ g ≫ h) ≫ (α_ f g h).inv⟩
-#align category_theory.bicategory.bicategorical_coherence.assoc' Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.assoc'
+    [CategoryTheory.BicategoricalCoherence i (f ≫ g ≫ h)] :
+    CategoryTheory.BicategoricalCoherence i ((f ≫ g) ≫ h) :=
+  ⟨CategoryTheory.BicategoricalCoherence.hom i (f ≫ g ≫ h) ≫ (α_ f g h).inv⟩
+#align category_theory.bicategory.bicategorical_coherence.assoc' CategoryTheory.BicategoricalCoherence.assoc'
 -/
 
 end BicategoricalCoherence
 
-#print Mathlib.Tactic.BicategoryCoherence.bicategoricalIso /-
+#print CategoryTheory.bicategoricalIso /-
 /-- Construct an isomorphism between two objects in a bicategorical category
 out of unitors and associators. -/
-def Mathlib.Tactic.BicategoryCoherence.bicategoricalIso (f g : a ⟶ b)
-    [Mathlib.Tactic.BicategoryCoherence.LiftHom f] [Mathlib.Tactic.BicategoryCoherence.LiftHom g]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence f g] : f ≅ g :=
-  asIso (Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom f g)
-#align category_theory.bicategory.bicategorical_iso Mathlib.Tactic.BicategoryCoherence.bicategoricalIso
+def CategoryTheory.bicategoricalIso (f g : a ⟶ b) [Mathlib.Tactic.BicategoryCoherence.LiftHom f]
+    [Mathlib.Tactic.BicategoryCoherence.LiftHom g] [CategoryTheory.BicategoricalCoherence f g] :
+    f ≅ g :=
+  asIso (CategoryTheory.BicategoricalCoherence.hom f g)
+#align category_theory.bicategory.bicategorical_iso CategoryTheory.bicategoricalIso
 -/
 
-#print Mathlib.Tactic.BicategoryCoherence.bicategoricalComp /-
+#print CategoryTheory.bicategoricalComp /-
 /-- Compose two morphisms in a bicategorical category,
 inserting unitors and associators between as necessary. -/
-def Mathlib.Tactic.BicategoryCoherence.bicategoricalComp {f g h i : a ⟶ b}
+def CategoryTheory.bicategoricalComp {f g h i : a ⟶ b}
     [Mathlib.Tactic.BicategoryCoherence.LiftHom g] [Mathlib.Tactic.BicategoryCoherence.LiftHom h]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence g h] (η : f ⟶ g) (θ : h ⟶ i) :
-    f ⟶ i :=
-  η ≫ Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom g h ≫ θ
-#align category_theory.bicategory.bicategorical_comp Mathlib.Tactic.BicategoryCoherence.bicategoricalComp
+    [CategoryTheory.BicategoricalCoherence g h] (η : f ⟶ g) (θ : h ⟶ i) : f ⟶ i :=
+  η ≫ CategoryTheory.BicategoricalCoherence.hom g h ≫ θ
+#align category_theory.bicategory.bicategorical_comp CategoryTheory.bicategoricalComp
 -/
 
-scoped[Bicategory] infixr:80 " ⊗≫ " => Mathlib.Tactic.BicategoryCoherence.bicategoricalComp
+scoped[Bicategory] infixr:80 " ⊗≫ " => CategoryTheory.bicategoricalComp
 
-#print Mathlib.Tactic.BicategoryCoherence.bicategoricalIsoComp /-
+#print CategoryTheory.bicategoricalIsoComp /-
 -- type as \ot \gg
 /-- Compose two isomorphisms in a bicategorical category,
 inserting unitors and associators between as necessary. -/
-def Mathlib.Tactic.BicategoryCoherence.bicategoricalIsoComp {f g h i : a ⟶ b}
+def CategoryTheory.bicategoricalIsoComp {f g h i : a ⟶ b}
     [Mathlib.Tactic.BicategoryCoherence.LiftHom g] [Mathlib.Tactic.BicategoryCoherence.LiftHom h]
-    [Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence g h] (η : f ≅ g) (θ : h ≅ i) :
-    f ≅ i :=
-  η ≪≫ asIso (Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence.hom g h) ≪≫ θ
-#align category_theory.bicategory.bicategorical_iso_comp Mathlib.Tactic.BicategoryCoherence.bicategoricalIsoComp
+    [CategoryTheory.BicategoricalCoherence g h] (η : f ≅ g) (θ : h ≅ i) : f ≅ i :=
+  η ≪≫ asIso (CategoryTheory.BicategoricalCoherence.hom g h) ≪≫ θ
+#align category_theory.bicategory.bicategorical_iso_comp CategoryTheory.bicategoricalIsoComp
 -/
 
-scoped[Bicategory] infixr:80 " ≪⊗≫ " => Mathlib.Tactic.BicategoryCoherence.bicategoricalIsoComp
+scoped[Bicategory] infixr:80 " ≪⊗≫ " => CategoryTheory.bicategoricalIsoComp
 
 -- type as \ot \gg
 example {f' : a ⟶ d} {f : a ⟶ b} {g : b ⟶ c} {h : c ⟶ d} {h' : a ⟶ d} (η : f' ⟶ f ≫ g ≫ h)
@@ -365,11 +357,11 @@ example {f' : a ⟶ d} {f : a ⟶ b} {g : b ⟶ c} {h : c ⟶ d} {h' : a ⟶ d} 
 example {f' : a ⟶ d} {f : a ⟶ b} {g : b ⟶ c} {h : c ⟶ d} (η : f' ⟶ (f ≫ g) ≫ h) : f' ⟶ f ≫ g ≫ h :=
   η ⊗≫ 𝟙 _
 
-#print Mathlib.Tactic.BicategoryCoherence.bicategoricalComp_refl /-
+#print CategoryTheory.bicategoricalComp_refl /-
 @[simp]
-theorem Mathlib.Tactic.BicategoryCoherence.bicategoricalComp_refl {f g h : a ⟶ b} (η : f ⟶ g)
-    (θ : g ⟶ h) : η ⊗≫ θ = η ≫ θ := by dsimp [bicategorical_comp]; simp
-#align category_theory.bicategory.bicategorical_comp_refl Mathlib.Tactic.BicategoryCoherence.bicategoricalComp_refl
+theorem CategoryTheory.bicategoricalComp_refl {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) :
+    η ⊗≫ θ = η ≫ θ := by dsimp [bicategorical_comp]; simp
+#align category_theory.bicategory.bicategorical_comp_refl CategoryTheory.bicategoricalComp_refl
 -/
 
 end CategoryTheory.Bicategory

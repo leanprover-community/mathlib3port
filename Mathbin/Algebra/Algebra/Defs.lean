@@ -6,7 +6,7 @@ Authors: Kenny Lau, Yury Kudryashov
 import Algebra.Module.Defs
 import Algebra.Module.ULift
 import Algebra.NeZero
-import Algebra.PUnitInstances
+import Algebra.PUnitInstances.Algebra
 import Algebra.Ring.Aut
 import Algebra.Ring.ULift
 import Algebra.CharZero.Lemmas

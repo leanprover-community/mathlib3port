@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
 import Data.Nat.Factors
-import Data.Nat.Prime
+import Data.Nat.Prime.Defs
 import Tactic.NormNum
 
 #align_import data.nat.prime_norm_num from "leanprover-community/mathlib"@"61db041ab8e4aaf8cb5c7dc10a7d4ff261997536"
@@ -29,7 +29,7 @@ theorem is_prime_helper (n : ℕ) (h₁ : 1 < n) (h₂ : Nat.minFac n = n) : Nat
 #align tactic.norm_num.is_prime_helper Tactic.NormNum.is_prime_helper
 
 theorem minFac_bit0 (n : ℕ) : Nat.minFac (bit0 n) = 2 := by
-  simp [Nat.minFac_eq, show 2 ∣ bit0 n by simp [bit0_eq_two_mul n]]
+  simp [Nat.minFac_eq, show 2 ∣ bit0 n by simp [bit0_eq_two_hMul n]]
 #align tactic.norm_num.min_fac_bit0 Tactic.NormNum.minFac_bit0
 
 /-- A predicate representing partial progress in a proof of `min_fac`. -/
@@ -43,7 +43,7 @@ theorem MinFacHelper.n_pos {n k : ℕ} (h : MinFacHelper n k) : 0 < n :=
 
 theorem minFac_ne_bit0 {n k : ℕ} : Nat.minFac (bit1 n) ≠ bit0 k :=
   by
-  rw [bit0_eq_two_mul]
+  rw [bit0_eq_two_hMul]
   refine' fun e => absurd ((Nat.dvd_add_iff_right _).2 (dvd_trans ⟨_, e⟩ (Nat.minFac_dvd _))) _ <;>
     simp
 #align tactic.norm_num.min_fac_ne_bit0 Tactic.NormNum.minFac_ne_bit0
@@ -201,10 +201,12 @@ theorem factorsHelper_same_sn (a : ℕ) : FactorsHelper a a [a] :=
   factorsHelper_same _ _ _ _ (mul_one _) (factorsHelper_nil _)
 #align tactic.norm_num.factors_helper_same_sn Tactic.NormNum.factorsHelper_same_sn
 
-theorem factorsHelper_end (n : ℕ) (l : List ℕ) (H : FactorsHelper n 2 l) : Nat.factors n = l :=
+theorem factorsHelper_end (n : ℕ) (l : List ℕ) (H : FactorsHelper n 2 l) :
+    Nat.primeFactorsList n = l :=
   let ⟨h₁, h₂, h₃⟩ := H Nat.prime_two
   have := List.chain'_iff_pairwise.1 (@List.Chain'.tail _ _ (_ :: _) h₁)
-  (List.eq_of_perm_of_sorted (Nat.factors_unique h₃ h₂) this (Nat.factors_sorted _)).symm
+  (List.eq_of_perm_of_sorted (Nat.primeFactorsList_unique h₃ h₂) this
+      (Nat.primeFactorsList_sorted _)).symm
 #align tactic.norm_num.factors_helper_end Tactic.NormNum.factorsHelper_end
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
@@ -293,11 +295,11 @@ unsafe def eval_prime : expr → tactic (expr × expr)
   | q(Nat.minFac $(e)) => do
     let ic ← mk_instance_cache q(ℕ)
     Prod.snd <$> prove_min_fac ic e
-  | q(Nat.factors $(e)) => do
+  | q(Nat.primeFactorsList $(e)) => do
     let n ← e.toNat
     match n with
-      | 0 => pure (q(@List.nil ℕ), q(Nat.factors_zero))
-      | 1 => pure (q(@List.nil ℕ), q(Nat.factors_one))
+      | 0 => pure (q(@List.nil ℕ), q(Nat.primeFactorsList_zero))
+      | 1 => pure (q(@List.nil ℕ), q(Nat.primeFactorsList_one))
       | _ => do
         let c ← mk_instance_cache q(ℕ)
         let (c, l, p) ← prove_factors_aux c e q(2) n 2

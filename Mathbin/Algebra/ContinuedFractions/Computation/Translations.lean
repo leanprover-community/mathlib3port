@@ -43,9 +43,9 @@ of three sections:
 -/
 
 
-namespace GeneralizedContinuedFraction
+namespace GenContFract
 
-open GeneralizedContinuedFraction (of)
+open GenContFract (of)
 
 /- ././././Mathport/Syntax/Translate/Command.lean:230:11: unsupported: unusual advanced open style -/
 -- Fix a discrete linear ordered floor field and a value `v`.
@@ -61,15 +61,15 @@ stream of integer and fractional parts of a value.
 -/
 
 
-#print GeneralizedContinuedFraction.IntFractPair.stream_zero /-
+#print GenContFract.IntFractPair.stream_zero /-
 theorem stream_zero (v : K) : IntFractPair.stream v 0 = some (IntFractPair.of v) :=
   rfl
-#align generalized_continued_fraction.int_fract_pair.stream_zero GeneralizedContinuedFraction.IntFractPair.stream_zero
+#align generalized_continued_fraction.int_fract_pair.stream_zero GenContFract.IntFractPair.stream_zero
 -/
 
 variable {n : ℕ}
 
-#print GeneralizedContinuedFraction.IntFractPair.stream_eq_none_of_fr_eq_zero /-
+#print GenContFract.IntFractPair.stream_eq_none_of_fr_eq_zero /-
 theorem stream_eq_none_of_fr_eq_zero {ifp_n : IntFractPair K}
     (stream_nth_eq : IntFractPair.stream v n = some ifp_n) (nth_fr_eq_zero : ifp_n.fr = 0) :
     IntFractPair.stream v (n + 1) = none :=
@@ -77,10 +77,10 @@ theorem stream_eq_none_of_fr_eq_zero {ifp_n : IntFractPair K}
   cases' ifp_n with _ fr
   change fr = 0 at nth_fr_eq_zero
   simp [int_fract_pair.stream, stream_nth_eq, nth_fr_eq_zero]
-#align generalized_continued_fraction.int_fract_pair.stream_eq_none_of_fr_eq_zero GeneralizedContinuedFraction.IntFractPair.stream_eq_none_of_fr_eq_zero
+#align generalized_continued_fraction.int_fract_pair.stream_eq_none_of_fr_eq_zero GenContFract.IntFractPair.stream_eq_none_of_fr_eq_zero
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.succ_nth_stream_eq_none_iff /-
+#print GenContFract.IntFractPair.succ_nth_stream_eq_none_iff /-
 /-- Gives a recurrence to compute the `n + 1`th value of the sequence of integer and fractional
 parts of a value in case of termination.
 -/
@@ -90,10 +90,10 @@ theorem succ_nth_stream_eq_none_iff :
   by
   rw [int_fract_pair.stream]
   cases int_fract_pair.stream v n <;> simp [imp_false]
-#align generalized_continued_fraction.int_fract_pair.succ_nth_stream_eq_none_iff GeneralizedContinuedFraction.IntFractPair.succ_nth_stream_eq_none_iff
+#align generalized_continued_fraction.int_fract_pair.succ_nth_stream_eq_none_iff GenContFract.IntFractPair.succ_nth_stream_eq_none_iff
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.succ_nth_stream_eq_some_iff /-
+#print GenContFract.IntFractPair.succ_nth_stream_eq_some_iff /-
 /-- Gives a recurrence to compute the `n + 1`th value of the sequence of integer and fractional
 parts of a value in case of non-termination.
 -/
@@ -103,20 +103,20 @@ theorem succ_nth_stream_eq_some_iff {ifp_succ_n : IntFractPair K} :
         IntFractPair.stream v n = some ifp_n ∧
           ifp_n.fr ≠ 0 ∧ IntFractPair.of ifp_n.fr⁻¹ = ifp_succ_n :=
   by simp [int_fract_pair.stream, ite_eq_iff]
-#align generalized_continued_fraction.int_fract_pair.succ_nth_stream_eq_some_iff GeneralizedContinuedFraction.IntFractPair.succ_nth_stream_eq_some_iff
+#align generalized_continued_fraction.int_fract_pair.succ_nth_stream_eq_some_iff GenContFract.IntFractPair.succ_nth_stream_eq_some_iff
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.stream_succ_of_some /-
+#print GenContFract.IntFractPair.stream_succ_of_some /-
 /-- An easier to use version of one direction of
 `generalized_continued_fraction.int_fract_pair.succ_nth_stream_eq_some_iff`.
 -/
 theorem stream_succ_of_some {p : IntFractPair K} (h : IntFractPair.stream v n = some p)
     (h' : p.fr ≠ 0) : IntFractPair.stream v (n + 1) = some (IntFractPair.of p.fr⁻¹) :=
   succ_nth_stream_eq_some_iff.mpr ⟨p, h, h', rfl⟩
-#align generalized_continued_fraction.int_fract_pair.stream_succ_of_some GeneralizedContinuedFraction.IntFractPair.stream_succ_of_some
+#align generalized_continued_fraction.int_fract_pair.stream_succ_of_some GenContFract.IntFractPair.stream_succ_of_some
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.stream_succ_of_int /-
+#print GenContFract.IntFractPair.stream_succ_of_int /-
 /-- The stream of `int_fract_pair`s of an integer stops after the first term.
 -/
 theorem stream_succ_of_int (a : ℤ) (n : ℕ) : IntFractPair.stream (a : K) (n + 1) = none :=
@@ -125,10 +125,10 @@ theorem stream_succ_of_int (a : ℤ) (n : ℕ) : IntFractPair.stream (a : K) (n 
   · refine' int_fract_pair.stream_eq_none_of_fr_eq_zero (int_fract_pair.stream_zero (a : K)) _
     simp only [int_fract_pair.of, Int.fract_intCast]
   · exact int_fract_pair.succ_nth_stream_eq_none_iff.mpr (Or.inl ih)
-#align generalized_continued_fraction.int_fract_pair.stream_succ_of_int GeneralizedContinuedFraction.IntFractPair.stream_succ_of_int
+#align generalized_continued_fraction.int_fract_pair.stream_succ_of_int GenContFract.IntFractPair.stream_succ_of_int
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.exists_succ_nth_stream_of_fr_zero /-
+#print GenContFract.IntFractPair.exists_succ_nth_stream_of_fr_zero /-
 theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : IntFractPair K}
     (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n)
     (succ_nth_fr_eq_zero : ifp_succ_n.fr = 0) :
@@ -140,10 +140,10 @@ theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : IntFractPair K}
     ⟨ifp_n, seq_nth_eq, nth_fr_ne_zero, rfl⟩
   refine' ⟨ifp_n, seq_nth_eq, _⟩
   simpa only [int_fract_pair.of, Int.fract, sub_eq_zero] using succ_nth_fr_eq_zero
-#align generalized_continued_fraction.int_fract_pair.exists_succ_nth_stream_of_fr_zero GeneralizedContinuedFraction.IntFractPair.exists_succ_nth_stream_of_fr_zero
+#align generalized_continued_fraction.int_fract_pair.exists_succ_nth_stream_of_fr_zero GenContFract.IntFractPair.exists_succ_nth_stream_of_fr_zero
 -/
 
-#print GeneralizedContinuedFraction.IntFractPair.stream_succ /-
+#print GenContFract.IntFractPair.stream_succ /-
 /-- A recurrence relation that expresses the `(n+1)`th term of the stream of `int_fract_pair`s
 of `v` for non-integer `v` in terms of the `n`th term of the stream associated to
 the inverse of the fractional part of `v`.
@@ -163,7 +163,7 @@ theorem stream_succ (h : Int.fract v ≠ 0) (n : ℕ) :
       cases' eq_or_ne p.fr 0 with hz hnz
       · rw [stream_eq_none_of_fr_eq_zero hp hz, stream_eq_none_of_fr_eq_zero ih hz]
       · rw [stream_succ_of_some hp hnz, stream_succ_of_some ih hnz]
-#align generalized_continued_fraction.int_fract_pair.stream_succ GeneralizedContinuedFraction.IntFractPair.stream_succ
+#align generalized_continued_fraction.int_fract_pair.stream_succ GenContFract.IntFractPair.stream_succ
 -/
 
 end IntFractPair
@@ -179,26 +179,26 @@ process.
 -/
 
 
-#print GeneralizedContinuedFraction.IntFractPair.seq1_fst_eq_of /-
+#print GenContFract.IntFractPair.seq1_fst_eq_of /-
 /-- The head term of the sequence with head of `v` is just the integer part of `v`. -/
 @[simp]
 theorem IntFractPair.seq1_fst_eq_of : (IntFractPair.seq1 v).fst = IntFractPair.of v :=
   rfl
-#align generalized_continued_fraction.int_fract_pair.seq1_fst_eq_of GeneralizedContinuedFraction.IntFractPair.seq1_fst_eq_of
+#align generalized_continued_fraction.int_fract_pair.seq1_fst_eq_of GenContFract.IntFractPair.seq1_fst_eq_of
 -/
 
-#print GeneralizedContinuedFraction.of_h_eq_intFractPair_seq1_fst_b /-
+#print GenContFract.of_h_eq_intFractPair_seq1_fst_b /-
 theorem of_h_eq_intFractPair_seq1_fst_b : (of v).h = (IntFractPair.seq1 v).fst.b := by
   cases aux_seq_eq : int_fract_pair.seq1 v; simp [of, aux_seq_eq]
-#align generalized_continued_fraction.of_h_eq_int_fract_pair_seq1_fst_b GeneralizedContinuedFraction.of_h_eq_intFractPair_seq1_fst_b
+#align generalized_continued_fraction.of_h_eq_int_fract_pair_seq1_fst_b GenContFract.of_h_eq_intFractPair_seq1_fst_b
 -/
 
-#print GeneralizedContinuedFraction.of_h_eq_floor /-
+#print GenContFract.of_h_eq_floor /-
 /-- The head term of the gcf of `v` is `⌊v⌋`. -/
 @[simp]
 theorem of_h_eq_floor : (of v).h = ⌊v⌋ := by
   simp [of_h_eq_int_fract_pair_seq1_fst_b, int_fract_pair.of]
-#align generalized_continued_fraction.of_h_eq_floor GeneralizedContinuedFraction.of_h_eq_floor
+#align generalized_continued_fraction.of_h_eq_floor GenContFract.of_h_eq_floor
 -/
 
 end Head
@@ -217,11 +217,11 @@ sequence implies the termination of another sequence.
 
 variable {n : ℕ}
 
-#print GeneralizedContinuedFraction.IntFractPair.get?_seq1_eq_succ_get?_stream /-
+#print GenContFract.IntFractPair.get?_seq1_eq_succ_get?_stream /-
 theorem IntFractPair.get?_seq1_eq_succ_get?_stream :
     (IntFractPair.seq1 v).snd.get? n = (IntFractPair.stream v) (n + 1) :=
   rfl
-#align generalized_continued_fraction.int_fract_pair.nth_seq1_eq_succ_nth_stream GeneralizedContinuedFraction.IntFractPair.get?_seq1_eq_succ_get?_stream
+#align generalized_continued_fraction.int_fract_pair.nth_seq1_eq_succ_nth_stream GenContFract.IntFractPair.get?_seq1_eq_succ_get?_stream
 -/
 
 section Termination
@@ -233,19 +233,19 @@ Let's first show how the termination of one sequence implies the termination of 
 -/
 
 
-#print GeneralizedContinuedFraction.of_terminatedAt_iff_intFractPair_seq1_terminatedAt /-
+#print GenContFract.of_terminatedAt_iff_intFractPair_seq1_terminatedAt /-
 theorem of_terminatedAt_iff_intFractPair_seq1_terminatedAt :
     (of v).TerminatedAt n ↔ (IntFractPair.seq1 v).snd.TerminatedAt n :=
   Option.map_eq_none
-#align generalized_continued_fraction.of_terminated_at_iff_int_fract_pair_seq1_terminated_at GeneralizedContinuedFraction.of_terminatedAt_iff_intFractPair_seq1_terminatedAt
+#align generalized_continued_fraction.of_terminated_at_iff_int_fract_pair_seq1_terminated_at GenContFract.of_terminatedAt_iff_intFractPair_seq1_terminatedAt
 -/
 
-#print GeneralizedContinuedFraction.of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none /-
+#print GenContFract.of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none /-
 theorem of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none :
     (of v).TerminatedAt n ↔ IntFractPair.stream v (n + 1) = none := by
   rw [of_terminated_at_iff_int_fract_pair_seq1_terminated_at, Stream'.Seq.TerminatedAt,
     int_fract_pair.nth_seq1_eq_succ_nth_stream]
-#align generalized_continued_fraction.of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none GeneralizedContinuedFraction.of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none
+#align generalized_continued_fraction.of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none GenContFract.of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none
 -/
 
 end Termination
@@ -259,7 +259,7 @@ Now let's show how the values of the sequences correspond to one another.
 -/
 
 
-#print GeneralizedContinuedFraction.IntFractPair.exists_succ_get?_stream_of_gcf_of_get?_eq_some /-
+#print GenContFract.IntFractPair.exists_succ_get?_stream_of_gcf_of_get?_eq_some /-
 theorem IntFractPair.exists_succ_get?_stream_of_gcf_of_get?_eq_some {gp_n : Pair K}
     (s_nth_eq : (of v).s.get? n = some gp_n) :
     ∃ ifp : IntFractPair K, IntFractPair.stream v (n + 1) = some ifp ∧ (ifp.b : K) = gp_n.b :=
@@ -273,10 +273,10 @@ theorem IntFractPair.exists_succ_get?_stream_of_gcf_of_get?_eq_some {gp_n : Pair
   injection gp_n_eq with _ ifp_b_eq_gp_n_b
   exists ifp
   exact ⟨stream_succ_nth_eq, ifp_b_eq_gp_n_b⟩
-#align generalized_continued_fraction.int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some GeneralizedContinuedFraction.IntFractPair.exists_succ_get?_stream_of_gcf_of_get?_eq_some
+#align generalized_continued_fraction.int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some GenContFract.IntFractPair.exists_succ_get?_stream_of_gcf_of_get?_eq_some
 -/
 
-#print GeneralizedContinuedFraction.get?_of_eq_some_of_succ_get?_intFractPair_stream /-
+#print GenContFract.get?_of_eq_some_of_succ_get?_intFractPair_stream /-
 /-- Shows how the entries of the sequence of the computed continued fraction can be obtained by the
 integer parts of the stream of integer and fractional parts.
 -/
@@ -287,10 +287,10 @@ theorem get?_of_eq_some_of_succ_get?_intFractPair_stream {ifp_succ_n : IntFractP
   unfold of int_fract_pair.seq1
   rw [seq.map_tail, seq.nth_tail, seq.map_nth]
   simp [seq.nth, stream_succ_nth_eq]
-#align generalized_continued_fraction.nth_of_eq_some_of_succ_nth_int_fract_pair_stream GeneralizedContinuedFraction.get?_of_eq_some_of_succ_get?_intFractPair_stream
+#align generalized_continued_fraction.nth_of_eq_some_of_succ_nth_int_fract_pair_stream GenContFract.get?_of_eq_some_of_succ_get?_intFractPair_stream
 -/
 
-#print GeneralizedContinuedFraction.get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero /-
+#print GenContFract.get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero /-
 /-- Shows how the entries of the sequence of the computed continued fraction can be obtained by the
 fractional parts of the stream of integer and fractional parts.
 -/
@@ -300,12 +300,12 @@ theorem get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero {ifp_n : IntFract
   have : IntFractPair.stream v (n + 1) = some (IntFractPair.of ifp_n.fr⁻¹) := by cases ifp_n;
     simp [int_fract_pair.stream, stream_nth_eq, nth_fr_ne_zero]
   get?_of_eq_some_of_succ_get?_intFractPair_stream this
-#align generalized_continued_fraction.nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero GeneralizedContinuedFraction.get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero
+#align generalized_continued_fraction.nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero GenContFract.get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero
 -/
 
 open Int IntFractPair
 
-#print GeneralizedContinuedFraction.of_s_head_aux /-
+#print GenContFract.of_s_head_aux /-
 theorem of_s_head_aux (v : K) :
     (of v).s.get? 0 =
       (IntFractPair.stream v 1).bind
@@ -316,10 +316,10 @@ theorem of_s_head_aux (v : K) :
   rw [of, int_fract_pair.seq1, of._match_1]
   simp only [seq.map_tail, seq.map, seq.tail, seq.head, seq.nth, Stream'.map]
   rw [← Stream'.get_succ, Stream'.get, Option.map]
-#align generalized_continued_fraction.of_s_head_aux GeneralizedContinuedFraction.of_s_head_aux
+#align generalized_continued_fraction.of_s_head_aux GenContFract.of_s_head_aux
 -/
 
-#print GeneralizedContinuedFraction.of_s_head /-
+#print GenContFract.of_s_head /-
 /-- This gives the first pair of coefficients of the continued fraction of a non-integer `v`.
 -/
 theorem of_s_head (h : fract v ≠ 0) : (of v).s.headI = some ⟨1, ⌊(fract v)⁻¹⌋⟩ :=
@@ -327,12 +327,12 @@ theorem of_s_head (h : fract v ≠ 0) : (of v).s.headI = some ⟨1, ⌊(fract v)
   change (of v).s.get? 0 = _
   rw [of_s_head_aux, stream_succ_of_some (stream_zero v) h, Option.bind]
   rfl
-#align generalized_continued_fraction.of_s_head GeneralizedContinuedFraction.of_s_head
+#align generalized_continued_fraction.of_s_head GenContFract.of_s_head
 -/
 
 variable (K)
 
-#print GeneralizedContinuedFraction.of_s_of_int /-
+#print GenContFract.of_s_of_int /-
 /-- If `a` is an integer, then the coefficient sequence of its continued fraction is empty.
 -/
 theorem of_s_of_int (a : ℤ) : (of (a : K)).s = Seq.nil :=
@@ -343,12 +343,12 @@ theorem of_s_of_int (a : ℤ) : (of (a : K)).s = Seq.nil :=
     · rw [of_s_head_aux, stream_succ_of_int, Option.bind]
     · exact (of (a : K)).s.IProp ih
   seq.ext fun n => (h n).trans (seq.nth_nil n).symm
-#align generalized_continued_fraction.of_s_of_int GeneralizedContinuedFraction.of_s_of_int
+#align generalized_continued_fraction.of_s_of_int GenContFract.of_s_of_int
 -/
 
 variable {K} (v)
 
-#print GeneralizedContinuedFraction.of_s_succ /-
+#print GenContFract.of_s_succ /-
 /-- Recurrence for the `generalized_continued_fraction.of` an element `v` of `K` in terms of
 that of the inverse of the fractional part of `v`.
 -/
@@ -367,42 +367,41 @@ theorem of_s_succ (n : ℕ) : (of v).s.get? (n + 1) = (of (fract v)⁻¹).s.get?
     have Hp := nth_of_eq_some_of_succ_nth_int_fract_pair_stream hp'₁
     rw [← stream_succ h] at hp'₁
     rw [Hp, nth_of_eq_some_of_succ_nth_int_fract_pair_stream hp'₁]
-#align generalized_continued_fraction.of_s_succ GeneralizedContinuedFraction.of_s_succ
+#align generalized_continued_fraction.of_s_succ GenContFract.of_s_succ
 -/
 
-#print GeneralizedContinuedFraction.of_s_tail /-
+#print GenContFract.of_s_tail /-
 /-- This expresses the tail of the coefficient sequence of the `generalized_continued_fraction.of`
 an element `v` of `K` as the coefficient sequence of that of the inverse of the
 fractional part of `v`.
 -/
 theorem of_s_tail : (of v).s.tail = (of (fract v)⁻¹).s :=
   Seq.ext fun n => Seq.get?_tail (of v).s n ▸ of_s_succ v n
-#align generalized_continued_fraction.of_s_tail GeneralizedContinuedFraction.of_s_tail
+#align generalized_continued_fraction.of_s_tail GenContFract.of_s_tail
 -/
 
 variable (K) (n)
 
-#print GeneralizedContinuedFraction.convergents'_of_int /-
+#print GenContFract.convs'_of_int /-
 /-- If `a` is an integer, then the `convergents'` of its continued fraction expansion
 are all equal to `a`.
 -/
-theorem convergents'_of_int (a : ℤ) : (of (a : K)).convergents' n = a :=
+theorem convs'_of_int (a : ℤ) : (of (a : K)).convs' n = a :=
   by
   induction' n with n ih
   · simp only [zeroth_convergent'_eq_h, of_h_eq_floor, floor_int_cast]
   · rw [convergents', of_h_eq_floor, floor_int_cast, add_right_eq_self]
     exact convergents'_aux_succ_none ((of_s_of_int K a).symm ▸ seq.nth_nil 0) _
-#align generalized_continued_fraction.convergents'_of_int GeneralizedContinuedFraction.convergents'_of_int
+#align generalized_continued_fraction.convergents'_of_int GenContFract.convs'_of_int
 -/
 
 variable {K} (v)
 
-#print GeneralizedContinuedFraction.convergents'_succ /-
+#print GenContFract.convs'_succ /-
 /-- The recurrence relation for the `convergents'` of the continued fraction expansion
 of an element `v` of `K` in terms of the convergents of the inverse of its fractional part.
 -/
-theorem convergents'_succ :
-    (of v).convergents' (n + 1) = ⌊v⌋ + 1 / (of (fract v)⁻¹).convergents' n :=
+theorem convs'_succ : (of v).convs' (n + 1) = ⌊v⌋ + 1 / (of (fract v)⁻¹).convs' n :=
   by
   cases' eq_or_ne (fract v) 0 with h h
   · obtain ⟨a, rfl⟩ : ∃ a : ℤ, v = a := ⟨⌊v⌋, eq_of_sub_eq_zero h⟩
@@ -410,12 +409,12 @@ theorem convergents'_succ :
       div_zero, add_zero, floor_int_cast]
   · rw [convergents', of_h_eq_floor, add_right_inj, convergents'_aux_succ_some (of_s_head h)]
     exact congr_arg ((· / ·) 1) (by rw [convergents', of_h_eq_floor, add_right_inj, of_s_tail])
-#align generalized_continued_fraction.convergents'_succ GeneralizedContinuedFraction.convergents'_succ
+#align generalized_continued_fraction.convergents'_succ GenContFract.convs'_succ
 -/
 
 end Values
 
 end sequence
 
-end GeneralizedContinuedFraction
+end GenContFract
 

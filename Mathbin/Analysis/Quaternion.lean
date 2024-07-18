@@ -119,7 +119,7 @@ instance : NormedAlgebra ℝ ℍ where
   toAlgebra := (Quaternion.algebra : Algebra ℝ ℍ)
 
 instance : CstarRing ℍ
-    where norm_star_hMul_self x := (norm_mul _ _).trans <| congr_arg (· * ‖x‖) (norm_star x)
+    where norm_star_mul_self x := (norm_mul _ _).trans <| congr_arg (· * ‖x‖) (norm_star x)
 
 instance : Coe ℂ ℍ :=
   ⟨fun z => ⟨z.re, z.im, 0, 0⟩⟩

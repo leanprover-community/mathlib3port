@@ -776,7 +776,7 @@ theorem ArithmeticFunction.IsMultiplicative.eq_iff_eq_on_prime_powers [CommMonoi
   refine' Finset.prod_congr rfl _
   simp only [support_factorization, List.mem_toFinset]
   intro p hp
-  exact h p _ (Nat.prime_of_mem_factors hp)
+  exact h p _ (Nat.prime_of_mem_primeFactorsList hp)
 #align nat.arithmetic_function.is_multiplicative.eq_iff_eq_on_prime_powers ArithmeticFunction.IsMultiplicative.eq_iff_eq_on_prime_powers
 -/
 
@@ -925,14 +925,14 @@ theorem ArithmeticFunction.isMultiplicative_sigma {k : ℕ} :
 #print ArithmeticFunction.cardFactors /-
 /-- `Ω n` is the number of prime factors of `n`. -/
 def ArithmeticFunction.cardFactors : ArithmeticFunction ℕ :=
-  ⟨fun n => n.factors.length, by simp⟩
+  ⟨fun n => n.primeFactorsList.length, by simp⟩
 #align nat.arithmetic_function.card_factors ArithmeticFunction.cardFactors
 -/
 
 scoped[ArithmeticFunction] notation "Ω" => ArithmeticFunction.cardFactors
 
 #print ArithmeticFunction.cardFactors_apply /-
-theorem ArithmeticFunction.cardFactors_apply {n : ℕ} : Ω n = n.factors.length :=
+theorem ArithmeticFunction.cardFactors_apply {n : ℕ} : Ω n = n.primeFactorsList.length :=
   rfl
 #align nat.arithmetic_function.card_factors_apply ArithmeticFunction.cardFactors_apply
 -/
@@ -994,7 +994,7 @@ theorem ArithmeticFunction.cardFactors_apply_prime_pow {p k : ℕ} (hp : p.Prime
 #print ArithmeticFunction.cardDistinctFactors /-
 /-- `ω n` is the number of distinct prime factors of `n`. -/
 def ArithmeticFunction.cardDistinctFactors : ArithmeticFunction ℕ :=
-  ⟨fun n => n.factors.dedup.length, by simp⟩
+  ⟨fun n => n.primeFactorsList.dedup.length, by simp⟩
 #align nat.arithmetic_function.card_distinct_factors ArithmeticFunction.cardDistinctFactors
 -/
 
@@ -1012,7 +1012,8 @@ theorem ArithmeticFunction.cardDistinctFactors_one : ω 1 = 0 := by simp [card_d
 -/
 
 #print ArithmeticFunction.cardDistinctFactors_apply /-
-theorem ArithmeticFunction.cardDistinctFactors_apply {n : ℕ} : ω n = n.factors.dedup.length :=
+theorem ArithmeticFunction.cardDistinctFactors_apply {n : ℕ} :
+    ω n = n.primeFactorsList.dedup.length :=
   rfl
 #align nat.arithmetic_function.card_distinct_factors_apply ArithmeticFunction.cardDistinctFactors_apply
 -/

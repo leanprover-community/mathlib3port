@@ -195,11 +195,9 @@ theorem two_mul [RightDistribClass α] (n : α) : 2 * n = n + n :=
 #align two_mul two_mul
 -/
 
-#print bit0_eq_two_mul /-
-theorem bit0_eq_two_mul [RightDistribClass α] (n : α) : bit0 n = 2 * n :=
+theorem bit0_eq_two_hMul [RightDistribClass α] (n : α) : bit0 n = 2 * n :=
   (two_mul _).symm
-#align bit0_eq_two_mul bit0_eq_two_mul
--/
+#align bit0_eq_two_mul bit0_eq_two_hMul
 
 #print mul_two /-
 theorem mul_two [LeftDistribClass α] (n : α) : n * 2 = n + n :=

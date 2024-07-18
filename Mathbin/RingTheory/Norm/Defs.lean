@@ -5,7 +5,7 @@ Authors: Anne Baanen
 -/
 import FieldTheory.PrimitiveElement
 import LinearAlgebra.Determinant
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 import LinearAlgebra.Matrix.Charpoly.Minpoly
 import LinearAlgebra.Matrix.ToLinearEquiv
 import FieldTheory.IsAlgClosed.AlgebraicClosure
@@ -245,12 +245,12 @@ variable (K)
 /- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print Algebra.norm_eq_norm_adjoin /-
-theorem norm_eq_norm_adjoin [FiniteDimensional K L] [IsSeparable K L] (x : L) :
+theorem norm_eq_norm_adjoin [FiniteDimensional K L] [Algebra.IsSeparable K L] (x : L) :
     norm K x = norm K (AdjoinSimple.gen K x) ^ finrank K⟮⟯ L :=
   by
-  letI := isSeparable_tower_top_of_isSeparable K K⟮⟯ L
+  letI := Algebra.isSeparable_tower_top_of_isSeparable K K⟮⟯ L
   let pbL := Field.powerBasisOfFiniteOfSeparable K⟮⟯ L
-  let pbx := IntermediateField.adjoin.powerBasis (IsSeparable.isIntegral K x)
+  let pbx := IntermediateField.adjoin.powerBasis (Algebra.IsSeparable.isIntegral K x)
   rw [← adjoin_simple.algebra_map_gen K x, norm_eq_matrix_det (pbx.basis.smul pbL.basis) _,
     smul_left_mul_matrix_algebra_map, det_block_diagonal, norm_eq_matrix_det pbx.basis]
   simp only [Finset.card_fin, Finset.prod_const]
@@ -323,7 +323,7 @@ theorem norm_eq_prod_embeddings_gen [Algebra R F] (pb : PowerBasis R S)
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 #print Algebra.norm_eq_prod_roots /-
-theorem norm_eq_prod_roots [IsSeparable K L] [FiniteDimensional K L] {x : L}
+theorem norm_eq_prod_roots [Algebra.IsSeparable K L] [FiniteDimensional K L] {x : L}
     (hF : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F (norm K x) = ((minpoly K x).map (algebraMap K F)).roots.Prod ^ finrank K⟮⟯ L :=
   by
@@ -333,12 +333,12 @@ theorem norm_eq_prod_roots [IsSeparable K L] [FiniteDimensional K L] {x : L}
 
 #print Algebra.prod_embeddings_eq_finrank_pow /-
 theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAlgClosed E]
-    [IsSeparable K F] [FiniteDimensional K F] (pb : PowerBasis K L) :
+    [Algebra.IsSeparable K F] [FiniteDimensional K F] (pb : PowerBasis K L) :
     ∏ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen) =
       ((@Finset.univ pb.AlgHom.Fintype).Prod fun σ : L →ₐ[K] E => σ pb.gen) ^ finrank L F :=
   by
   haveI : FiniteDimensional L F := FiniteDimensional.right K L F
-  haveI : IsSeparable L F := isSeparable_tower_top_of_isSeparable K L F
+  haveI : Algebra.IsSeparable L F := Algebra.isSeparable_tower_top_of_isSeparable K L F
   letI : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
   letI : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _
   rw [Fintype.prod_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ←
@@ -361,15 +361,15 @@ variable (K)
 /-- For `L/K` a finite separable extension of fields and `E` an algebraically closed extension
 of `K`, the norm (down to `K`) of an element `x` of `L` is equal to the product of the images
 of `x` over all the `K`-embeddings `σ`  of `L` into `E`. -/
-theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlgClosed E] (x : L) :
-    algebraMap K E (norm K x) = ∏ σ : L →ₐ[K] E, σ x :=
+theorem norm_eq_prod_embeddings [FiniteDimensional K L] [Algebra.IsSeparable K L] [IsAlgClosed E]
+    (x : L) : algebraMap K E (norm K x) = ∏ σ : L →ₐ[K] E, σ x :=
   by
-  have hx := IsSeparable.isIntegral K x
+  have hx := Algebra.IsSeparable.isIntegral K x
   rw [norm_eq_norm_adjoin K x, RingHom.map_pow, ← adjoin.power_basis_gen hx,
     norm_eq_prod_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splits_codomain _)]
   · exact (prod_embeddings_eq_finrank_pow L E (adjoin.power_basis hx)).symm
-  · haveI := isSeparable_tower_bot_of_isSeparable K K⟮⟯ L
-    exact IsSeparable.separable K _
+  · haveI := Algebra.isSeparable_tower_bot_of_isSeparable K K⟮⟯ L
+    exact Algebra.IsSeparable.isSeparable K _
 #align algebra.norm_eq_prod_embeddings Algebra.norm_eq_prod_embeddings
 -/
 
@@ -389,7 +389,7 @@ theorem norm_eq_prod_automorphisms [FiniteDimensional K L] [IsGalois K L] (x : L
 -/
 
 #print Algebra.isIntegral_norm /-
-theorem isIntegral_norm [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSeparable K L]
+theorem isIntegral_norm [Algebra R L] [Algebra R K] [IsScalarTower R K L] [Algebra.IsSeparable K L]
     [FiniteDimensional K L] {x : L} (hx : IsIntegral R x) : IsIntegral R (norm K x) :=
   by
   have hx' : IsIntegral K x := IsIntegral.tower_top hx
@@ -409,7 +409,7 @@ variable {F} (L)
 
 #print Algebra.norm_norm /-
 -- TODO. Generalize this proof to rings
-theorem norm_norm [Algebra L F] [IsScalarTower K L F] [IsSeparable K F] (x : F) :
+theorem norm_norm [Algebra L F] [IsScalarTower K L F] [Algebra.IsSeparable K F] (x : F) :
     norm K (norm L x) = norm K x :=
   by
   by_cases hKF : FiniteDimensional K F
@@ -418,8 +418,8 @@ theorem norm_norm [Algebra L F] [IsScalarTower K L F] [IsSeparable K F] (x : F) 
     apply (algebraMap K A).Injective
     haveI : FiniteDimensional L F := FiniteDimensional.right K L F
     haveI : FiniteDimensional K L := FiniteDimensional.left K L F
-    haveI : IsSeparable K L := isSeparable_tower_bot_of_isSeparable K L F
-    haveI : IsSeparable L F := isSeparable_tower_top_of_isSeparable K L F
+    haveI : Algebra.IsSeparable K L := Algebra.isSeparable_tower_bot_of_isSeparable K L F
+    haveI : Algebra.IsSeparable L F := Algebra.isSeparable_tower_top_of_isSeparable K L F
     letI :
       ∀ σ : L →ₐ[K] A,
         haveI := σ.to_ring_hom.to_algebra

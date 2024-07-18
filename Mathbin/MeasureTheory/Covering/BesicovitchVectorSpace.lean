@@ -193,7 +193,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
     (ENNReal.mul_le_mul_right (measure_ball_pos _ _ zero_lt_one).ne' measure_ball_lt_top.ne).1 I
   have K : (s.card : ℝ) ≤ (5 : ℝ) ^ finrank ℝ E := by
     simpa [ENNReal.toReal_mul, div_eq_mul_inv] using
-      ENNReal.toReal_le_of_le_ofReal (pow_nonneg ρpos.le _) J
+      ENNReal.toReal_le_of_le_ofReal (Nonneg.pow_nonneg ρpos.le _) J
   exact_mod_cast K
 #align besicovitch.card_le_of_separated Besicovitch.card_le_of_separated
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
 -/
 import CategoryTheory.Sites.Sieves
-import CategoryTheory.Limits.Shapes.Pullbacks
+import CategoryTheory.Limits.Shapes.Pullback.Cospan
 import CategoryTheory.Limits.Shapes.Multiequalizer
 import CategoryTheory.Category.Preorder
 import Order.Copy

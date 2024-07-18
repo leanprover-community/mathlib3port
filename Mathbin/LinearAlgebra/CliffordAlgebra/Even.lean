@@ -42,7 +42,7 @@ namespace CliffordAlgebra
 
 variable {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
 
-variable {Q : QuadraticForm R M}
+variable {Q : QuadraticMap R M}
 
 -- put this after `Q` since we want to talk about morphisms from `clifford_algebra Q` to `A` and
 -- that order is more natural

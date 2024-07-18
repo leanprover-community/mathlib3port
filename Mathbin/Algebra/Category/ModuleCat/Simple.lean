@@ -7,7 +7,7 @@ import CategoryTheory.Simple
 import Algebra.Category.ModuleCat.Subobject
 import Algebra.Category.ModuleCat.Algebra
 import RingTheory.SimpleModule
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 
 #align_import algebra.category.Module.simple from "leanprover-community/mathlib"@"44e2ae8cffc713925494e4975ee31ec1d06929b3"
 

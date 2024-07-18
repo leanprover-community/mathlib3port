@@ -341,12 +341,12 @@ theorem exponent_eq_iSup_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G = �
   apply Nat.dvd_antisymm _
   · rw [← ht]
     apply order_dvd_exponent
-  refine' Nat.dvd_of_factors_subperm he _
+  refine' Nat.dvd_of_primeFactorsList_subperm he _
   rw [List.subperm_ext_iff]
   by_contra! h
   obtain ⟨p, hp, hpe⟩ := h
-  replace hp := Nat.prime_of_mem_factors hp
-  simp only [Nat.factors_count_eq] at hpe
+  replace hp := Nat.prime_of_mem_primeFactorsList hp
+  simp only [Nat.primeFactorsList_count_eq] at hpe
   set k := (orderOf t).factorization p with hk
   obtain ⟨g, hg⟩ := hp.exists_order_of_eq_pow_factorization_exponent G
   suffices orderOf t < orderOf (t ^ p ^ k * g)

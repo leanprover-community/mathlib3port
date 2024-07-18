@@ -552,7 +552,7 @@ theorem arccos_of_one_le {x : ℝ} (hx : 1 ≤ x) : arccos x = 0 := by
 
 #print Real.arccos_of_le_neg_one /-
 theorem arccos_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arccos x = π := by
-  rw [arccos, arcsin_of_le_neg_one hx, sub_neg_eq_add, add_halves']
+  rw [arccos, arcsin_of_le_neg_one hx, sub_neg_eq_add, add_halves]
 #align real.arccos_of_le_neg_one Real.arccos_of_le_neg_one
 -/
 

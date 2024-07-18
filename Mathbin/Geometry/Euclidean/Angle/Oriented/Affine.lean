@@ -286,7 +286,7 @@ theorem oangle_ne_zero_and_ne_pi_iff_affineIndependent {p₁ p₂ p₃ : P} :
   by
   rw [oangle, o.oangle_ne_zero_and_ne_pi_iff_linearIndependent,
     affineIndependent_iff_linearIndependent_vsub ℝ _ (1 : Fin 3), ←
-    linearIndependent_equiv (finSuccAboveEquiv (1 : Fin 3)).toEquiv]
+    linearIndependent_equiv (finSuccAboveOrderIso (1 : Fin 3)).toEquiv]
   convert Iff.rfl
   ext i
   fin_cases i <;> rfl

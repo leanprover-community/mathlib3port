@@ -957,7 +957,8 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
         (tendsto_pow_atTop_nhds_zero_of_lt_one I0.le I1).const_mul _
       rw [MulZeroClass.mul_zero] at this
       exact
-        squeeze_zero (fun n => diam_nonneg) (fun n => diam_closed_ball (pow_nonneg I0.le _)) this
+        squeeze_zero (fun n => diam_nonneg) (fun n => diam_closed_ball (Nonneg.pow_nonneg I0.le _))
+          this
     refine'
       nonempty_Inter_of_nonempty_bInter (fun n => is_closed_ball) (fun n => bounded_closed_ball) _ L
     intro N
@@ -1020,7 +1021,7 @@ theorem dist_summable (x y : ∀ i, F i) :
   by
   refine'
     Summable.of_nonneg_of_le (fun i => _) (fun i => min_le_left _ _) summable_geometric_two_encode
-  exact le_min (pow_nonneg (by norm_num) _) dist_nonneg
+  exact le_min (Nonneg.pow_nonneg (by norm_num) _) dist_nonneg
 #align pi_countable.dist_summable PiCountable.dist_summable
 -/
 

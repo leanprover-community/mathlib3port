@@ -80,7 +80,7 @@ theorem ofNat_toNat {n : ℕ} (v : BitVec n) : BitVec.ofNat _ v.toNat = v :=
   by
   cases' v with xs h
   ext1
-  change Vector.toList _ = xs
+  change Mathlib.Vector.toList _ = xs
   dsimp [BitVec.toNat, bits_to_nat]
   rw [← List.length_reverse] at h
   rw [← List.reverse_reverse xs, List.foldl_reverse]
@@ -88,8 +88,8 @@ theorem ofNat_toNat {n : ℕ} (v : BitVec n) : BitVec.ofNat _ v.toNat = v :=
   induction ys generalizing n
   · cases h; simp [BitVec.ofNat]
   · simp only [← Nat.succ_eq_add_one, List.length] at h; subst n
-    simp only [BitVec.ofNat, Vector.toList_cons, Vector.toList_nil, List.reverse_cons,
-      Vector.toList_append, List.foldr]
+    simp only [BitVec.ofNat, Mathlib.Vector.toList_cons, Mathlib.Vector.toList_nil,
+      List.reverse_cons, Mathlib.Vector.toList_append, List.foldr]
     erw [add_lsb_div_two, to_bool_add_lsb_mod_two]
     congr; apply ys_ih; rfl
 #align bitvec.of_nat_to_nat BitVec.ofNat_toNat

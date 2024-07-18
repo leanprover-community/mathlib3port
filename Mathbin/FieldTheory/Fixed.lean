@@ -332,15 +332,15 @@ instance normal : Normal (FixedPoints.subfield G F) F :=
 #align fixed_points.normal FixedPoints.normal
 -/
 
-#print FixedPoints.separable /-
-instance separable : IsSeparable (FixedPoints.subfield G F) F :=
+#print FixedPoints.isSeparable /-
+instance isSeparable : Algebra.IsSeparable (FixedPoints.subfield G F) F :=
   ⟨isIntegral G F, fun x => by
     cases nonempty_fintype G
     -- this was a plain rw when we were using unbundled subrings
     erw [← minpoly_eq_minpoly, ← Polynomial.separable_map (FixedPoints.subfield G F).Subtype,
       minpoly, Polynomial.map_toSubring _ (Subfield G F).toSubring]
     exact Polynomial.separable_prod_X_sub_C_iff.2 (injective_of_quotient_stabilizer G x)⟩
-#align fixed_points.separable FixedPoints.separable
+#align fixed_points.separable FixedPoints.isSeparable
 -/
 
 instance : FiniteDimensional (subfield G F) F := by cases nonempty_fintype G;

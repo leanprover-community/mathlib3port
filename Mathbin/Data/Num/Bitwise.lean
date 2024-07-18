@@ -500,8 +500,8 @@ namespace SNum
 
 #print SNum.bits /-
 /-- `a.bits n` is the vector of the `n` first bits of `a` (starting from the LSB). -/
-def bits : SNum → ∀ n, Vector Bool n
-  | p, 0 => Vector.nil
+def bits : SNum → ∀ n, Mathlib.Vector Bool n
+  | p, 0 => Mathlib.Vector.nil
   | p, n + 1 => head p ::ᵥ bits (tail p) n
 #align snum.bits SNum.bits
 -/

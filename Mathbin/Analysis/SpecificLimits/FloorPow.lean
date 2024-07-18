@@ -336,7 +336,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
     _ ≤ c ^ 3 * (c - 1)⁻¹ / j ^ 2 :=
       by
       apply div_le_div _ B (sq_pos_of_pos hj) le_rfl
-      exact mul_nonneg (pow_nonneg cpos.le _) (inv_nonneg.2 (sub_pos.2 hc).le)
+      exact mul_nonneg (Nonneg.pow_nonneg cpos.le _) (inv_nonneg.2 (sub_pos.2 hc).le)
 #align sum_div_pow_sq_le_div_sq sum_div_pow_sq_le_div_sq
 -/
 
@@ -373,7 +373,7 @@ theorem sum_div_nat_floor_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c :
       · intro i hi
         simp only [mem_filter, mem_range] at hi
         simpa only [hi.1, mem_filter, mem_range, true_and_iff] using
-          hi.2.trans_le (Nat.floor_le (pow_nonneg cpos.le _))
+          hi.2.trans_le (Nat.floor_le (Nonneg.pow_nonneg cpos.le _))
       · intro i hi hident
         exact div_nonneg zero_le_one (sq_nonneg _)
     _ ≤ ∑ i in (range N).filterₓ fun i => j < c ^ i, (1 - c⁻¹)⁻¹ ^ 2 * (1 / (c ^ i) ^ 2) :=
@@ -385,7 +385,7 @@ theorem sum_div_nat_floor_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c :
         simp only [Nat.le_floor, one_le_pow_of_one_le, hc.le, Nat.one_le_cast, Nat.cast_one]
       · exact sq_pos_of_pos (pow_pos cpos _)
       rw [one_mul, ← mul_pow]
-      apply pow_le_pow_left (pow_nonneg cpos.le _)
+      apply pow_le_pow_left (Nonneg.pow_nonneg cpos.le _)
       rw [← div_eq_inv_mul, le_div_iff A, mul_comm]
       exact mul_pow_le_nat_floor_pow hc i
     _ ≤ (1 - c⁻¹)⁻¹ ^ 2 * (c ^ 3 * (c - 1)⁻¹) / j ^ 2 :=

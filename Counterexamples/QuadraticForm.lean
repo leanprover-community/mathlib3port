@@ -51,18 +51,18 @@ theorem b_ne_zero : b F ≠ 0 := fun h => by simpa using LinearMap.BilinForm.con
 
 This disproves a weaker version of `quadratic_form.associated_left_inverse`.
 -/
-theorem BilinForm.not_injOn_toQuadraticForm_isSymm.{u} :
+theorem BilinForm.not_injOn_toQuadraticMap_isSymm.{u} :
     ¬∀ {R M : Type u} [Semiring R] [AddCommMonoid M],
         ∀ [Module R M],
-          Set.InjOn (to_quadratic_form : BilinForm R M → QuadraticForm R M) {B | B.IsSymm} :=
+          Set.InjOn (to_quadratic_form : BilinForm R M → QuadraticMap R M) {B | B.IsSymm} :=
   by
   intro h
   let F := ULift.{u} (ZMod 2)
   apply B_ne_zero F
   apply h (is_symm_B F) is_symm_zero
-  rw [LinearMap.BilinForm.toQuadraticForm_zero, LinearMap.BilinForm.toQuadraticForm_eq_zero]
+  rw [LinearMap.BilinMap.toQuadraticMap_zero, LinearMap.BilinMap.toQuadraticMap_eq_zero]
   exact is_alt_B F
-#align counterexample.bilin_form.not_inj_on_to_quadratic_form_is_symm Counterexample.BilinForm.not_injOn_toQuadraticForm_isSymm
+#align counterexample.bilin_form.not_inj_on_to_quadratic_form_is_symm Counterexample.BilinForm.not_injOn_toQuadraticMap_isSymm
 
 end Counterexample
 

@@ -268,7 +268,8 @@ theorem mem_tangentCone_of_openSegment_subset {s : Set G} {x y : G} (h : openSeg
     · apply inv_lt_one; apply one_lt_pow _ (Nat.succ_ne_zero _); norm_num
     · simp only [d, sub_smul, smul_sub, one_smul]; abel
   show Filter.Tendsto (fun n : ℕ => ‖c n‖) Filter.atTop Filter.atTop
-  · have : (fun n : ℕ => ‖c n‖) = c := by ext n; exact abs_of_nonneg (pow_nonneg (by norm_num) _)
+  · have : (fun n : ℕ => ‖c n‖) = c := by ext n;
+      exact abs_of_nonneg (Nonneg.pow_nonneg (by norm_num) _)
     rw [this]
     exact (tendsto_pow_atTop_atTop_of_one_lt (by norm_num)).comp (tendsto_add_at_top_nat 1)
   show Filter.Tendsto (fun n : ℕ => c n • d n) Filter.atTop (𝓝 (y - x))

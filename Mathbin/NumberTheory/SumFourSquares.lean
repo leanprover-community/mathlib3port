@@ -103,7 +103,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
         ∃ i : Fin 4,
           f i ^ 2 + f (swap i 0 1) ^ 2 = 0 ∧ f (swap i 0 2) ^ 2 + f (swap i 0 3) ^ 2 = 0 :=
     by decide
-  let f : Fin 4 → ℤ := Vector.get (a ::ᵥ b ::ᵥ c ::ᵥ d ::ᵥ Vector.nil)
+  let f : Fin 4 → ℤ := Mathlib.Vector.get (a ::ᵥ b ::ᵥ c ::ᵥ d ::ᵥ Mathlib.Vector.nil)
   let ⟨i, hσ⟩ :=
     this (fun x => coe (f x))
       (by
@@ -184,7 +184,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
                   (Nat.pow_le_pow_left (ZMod.natAbs_valMinAbs_le _) _))
                 (Nat.pow_le_pow_left (ZMod.natAbs_valMinAbs_le _) _))
           _ = 4 * (m / 2 : ℕ) ^ 2 := by
-            simp only [bit0_mul, one_mul, two_smul, Nat.cast_add, Nat.cast_pow, add_assoc]
+            simp only [bit0_hMul, one_mul, two_smul, Nat.cast_add, Nat.cast_pow, add_assoc]
           _ < 4 * (m / 2 : ℕ) ^ 2 + ((4 * (m / 2) : ℕ) * (m % 2 : ℕ) + (m % 2 : ℕ) ^ 2) :=
             ((lt_add_iff_pos_right _).2
               (by

@@ -304,17 +304,18 @@ end ComputablePred
 
 namespace Nat
 
-open Vector Part
+open Mathlib.Vector Part
 
 #print Nat.Partrec' /-
 /-- A simplified basis for `partrec`. -/
-inductive Partrec' : ∀ {n}, (Vector ℕ n →. ℕ) → Prop
+inductive Partrec' : ∀ {n}, (Mathlib.Vector ℕ n →. ℕ) → Prop
   | prim {n f} : @Primrec' n f → @partrec' n f
   |
-  comp {m n f} (g : Fin n → Vector ℕ m →. ℕ) :
-    partrec' f → (∀ i, partrec' (g i)) → partrec' fun v => (mOfFn fun i => g i v) >>= f
+  comp {m n f} (g : Fin n → Mathlib.Vector ℕ m →. ℕ) :
+    partrec' f →
+      (∀ i, partrec' (g i)) → partrec' fun v => (Mathlib.Vector.mOfFn fun i => g i v) >>= f
   |
-  rfind {n} {f : Vector ℕ (n + 1) → ℕ} :
+  rfind {n} {f : Mathlib.Vector ℕ (n + 1) → ℕ} :
     @partrec' (n + 1) f → partrec' fun v => rfind fun n => some (f (n ::ᵥ v) = 0)
 #align nat.partrec' Nat.Partrec'
 -/
@@ -323,7 +324,7 @@ end Nat
 
 namespace Nat.Partrec'
 
-open Vector Partrec Computable
+open Mathlib.Vector Partrec Computable
 
 open Nat (Partrec')
 
@@ -345,19 +346,20 @@ theorem to_part {n f} (pf : @Partrec' n f) : Partrec f :=
 -/
 
 #print Nat.Partrec'.of_eq /-
-theorem of_eq {n} {f g : Vector ℕ n →. ℕ} (hf : Partrec' f) (H : ∀ i, f i = g i) : Partrec' g :=
+theorem of_eq {n} {f g : Mathlib.Vector ℕ n →. ℕ} (hf : Partrec' f) (H : ∀ i, f i = g i) :
+    Partrec' g :=
   (funext H : f = g) ▸ hf
 #align nat.partrec'.of_eq Nat.Partrec'.of_eq
 -/
 
 #print Nat.Partrec'.of_prim /-
-theorem of_prim {n} {f : Vector ℕ n → ℕ} (hf : Primrec f) : @Partrec' n f :=
+theorem of_prim {n} {f : Mathlib.Vector ℕ n → ℕ} (hf : Primrec f) : @Partrec' n f :=
   prim (Nat.Primrec'.of_prim hf)
 #align nat.partrec'.of_prim Nat.Partrec'.of_prim
 -/
 
 #print Nat.Partrec'.head /-
-theorem head {n : ℕ} : @Partrec' n.succ (@head ℕ n) :=
+theorem head {n : ℕ} : @Partrec' n.succ (@Mathlib.Vector.head ℕ n) :=
   prim Nat.Primrec'.head
 #align nat.partrec'.head Nat.Partrec'.head
 -/
@@ -381,7 +383,7 @@ protected theorem bind {n f g} (hf : @Partrec' n f) (hg : @Partrec' (n + 1) g) :
 -/
 
 #print Nat.Partrec'.map /-
-protected theorem map {n f} {g : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' n f)
+protected theorem map {n f} {g : Mathlib.Vector ℕ (n + 1) → ℕ} (hf : @Partrec' n f)
     (hg : @Partrec' (n + 1) g) : @Partrec' n fun v => (f v).map fun a => g (a ::ᵥ v) := by
   simp [(Part.bind_some_eq_map _ _).symm] <;> exact hf.bind hg
 #align nat.partrec'.map Nat.Partrec'.map
@@ -392,7 +394,7 @@ attribute [-instance] Part.hasZero
 #print Nat.Partrec'.Vec /-
 /-- Analogous to `nat.partrec'` for `ℕ`-valued functions, a predicate for partial recursive
   vector-valued functions.-/
-def Vec {n m} (f : Vector ℕ n → Vector ℕ m) :=
+def Vec {n m} (f : Mathlib.Vector ℕ n → Mathlib.Vector ℕ m) :=
   ∀ i, Partrec' fun v => (f v).get? i
 #align nat.partrec'.vec Nat.Partrec'.Vec
 -/
@@ -403,13 +405,13 @@ theorem Vec.prim {n m f} (hf : @Nat.Primrec'.Vec n m f) : Vec f := fun i => prim
 -/
 
 #print Nat.Partrec'.nil /-
-protected theorem nil {n} : @Vec n 0 fun _ => nil := fun i => i.elim0ₓ
+protected theorem nil {n} : @Vec n 0 fun _ => Mathlib.Vector.nil := fun i => i.elim0ₓ
 #align nat.partrec'.nil Nat.Partrec'.nil
 -/
 
 #print Nat.Partrec'.cons /-
-protected theorem cons {n m} {f : Vector ℕ n → ℕ} {g} (hf : @Partrec' n f) (hg : @Vec n m g) :
-    Vec fun v => f v ::ᵥ g v := fun i =>
+protected theorem cons {n m} {f : Mathlib.Vector ℕ n → ℕ} {g} (hf : @Partrec' n f)
+    (hg : @Vec n m g) : Vec fun v => f v ::ᵥ g v := fun i =>
   Fin.cases (by simp [*]) (fun i => by simp only [hg i, nth_cons_succ]) i
 #align nat.partrec'.cons Nat.Partrec'.cons
 -/
@@ -427,14 +429,14 @@ theorem comp' {n m f g} (hf : @Partrec' m f) (hg : @Vec n m g) : Partrec' fun v 
 -/
 
 #print Nat.Partrec'.comp₁ /-
-theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @Partrec' 1 fun v => f v.headI)
+theorem comp₁ {n} (f : ℕ →. ℕ) {g : Mathlib.Vector ℕ n → ℕ} (hf : @Partrec' 1 fun v => f v.headI)
     (hg : @Partrec' n g) : @Partrec' n fun v => f (g v) := by
   simpa using hf.comp' (partrec'.cons hg partrec'.nil)
 #align nat.partrec'.comp₁ Nat.Partrec'.comp₁
 -/
 
 #print Nat.Partrec'.rfindOpt /-
-theorem rfindOpt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f) :
+theorem rfindOpt {n} {f : Mathlib.Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f) :
     @Partrec' n fun v => Nat.rfindOpt fun a => ofNat (Option ℕ) (f (a ::ᵥ v)) :=
   ((rfind <|
             (of_prim (Primrec.nat_sub.comp (Primrec.const 1) Primrec.vector_head)).comp₁
@@ -499,8 +501,8 @@ theorem part_iff₁ {f : ℕ →. ℕ} : (@Partrec' 1 fun v => f v.headI) ↔ Pa
 theorem part_iff₂ {f : ℕ → ℕ →. ℕ} : (@Partrec' 2 fun v => f v.headI v.tail.headI) ↔ Partrec₂ f :=
   part_iff.trans
     ⟨fun h =>
-      (h.comp <| vector_cons.comp fst <| vector_cons.comp snd (const nil)).of_eq fun v => by
-        simp only [cons_head, cons_tail],
+      (h.comp <| vector_cons.comp fst <| vector_cons.comp snd (const Mathlib.Vector.nil)).of_eq
+        fun v => by simp only [cons_head, cons_tail],
       fun h => h.comp vector_head (vector_head.comp vector_tail)⟩
 #align nat.partrec'.part_iff₂ Nat.Partrec'.part_iff₂
 -/

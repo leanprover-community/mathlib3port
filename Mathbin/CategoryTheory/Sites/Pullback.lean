@@ -74,7 +74,7 @@ instance (G : C ⥤ D) [RepresentablyFlat G] :
 def Functor.sheafAdjunctionContinuous {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)
     (hG₂ : CoverPreserving J K G) :
     Functor.sheafPullback A J K G ⊣ Functor.sheafPushforwardContinuous A hG₁ hG₂ :=
-  ((Lan.adjunction A G.op).comp (plusPlusAdjunction K A)).restrictFullyFaithful
+  ((lan.adjunction A G.op).comp (plusPlusAdjunction K A)).restrictFullyFaithful
     (sheafToPresheaf J A) (𝟭 _)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
       (Category.comp_id _).trans (Category.id_comp _).symm)

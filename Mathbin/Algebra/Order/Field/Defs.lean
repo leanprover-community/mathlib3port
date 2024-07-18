@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
 import Algebra.Field.Defs
-import Algebra.Order.Ring.Defs
+import Algebra.Order.Ring.Unbundled.Basic
 
 #align_import algebra.order.field.defs from "leanprover-community/mathlib"@"448144f7ae193a8990cb7473c9e9a01990f64ac7"
 

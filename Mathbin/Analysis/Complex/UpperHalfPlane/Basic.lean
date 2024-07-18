@@ -7,7 +7,7 @@ import Data.Fintype.Parity
 import LinearAlgebra.Matrix.SpecialLinearGroup
 import Analysis.Complex.Basic
 import Algebra.Group.Action.Defs
-import LinearAlgebra.Matrix.GeneralLinearGroup
+import LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 import Tactic.LinearCombination
 
 #align_import analysis.complex.upper_half_plane.basic from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"

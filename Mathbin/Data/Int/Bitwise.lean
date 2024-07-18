@@ -113,17 +113,13 @@ theorem div2_val : ∀ n, div2 n = n / 2
 #align int.div2_val Int.div2_val
 -/
 
-#print Int.bit0_val /-
 theorem bit0_val (n : ℤ) : bit0 n = 2 * n :=
   (two_mul _).symm
 #align int.bit0_val Int.bit0_val
--/
 
-#print Int.bit1_val /-
 theorem bit1_val (n : ℤ) : bit1 n = 2 * n + 1 :=
   congr_arg (· + (1 : ℤ)) (bit0_val _)
 #align int.bit1_val Int.bit1_val
--/
 
 #print Int.bit_val /-
 theorem bit_val (b n) : bit b n = 2 * n + cond b 1 0 := by cases b;
@@ -173,36 +169,26 @@ theorem bodd_bit (b n) : bodd (bit b n) = b := by
 #align int.bodd_bit Int.bodd_bit
 -/
 
-#print Int.bodd_bit0 /-
 @[simp]
 theorem bodd_bit0 (n : ℤ) : bodd (bit0 n) = false :=
   bodd_bit false n
 #align int.bodd_bit0 Int.bodd_bit0
--/
 
-#print Int.bodd_bit1 /-
 @[simp]
 theorem bodd_bit1 (n : ℤ) : bodd (bit1 n) = true :=
   bodd_bit true n
 #align int.bodd_bit1 Int.bodd_bit1
--/
 
-#print Int.bit0_ne_bit1 /-
 theorem bit0_ne_bit1 (m n : ℤ) : bit0 m ≠ bit1 n :=
   mt (congr_arg bodd) <| by simp
 #align int.bit0_ne_bit1 Int.bit0_ne_bit1
--/
 
-#print Int.bit1_ne_bit0 /-
 theorem bit1_ne_bit0 (m n : ℤ) : bit1 m ≠ bit0 n :=
   (bit0_ne_bit1 _ _).symm
 #align int.bit1_ne_bit0 Int.bit1_ne_bit0
--/
 
-#print Int.bit1_ne_zero /-
 theorem bit1_ne_zero (m : ℤ) : bit1 m ≠ 0 := by simpa only [bit0_zero] using bit1_ne_bit0 m 0
 #align int.bit1_ne_zero Int.bit1_ne_zero
--/
 
 #print Int.testBit_bit_zero /-
 @[simp]
@@ -280,7 +266,7 @@ theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :
       first
       | rw [bit_coe_nat]
       | rw [bit_neg_succ]
-      | rw [Bool.not_not]
+      | rw [not_not]
   all_goals unfold not <;> rw [h] <;> rfl
 #align int.bitwise_bit Int.bitwise_bit
 -/

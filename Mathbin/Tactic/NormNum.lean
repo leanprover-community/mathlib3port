@@ -336,7 +336,7 @@ unsafe def prove_mul_nat : instance_cache → expr → expr → tactic (instance
       return (ic, c', p)
     | bit0 a, _ => do
       let (ic, c, p) ← prove_mul_nat ic a b
-      let (ic, p) ← ic.mk_app `` bit0_mul [a, b, c, p]
+      let (ic, p) ← ic.mk_app `` bit0_hMul [a, b, c, p]
       let (ic, c') ← ic.mk_bit0 c
       return (ic, c', p)
     | _, bit0 b => do
@@ -1830,8 +1830,7 @@ unsafe def norm_num (hs : parse simp_arg_list) (l : parse location) : tactic Uni
   tactic.norm_num f hs l
 #align tactic.interactive.norm_num tactic.interactive.norm_num
 
-add_hint_tactic norm_num
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic norm_num -/
 /-- Normalizes a numerical expression and tries to close the goal with the result. -/
 unsafe def apply_normed (x : parse texpr) : tactic Unit := do
   let x₁ ← to_expr x

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
 import Algebra.Order.Group.OrderIso
-import Algebra.Order.Monoid.OrderDual
+import Algebra.Order.Monoid.Unbundled.OrderDual
 import Data.Set.Pointwise.Basic
 import Order.Bounds.OrderIso
 import Order.ConditionallyCompleteLattice.Basic

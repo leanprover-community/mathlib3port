@@ -221,29 +221,29 @@ theorem Sylow.exists_comap_subtype_eq {H : Subgroup G} (P : Sylow p H) :
 #align sylow.exists_comap_subtype_eq Sylow.exists_comap_subtype_eq
 -/
 
-#print Sylow.fintypeOfKerIsPGroup /-
+#print Sylow.finite_of_ker_is_pGroup /-
 /-- If the kernel of `f : H →* G` is a `p`-group,
   then `fintype (sylow p G)` implies `fintype (sylow p H)`. -/
-noncomputable def Sylow.fintypeOfKerIsPGroup {H : Type _} [Group H] {f : H →* G}
+noncomputable def Sylow.finite_of_ker_is_pGroup {H : Type _} [Group H] {f : H →* G}
     (hf : IsPGroup p f.ker) [Fintype (Sylow p G)] : Fintype (Sylow p H) :=
   let h_exists := fun P : Sylow p H => P.exists_comap_eq_of_ker_isPGroup hf
   let g : Sylow p H → Sylow p G := fun P => Classical.choose (h_exists P)
   let hg : ∀ P : Sylow p H, (g P).1.comap f = P := fun P => Classical.choose_spec (h_exists P)
   Fintype.ofInjective g fun P Q h => Sylow.ext (by simp only [← hg, h])
-#align sylow.fintype_of_ker_is_p_group Sylow.fintypeOfKerIsPGroup
+#align sylow.fintype_of_ker_is_p_group Sylow.finite_of_ker_is_pGroup
 -/
 
-#print Sylow.fintypeOfInjective /-
+#print Sylow.finite_of_injective /-
 /-- If `f : H →* G` is injective, then `fintype (sylow p G)` implies `fintype (sylow p H)`. -/
-noncomputable def Sylow.fintypeOfInjective {H : Type _} [Group H] {f : H →* G}
+noncomputable def Sylow.finite_of_injective {H : Type _} [Group H] {f : H →* G}
     (hf : Function.Injective f) [Fintype (Sylow p G)] : Fintype (Sylow p H) :=
-  Sylow.fintypeOfKerIsPGroup (IsPGroup.ker_isPGroup_of_injective hf)
-#align sylow.fintype_of_injective Sylow.fintypeOfInjective
+  Sylow.finite_of_ker_is_pGroup (IsPGroup.ker_isPGroup_of_injective hf)
+#align sylow.fintype_of_injective Sylow.finite_of_injective
 -/
 
 /-- If `H` is a subgroup of `G`, then `fintype (sylow p G)` implies `fintype (sylow p H)`. -/
 noncomputable instance (H : Subgroup G) [Fintype (Sylow p G)] : Fintype (Sylow p H) :=
-  Sylow.fintypeOfInjective H.subtype_injective
+  Sylow.finite_of_injective H.subtype_injective
 
 /-- If `H` is a subgroup of `G`, then `finite (sylow p G)` implies `finite (sylow p H)`. -/
 instance (H : Subgroup G) [Finite (Sylow p G)] : Finite (Sylow p H) := by

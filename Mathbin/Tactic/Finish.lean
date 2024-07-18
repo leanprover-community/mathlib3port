@@ -675,8 +675,7 @@ unsafe def finish (hs : parse simp_arg_list)
   auto.finish s (ps []) cfg
 #align tactic.interactive.finish tactic.interactive.finish
 
-add_hint_tactic finish
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic finish -/
 /--
 These tactics do straightforward things: they call the simplifier, split conjunctive assumptions,
 eliminate existential quantifiers on the left, and look for contradictions. They rely on ematching

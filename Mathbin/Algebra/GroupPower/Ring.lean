@@ -246,19 +246,15 @@ theorem neg_pow (a : R) (n : ℕ) : (-a) ^ n = (-1) ^ n * a ^ n :=
 #align neg_pow neg_pow
 -/
 
-#print neg_pow_bit0 /-
 @[simp]
 theorem neg_pow_bit0 (a : R) (n : ℕ) : (-a) ^ bit0 n = a ^ bit0 n := by
   rw [pow_bit0', neg_mul_neg, pow_bit0']
 #align neg_pow_bit0 neg_pow_bit0
--/
 
-#print neg_pow_bit1 /-
 @[simp]
 theorem neg_pow_bit1 (a : R) (n : ℕ) : (-a) ^ bit1 n = -a ^ bit1 n := by
   simp only [bit1, pow_succ', neg_pow_bit0, neg_mul_eq_neg_mul]
 #align neg_pow_bit1 neg_pow_bit1
--/
 
 #print neg_sq /-
 @[simp]

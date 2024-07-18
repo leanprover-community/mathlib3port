@@ -58,7 +58,7 @@ theorem Chain.count_not :
   | b, x :: l, h =>
     by
     obtain rfl : b = !x := Bool.eq_not_iff.2 (rel_of_chain_cons h)
-    rw [Bool.not_not, count_cons_self, count_cons_of_ne x.bnot_ne_self,
+    rw [not_not, count_cons_self, count_cons_of_ne x.bnot_ne_self,
       chain.count_bnot (chain_of_chain_cons h), length, add_assoc, Nat.mod_two_add_succ_mod_two]
 #align list.chain.count_bnot List.Chain.count_not
 -/
@@ -92,7 +92,7 @@ theorem count_not_le_count_add_one (hl : Chain' (· ≠ ·) l) (b : Bool) :
   obtain rfl | rfl : b = x ∨ b = !x := by simp only [Bool.eq_not_iff, em]
   · rw [count_cons_of_ne b.bnot_ne_self, count_cons_self, hl.count_bnot, add_assoc]
     exact add_le_add_left (Nat.mod_lt _ two_pos).le _
-  · rw [Bool.not_not, count_cons_self, count_cons_of_ne x.bnot_ne_self, hl.count_bnot]
+  · rw [not_not, count_cons_self, count_cons_of_ne x.bnot_ne_self, hl.count_bnot]
     exact add_le_add_right (le_add_right le_rfl) _
 #align list.chain'.count_bnot_le_count_add_one List.Chain'.count_not_le_count_add_one
 -/

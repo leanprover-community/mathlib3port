@@ -255,10 +255,10 @@ def IsWeight (χ : LieCharacter R H) : Prop :=
 
 /-- For a non-trivial nilpotent Lie module over a nilpotent Lie algebra, the zero character is a
 weight with respect to the `⊤` Lie subalgebra. -/
-theorem isWeightZeroOfNilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
+theorem isWeight_zero_of_nilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
     IsWeight (⊤ : LieSubalgebra R L) M 0 := by
   rw [is_weight, LieHom.coe_zero, zero_weight_space_eq_top_of_nilpotent]; exact top_ne_bot
-#align lie_module.is_weight_zero_of_nilpotent LieModule.isWeightZeroOfNilpotent
+#align lie_module.is_weight_zero_of_nilpotent LieModule.isWeight_zero_of_nilpotent
 
 #print LieModule.isNilpotent_toEnd_weightSpace_zero /-
 /-- A (nilpotent) Lie algebra acts nilpotently on the zero weight space of a Noetherian Lie

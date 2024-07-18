@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 -/
 import Tactic.Positivity
-import Data.Real.NNReal
+import Data.NNReal.Basic
 
 #align_import analysis.normed.group.seminorm from "leanprover-community/mathlib"@"09079525fd01b3dda35e96adaa08d2f943e1648c"
 

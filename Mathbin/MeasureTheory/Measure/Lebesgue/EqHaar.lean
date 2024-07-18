@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 -/
 import Analysis.NormedSpace.Pointwise
-import LinearAlgebra.FiniteDimensional
+import LinearAlgebra.FiniteDimensional.Defs
 import MeasureTheory.Group.Pointwise
 import MeasureTheory.Measure.Lebesgue.Basic
 import MeasureTheory.Measure.Haar.Basic

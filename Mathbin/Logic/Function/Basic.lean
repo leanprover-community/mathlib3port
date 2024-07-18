@@ -1177,7 +1177,7 @@ theorem involutive_iff_iter_2_eq_id {α} {f : α → α} : Involutive f ↔ f^[2
 
 #print Bool.involutive_not /-
 theorem Bool.involutive_not : Involutive not :=
-  Bool.not_not
+  not_not
 #align bool.involutive_bnot Bool.involutive_not
 -/
 

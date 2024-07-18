@@ -555,7 +555,7 @@ theorem range_bind_sublistsLen_perm {α : Type _} (l : List α) :
     refine' perm.append _ (l_ih.map _)
     rw [List.range_succ, append_bind, bind_singleton,
       sublists_len_of_length_lt (Nat.lt_succ_self _), append_nil, ←
-      List.map_bind (fun n => sublists_len n tl) Nat.succ, ←
+      List.bind_map (fun n => sublists_len n tl) Nat.succ, ←
       cons_bind 0 _ fun n => sublists_len n tl, ← range_succ_eq_map]
     exact l_ih
 #align list.range_bind_sublists_len_perm List.range_bind_sublistsLen_perm

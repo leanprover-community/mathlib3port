@@ -838,8 +838,8 @@ def finTwoArrow : (Fin 2 → α) ≃ₜ α × α :=
 #align homeomorph.fin_two_arrow Homeomorph.finTwoArrow
 -/
 
-/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:303:22: continuitity! not supported at the moment -/
-/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:303:22: continuitity! not supported at the moment -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:310:22: continuitity! not supported at the moment -/
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:310:22: continuitity! not supported at the moment -/
 #print Homeomorph.image /-
 /-- A subset of a topological space is homeomorphic to its image under a homeomorphism.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import CategoryTheory.Preadditive.Basic
-import Algebra.Module.LinearMap.Basic
+import Algebra.Module.LinearMap.Defs
 import Algebra.Group.Invertible.Defs
 import Algebra.Algebra.Defs
 

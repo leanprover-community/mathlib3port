@@ -159,7 +159,7 @@ theorem IsCauSeq.geo_series {β : Type _} [Ring β] [Nontrivial β] {abv : β �
       · intro n hn
         refine' div_le_div_of_le (le_of_lt <| sub_pos.2 hx1) (sub_le_sub_left _ _)
         rw [← one_mul (_ ^ n), pow_succ']
-        exact mul_le_mul_of_nonneg_right (le_of_lt hx1) (pow_nonneg (abv_nonneg _ _) _))
+        exact mul_le_mul_of_nonneg_right (le_of_lt hx1) (Nonneg.pow_nonneg (abv_nonneg _ _) _))
 #align is_cau_geo_series IsCauSeq.geo_series
 -/
 
@@ -1103,8 +1103,8 @@ theorem sin_sub_sin : sin x - sin y = 2 * sin ((x - y) / 2) * cos ((x + y) / 2) 
   by
   have s1 := sin_add ((x + y) / 2) ((x - y) / 2)
   have s2 := sin_sub ((x + y) / 2) ((x - y) / 2)
-  rw [div_add_div_same, add_sub, add_right_comm, add_sub_cancel_right, half_add_self] at s1
-  rw [div_sub_div_same, ← sub_add, add_sub_cancel_left, half_add_self] at s2
+  rw [div_add_div_same, add_sub, add_right_comm, add_sub_cancel_right, add_self_div_two] at s1
+  rw [div_sub_div_same, ← sub_add, add_sub_cancel_left, add_self_div_two] at s2
   rw [s1, s2]
   ring
 #align complex.sin_sub_sin Complex.sin_sub_sin
@@ -1115,8 +1115,8 @@ theorem cos_sub_cos : cos x - cos y = -2 * sin ((x + y) / 2) * sin ((x - y) / 2)
   by
   have s1 := cos_add ((x + y) / 2) ((x - y) / 2)
   have s2 := cos_sub ((x + y) / 2) ((x - y) / 2)
-  rw [div_add_div_same, add_sub, add_right_comm, add_sub_cancel_right, half_add_self] at s1
-  rw [div_sub_div_same, ← sub_add, add_sub_cancel_left, half_add_self] at s2
+  rw [div_add_div_same, add_sub, add_right_comm, add_sub_cancel_right, add_self_div_two] at s1
+  rw [div_sub_div_same, ← sub_add, add_sub_cancel_left, add_self_div_two] at s2
   rw [s1, s2]
   ring
 #align complex.cos_sub_cos Complex.cos_sub_cos
@@ -2127,7 +2127,7 @@ theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (
       exact Nat.cast_pos.2 hn
       exact
         sub_le_self _
-          (mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (inv_nonneg.2 (Nat.cast_nonneg _)) _))
+          (mul_nonneg (Nat.cast_nonneg _) (Nonneg.pow_nonneg (inv_nonneg.2 (Nat.cast_nonneg _)) _))
 #align complex.sum_div_factorial_le Complex.sum_div_factorial_le
 -/
 
@@ -2160,11 +2160,11 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
       · exact Nat.cast_pos.2 (Nat.factorial_pos _)
       · rw [abv_pow abs]
         exact pow_le_one _ (abs.nonneg _) hx
-      · exact pow_nonneg (abs.nonneg _) _
+      · exact Nonneg.pow_nonneg (abs.nonneg _) _
     _ = abs x ^ n * ∑ m in (range j).filterₓ fun k => n ≤ k, (1 / m ! : ℝ) := by
       simp [abs_mul, abv_pow abs, abs_div, mul_sum.symm]
     _ ≤ abs x ^ n * (n.succ * (n ! * n)⁻¹) :=
-      mul_le_mul_of_nonneg_left (sum_div_factorial_le _ _ hn) (pow_nonneg (abs.nonneg _) _)
+      mul_le_mul_of_nonneg_left (sum_div_factorial_le _ _ hn) (Nonneg.pow_nonneg (abs.nonneg _) _)
 #align complex.exp_bound Complex.exp_bound
 -/
 
@@ -2189,7 +2189,7 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
     _ ≤ ∑ i : ℕ in range k, abs x ^ (n + i) / (n ! * n.succ ^ i) := _
     _ = ∑ i : ℕ in range k, abs x ^ n / n ! * (abs x ^ i / n.succ ^ i) := _
     _ ≤ abs x ^ n / ↑n ! * 2 := _
-  · refine' sum_le_sum fun m hm => div_le_div (pow_nonneg (abs.nonneg x) (n + m)) le_rfl _ _
+  · refine' sum_le_sum fun m hm => div_le_div (Nonneg.pow_nonneg (abs.nonneg x) (n + m)) le_rfl _ _
     · exact_mod_cast mul_pos n.factorial_pos (pow_pos n.succ_pos _)
     · exact_mod_cast Nat.factorial_mul_pow_le_factorial
   · refine' Finset.sum_congr rfl fun _ _ => _
@@ -2202,11 +2202,11 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
         · linarith
         · simp only [neg_le_sub_iff_le_add, div_pow, Nat.cast_succ, le_add_iff_nonneg_left]
           exact
-            div_nonneg (pow_nonneg (abs.nonneg x) k)
-              (pow_nonneg (add_nonneg n.cast_nonneg zero_le_one) k)
+            div_nonneg (Nonneg.pow_nonneg (abs.nonneg x) k)
+              (Nonneg.pow_nonneg (add_nonneg n.cast_nonneg zero_le_one) k)
       · linarith
       · linarith
-    · exact div_nonneg (pow_nonneg (abs.nonneg x) n) (Nat.cast_nonneg n !)
+    · exact div_nonneg (Nonneg.pow_nonneg (abs.nonneg x) n) (Nat.cast_nonneg n !)
 #align complex.exp_bound' Complex.exp_bound'
 -/
 

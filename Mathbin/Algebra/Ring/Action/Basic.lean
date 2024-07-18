@@ -5,7 +5,7 @@ Authors: Kenny Lau
 -/
 import Algebra.Ring.Equiv
 import Algebra.Field.Defs
-import GroupTheory.GroupAction.Group
+import Algebra.Group.Action.Basic
 
 #align_import algebra.group_ring_action.basic from "leanprover-community/mathlib"@"c3291da49cfa65f0d43b094750541c0731edc932"
 

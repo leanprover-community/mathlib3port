@@ -192,7 +192,7 @@ end SSet
 #print TopCat.toSSet /-
 /-- The functor associating the singular simplicial set to a topological space. -/
 def TopCat.toSSet : TopCat ⥤ SSet :=
-  ColimitAdj.restrictedYoneda SimplexCategory.toTop
+  Presheaf.restrictedYoneda SimplexCategory.toTop
 #align Top.to_sSet TopCat.toSSet
 -/
 
@@ -206,7 +206,7 @@ noncomputable def SSet.toTop : SSet ⥤ TopCat :=
 #print sSetTopAdj /-
 /-- Geometric realization is left adjoint to the singular simplicial set construction. -/
 noncomputable def sSetTopAdj : SSet.toTop ⊣ TopCat.toSSet :=
-  ColimitAdj.yonedaAdjunction _
+  Presheaf.yonedaAdjunction _
 #align sSet_Top_adj sSetTopAdj
 -/
 

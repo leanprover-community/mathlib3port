@@ -8,7 +8,7 @@ import Algebra.GeomSum
 import Data.Nat.Bitwise
 import Data.Nat.Log
 import Data.Nat.Parity
-import Data.Nat.Prime
+import Data.Nat.Prime.Defs
 import RingTheory.Multiplicity
 
 #align_import data.nat.multiplicity from "leanprover-community/mathlib"@"290a7ba01fbcab1b64757bdaa270d28f4dcede35"
@@ -325,10 +325,10 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicit
       refine' (PartENat.add_lt_add_right (ih hn) (PartENat.natCast_ne_top _)).trans_le _
       rw [two_mul]; norm_cast
     cases b
-    · simpa [bit0_eq_two_mul n]
+    · simpa [bit0_eq_two_hMul n]
     · suffices multiplicity 2 (2 * n + 1) + multiplicity 2 (2 * n)! < ↑(2 * n) + 1 by
         simpa [succ_eq_add_one, multiplicity.mul, h2, prime_two, Nat.bit1_eq_succ_bit0,
-          bit0_eq_two_mul n]
+          bit0_eq_two_hMul n]
       rw [multiplicity_eq_zero.2 (two_not_dvd_two_mul_add_one n), zero_add]
       refine' this.trans _; exact_mod_cast lt_succ_self _
 #align nat.multiplicity_two_factorial_lt Nat.multiplicity_two_factorial_lt

@@ -102,8 +102,7 @@ unsafe def split_ifs (at_ : parse location) (names : parse with_ident_list) : ta
   tactic.split_ifs names at_
 #align tactic.interactive.split_ifs tactic.interactive.split_ifs
 
-add_hint_tactic split_ifs
-
+/- ././././Mathport/Syntax/Translate/Tactic/Mathlib/Hint.lean:22:2: unsupported: add_hint_tactic split_ifs -/
 add_tactic_doc
   { Name := "split_ifs"
     category := DocCategory.tactic

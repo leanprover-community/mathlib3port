@@ -180,19 +180,15 @@ theorem binCast_eq [AddMonoidWithOne R] (n : ℕ) : (Nat.binCast n : R) = ((n : 
 #align nat.bin_cast_eq Nat.binCast_eq
 -/
 
-#print Nat.cast_bit0 /-
 @[simp, norm_cast]
 theorem cast_bit0 [AddMonoidWithOne R] (n : ℕ) : ((bit0 n : ℕ) : R) = bit0 n :=
   cast_add _ _
 #align nat.cast_bit0 Nat.cast_bit0
--/
 
-#print Nat.cast_bit1 /-
 @[simp, norm_cast]
 theorem cast_bit1 [AddMonoidWithOne R] (n : ℕ) : ((bit1 n : ℕ) : R) = bit1 n := by
   rw [bit1, cast_add_one, cast_bit0] <;> rfl
 #align nat.cast_bit1 Nat.cast_bit1
--/
 
 #print Nat.cast_two /-
 theorem cast_two [AddMonoidWithOne R] : ((2 : ℕ) : R) = 2 := by rw [cast_add_one, cast_one, bit0]

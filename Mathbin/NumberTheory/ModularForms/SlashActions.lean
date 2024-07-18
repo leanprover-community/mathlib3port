@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
 import Analysis.Complex.UpperHalfPlane.Basic
-import LinearAlgebra.Matrix.GeneralLinearGroup
+import LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 import LinearAlgebra.Matrix.SpecialLinearGroup
 
 #align_import number_theory.modular_forms.slash_actions from "leanprover-community/mathlib"@"9240e8be927a0955b9a82c6c85ef499ee3a626b8"

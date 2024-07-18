@@ -3,7 +3,7 @@ Copyright (c) 2022 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Algebra.Associated
+import Algebra.Associated.Basic
 import NumberTheory.Divisors
 
 #align_import algebra.is_prime_pow from "leanprover-community/mathlib"@"13a5329a8625701af92e9a96ffc90fa787fff24d"

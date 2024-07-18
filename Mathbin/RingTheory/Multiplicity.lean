@@ -3,7 +3,7 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Chris Hughes
 -/
-import Algebra.Associated
+import Algebra.Associated.Basic
 import Algebra.BigOperators.Group.Finset
 import RingTheory.Valuation.Basic
 

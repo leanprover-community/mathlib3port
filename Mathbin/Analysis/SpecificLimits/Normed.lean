@@ -220,7 +220,7 @@ theorem isLittleO_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k :
     ((this.eventually (gt_mem_nhds hr)).And self_mem_nhdsWithin).exists
   have h0 : 0 ≤ r' := zero_le_one.trans h1.le
   suffices : (fun n => n ^ k : ℕ → R) =O[at_top] fun n : ℕ => (r' ^ k) ^ n
-  exact this.trans_is_o (isLittleO_pow_pow_of_lt_left (pow_nonneg h0 _) hr')
+  exact this.trans_is_o (isLittleO_pow_pow_of_lt_left (Nonneg.pow_nonneg h0 _) hr')
   conv in (r' ^ _) ^ _ => rw [← pow_mul, mul_comm, pow_mul]
   suffices : ∀ n : ℕ, ‖(n : R)‖ ≤ (r' - 1)⁻¹ * ‖(1 : R)‖ * ‖r' ^ n‖
   exact (is_O_of_le' _ this).pow _
@@ -534,7 +534,7 @@ theorem NormedAddCommGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ �
   dsimp [v]
   split_ifs with H H
   · rw [norm_zero]
-    exact mul_nonneg hC (pow_nonneg hr₀.le _)
+    exact mul_nonneg hC (Nonneg.pow_nonneg hr₀.le _)
   · push_neg at H
     exact h _ H
 #align normed_add_comm_group.cauchy_series_of_le_geometric'' NormedAddCommGroup.cauchy_series_of_le_geometric''

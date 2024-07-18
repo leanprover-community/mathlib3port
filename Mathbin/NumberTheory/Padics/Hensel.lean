@@ -131,7 +131,7 @@ private theorem T_nonneg : 0 ≤ T :=
   norm_nonneg _
 
 private theorem T_pow_nonneg (n : ℕ) : 0 ≤ T ^ n :=
-  pow_nonneg T_nonneg _
+  Nonneg.pow_nonneg T_nonneg _
 
 private theorem T_pow {n : ℕ} (hn : n ≠ 0) : T ^ n < 1 :=
   pow_lt_one T_nonneg T_lt_one hn
@@ -197,7 +197,7 @@ private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F
   calc
     ‖F.eval z'‖ = ‖q‖ * ‖z1‖ ^ 2 := by simp [HEq]
     _ ≤ 1 * ‖z1‖ ^ 2 :=
-      (mul_le_mul_of_nonneg_right (PadicInt.norm_le_one _) (pow_nonneg (norm_nonneg _) _))
+      (mul_le_mul_of_nonneg_right (PadicInt.norm_le_one _) (Nonneg.pow_nonneg (norm_nonneg _) _))
     _ = ‖F.eval z‖ ^ 2 / ‖F.derivative.eval a‖ ^ 2 := by simp [hzeq, hz.1, div_pow]
     _ ≤ (‖F.derivative.eval a‖ ^ 2 * T ^ 2 ^ n) ^ 2 / ‖F.derivative.eval a‖ ^ 2 :=
       ((div_le_div_right deriv_sq_norm_pos).2 (pow_le_pow_left (norm_nonneg _) hz.2 _))
