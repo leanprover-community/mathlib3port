@@ -47,7 +47,6 @@ namespace MonFunctorCategoryEquivalence
 
 variable {C D}
 
-#print CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.functor /-
 /-- Functor translating a monoid object in a functor category
 to a functor into the category of monoid objects.
 -/
@@ -74,10 +73,8 @@ def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D
         { Hom := f.Hom.app X
           one_hom' := congr_app f.OneHom X
           mul_hom' := congr_app f.MulHom X } }
-#align category_theory.monoidal.Mon_functor_category_equivalence.functor CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.functor
--/
+#align category_theory.monoidal.Mon_functor_category_equivalence.functor CategoryTheory.Monoidal.monFunctorCategoryEquivalence.functor
 
-#print CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.inverse /-
 /-- Functor translating a functor into the category of monoid objects
 to a monoid object in the functor category
 -/
@@ -97,10 +94,8 @@ def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D)
           naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) }
       one_hom' := by ext x; dsimp; rw [(α.app x).OneHom]
       mul_hom' := by ext x; dsimp; rw [(α.app x).MulHom] }
-#align category_theory.monoidal.Mon_functor_category_equivalence.inverse CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.inverse
--/
+#align category_theory.monoidal.Mon_functor_category_equivalence.inverse CategoryTheory.Monoidal.monFunctorCategoryEquivalence.inverse
 
-#print CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.unitIso /-
 /-- The unit for the equivalence `Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D`.
 -/
 @[simps]
@@ -120,10 +115,8 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ functor ⋙ inverse :=
     ext X
     simp only [functor.id_map, functor.comp_map, functor_map_app_hom, Mon_.comp_hom',
       category.id_comp, category.comp_id, inverse_map_hom_app, nat_trans.comp_app]
-#align category_theory.monoidal.Mon_functor_category_equivalence.unit_iso CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.unitIso
--/
+#align category_theory.monoidal.Mon_functor_category_equivalence.unit_iso CategoryTheory.Monoidal.monFunctorCategoryEquivalence.unitIso
 
-#print CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.counitIso /-
 /-- The counit for the equivalence `Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D`.
 -/
 @[simps]
@@ -136,8 +129,7 @@ def counitIso : inverse ⋙ functor ≅ 𝟭 (C ⥤ Mon_ D) :=
             inv := { Hom := 𝟙 _ } })
         (by tidy))
     (by tidy)
-#align category_theory.monoidal.Mon_functor_category_equivalence.counit_iso CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.counitIso
--/
+#align category_theory.monoidal.Mon_functor_category_equivalence.counit_iso CategoryTheory.Monoidal.monFunctorCategoryEquivalence.counitIso
 
 end MonFunctorCategoryEquivalence
 

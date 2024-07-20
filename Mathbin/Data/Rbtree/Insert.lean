@@ -371,12 +371,10 @@ theorem Batteries.RBNode.mem_insert_of_incomp [DecidableRel lt] (t : Batteries.R
   intros <;> unfold insert <;> apply mem_mk_insert_result <;> apply mem_ins_of_incomp <;> assumption
 #align rbnode.mem_insert_of_incomp Batteries.RBNode.mem_insert_of_incomp
 
-#print Batteries.RBNode.mem_insert_of_mem /-
 theorem Batteries.RBNode.mem_insert_of_mem [DecidableRel lt] [IsStrictWeakOrder α lt] {t x} (z) :
     (x ∈ t) → (x ∈ t.insert lt z) := by
   intros <;> apply mem_mk_insert_result <;> apply mem_ins_of_mem <;> assumption
 #align rbnode.mem_insert_of_mem Batteries.RBNode.mem_insert_of_mem
--/
 
 theorem Batteries.RBNode.of_mem_balance1Node {x s v t} :
     (x ∈ Batteries.RBNode.balance1Node s v t) → (x ∈ s) ∨ ¬lt x v ∧ ¬lt v x ∨ (x ∈ t) :=

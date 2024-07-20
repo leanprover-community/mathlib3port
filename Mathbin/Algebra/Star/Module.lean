@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Frédéric Dupuis
 -/
 import Algebra.Star.SelfAdjoint
-import Algebra.Module.Equiv
+import Algebra.Module.Equiv.Defs
 import LinearAlgebra.Prod
 
 #align_import algebra.star.module from "leanprover-community/mathlib"@"aa6669832974f87406a3d9d70fc5707a60546207"

@@ -7,7 +7,7 @@ import Algebra.BigOperators.Ring.Multiset
 import Algebra.Group.Pi.Lemmas
 import Algebra.GroupPower.Lemmas
 import Algebra.Group.Equiv.Basic
-import Algebra.Ring.Opposite
+import Algebra.GroupWithZero.Opposite
 import Data.Finset.Sum
 import Data.Fintype.Basic
 import Data.Finset.Sigma

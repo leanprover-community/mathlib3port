@@ -208,13 +208,13 @@ theorem inr.inj_iff {a b} : (inr a : Sum α β) = inr b ↔ a = b :=
 
 #print Sum.inl_ne_inr /-
 theorem inl_ne_inr {a : α} {b : β} : inl a ≠ inr b :=
-  fun.
+  nofun
 #align sum.inl_ne_inr Sum.inl_ne_inr
 -/
 
 #print Sum.inr_ne_inl /-
 theorem inr_ne_inl {a : α} {b : β} : inr b ≠ inl a :=
-  fun.
+  nofun
 #align sum.inr_ne_inl Sum.inr_ne_inl
 -/
 
@@ -538,14 +538,14 @@ theorem liftRel_inl_inl : LiftRel r s (inl a) (inl c) ↔ r a c :=
 #print Sum.not_liftRel_inl_inr /-
 @[simp]
 theorem not_liftRel_inl_inr : ¬LiftRel r s (inl a) (inr d) :=
-  fun.
+  nofun
 #align sum.not_lift_rel_inl_inr Sum.not_liftRel_inl_inr
 -/
 
 #print Sum.not_liftRel_inr_inl /-
 @[simp]
 theorem not_liftRel_inr_inl : ¬LiftRel r s (inr b) (inl c) :=
-  fun.
+  nofun
 #align sum.not_lift_rel_inr_inl Sum.not_liftRel_inr_inl
 -/
 
@@ -634,7 +634,7 @@ theorem lex_inr_inr : Lex r s (inr b₁) (inr b₂) ↔ s b₁ b₂ :=
 #print Sum.lex_inr_inl /-
 @[simp]
 theorem lex_inr_inl : ¬Lex r s (inr b) (inl a) :=
-  fun.
+  nofun
 #align sum.lex_inr_inl Sum.lex_inr_inl
 -/
 

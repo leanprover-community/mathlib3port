@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Algebra.Field.Defs
-import Algebra.Ring.Opposite
+import Algebra.GroupWithZero.Opposite
 import Data.Int.Cast.Lemmas
 
 #align_import algebra.field.opposite from "leanprover-community/mathlib"@"76de8ae01554c3b37d66544866659ff174e66e1f"

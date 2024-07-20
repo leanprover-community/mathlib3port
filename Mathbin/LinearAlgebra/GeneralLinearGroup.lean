@@ -3,7 +3,7 @@ Copyright (c) 2019 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Algebra.Module.Equiv
+import Algebra.Module.Equiv.Defs
 
 #align_import linear_algebra.general_linear_group from "leanprover-community/mathlib"@"4c19a16e4b705bf135cf9a80ac18fcc99c438514"
 

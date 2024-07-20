@@ -3,7 +3,7 @@ Copyright (c) 2022 Jakob von Raumer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 -/
-import GroupTheory.MonoidLocalization
+import GroupTheory.MonoidLocalization.Basic
 import Algebra.GroupWithZero.NonZeroDivisors
 import RingTheory.OreLocalization.OreSet
 import Tactic.NoncommRing

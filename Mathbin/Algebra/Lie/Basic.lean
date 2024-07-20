@@ -3,7 +3,7 @@ Copyright (c) 2019 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Algebra.Module.Equiv
+import Algebra.Module.Equiv.Defs
 import Data.Bracket
 import Algebra.Module.Submodule.Ker
 import Tactic.NoncommRing

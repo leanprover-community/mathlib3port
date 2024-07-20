@@ -43,7 +43,7 @@ namespace Vector3
 /-- The empty vector -/
 @[match_pattern]
 def nil : Vector3 α 0 :=
-  fun.
+  nofun
 #align vector3.nil Vector3.nil
 -/
 

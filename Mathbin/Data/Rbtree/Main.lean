@@ -110,12 +110,10 @@ theorem Batteries.RBSet.find?_insert_of_eqv [IsStrictWeakOrder α lt] (t : Batte
   assumption
 #align rbtree.find_insert_of_eqv Batteries.RBSet.find?_insert_of_eqv
 
-#print Batteries.RBSet.find?_insert /-
 theorem Batteries.RBSet.find?_insert [IsStrictWeakOrder α lt] (t : Batteries.RBSet α lt) (x) :
     (t.insert x).find x = some x :=
   Batteries.RBSet.find?_insert_of_eqv t (refl x)
 #align rbtree.find_insert Batteries.RBSet.find?_insert
--/
 
 theorem Batteries.RBSet.find?_insert_of_disj [IsStrictWeakOrder α lt] {x y : α}
     (t : Batteries.RBSet α lt) : lt x y ∨ lt y x → (t.insert x).find y = t.find y :=
@@ -132,7 +130,6 @@ theorem Batteries.RBSet.find?_insert_of_not_eqv [IsStrictWeakOrder α lt] {x y :
   apply Batteries.RBNode.isSearchableOfWellFormed; assumption
 #align rbtree.find_insert_of_not_eqv Batteries.RBSet.find?_insert_of_not_eqv
 
-#print Batteries.RBSet.find?_insert_of_ne /-
 theorem Batteries.RBSet.find?_insert_of_ne [IsStrictTotalOrder α lt] {x y : α}
     (t : Batteries.RBSet α lt) : x ≠ y → (t.insert x).find y = t.find y :=
   by
@@ -141,7 +138,6 @@ theorem Batteries.RBSet.find?_insert_of_ne [IsStrictTotalOrder α lt] {x y : α}
   apply Batteries.RBNode.find?_insert_of_not_eqv lt this
   apply Batteries.RBNode.isSearchableOfWellFormed; assumption
 #align rbtree.find_insert_of_ne Batteries.RBSet.find?_insert_of_ne
--/
 
 theorem Batteries.RBSet.not_mem_of_find?_none [IsStrictWeakOrder α lt] {a : α}
     {t : Batteries.RBSet α lt} : t.find a = none → a ∉ t := fun h =>
@@ -191,23 +187,19 @@ theorem Batteries.RBSet.mem_insert_of_incomp {a b : α} (t : Batteries.RBSet α 
     ¬lt a b ∧ ¬lt b a → a ∈ t.insert b := by cases t; apply Batteries.RBNode.mem_insert_of_incomp
 #align rbtree.mem_insert_of_incomp Batteries.RBSet.mem_insert_of_incomp
 
-#print Batteries.RBSet.mem_insert /-
 theorem Batteries.RBSet.mem_insert [IsIrrefl α lt] :
     ∀ (a : α) (t : Batteries.RBSet α lt), a ∈ t.insert a := by intros; apply mem_insert_of_incomp;
   constructor <;> apply irrefl_of lt
 #align rbtree.mem_insert Batteries.RBSet.mem_insert
--/
 
 theorem Batteries.RBSet.mem_insert_of_equiv {a b : α} (t : Batteries.RBSet α lt) :
     a ≈[lt]b → a ∈ t.insert b := by cases t; apply Batteries.RBNode.mem_insert_of_incomp
 #align rbtree.mem_insert_of_equiv Batteries.RBSet.mem_insert_of_equiv
 
-#print Batteries.RBSet.mem_insert_of_mem /-
 theorem Batteries.RBSet.mem_insert_of_mem [IsStrictWeakOrder α lt] {a : α}
     {t : Batteries.RBSet α lt} (b : α) : a ∈ t → a ∈ t.insert b := by cases t;
   apply Batteries.RBNode.mem_insert_of_mem
 #align rbtree.mem_insert_of_mem Batteries.RBSet.mem_insert_of_mem
--/
 
 theorem Batteries.RBSet.equiv_or_mem_of_mem_insert {a b : α} {t : Batteries.RBSet α lt} :
     a ∈ t.insert b → a ≈[lt]b ∨ a ∈ t := by cases t;

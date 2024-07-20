@@ -435,14 +435,14 @@ theorem independent_def'' :
 #print CompleteLattice.independent_empty /-
 @[simp]
 theorem independent_empty (t : Empty → α) : Independent t :=
-  fun.
+  nofun
 #align complete_lattice.independent_empty CompleteLattice.independent_empty
 -/
 
 #print CompleteLattice.independent_pempty /-
 @[simp]
 theorem independent_pempty (t : PEmpty → α) : Independent t :=
-  fun.
+  nofun
 #align complete_lattice.independent_pempty CompleteLattice.independent_pempty
 -/
 

@@ -7,7 +7,7 @@ import Tactic.Tidy
 import Topology.ContinuousFunction.Basic
 import Topology.Homeomorph
 import Topology.SubsetProperties
-import Topology.Maps
+import Topology.Maps.Basic
 
 #align_import topology.compact_open from "leanprover-community/mathlib"@"34ee86e6a59d911a8e4f89b68793ee7577ae79c7"
 

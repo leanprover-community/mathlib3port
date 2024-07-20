@@ -3,7 +3,7 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Jujian Zhang
 -/
-import GroupTheory.MonoidLocalization
+import GroupTheory.MonoidLocalization.Basic
 import RingTheory.Localization.Basic
 import Algebra.Algebra.RestrictScalars
 

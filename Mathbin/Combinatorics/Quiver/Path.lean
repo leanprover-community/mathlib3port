@@ -46,13 +46,13 @@ variable {V : Type u} [Quiver V] {a b c d : V}
 
 #print Quiver.Path.nil_ne_cons /-
 theorem nil_ne_cons (p : Path a b) (e : b ⟶ a) : Path.nil ≠ p.cons e :=
-  fun.
+  nofun
 #align quiver.path.nil_ne_cons Quiver.Path.nil_ne_cons
 -/
 
 #print Quiver.Path.cons_ne_nil /-
 theorem cons_ne_nil (p : Path a b) (e : b ⟶ a) : p.cons e ≠ Path.nil :=
-  fun.
+  nofun
 #align quiver.path.cons_ne_nil Quiver.Path.cons_ne_nil
 -/
 

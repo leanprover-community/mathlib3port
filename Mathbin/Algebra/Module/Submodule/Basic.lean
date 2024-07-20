@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 -/
 import Algebra.Module.LinearMap.Defs
-import Algebra.Module.Equiv
+import Algebra.Module.Equiv.Defs
 import GroupTheory.GroupAction.SubMulAction
 import Algebra.Group.Submonoid.Membership
 

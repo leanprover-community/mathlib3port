@@ -58,7 +58,7 @@ theorem some_ne_none (x : α) : some x ≠ none := fun h => Option.noConfusion h
 
 @[simp]
 theorem coe_ne_none (a : α) : (a : Option α) ≠ none :=
-  fun.
+  nofun
 #align option.coe_ne_none Option.coe_ne_none
 
 #print Option.forall /-

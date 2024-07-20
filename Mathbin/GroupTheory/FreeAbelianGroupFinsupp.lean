@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Algebra.Group.Equiv.TypeTags
-import Algebra.Module.Equiv
+import Algebra.Module.Equiv.Defs
 import Data.Finsupp.Defs
 import GroupTheory.FreeAbelianGroup
 import GroupTheory.FreeGroup.IsFreeGroup

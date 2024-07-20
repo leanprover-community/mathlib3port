@@ -116,7 +116,7 @@ theorem one_eq_coe {a : α} : 1 = (a : WithTop α) ↔ a = 1 :=
 #print WithTop.top_ne_one /-
 @[simp, to_additive]
 theorem top_ne_one : ⊤ ≠ (1 : WithTop α) :=
-  fun.
+  nofun
 #align with_top.top_ne_one WithTop.top_ne_one
 #align with_top.top_ne_zero WithTop.top_ne_zero
 -/
@@ -124,7 +124,7 @@ theorem top_ne_one : ⊤ ≠ (1 : WithTop α) :=
 #print WithTop.one_ne_top /-
 @[simp, to_additive]
 theorem one_ne_top : (1 : WithTop α) ≠ ⊤ :=
-  fun.
+  nofun
 #align with_top.one_ne_top WithTop.one_ne_top
 #align with_top.zero_ne_top WithTop.zero_ne_top
 -/

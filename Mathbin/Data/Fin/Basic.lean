@@ -487,7 +487,7 @@ theorem zero_lt_one : (0 : Fin (n + 2)) < 1 :=
 #print Fin.not_lt_zero /-
 @[simp]
 theorem not_lt_zero (a : Fin n.succ) : ¬a < 0 :=
-  fun.
+  nofun
 #align fin.not_lt_zero Fin.not_lt_zero
 -/
 

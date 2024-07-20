@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
 import Algebra.GroupPower.Basic
-import Algebra.Ring.Opposite
+import Algebra.GroupWithZero.Opposite
 import Algebra.Group.Action.Opposite
 import Algebra.Group.Action.Prod
 

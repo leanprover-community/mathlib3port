@@ -46,7 +46,7 @@ and hence sends monoid objects to monoid objects.
 -/
 @[simps]
 def limit (F : J ⥤ Mon_ C) : Mon_ C :=
-  limLax.mapMon.obj (MonFunctorCategoryEquivalence.inverse.obj F)
+  limLax.mapMon.obj (monFunctorCategoryEquivalence.inverse.obj F)
 #align Mon_.limit Mon_.limit
 -/
 
@@ -94,26 +94,26 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F)
 #align Mon_.limit_cone_is_limit Mon_.limitConeIsLimit
 -/
 
-#print Mon_.hasLimits /-
-instance hasLimits : HasLimits (Mon_ C)
+#print Mon_.hasLimitsOfShape /-
+instance hasLimitsOfShape : HasLimits (Mon_ C)
     where HasLimitsOfShape J 𝒥 :=
     {
       HasLimit := fun F =>
         has_limit.mk
           { Cone := limit_cone F
             IsLimit := limit_cone_is_limit F } }
-#align Mon_.has_limits Mon_.hasLimits
+#align Mon_.has_limits Mon_.hasLimitsOfShape
 -/
 
-#print Mon_.forgetPreservesLimits /-
-instance forgetPreservesLimits : PreservesLimits (Mon_.forget C)
+#print Mon_.forgetPreservesLimitsOfShape /-
+instance forgetPreservesLimitsOfShape : PreservesLimits (Mon_.forget C)
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F : J ⥤ Mon_ C =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (is_limit.of_iso_limit (limit.is_limit (F ⋙ Mon_.forget C))
             (forget_map_cone_limit_cone_iso F).symm) }
-#align Mon_.forget_preserves_limits Mon_.forgetPreservesLimits
+#align Mon_.forget_preserves_limits Mon_.forgetPreservesLimitsOfShape
 -/
 
 end Mon_

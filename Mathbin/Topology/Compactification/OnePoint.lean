@@ -109,14 +109,14 @@ theorem coe_eq_coe {x y : X} : (x : OnePoint X) = y ↔ x = y :=
 #print OnePoint.coe_ne_infty /-
 @[simp]
 theorem coe_ne_infty (x : X) : (x : OnePoint X) ≠ ∞ :=
-  fun.
+  nofun
 #align alexandroff.coe_ne_infty OnePoint.coe_ne_infty
 -/
 
 #print OnePoint.infty_ne_coe /-
 @[simp]
 theorem infty_ne_coe (x : X) : ∞ ≠ (x : OnePoint X) :=
-  fun.
+  nofun
 #align alexandroff.infty_ne_coe OnePoint.infty_ne_coe
 -/
 

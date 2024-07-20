@@ -840,11 +840,11 @@ instance finite_image (s : Set α) (f : α → β) [Finite s] : Finite (f '' s) 
 #align finite.set.finite_image Finite.Set.finite_image
 -/
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:374:4: unsupported set replacement {(f x) | x : α} -/
+/- ././././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {(f x) | x : α} -/
 #print Finite.Set.finite_replacement /-
 instance finite_replacement [Finite α] (f : α → β) :
     Finite
-      "././././Mathport/Syntax/Translate/Expr.lean:374:4: unsupported set replacement {(f x) | x : α}" :=
+      "././././Mathport/Syntax/Translate/Expr.lean:373:4: unsupported set replacement {(f x) | x : α}" :=
   Finite.Set.finite_range f
 #align finite.set.finite_replacement Finite.Set.finite_replacement
 -/

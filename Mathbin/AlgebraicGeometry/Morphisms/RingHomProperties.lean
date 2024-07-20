@@ -193,7 +193,7 @@ theorem sourceAffineLocally_respectsIso (h₁ : RingHom.RespectsIso @P) :
 
 #print AlgebraicGeometry.affineLocally_respectsIso /-
 theorem affineLocally_respectsIso (h : RingHom.RespectsIso @P) : (affineLocally @P).RespectsIso :=
-  targetAffineLocally_respectsIso (sourceAffineLocally_respectsIso h)
+  AlgebraicGeometry.HasAffineProperty.instRespectsIsoScheme (sourceAffineLocally_respectsIso h)
 #align algebraic_geometry.affine_locally_respects_iso AlgebraicGeometry.affineLocally_respectsIso
 -/
 
@@ -488,10 +488,10 @@ theorem source_affine_openCover_iff {X Y : Scheme.{u}} (f : X ⟶ Y) [IsAffine Y
     (𝒰 : Scheme.OpenCover.{u} X) [∀ i, IsAffine (𝒰.obj i)] :
     sourceAffineLocally (@P) f ↔ ∀ i, P (Scheme.Γ.map (𝒰.map i ≫ f).op) :=
   ⟨fun H =>
-    let h := ((hP.affine_openCover_TFAE f).out 0 2).mp H
+    let h := ((hP.affine_openCover_tFAE f).out 0 2).mp H
     h 𝒰,
     fun H =>
-    let h := ((hP.affine_openCover_TFAE f).out 1 0).mp
+    let h := ((hP.affine_openCover_tFAE f).out 1 0).mp
     h ⟨𝒰, inferInstance, H⟩⟩
 #align ring_hom.property_is_local.source_affine_open_cover_iff RingHom.PropertyIsLocal.source_affine_openCover_iff
 -/
@@ -503,11 +503,9 @@ theorem isLocal_sourceAffineLocally : (sourceAffineLocally @P).IsLocal :=
 #align ring_hom.property_is_local.is_local_source_affine_locally RingHom.PropertyIsLocal.isLocal_sourceAffineLocally
 -/
 
-#print RingHom.PropertyIsLocal.is_local_affineLocally /-
-theorem is_local_affineLocally : PropertyIsLocalAtTarget (affineLocally @P) :=
-  hP.isLocal_sourceAffineLocally.targetAffineLocally_isLocal
+theorem is_local_affineLocally : IsLocalAtTarget (affineLocally @P) :=
+  hP.isLocal_sourceAffineLocally.instIsLocalAtTarget
 #align ring_hom.property_is_local.is_local_affine_locally RingHom.PropertyIsLocal.is_local_affineLocally
--/
 
 #print RingHom.PropertyIsLocal.affine_openCover_iff /-
 theorem affine_openCover_iff {X Y : Scheme.{u}} (f : X ⟶ Y) (𝒰 : Scheme.OpenCover.{u} Y)

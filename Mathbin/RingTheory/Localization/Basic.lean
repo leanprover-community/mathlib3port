@@ -5,7 +5,7 @@ Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baan
 -/
 import Algebra.Algebra.Tower
 import Algebra.Ring.Equiv
-import GroupTheory.MonoidLocalization
+import GroupTheory.MonoidLocalization.Basic
 import RingTheory.Ideal.Basic
 import Algebra.GroupWithZero.NonZeroDivisors
 import Tactic.RingExp

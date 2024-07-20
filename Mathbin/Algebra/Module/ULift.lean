@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Algebra.Ring.ULift
-import Algebra.Module.Equiv
+import Algebra.Module.Equiv.Defs
 
 #align_import algebra.module.ulift from "leanprover-community/mathlib"@"68d1483e8a718ec63219f0e227ca3f0140361086"
 

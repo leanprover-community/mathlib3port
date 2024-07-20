@@ -54,7 +54,7 @@ def hidden {α : Sort _} {a : α} :=
 #print Empty.elim /-
 /-- Ex falso, the nondependent eliminator for the `empty` type. -/
 def Empty.elim {C : Sort _} : Empty → C :=
-  fun.
+  nofun
 #align empty.elim Empty.elim
 -/
 
@@ -204,7 +204,7 @@ inductive PEmpty.{u} : Sort u
 #print PEmpty.elim /-
 /-- Ex falso, the nondependent eliminator for the `pempty` type. -/
 def PEmpty.elim {C : Sort _} : PEmpty → C :=
-  fun.
+  nofun
 #align pempty.elim PEmpty.elim
 -/
 

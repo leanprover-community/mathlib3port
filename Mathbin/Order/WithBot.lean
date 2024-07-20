@@ -106,14 +106,14 @@ theorem some_eq_coe (a : α) : (some a : WithBot α) = (↑a : WithBot α) :=
 #print WithBot.bot_ne_coe /-
 @[simp]
 theorem bot_ne_coe : ⊥ ≠ (a : WithBot α) :=
-  fun.
+  nofun
 #align with_bot.bot_ne_coe WithBot.bot_ne_coe
 -/
 
 #print WithBot.coe_ne_bot /-
 @[simp]
 theorem coe_ne_bot : (a : WithBot α) ≠ ⊥ :=
-  fun.
+  nofun
 #align with_bot.coe_ne_bot WithBot.coe_ne_bot
 -/
 
@@ -730,14 +730,14 @@ theorem some_eq_coe (a : α) : (some a : WithTop α) = (↑a : WithTop α) :=
 #print WithTop.top_ne_coe /-
 @[simp]
 theorem top_ne_coe : ⊤ ≠ (a : WithTop α) :=
-  fun.
+  nofun
 #align with_top.top_ne_coe WithTop.top_ne_coe
 -/
 
 #print WithTop.coe_ne_top /-
 @[simp]
 theorem coe_ne_top : (a : WithTop α) ≠ ⊤ :=
-  fun.
+  nofun
 #align with_top.coe_ne_top WithTop.coe_ne_top
 -/
 

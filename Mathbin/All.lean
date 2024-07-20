@@ -328,7 +328,7 @@ import Algebra.Module.Defs
 import Algebra.Module.BigOperators
 import Algebra.Module.Bimodule
 import Algebra.Module.DedekindDomain
-import Algebra.Module.Equiv
+import Algebra.Module.Equiv.Defs
 import Algebra.Module.GradedModule
 import Algebra.Module.Hom
 import Algebra.Module.Injective
@@ -459,7 +459,7 @@ import Algebra.Ring.Equiv
 import Algebra.Ring.Fin
 import Algebra.Ring.Idempotents
 import Algebra.Ring.InjSurj
-import Algebra.Ring.Opposite
+import Algebra.GroupWithZero.Opposite
 import Algebra.Order.Ring.Synonym
 import Algebra.Ring.Pi
 import Algebra.Ring.Prod
@@ -844,7 +844,7 @@ import CategoryTheory.Bicategory.Free
 import CategoryTheory.Bicategory.FunctorBicategory
 import CategoryTheory.Bicategory.Functor.Oplax
 import CategoryTheory.Bicategory.LocallyDiscrete
-import CategoryTheory.Bicategory.NaturalTransformation
+import CategoryTheory.Bicategory.NaturalTransformation.Oplax
 import CategoryTheory.Bicategory.SingleObj
 import CategoryTheory.Bicategory.Strict
 import CategoryTheory.Category.Bipointed
@@ -1925,7 +1925,7 @@ import GroupTheory.GroupAction.Support
 import Algebra.Group.Action.Units
 import GroupTheory.Index
 import GroupTheory.FreeGroup.IsFreeGroup
-import GroupTheory.MonoidLocalization
+import GroupTheory.MonoidLocalization.Basic
 import GroupTheory.FreeGroup.NielsenSchreier
 import GroupTheory.Nilpotent
 import GroupTheory.NoncommPiCoprod
@@ -3111,7 +3111,7 @@ import Topology.PartialHomeomorph
 import Topology.LocallyConstant.Algebra
 import Topology.LocallyConstant.Basic
 import Topology.LocallyFinite
-import Topology.Maps
+import Topology.Maps.Basic
 import Topology.MetricSpace.Algebra
 import Topology.MetricSpace.Antilipschitz
 import Topology.Baire.Lemmas

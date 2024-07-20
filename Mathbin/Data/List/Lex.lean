@@ -64,7 +64,7 @@ theorem cons_iff {r : α → α → Prop} [IsIrrefl α r] {a l₁ l₂} :
 #print List.Lex.not_nil_right /-
 @[simp]
 theorem not_nil_right (r : α → α → Prop) (l : List α) : ¬Lex r l [] :=
-  fun.
+  nofun
 #align list.lex.not_nil_right List.Lex.not_nil_right
 -/
 

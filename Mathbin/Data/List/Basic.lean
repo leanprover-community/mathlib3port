@@ -51,7 +51,7 @@ instance : Std.Associative (List α) Append.append :=
 
 #print List.cons_ne_nil /-
 theorem cons_ne_nil (a : α) (l : List α) : a :: l ≠ [] :=
-  fun.
+  nofun
 #align list.cons_ne_nil List.cons_ne_nil
 -/
 
@@ -473,7 +473,7 @@ theorem doubleton_eq [DecidableEq α] {x y : α} (h : x ≠ y) : ({x, y} : List 
 Case conversion may be inaccurate. Consider using '#align list.forall_mem_nil List.forall_mem_nilₓ'. -/
 #print List.forall_mem_nil /-
 theorem forall_mem_nil (p : α → Prop) : ∀ x ∈ @nil α, p x :=
-  fun.
+  nofun
 #align list.forall_mem_nil List.forall_mem_nil
 -/
 
@@ -505,7 +505,7 @@ theorem forall_mem_append {p : α → Prop} {l₁ l₂ : List α} :
 -/
 
 theorem not_exists_mem_nil (p : α → Prop) : ¬∃ x ∈ @nil α, p x :=
-  fun.
+  nofun
 #align list.not_exists_mem_nil List.not_exists_mem_nilₓ
 
 theorem exists_mem_cons_of {p : α → Prop} {a : α} (l : List α) (h : p a) : ∃ x ∈ a :: l, p x :=

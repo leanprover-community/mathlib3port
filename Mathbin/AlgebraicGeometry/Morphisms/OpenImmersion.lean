@@ -60,7 +60,7 @@ theorem isOpenImmersion_respectsIso : MorphismProperty.RespectsIso @IsOpenImmers
 -/
 
 #print AlgebraicGeometry.isOpenImmersion_isLocalAtTarget /-
-theorem isOpenImmersion_isLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersionCat :=
+theorem isOpenImmersion_isLocalAtTarget : IsLocalAtTarget @IsOpenImmersionCat :=
   by
   constructor
   · exact is_open_immersion_respects_iso
@@ -89,8 +89,7 @@ theorem isOpenImmersion_isLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersi
 #align algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersion_isLocalAtTarget
 -/
 
-#print AlgebraicGeometry.IsOpenImmersion.openCover_TFAE /-
-theorem IsOpenImmersion.openCover_TFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
+theorem IsOpenImmersionCat.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
     TFAE
       [IsOpenImmersionCat f,
         ∃ 𝒰 : Scheme.OpenCover.{u} Y,
@@ -102,16 +101,14 @@ theorem IsOpenImmersion.openCover_TFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
           IsOpenImmersionCat (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤),
           ∀ i, IsOpenImmersionCat (f ∣_ U i)] :=
-  isOpenImmersion_isLocalAtTarget.openCover_TFAE f
-#align algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersion.openCover_TFAE
--/
+  isOpenImmersion_isLocalAtTarget.openCover_tFAE f
+#align algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersionCat.openCover_tFAE
 
-#print AlgebraicGeometry.IsOpenImmersion.openCover_iff /-
-theorem IsOpenImmersion.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y) (f : X ⟶ Y) :
+theorem IsOpenImmersionCat.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y)
+    (f : X ⟶ Y) :
     IsOpenImmersionCat f ↔ ∀ i, IsOpenImmersionCat (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   isOpenImmersion_isLocalAtTarget.openCover_iff f 𝒰
-#align algebraic_geometry.is_open_immersion.open_cover_iff AlgebraicGeometry.IsOpenImmersion.openCover_iff
--/
+#align algebraic_geometry.is_open_immersion.open_cover_iff AlgebraicGeometry.IsOpenImmersionCat.openCover_iff
 
 #print AlgebraicGeometry.isOpenImmersion_stableUnderBaseChange /-
 theorem isOpenImmersion_stableUnderBaseChange :
